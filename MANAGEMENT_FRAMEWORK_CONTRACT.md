@@ -1,12 +1,14 @@
 # Management Framework — Shared Cross-Package Contract
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Date:** 2026-06-10
 **Author:** Maheri
 **Authored under:** `#persona-process-designer` (lead) + `#persona-compliance-governance` (support)
-**Status:** DIRECTION APPROVED (2026-06-10, Plan Phase 0.3) — execution deferred to Plan Phase 2.1
+**Status:** IN EXECUTION (2026-06-10, Plan Phase 2.1) — Lesson 45 done; §5 amended ("do for all"); templates in progress
 
-> **Approval record (2026-06-10):** Shared-spine direction approved (Q1); Lesson 19 override via corrective Lesson 34 approved (Q2); phase-code set expanded to match the reshaped family (Q3 — see §5); default location = project root `management_framework/` with user override (Q4). Building of Lesson 34 + templates happens in Plan Phase 2.1, not yet.
+> **Approval record (2026-06-10):** Shared-spine direction approved (Q1); Lesson 19 override via corrective Lesson 45 approved (Q2); phase-code set expanded to match the reshaped family (Q3 — see §5); default location = project root `management_framework/` with user override (Q4). Corrective **Lesson 45** added 2026-06-10 (Plan 2.1); templates follow in Plan Phase 2.1.
+>
+> **v1.1.0 amendment (2026-06-10, Plan 2.1 Step 1b):** §5 contributor set widened per user decision "do for all" — **AI-ILC** added as contributor (previously excluded); **AI-GCE** and **AI-TGE** promoted from "optional" to "contributor." PPM/FLO remain excluded (structural). §10 impact list updated accordingly.
 
 ---
 
@@ -35,7 +37,7 @@ Lesson 19's rationale was sound; this contract preserves its *intent* by other m
 | **Self-contained output** | In **standalone mode**, each package still produces its own self-contained spine. Consolidation only happens in **chain mode**, when a spine already exists. |
 | **Know which phase by looking** | The phase-prefixed ID answers this at the row level — stronger than "by which folder it's in." |
 
-**Required follow-up:** LESSONS.md must record a corrective lesson (proposed "Lesson 34") noting that Lesson 19 is superseded in chain mode by this contract. Do not silently leave Lesson 19 contradicting a live contract.
+**Required follow-up:** LESSONS.md records corrective **Lesson 45** (✅ added 2026-06-10, Plan 2.1) noting that Lesson 19 is superseded in chain mode by this contract. (Originally drafted as "Lesson 34", but that number was already taken — the real next free number was 45.) Lesson 19 ⇄ Lesson 45 are cross-linked both ways.
 
 ---
 
@@ -91,23 +93,23 @@ The consolidated spine carries up to six registers. Four are **universal** (ever
 | Action Items | `Action_Items.md` | PILC-origin | `{PHASE}-A-{NNN}` |
 | Assumptions & Dependencies | `Assumptions_Dependencies.md` | PILC-origin | `{PHASE}-AD-{NNN}` |
 
-**Phase codes (approved 2026-06-10, Plan Phase 0.3 — reshaped-family set):**
+**Phase codes (amended 2026-06-10, Plan 2.1 Step 1b — "do for all"):**
 
-The spine is **per-project**, so its contributors are the **Project-layer** governance producers:
+The spine is **per-project**. All **project-touching** packages contribute:
 
 | Phase code | Package | Contribution |
 |------------|---------|--------------|
-| `PILC` | AI-PILC | **Required** producer |
-| `ADLC` | AI-ADLC | **Required** producer |
-| `POG` | AI-POG | **Required** producer (new build) |
-| `DWG` | AI-DWG | **Required** producer |
-| `GCE` | AI-GCE | **Optional** — may log governance decisions (e.g. "baseline this violation"); primary record stays its own compliance log |
-| `TGE` | AI-TGE | **Optional** — may log test-governance decisions |
+| `ILC`  | AI-ILC  | **Contributor** — idea-stage decisions (e.g. "approved idea", "rejected idea") seed the spine at the earliest point; PILC continues from there |
+| `PILC` | AI-PILC | **Required** producer — full PMO governance (6 registers: Decision, Change, Issue, Action, Assumptions, Lessons) |
+| `ADLC` | AI-ADLC | **Required** producer — architecture governance (4 registers: Decision, Change, Issue, Lessons) + ADRs remain separate |
+| `POG`  | AI-POG  | **Required** producer (new build, Phase 4.1) — product-ownership governance |
+| `DWG`  | AI-DWG  | **Required** producer — workspace generation governance (4 registers: Decision, Change, Issue, Lessons) |
+| `GCE`  | AI-GCE  | **Contributor** — logs compliance-governance decisions (e.g. "baseline this violation", "tier activated") to the spine; primary compliance log (`.governance/compliance-log/`) remains the detailed operational record |
+| `TGE`  | AI-TGE  | **Contributor** — logs test-governance decisions (e.g. "override test requirement", "risk acceptance") to the spine; primary test record (`.tge/`) remains the detailed operational record |
 
-**Excluded from the per-project spine:**
-- `PPM` (AI-PPM) — portfolio-scope (governs *many* projects); has its own portfolio register.
-- `FLO` (AI-FLO) — routing infrastructure; records no per-project governance.
-- `ILC` (AI-ILC) — pre-project idea stage; its decisions predate the project and roll into PILC.
+**Excluded from the per-project spine (structural — not oversight):**
+- `PPM` (AI-PPM) — portfolio-scope (governs *many* projects); has its own portfolio register. Putting portfolio data in a per-project spine conflates scopes.
+- `FLO` (AI-FLO) — routing infrastructure; produces no per-project governance records (it carries position, does not decide).
 
 A package only creates the register files it actually writes to. The four universal registers exist in any spine; the two PILC-origin registers exist only if a phase that uses them has run.
 
@@ -222,21 +224,23 @@ When a package appends, it also adds its row to **Contributing Phases**.
 
 | File | Change |
 |------|--------|
+| `ai-ilc/.../templates/management-framework.md` | NEW — ILC-phase registers + shared-contract behavior (idea-stage decisions seed the spine) |
 | `ai-pilc/.../templates/management-framework.md` | NEW — consolidated template referencing the shared contract + Phase column |
 | `ai-adlc/.../templates/management-framework.md` | NEW — 4 registers with Phase column + shared-contract behavior |
 | `ai-dwg/.../templates/operational/management-framework.md` | UPDATE — add Phase column, append-if-exists behavior, marker awareness |
-| `ai-pog/.../templates/management-framework.md` | NEW (at AI-POG build, Phase 4) — POG-phase registers + shared-contract behavior |
-| `ai-gce/.../templates/...` | UPDATE (optional contributor) — Phase-column awareness for governance decisions logged to the spine |
-| `ai-tge/.../templates/...` | UPDATE (optional contributor) — Phase-column awareness for test-governance decisions |
+| `ai-pog/.../templates/management-framework.md` | NEW (at AI-POG build, Phase 4.1) — POG-phase registers + shared-contract behavior |
+| `ai-gce/.../templates/...` | UPDATE (**contributor**) — Phase-column awareness + `GCE-*` IDs for governance decisions logged to the spine |
+| `ai-tge/.../templates/...` | UPDATE (**contributor**) — Phase-column awareness + `TGE-*` IDs for test-governance decisions logged to the spine |
+| `ai-ilc/.../core-workflow.md` | UPDATE — output references shared spine + create-if-absent |
 | `ai-pilc/.../core-workflow.md` | UPDATE — Stage 6 references shared spine + detection |
 | `ai-adlc/.../core-workflow.md` | UPDATE — output table references shared spine |
 | `ai-dwg/.../core-generator.md` | UPDATE — generation references shared spine + append behavior |
 | `FAMILY_STRUCTURE.md` | UPDATE — show consolidated spine in runtime output |
 | Each package `CONCEPTUAL_MAP.md` | UPDATE — Concern → Location map points to shared spine |
-| `ai-packagebuilder/LESSONS.md` | UPDATE — add corrective Lesson 34 (supersedes Lesson 19 in chain mode) |
+| `ai-packagebuilder/LESSONS.md` | ✅ DONE (2026-06-10) — added corrective **Lesson 45** (supersedes Lesson 19 in chain mode); Lesson 19 cross-linked; spine marker added to Lesson 14 registry |
 
-> **Scope note (Plan Phase 0.3, 2026-06-10):** The original §10 list covered only PILC/ADLC/DWG. The approved reshaped-family phase set (§5) expands execution to AI-POG (new build, Phase 4) and optional Phase-column awareness in AI-GCE/AI-TGE. AI-POG's template is created during its build, not during the initial Phase 2.1 spine rollout.
+> **Scope note (v1.1.0, 2026-06-10):** Expanded from the original PILC/ADLC/DWG + optional GCE/TGE set to **all project-touching packages** ("do for all"): ILC added, GCE/TGE promoted to contributor. AI-POG's template is created during its build (Phase 4.1), not during the initial Phase 2.1 rollout.
 
 ---
 
-*Contract Version: 1.0.0 | Created: 2026-06-10 | Authored under #persona-process-designer + #persona-compliance-governance*
+*Contract Version: 1.1.0 | Created: 2026-06-10 | Amended: 2026-06-10 (v1.1.0 — "do for all" contributor scope: ILC/PILC/ADLC/POG/DWG/GCE/TGE) | Authored under #persona-process-designer + #persona-compliance-governance*

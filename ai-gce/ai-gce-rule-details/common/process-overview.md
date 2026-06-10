@@ -25,9 +25,12 @@ Unlike AI-PILC and AI-ADLC (interactive lifecycles with stages and gates), AI-GC
 
     AI-ADLC ──┐                                                
     Design it │                                                
+    AI-UXD ───┤
+    Design UX │
               ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
     AI-POG ───┘     Prepare it       ▲                          
     Own it      └───────────────────┘  AI-POG ⇄ AI-DLC (back-and-forth)
+                AI-UXD ⇢ AI-POG (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POG (feedback)
 
     AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
     Guard it   Test it

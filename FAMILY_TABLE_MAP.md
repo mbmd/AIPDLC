@@ -77,6 +77,12 @@
 - **20** full canonical-table files updated to the reshaped two-layer table (#1–15, #18, #19, #21, #22, #24).
 - **2** diagram-only files updated (#16, #17).
 - **22 content files total** now carry the reshaped canonical (verified: `grep "PORTFOLIO LAYER"`).
+
+**AI-UXD canonical top-up (2026-06-10, Plan 1.5 / OI-028):**
+- The canonical was later extended to add **AI-UXD** (new Project-layer row, `AI-UXD ───┤` diagram node + `AI-UXD ⇢ AI-POG … AI-DLC ⇢ AI-UXD+AI-POG (feedback)` line, AI-DWG input `AP + PBP` → `AP + PBP + UXP`, footnote ³ expanded).
+- Re-propagated verbatim to the same **22 content files** (20 full-table + 2 diagram-only) — verified line-exact: AI-UXD diagram node = 1, Design UX line = 1, feedback line = 1 in every file; AI-UXD table row = 1 and zero bare `| AP + PBP |` in all 20 full-table files.
+- **#26** (`ai-tge/ai-tge-rules/core-engine.md`) was authored already-current in Plan 1.4 — **excluded** from the top-up (not re-touched).
+- AI-TGE's **bespoke** companion sub-diagram in #19 (`### AI-TGE Position (Companion Pattern)`) was left untouched (already UXD-correct from OI-019/Plan 1.3).
 - **2** special-handling files (see table below): #20 (historical snapshot — pointer added), #25 (bespoke companion diagram — deferred to OI-019).
 - **De-registered:** former #23 (AI-ILC kiro-setup mirror) — does not exist; AI-ILC ships INSTALL-only (OI-022).
 - Old linear diagram intentionally retained in: `CONSISTENCY_ASSESSMENT.md` (excluded), `ai-ilc/PLAN.md` §4.1 (historical), `idea-management/ideas/002-idea-lifecycle.md` (archival idea record).
