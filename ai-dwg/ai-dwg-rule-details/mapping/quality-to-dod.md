@@ -1,0 +1,165 @@
+# Mapping: Quality Attributes → DEFINITION_OF_DONE.md
+
+## Purpose
+
+Transforms quality attributes and testing strategy from the Architecture Vision into a Definition of Done document that defines when work is "complete" — covering code quality, testing, documentation, and review gates.
+
+**Output:** `DEFINITION_OF_DONE.md` (project root)
+
+---
+
+## MANDATORY: Stage Sub-Role — Workspace Architect
+
+During THIS activity, ALSO adopt the mindset of a **Workspace Architect**. This does NOT replace your primary role (DevOps/Platform Engineer + Senior Architect) — it ADDS a thinking dimension.
+
+### Behavioral Shifts
+- Write DoD items as binary checkboxes — each must be verifiable as yes/no, never subjective quality judgment
+- Trace every DoD section back to a specific steering file — "follows coding-standards.md" not "writes good code"
+- Ensure security items are non-negotiable regardless of task type — no PR skips security verification
+- Think about conditional sections (Database, API) — not every task touches every layer; make applicability clear
+- Consider DoD as the quality gate contract between AI-DLC and human reviewers — it defines "done" for both
+
+### Anti-Patterns for This Activity
+- Do NOT write aspirational quality statements ("code should be clean") — write enforceable checks
+- Do NOT make the DoD so long it gets ignored — keep it to verifiable, high-impact items
+- Do NOT skip observability requirements — logging is not optional for any feature work
+
+### Quality Check
+A good output from this activity sounds like:
+- "Testing section: Unit tests pass (100%), integration tests for new API endpoints, coverage does not decrease, edge cases tested (null, empty, boundary)."
+- "Security section: No secrets in code (DATA-06), input validated (SEC-01), authorization checked (AUTHZ-05), sensitive data not logged (SENS rules)."
+
+---
+
+## Source
+
+**From:** Architecture Vision — Quality Attributes (all priorities)
+**Also from:** Testing Strategy (from AP), Security Architecture (security review requirements), Git Workflow (PR process)
+
+---
+
+## Target: DEFINITION_OF_DONE.md
+
+### Structure
+
+```markdown
+<!-- AI-DWG generated | source: Architecture Vision (Quality Attributes) + multiple AP sources | date: {generation-date} -->
+
+# Definition of Done
+
+## When Is a Task "Done"?
+
+A task (user story, bug fix, feature) is DONE when ALL of the following are met. No exceptions — "almost done" is not done.
+
+---
+
+## Code Quality
+
+- [ ] Code follows coding-standards.md conventions
+- [ ] Code follows module-structure.md boundaries (no boundary violations)
+- [ ] Domain terminology matches domain-context.md (no invented terms)
+- [ ] Error handling follows error-handling.md patterns
+- [ ] No new lint warnings introduced
+- [ ] No `TODO` or `FIXME` left without a linked ticket
+
+---
+
+## Testing
+
+- [ ] Unit tests written for new/changed logic
+- [ ] Unit tests pass (100% of suite)
+- [ ] Integration tests written for new API endpoints or service interactions
+- [ ] Integration tests pass
+- [ ] Test coverage: {from AP — e.g., does not decrease / meets module target}
+- [ ] Edge cases tested (null, empty, boundary values, error paths)
+
+---
+
+## Security
+
+- [ ] No secrets in code (security-rules.md DATA-06)
+- [ ] Input validation on all new inputs (security-rules.md SEC-01)
+- [ ] Authorization checked for new endpoints (security-rules.md AUTHZ-05)
+- [ ] Sensitive data not logged (observability-sensitive.md)
+- [ ] Tenant scoping verified (if multi-tenant — multi-tenancy.md)
+
+---
+
+## Observability
+
+- [ ] Logging added for significant operations (observability-logging.md required points)
+- [ ] Log level appropriate (INFO for business events, ERROR for failures)
+- [ ] No sensitive data in log statements
+- [ ] Metrics incremented where applicable
+
+---
+
+## Database (if schema changes)
+
+- [ ] Migration created and tested (database-rules.md DB-MIG-01)
+- [ ] Migration is reversible OR explicitly documented as forward-only
+- [ ] Schema follows naming conventions (database-rules.md DB-SCHEMA)
+- [ ] Indexes added for new query patterns
+- [ ] Tenant scoping on new tables (if multi-tenant)
+
+---
+
+## API (if endpoint changes)
+
+- [ ] Follows api-standards.md conventions (URL, methods, response format)
+- [ ] Error responses use standard format (api-standards.md API-ERR)
+- [ ] OpenAPI documentation updated
+- [ ] Pagination applied for list endpoints
+- [ ] Rate limiting considered
+
+---
+
+## Documentation
+
+- [ ] Code comments for complex logic (WHY, not WHAT)
+- [ ] README updated if setup/commands changed
+- [ ] API documentation (OpenAPI) updated for new/changed endpoints
+- [ ] ADR created if architectural decision was made
+
+---
+
+## Review & Merge
+
+- [ ] PR follows template (all checklist items checked)
+- [ ] Required approvals received ({n} reviewers)
+- [ ] CI pipeline passes (lint + test + build + security)
+- [ ] No merge conflicts
+- [ ] Branch is up-to-date with target branch
+
+---
+
+## Post-Merge (if applicable)
+
+- [ ] Staging deployment successful
+- [ ] Smoke test on staging passed
+- [ ] No error rate increase in monitoring
+```
+
+---
+
+## Transformation Rules
+
+| AP Content | Output |
+|-----------|--------|
+| Quality attribute: Security (Critical/High) | Security section items |
+| Quality attribute: Reliability | Testing rigor requirements |
+| Quality attribute: Performance | Performance-related items (if targets exist) |
+| Testing strategy from AP | Testing section requirements |
+| Security Architecture review requirements | Security section |
+| Git workflow (review process) | Review & Merge section |
+| Observability requirements | Observability section |
+
+---
+
+## Key Rules
+
+1. **Every section traces to a steering file** — DoD items reference specific rules
+2. **All checkboxes are binary** — can verify yes/no, not subjective quality
+3. **Security is non-negotiable** — security section is present regardless of depth
+4. **Conditional sections** — Database and API sections only apply when those areas are touched
+5. **DoD is a gate** — work that doesn't pass ALL applicable items is not done

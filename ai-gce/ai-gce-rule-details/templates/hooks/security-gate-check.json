@@ -1,0 +1,13 @@
+{
+  "name": "Security Gate Check",
+  "version": "1.0.0",
+  "description": "Tier A (fileEdited): Verifies auth declarations on endpoint files. Fires immediately on every save — security-critical.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["{DERIVE: presentation layer controller file patterns from tech-stack.md}"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "SECURITY CHECK (Tier A — immediate enforcement):\n\n1. AUTH DECLARATION: Does this endpoint file have explicit auth? Every endpoint MUST have [Authorize] or explicit [AllowAnonymous] (or framework equivalent). No endpoint without an auth decision.\n2. INPUT VALIDATION: If this is a controller/endpoint with request parameters, verify validation rules exist for the DTOs.\n3. INJECTION PREVENTION: Scan for string concatenation in queries or commands (SQL injection, command injection risk).\n\nIf any security rule is violated, warn IMMEDIATELY with rule ID and remediation.\nIf all rules pass, confirm compliance silently.\n\n## Compliance Logging\nAfter completing all checks, append to `compliance-log/events/{today-date}.jsonl`:\n{\"timestamp\": \"{ISO-8601-UTC}\", \"type\": \"check\", \"id\": \"chk-{date}-{time}-{seq}\", \"hook\": \"security-gate-check\", \"trigger\": \"fileEdited\", \"ruleId\": \"{primary-rule-checked}\", \"ruleSeverity\": \"critical\", \"result\": \"{pass|fail|warn}\", \"message\": \"{finding}\", \"sessionDedup\": true}\n\nIf a previous log entry exists for the same hook + file path within this session, OVERWRITE it (keep only the latest result)."
+  }
+}

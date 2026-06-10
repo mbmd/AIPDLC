@@ -1,0 +1,56 @@
+# Apache License 2.0 with Attribution Addendum
+# AIFLC (AI Full Life Cycle) — AI-PILC Sub-Package
+
+**Copyright © 2026 Mohammad Maheri**
+
+This sub-package is part of the AIFLC suite and is licensed under the
+Apache License, Version 2.0 with Attribution Addendum.
+
+For the full license text, see:
+`../ai-license/LICENSE_APACHE2_WITH_ATTRIBUTION.md`
+
+---
+
+## Quick Summary
+
+- **Free to use:** Personal, commercial, educational, and organizational use — all permitted
+- **Modify and distribute:** Create derivative works, redistribute, sublicense — all permitted
+- **Attribution required:** Any distributed product substantially based on this work must include:
+
+> *"Built on AIFLC by Mohammad Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)"*
+
+- **No warranty:** Provided "AS IS" without warranties of any kind
+
+---
+
+## Attribution Addendum (Summary)
+
+Any product, service, platform, or deliverable that incorporates or is substantially based on this work must include the Attribution Notice (above) in a prominent location visible to end users — such as README files, documentation, about pages, or application footers.
+
+Failure to include the Attribution Notice constitutes a material breach and terminates license rights. A 30-day cure period applies for first-time breaches.
+
+---
+
+## Scope
+
+| Sub-Package | Covered |
+|-------------|:-------:|
+| AI-PILC (Project Initiation Life Cycle) | ✅ — This package |
+| AI-ADLC (Architecture Design Life Cycle) | ✅ |
+| AI-DWG (Workspace Generator) | ✅ |
+| AI-GCE (Governance & Compliance Engine) | ✅ |
+| AI-DLC (Development Life Cycle) | ❌ Not part of AIFLC — owned by AWS (MIT-0) |
+
+---
+
+## Contact
+
+- **Name:** Mohammad Maheri
+- **Email:** mohammad.maheri.work@gmail.com
+- **LinkedIn:** [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)
+
+---
+
+*Full license: `../ai-license/LICENSE_APACHE2_WITH_ATTRIBUTION.md`*
+*Decision record: `../ai-license/LDR-002_License-Strategy-Change.md`*
+*Document Status: DRAFT*

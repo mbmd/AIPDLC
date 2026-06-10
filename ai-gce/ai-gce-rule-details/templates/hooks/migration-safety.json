@@ -1,0 +1,13 @@
+{
+  "name": "Migration Safety Check",
+  "version": "1.0.0",
+  "description": "Tier A (fileEdited): Verifies database migrations have rollback methods and are backward-compatible. Fires immediately — destructive ops are irreversible.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["{DERIVE: migration file patterns from tech-stack.md + database-rules.md}"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "MIGRATION SAFETY CHECK (Tier A — immediate enforcement):\n\n1. ROLLBACK METHOD: Does this migration have a Down/Revert method? Every migration MUST be reversible.\n2. BACKWARD COMPATIBILITY: Does this migration break existing code? No column renames or drops without expand-contract pattern.\n3. DESTRUCTIVE OPERATIONS: Flag any DROP TABLE, DROP COLUMN, TRUNCATE, or DELETE without WHERE clause.\n4. DATA LOSS RISK: Flag any ALTER that could lose data (column type narrowing, nullable → not null without default).\n\nIf any rule is violated, warn IMMEDIATELY with severity 🔴 Critical.\nIf all rules pass, confirm compliance silently.\n\n## Compliance Logging\nAfter completing all checks, append to `compliance-log/events/{today-date}.jsonl`:\n{\"timestamp\": \"{ISO-8601-UTC}\", \"type\": \"check\", \"id\": \"chk-{date}-{time}-{seq}\", \"hook\": \"migration-safety\", \"trigger\": \"fileEdited\", \"ruleId\": \"DATA-BASELINE-01\", \"ruleSeverity\": \"critical\", \"result\": \"{pass|fail|warn}\", \"message\": \"{finding}\", \"sessionDedup\": true}\n\nIf a previous log entry exists for the same hook + file path within this session, OVERWRITE it."
+  }
+}

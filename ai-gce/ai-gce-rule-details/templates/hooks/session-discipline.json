@@ -1,0 +1,12 @@
+{
+  "name": "AI-DLC Session Discipline",
+  "version": "1.0.0",
+  "description": "On every prompt, enforces AI-DLC session discipline: spec-before-code, never-vibe-code, correction escalation, session scope respect.",
+  "when": {
+    "type": "promptSubmit"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check .compliance-state.json → currentPhase. This hook applies at ALL phases.\n\nBefore proceeding with this request, verify AI-DLC session discipline:\n\n1. SESSION SCOPE: Is this request within the defined session scope? If a session plan exists, check IN/OUT lists. If OUT of scope, warn.\n\n2. NEVER VIBE CODE: If the user is asking to directly edit AI-generated code during an AI-DLC session, remind: all fixes flow through design docs → regenerate. Exceptions: config files, production emergencies.\n\n3. CORRECTION ESCALATION: If this is a fix for an AI mistake, identify level:\n   - Level 1 (Point Fix): Single wrong value → tell AI the specific fix\n   - Level 2 (Pattern Fix): Same mistake in multiple places → update steering file\n   - Level 3 (Design Fix): Logic structure wrong → fix in design docs\n   - Level 4 (Restart): >30% wrong → abandon session, improve inputs\n\n4. LOOP DETECTION: If this is the second attempt at the same fix, recommend stopping and trying a different approach.\n\nIf all rules pass, confirm compliance silently. Do NOT produce output when nothing is wrong.\n\n## Compliance Logging\nAfter completing all checks above, append a JSON event to `compliance-log/events/{today-date}.jsonl` (create the file if it doesn't exist). Format:\n{\"timestamp\": \"{ISO-8601-UTC}\", \"type\": \"check\", \"id\": \"chk-{date}-{time}-{seq}\", \"hook\": \"session-discipline\", \"trigger\": \"promptSubmit\", \"ruleId\": \"{primary-rule-checked}\", \"ruleSeverity\": \"{severity}\", \"result\": \"{pass|fail|warn}\", \"message\": \"{one-line-finding}\"}\nLog ONE event per rule checked."
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "Module Boundary Check",
+  "version": "1.0.0",
+  "description": "Tier B (agentStop): After session completes, checks for cross-module boundary violations in modified files.",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check .compliance-state.json → currentPhase. This hook applies from Construction phase onward.\n\nReview all files modified during this session that are within module source paths. For each:\n\n1. CROSS-MODULE IMPORTS: Check if any file imports/references classes from another module directly. Cross-module communication MUST use events or APIs — not direct class references.\n2. LAYER DIRECTION: Verify dependencies flow inward only (presentation → application → domain, infrastructure → domain). No outward dependencies.\n3. SHARED KERNEL ONLY: If cross-module code is needed, it MUST come from the shared kernel — not from another module's internals.\n\nIf violations found, warn with rule MOD-02/MOD-03 and explain the correct pattern.\nIf all rules pass, confirm compliance silently.\n\n## Compliance Logging\nAfter completing all checks, append to `compliance-log/events/{today-date}.jsonl`:\n{\"timestamp\": \"{ISO-8601-UTC}\", \"type\": \"check\", \"id\": \"chk-{date}-{time}-{seq}\", \"hook\": \"module-boundary-check\", \"trigger\": \"agentStop\", \"ruleId\": \"{primary-rule-checked}\", \"ruleSeverity\": \"high\", \"result\": \"{pass|fail|warn}\", \"message\": \"{finding}\"}\nLog ONE event per rule checked."
+  }
+}
