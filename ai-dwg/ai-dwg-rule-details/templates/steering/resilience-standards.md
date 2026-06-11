@@ -1,3 +1,10 @@
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "{upstream-ap-artifact}"
+generatedOn: "{generation-date}"
+ownership: hybrid
+---
 # Template: resilience-standards.md (CONDITIONAL)
 
 **Generate IF:** >3 external integrations OR distributed system OR Microservices/Resilience extension active.

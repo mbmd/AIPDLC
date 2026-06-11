@@ -71,14 +71,14 @@ This is the anchor. Once found, ALL other AP files are located relative to its d
 
 ## Step 1b: Locate Parallel Inputs (PBP / UXP)
 
-In the reshaped Project layer, **AI-ADLC, AI-POG, and AI-UXD run in parallel and all feed AI-DWG**. After locating the AP, also look for two optional sibling inputs. Neither blocks generation — they enrich it.
+In the reshaped Project layer, **AI-ADLC, AI-POLC, and AI-UXD run in parallel and all feed AI-DWG**. After locating the AP, also look for two optional sibling inputs. Neither blocks generation — they enrich it.
 
 ### Detection Strategy (per input)
 
 ```
-For PBP (AI-POG output):
+For PBP (AI-POLC output):
 1. User provides path explicitly → use it
-2. Scan for marker pog-state.md in: ./backlog/, ./product/, ../, ./ , sibling folders
+2. Scan for marker polc-state.md in: ./backlog/, ./product/, ../, ./ , sibling folders
 3. Not found → proceed AP-only (PBP enrichment skipped — do NOT block)
 
 For UXP (AI-UXD output):
@@ -91,14 +91,14 @@ For UXP (AI-UXD output):
 
 | Input | Marker | Producer | What it anchors |
 |-------|--------|----------|-----------------|
-| **PBP** — Product Backlog Package | `pog-state.md` | AI-POG | DoR/DoD, release/increment slices, acceptance-criteria standard, prioritization model |
+| **PBP** — Product Backlog Package | `polc-state.md` | AI-POLC | DoR/DoD, release/increment slices, acceptance-criteria standard, prioritization model |
 | **UXP** — UX Design Package | `uxd-state.md` | AI-UXD | Design system + tokens, component/pattern inventory, accessibility baseline (WCAG) |
 
 ### Graceful Degradation (Lesson 6 — OR-input)
 
 The AP is the generation core. PBP and UXP are *additive enrichment*: when present they sharpen specific outputs (`DEFINITION_OF_DONE.md`, planning templates, `frontend-standards.md`, and a future `design-system.md`); when absent the generator proceeds AP-only with no loss of core function. **Never invent backlog or design content the PBP/UXP doesn't provide** — same rule as the AP (Key Rule 1).
 
-> **Forward-declaration note:** AI-POG (idea 006) and AI-UXD (idea 010) are pending build. This step defines the *detection contract* AI-DWG honors once these producers exist. The detailed PBP→DW and UXP→DW extraction guides are authored at their integration builds (Phase 4), not here.
+> **Forward-declaration note:** AI-POLC (idea 006) and AI-UXD (idea 010) are pending build. This step defines the *detection contract* AI-DWG honors once these producers exist. The detailed PBP→DW and UXP→DW extraction guides are authored at their integration builds (Phase 4), not here.
 
 ---
 

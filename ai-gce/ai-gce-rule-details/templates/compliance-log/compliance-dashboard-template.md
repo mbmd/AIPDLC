@@ -1,3 +1,10 @@
+---
+generatedBy: AI-GCE
+generatedVersion: "{version}"
+source: "{upstream-steering-file}"
+generatedOn: "{generation-date}"
+ownership: generated
+---
 # Compliance Dashboard — Template
 
 Generated into `docs/compliance-dashboard.md`. The audit agent populates variables after each scan.

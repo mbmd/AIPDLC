@@ -1,3 +1,10 @@
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "{upstream-ap-artifact}"
+generatedOn: "{generation-date}"
+ownership: generated
+---
 # Template: .github/pull_request_template.md
 
 ```markdown

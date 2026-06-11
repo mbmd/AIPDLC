@@ -1,4 +1,7 @@
 {
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
   "name": "Governance Check After Task",
   "version": "1.0.0",
   "description": "After spec task completion, verifies architecture compliance, governance artifacts, commit conventions, and DoD criteria.",

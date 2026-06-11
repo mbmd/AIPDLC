@@ -1,4 +1,7 @@
 {
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
   "name": "Full Compliance Audit",
   "version": "1.0.0",
   "description": "On-demand full compliance scan. Triggers the audit agent to score the project against all applicable rules for the current tier and phase.",

@@ -36,9 +36,9 @@
     AI-UXD ───┤
     Design UX │
               ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POG ───┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POG ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POG (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POG (feedback)
+    AI-POLC ──┘     Prepare it       ▲                          
+    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
+                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
 
     AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
     Guard it   Test it
@@ -54,16 +54,16 @@
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
 | Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POG | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POG** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POG) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
 > ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POG**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POG (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POG run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POG consumes** (and AI-POG's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POG ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POG**.
+> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
 
 **AI-DWG sits between architecture and construction.** It takes the "how" from AI-ADLC and transforms it into the operational environment that AI-DLC builds within and AI-GCE enforces against.
 
@@ -151,12 +151,12 @@ This role applies to ALL work done while this generator is active. Do not revert
 
 AI-DWG is contract-aware — it knows its predecessors' output formats and its successor's input expectations. This enables precise detection, validation, and signaling. **Paths are never hardcoded; detection is by marker file.**
 
-In the reshaped two-layer family, AI-DWG sits at the convergence of the Project layer: **AI-ADLC, AI-POG, and AI-UXD run in parallel and all feed AI-DWG**. AI-DWG therefore reads up to three inputs:
+In the reshaped two-layer family, AI-DWG sits at the convergence of the Project layer: **AI-ADLC, AI-POLC, and AI-UXD run in parallel and all feed AI-DWG**. AI-DWG therefore reads up to three inputs:
 
 | Input | Producer | Marker | Required? | If absent |
 |-------|----------|--------|:---------:|-----------|
 | **AP** — Architecture Package | AI-ADLC | `adlc-state.md` | ✅ Required | Generation blocks — ask user (AP is the generation core) |
-| **PBP** — Product Backlog Package | AI-POG | `pog-state.md` | ⚪ Optional | Generate from AP only (no backlog-derived enrichment) |
+| **PBP** — Product Backlog Package | AI-POLC | `polc-state.md` | ⚪ Optional | Generate from AP only (no backlog-derived enrichment) |
 | **UXP** — UX Design Package | AI-UXD | `uxd-state.md` | ⚪ Optional | Generate from AP only (no design-system / accessibility enrichment) |
 
 **Graceful degradation (Lesson 6 — OR-input):** AP alone still produces a complete workspace. PBP and UXP are *additive enrichment* inputs — when present they sharpen specific outputs; when absent the generator proceeds AP-only with no loss of core function. AI-DWG never blocks on a missing PBP or UXP.
@@ -205,13 +205,13 @@ In the reshaped two-layer family, AI-DWG sits at the convergence of the Project 
 
 ---
 
-### I Read — Additional input (Parallel: AI-POG → Product Backlog Package)
+### I Read — Additional input (Parallel: AI-POLC → Product Backlog Package)
 
 | Aspect | Specification |
 |--------|--------------|
-| **Producer** | AI-POG (Product Ownership Life Cycle) — runs parallel to AI-ADLC |
-| **Marker file** | `pog-state.md` |
-| **Detection strategy** | 1. User provides path explicitly → use it<br>2. Scan common locations for `pog-state.md` (`./backlog/`, `./product/`, `../`, current dir, sibling folders)<br>3. Not found → proceed AP-only (do NOT block; PBP is optional enrichment) |
+| **Producer** | AI-POLC (Product Ownership Life Cycle) — runs parallel to AI-ADLC |
+| **Marker file** | `polc-state.md` |
+| **Detection strategy** | 1. User provides path explicitly → use it<br>2. Scan common locations for `polc-state.md` (`./backlog/`, `./product/`, `../`, current dir, sibling folders)<br>3. Not found → proceed AP-only (do NOT block; PBP is optional enrichment) |
 | **Required?** | ⚪ Optional — absence triggers graceful degradation, not an error |
 
 **What AI-DWG reads from the PBP (if present):**
@@ -223,7 +223,7 @@ In the reshaped two-layer family, AI-DWG sits at the convergence of the Project 
 | Acceptance-criteria standard (Given/When/Then) | `testing-strategy.md` (align test expectations to the story acceptance format) |
 | Value-based prioritization model (WSJF / MoSCoW) | `templates/sprint-planning.md` (ordering rationale awareness) |
 
-> **Forward-declaration note:** AI-POG is pending build (idea 006). This block defines the *contract* AI-DWG honors once a PBP exists. The detailed PBP→DW mapping file is authored at the AI-POG integration build (Phase 4), not here. Until then, AI-DWG detects `pog-state.md`, consumes what it can, and degrades gracefully when it is absent.
+> **Forward-declaration note:** AI-POLC is pending build (idea 006). This block defines the *contract* AI-DWG honors once a PBP exists. The detailed PBP→DW mapping file is authored at the AI-POLC integration build (Phase 4), not here. Until then, AI-DWG detects `polc-state.md`, consumes what it can, and degrades gracefully when it is absent.
 
 ---
 
@@ -231,7 +231,7 @@ In the reshaped two-layer family, AI-DWG sits at the convergence of the Project 
 
 | Aspect | Specification |
 |--------|--------------|
-| **Producer** | AI-UXD (UX Design Life Cycle) — runs parallel to AI-ADLC; produces personas/journeys consumed by AI-POG |
+| **Producer** | AI-UXD (UX Design Life Cycle) — runs parallel to AI-ADLC; produces personas/journeys consumed by AI-POLC |
 | **Marker file** | `uxd-state.md` |
 | **Detection strategy** | 1. User provides path explicitly → use it<br>2. Scan common locations for `uxd-state.md` (`./design/`, `./ux/`, `../`, current dir, sibling folders)<br>3. Not found → proceed without design-system / accessibility enrichment (do NOT block; UXP is optional) |
 | **Required?** | ⚪ Optional — absence triggers graceful degradation, not an error |
@@ -304,7 +304,7 @@ In the reshaped two-layer family, AI-DWG sits at the convergence of the Project 
 | **Cross-repo support** | Predecessor output can be in a different folder, drive, or repo — just point to it |
 | **Format tolerance** | Support both numbered (`01_Architecture_Vision.md`) and phase-folder (`foundation/`) structures |
 | **Standalone capable** | Works without AI-ADLC if user provides equivalent markdown docs manually |
-| **Multi-input, AP-anchored** | AP (AI-ADLC) is required; PBP (AI-POG) and UXP (AI-UXD) are optional enrichment inputs — detected by their own markers (`pog-state.md`, `uxd-state.md`), never blocking generation |
+| **Multi-input, AP-anchored** | AP (AI-ADLC) is required; PBP (AI-POLC) and UXP (AI-UXD) are optional enrichment inputs — detected by their own markers (`polc-state.md`, `uxd-state.md`), never blocking generation |
 
 ---
 
@@ -699,7 +699,7 @@ Same mapping rules as Mode 1, with these OVERRIDES:
 | ONBOARDING.md | Generate fresh | SKIP if exists; generate if missing |
 | PR template | Generate fresh | SKIP if exists; generate if missing |
 | Planning templates | Generate fresh | Generate (new directory — won't conflict) |
-| management_framework/ | Generate fresh | Generate if missing; skip if exists |
+| management_framework/ | Generate fresh | **Spine-aware:** detect marker (`MANAGEMENT_FRAMEWORK.md`). If spine exists → append `DWG-*` entries. If missing → generate. If non-conforming (no marker) → add marker + Phase columns non-destructively (Lesson 45). |
 
 **Key rule:** Steering files are ALWAYS generated (they live in .kiro/steering/ which is unlikely to have existing content in a non-AI-DWG workspace). Everything else respects existing files.
 
@@ -902,8 +902,9 @@ The generator produces this workspace structure:
 ├── .editorconfig
 ├── docker-compose.yml
 ├── CODEOWNERS
-├── management_framework/                 ← Development phase governance registers
-│   ├── Decision_Log.md                   ← Implementation decisions (below ADR threshold)
+├── management_framework/                 ← Shared governance spine (append-if-exists / create-if-absent per Lesson 45)
+│   ├── MANAGEMENT_FRAMEWORK.md           ← Spine marker + index (detection target)
+│   ├── Decision_Log.md                   ← Phase-tagged decisions (DWG-D-* entries appended by AI-DWG)
 │   ├── Change_Log.md                     ← Scope/approach changes during build
 │   ├── Issue_Log.md                      ← Blockers and problems
 │   └── Lessons_Learned.md               ← Sprint/session insights

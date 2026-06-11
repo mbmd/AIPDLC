@@ -36,9 +36,9 @@
     AI-UXD ───┤
     Design UX │
               ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POG ───┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POG ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POG (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POG (feedback)
+    AI-POLC ──┘     Prepare it       ▲                          
+    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
+                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
 
     AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
     Guard it   Test it
@@ -54,16 +54,16 @@
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
 | Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POG | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POG** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POG) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
 > ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POG**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POG (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POG run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POG consumes** (and AI-POG's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POG ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POG**.
+> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
 
 AI-PILC is the first step in the family. Its output (the PIP) feeds into AI-ADLC for architecture design.
 
@@ -172,7 +172,9 @@ The workflow automatically creates and maintains six management registers throug
 - Registers are created during Workspace Detection (Phase 1)
 - Entries are added in real-time as they arise (not batched)
 - Each entry is sequentially numbered and never deleted
-- Registers live in `{output_root}/management_framework/`
+- Registers live in `{output_root}/management_framework/` (the shared governance spine)
+- **Spine behavior (Lesson 45):** AI-PILC detects the spine marker (`management_framework/MANAGEMENT_FRAMEWORK.md`). If found → appends `PILC-*` entries. If not found → creates the spine (typical: AI-PILC is usually the first chain package to run). See `templates/management-framework.md` for the full contract-aware template.
+- All entries carry a Phase column (`PILC`) and phase-prefixed IDs (`PILC-D-001`, `PILC-C-001`, etc.) per `MANAGEMENT_FRAMEWORK_CONTRACT.md` v1.1.0.
 
 ---
 
@@ -221,14 +223,28 @@ Default if user doesn't specify: Option (a).
 
 AI-PILC is contract-aware — it knows it is the first package in the AI-* chain and that its output feeds AI-ADLC.
 
-### I Read (Predecessor: None)
+### I Read (Predecessor: AI-ILC — optional)
 
-AI-PILC is the first package in the chain. It accepts raw requirements in any format:
+AI-PILC is the first **required** package in the chain. It accepts input in two modes:
+
+**Standalone (no predecessor):** Raw requirements in any format:
 - Document (PRD, RFP, spec, email, brief)
 - Verbal description
 - Existing artifacts to restructure
+- Brownfield system extension
 
-No input marker file. No predecessor package.
+**Chain (AI-ILC predecessor detected):** An Approved Idea Brief via `ilc-state.md`:
+
+| Aspect | Specification |
+|--------|--------------|
+| **Predecessor** | AI-ILC (Idea Life Cycle) — **optional** pre-stage |
+| **Marker file** | `ilc-state.md` |
+| **Detection strategy** | Scan `./`, `../`, user-specified path for `ilc-state.md` |
+| **Required fields** | `Route: project`, `Status: Approved` or `Complete` |
+| **What AI-PILC reads** | Idea name, scope summary, dependencies, risks, originating idea ID |
+| **Graceful degradation** | If `ilc-state.md` absent → proceed as standalone (Lesson 6) |
+
+> **Lesson 6 (OR-input):** AI-ILC is optional. AI-PILC works identically without it. The AI-ILC brief is a fifth intake mode (Mode E in `source-ingestion.md`) that enriches Stage 2 — it does not replace Modes A/B/C/D.
 
 ### I Produce (Successor: AI-ADLC)
 
@@ -334,10 +350,11 @@ Shall I continue? [Yes / Adjust configuration]
    - Paste content directly
    - Describe verbally (for early-stage ideas)
    - Brownfield extension (extending/modernizing an existing system)
+   - **AI-ILC brief** (if `ilc-state.md` detected at Stage 1b — read the Approved Idea Brief as source)
 2. Validate source:
    - Is it a structured document or raw idea?
    - Estimate completeness (scale: Idea / Draft / Structured / Comprehensive)
-   - Identify format (PRD, user story, brief, RFP, email, verbal description)
+   - Identify format (PRD, user story, brief, RFP, email, verbal description, **AI-ILC brief**)
    - Detect brownfield signals ("existing system," "legacy," "migration," "extend," "modernize")
 3. Generate source assessment summary:
    - Document type and completeness rating

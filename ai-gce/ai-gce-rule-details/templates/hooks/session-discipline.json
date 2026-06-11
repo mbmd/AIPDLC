@@ -1,4 +1,7 @@
 {
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
   "name": "AI-DLC Session Discipline",
   "version": "1.0.0",
   "description": "On every prompt, enforces AI-DLC session discipline: spec-before-code, never-vibe-code, correction escalation, session scope respect.",

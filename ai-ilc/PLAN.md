@@ -122,7 +122,7 @@ Adding AI-ILC to the family changes the canonical chain. Per workspace rule 10 a
 
 > ~~⚠️ **Above is a PROPOSAL pending your approval.**~~ ✅ APPROVED and canonical as of 2026-06-08.
 
-> 📌 **SUPERSEDED (2026-06-10):** The table in §4.1 above is the AI-ILC-era *linear* canonical and is retained here as the historical record of the AI-ILC addition decision. The family was later reshaped into Portfolio + Project layers (adding AI-PPM, AI-FLO, AI-POG, AI-TGE). For the current canonical, see `ai-packages/FAMILY_TABLE_MAP.md`. AI-ILC's live table-bearing files (README, core-workflow, process-overview) have been updated to the reshaped canonical (OI-018).
+> 📌 **SUPERSEDED (2026-06-10):** The table in §4.1 above is the AI-ILC-era *linear* canonical and is retained here as the historical record of the AI-ILC addition decision. The family was later reshaped into Portfolio + Project layers (adding AI-PPM, AI-FLO, AI-POLC, AI-TGE). For the current canonical, see `ai-packages/FAMILY_TABLE_MAP.md`. AI-ILC's live table-bearing files (README, core-workflow, process-overview) have been updated to the reshaped canonical (OI-018).
 
 ### 4.2 Propagation Sequence (after approval)
 1. Update the "Canonical Family Table (Copy From Here)" section in `FAMILY_TABLE_MAP.md` **first**.

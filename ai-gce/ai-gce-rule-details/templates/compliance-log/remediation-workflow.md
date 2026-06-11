@@ -1,3 +1,10 @@
+---
+generatedBy: AI-GCE
+generatedVersion: "{version}"
+source: "{upstream-steering-file}"
+generatedOn: "{generation-date}"
+ownership: generated
+---
 # Remediation Workflow — Template
 
 Generated into `.governance/compliance-log/remediation-workflow.md` in the target workspace.

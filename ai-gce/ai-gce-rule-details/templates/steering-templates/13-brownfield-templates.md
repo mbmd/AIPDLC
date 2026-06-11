@@ -1,3 +1,10 @@
+---
+generatedBy: AI-GCE
+generatedVersion: "{version}"
+source: "{upstream-steering-file}"
+generatedOn: "{generation-date}"
+ownership: generated
+---
 # Brownfield Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate brownfield-specific steering files

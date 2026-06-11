@@ -1,4 +1,7 @@
 {
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
   "name": "Spec & Contract Check Before Code",
   "version": "1.0.0",
   "description": "Enforces spec-before-code: verifies requirements/spec and API contract exist before allowing implementation code to be written.",

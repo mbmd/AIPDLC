@@ -1,4 +1,7 @@
 {
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
   "name": "Migration Safety Check",
   "version": "1.0.0",
   "description": "Tier A (fileEdited): Verifies database migrations have rollback methods and are backward-compatible. Fires immediately — destructive ops are irreversible.",

@@ -1,3 +1,10 @@
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "{upstream-ap-artifact}"
+generatedOn: "{generation-date}"
+ownership: hybrid
+---
 # Template: observability-tracing.md (CONDITIONAL)
 
 **Generate IF:** Infrastructure specifies distributed tracing tool OR Microservices extension active.

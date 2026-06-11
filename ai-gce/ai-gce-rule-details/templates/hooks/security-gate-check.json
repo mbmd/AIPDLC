@@ -1,4 +1,7 @@
 {
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
   "name": "Security Gate Check",
   "version": "1.0.0",
   "description": "Tier A (fileEdited): Verifies auth declarations on endpoint files. Fires immediately on every save — security-critical.",

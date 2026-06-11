@@ -28,7 +28,27 @@ N/A — This stage is depth-independent. Workspace setup is identical regardless
    - `./01_Requirement_Submission/../pilc-state.md` (numbered folder root)
    - Any directory the user has specified as output root
 2. If found → load state and follow **Session Resumption Flow** (see `common/session-continuity.md`)
-3. If NOT found → proceed to Step 2 (fresh start)
+3. If NOT found → proceed to Step 1b (predecessor detection)
+
+---
+
+### Step 1b: Detect AI-ILC Predecessor (Chain Awareness)
+
+Scan for the AI-ILC predecessor marker `ilc-state.md` in common locations:
+- `./ilc-state.md`
+- `../ilc-state.md` (sibling folder)
+- Any directory the user has specified
+
+**If `ilc-state.md` found:**
+1. Read the `Route` field — confirm it targets `project` (or a value that resolves to AI-PILC)
+2. Read the `Status` field — confirm it shows "Approved" or "Complete"
+3. If both confirm → flag for Mode E intake at Stage 2: "AI-ILC brief detected. Stage 2 will offer the AI-ILC Brief intake mode."
+4. Store in session context: `predecessor_detected: AI-ILC`, `ilc_state_path: {path}`
+5. Proceed to Step 2
+
+**If NOT found → proceed to Step 2** (normal — AI-ILC is optional; its absence is the default path)
+
+> **Lesson 6 (OR-input):** AI-ILC is an optional pre-stage. AI-PILC works identically without it. Detection is informational — it enriches Stage 2's intake options but doesn't change workspace setup.
 
 ---
 

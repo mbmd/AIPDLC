@@ -1,3 +1,10 @@
+---
+generatedBy: AI-GCE
+generatedVersion: "{version}"
+source: "{upstream-steering-file}"
+generatedOn: "{generation-date}"
+ownership: generated
+---
 # Observability Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate observability-related steering files

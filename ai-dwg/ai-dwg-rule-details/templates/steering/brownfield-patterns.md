@@ -1,3 +1,10 @@
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "{upstream-ap-artifact}"
+generatedOn: "{generation-date}"
+ownership: hybrid
+---
 # Template: brownfield-patterns.md (Conditional Steering File)
 
 **Trigger:** AI-ADLC input mode was "Brownfield" (from `adlc-state.md` → `Input Mode: Brownfield`) OR Mode 3 Brownfield Overlay detected existing codebase with legacy integration context.

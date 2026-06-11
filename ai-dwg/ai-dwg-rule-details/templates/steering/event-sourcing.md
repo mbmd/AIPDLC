@@ -1,3 +1,10 @@
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "{upstream-ap-artifact}"
+generatedOn: "{generation-date}"
+ownership: hybrid
+---
 # Template: event-sourcing.md (CONDITIONAL — ADLC Extension)
 
 **Generate IF:** Event Sourcing/CQRS extension was active in AI-ADLC.

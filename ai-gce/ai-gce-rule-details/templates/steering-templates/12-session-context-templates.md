@@ -1,3 +1,10 @@
+---
+generatedBy: AI-GCE
+generatedVersion: "{version}"
+source: "{upstream-steering-file}"
+generatedOn: "{generation-date}"
+ownership: generated
+---
 # Session & Context Management Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate session governance and context management

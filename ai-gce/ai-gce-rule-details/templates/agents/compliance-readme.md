@@ -1,3 +1,10 @@
+---
+generatedBy: AI-GCE
+generatedVersion: "{version}"
+source: "{upstream-steering-file}"
+generatedOn: "{generation-date}"
+ownership: generated
+---
 # COMPLIANCE_README — Template
 
 Generated into `.governance/COMPLIANCE_README.md` in the target workspace.

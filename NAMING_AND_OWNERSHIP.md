@@ -86,7 +86,7 @@ The two approaches are not mutually exclusive. Use each where it fits:
 | **Living steering** (`tech-stack.md`, `coding-standards.md`, `workspace-rules.md`, …) | AI-DWG | Generic name (unchanged — also protects Lesson 14 markers) | **Provenance front-matter (Approach A)** |
 | **Project config** (`.editorconfig`, `docker-compose.yml`, `CODEOWNERS`, operational docs) | AI-DWG | Generic name (ecosystem-standard) | Provenance front-matter where the format allows comments |
 | **Compliance rules** (`.governance/rules/*.md`) | AI-GCE | Generic name **inside the `.governance/` folder** | Folder = tool-owned boundary (Approach B by folder); front-matter for source trace |
-| **Hooks** (`.kiro/hooks/*`) | AI-GCE | Single file convention `*.kiro.hook` | `generatedBy` field inside the JSON |
+| **Hooks** (`.kiro/hooks/*`) | AI-GCE | Standard `.json` extension (Kiro IDE requirement); provenance via `generatedBy` field inside the JSON | `generatedBy` field inside the JSON |
 | **GCE steering enrichments** (`compliance-*.md`) | AI-GCE | Keep `compliance-` prefix (already a meaningful namespace) | Provenance front-matter |
 
 ### 5.2 Provenance front-matter schema (for `.md` artifacts)
@@ -161,10 +161,10 @@ Propagation proceeds per §7.
 |---|------|--------|
 | 1 | Lock the front-matter schema (§5.2) and key names | ✅ Done — schema ratified (2026-06-09); **key names locked camelCase 2026-06-10, Plan Phase 0.4** (`generatedBy/generatedVersion/source/generatedOn/ownership`; `sourceRule→source`) |
 | 2 | Add a "Naming & Ownership" pointer section to `FAMILY_STRUCTURE.md` and annotate PART 2 output trees with `ownership:` markers | ✅ Done (pointer section + ownership map added) |
-| 3 | Add the provenance requirement to each package's rules/README (PILC, ADLC, DWG, GCE) | ⬜ Pending |
-| 4 | Update DWG + GCE templates to emit the front-matter / `generatedBy` field | ⬜ Pending |
-| 5 | Unify GCE hook templates on `*.kiro.hook` + `generatedBy`; update INSTALL and uninstall scripts | ⬜ Pending |
-| 6 | Register any new tables/files per `FAMILY_TABLE_MAP.md` rules | ⬜ Pending |
+| 3 | Add the provenance requirement to each package's rules/README (PILC, ADLC, DWG, GCE) | ✅ Done (2026-06-10, Plan 2.2) — added to all 6 packages: PILC, ADLC, DWG, GCE, ILC, TGE |
+| 4 | Update DWG + GCE templates to emit the front-matter / `generatedBy` field | ✅ Done (2026-06-10, Plan 2.2) — 77 files: 40 DWG templates + 23 GCE templates + 14 hook JSONs |
+| 5 | Unify GCE hook templates on `*.kiro.hook` + `generatedBy`; update INSTALL and uninstall scripts | ✅ Done (2026-06-10, Plan 2.2) — **extension rename SKIPPED** (Kiro requires `.json`; §5.1 updated); provenance achieved via `generatedBy` JSON field (Step 4E) |
+| 6 | Register any new tables/files per `FAMILY_TABLE_MAP.md` rules | ✅ Done (2026-06-10) — verified: no template files carry the family table; no new registrations needed |
 
 ---
 

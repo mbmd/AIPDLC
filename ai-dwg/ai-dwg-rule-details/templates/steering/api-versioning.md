@@ -1,3 +1,10 @@
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "{upstream-ap-artifact}"
+generatedOn: "{generation-date}"
+ownership: hybrid
+---
 # Template: api-versioning.md (CONDITIONAL)
 
 **Generate IF:** API Architecture specifies multi-version strategy or deprecation lifecycle.

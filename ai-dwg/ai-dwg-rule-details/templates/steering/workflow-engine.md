@@ -1,3 +1,10 @@
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "{upstream-ap-artifact}"
+generatedOn: "{generation-date}"
+ownership: hybrid
+---
 # Template: workflow-engine.md (CONDITIONAL)
 
 **Generate IF:** Component Design includes workflow/state-machine component.

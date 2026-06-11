@@ -1,3 +1,10 @@
+---
+generatedBy: AI-GCE
+generatedVersion: "{version}"
+source: "{upstream-steering-file}"
+generatedOn: "{generation-date}"
+ownership: generated
+---
 # Brownfield Baseline — Template
 
 Generated into `.governance/brownfield-baseline.md` when Mode 3 (Brownfield Incremental Adoption) runs.

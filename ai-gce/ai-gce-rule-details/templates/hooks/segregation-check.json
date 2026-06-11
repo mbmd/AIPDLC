@@ -1,4 +1,7 @@
 {
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
   "name": "Segregation of Duties Check",
   "version": "1.0.0",
   "description": "After task completion, reminds that code author ≠ reviewer ≠ deployer. Enforces GOV-ROLE segregation rules.",

@@ -1,4 +1,7 @@
 {
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
   "name": "Test Coverage Check",
   "version": "1.0.0",
   "description": "Tier B (agentStop): After session completes, verifies test coverage meets stated thresholds from testing-strategy.md.",

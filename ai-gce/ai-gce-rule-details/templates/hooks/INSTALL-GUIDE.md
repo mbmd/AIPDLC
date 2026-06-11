@@ -1,3 +1,10 @@
+---
+generatedBy: AI-GCE
+generatedVersion: "{version}"
+source: "ai-gce-rules/core-generator.md"
+generatedOn: "{generation-date}"
+ownership: generated
+---
 # Hook Installation Guide — Template
 
 Generated into `.kiro/hooks/INSTALL-GUIDE.md` in the target workspace. This template is populated with project-specific hooks during AI-GCE generation.

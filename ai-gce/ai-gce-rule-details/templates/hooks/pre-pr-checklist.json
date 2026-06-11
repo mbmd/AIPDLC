@@ -1,4 +1,7 @@
 {
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
   "name": "Pre-PR Quality Checklist",
   "version": "1.0.0",
   "description": "User-triggered: Full PR readiness verification before creating a pull request. Checks governance, tests, naming, API contracts, and segregation.",

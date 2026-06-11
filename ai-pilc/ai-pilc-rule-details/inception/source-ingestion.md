@@ -106,6 +106,55 @@ When the user indicates they are extending, modernizing, or integrating with an 
 
 **Brownfield detection (automatic):** If the user's source document (Mode A/B) mentions phrases like "existing system," "legacy," "migration," "extend the platform," "replace module," "integrate with," or "modernize" — proactively ask: "It sounds like this involves an existing system. Should I treat this as a brownfield extension?" If yes → switch to Mode D behavior.
 
+#### Mode E: AI-ILC Brief (Chain Intake)
+
+When `ilc-state.md` is detected (AI-ILC ran before AI-PILC) or the user says "I have an AI-ILC approved idea brief":
+
+1. Read `ilc-state.md` from the detected/specified location
+2. Extract the Approved Idea Brief fields:
+   - Idea name / ID → pre-populate `{project_name}` suggestion (user can override)
+   - Scope summary → pre-populate problem statement
+   - Approval status → confirm it is "Approved" (reject if "Parked" or "Rejected" — inform user)
+   - Route field → confirm it says `project` (other routes target different packages)
+3. Map the AI-ILC output to AI-PILC intake:
+   - Idea Problem Statement → Source requirement (captures the "what needs solving")
+   - Idea Scope (v1.0) → Initial scope boundaries
+   - Idea Dependencies → Constraints / assumptions seed
+   - Idea Risks → Risk register seed
+4. Save extracted content to: `{output_root}/__input/source_from_ilc_brief.md`
+5. Store in state file:
+   - `Source Document: __input/source_from_ilc_brief.md (from AI-ILC)`
+   - `Originating Idea: {idea_id}` (auto-populated from `ilc-state.md`)
+   - `Intake Mode: AI-ILC Brief`
+6. Present summary for user confirmation:
+   ```
+   📋 AI-ILC Brief Detected
+   
+   Idea: {idea_name} (ID: {idea_id})
+   Status: Approved ✅
+   Route: Project → AI-PILC
+   
+   I've extracted the following from the approved idea:
+   - Problem: {problem summary}
+   - Scope: {scope summary}
+   - Dependencies: {count} identified
+   - Risks: {count} pre-identified
+   
+   This will be used as the source requirement for project initiation.
+   
+   (a) Accept and proceed with this as the source
+   (b) I have additional source material to add alongside
+   (c) Use a different source document instead (ignore the ILC brief)
+   ```
+7. If (a) → proceed to Step 2 with the ILC brief as source
+8. If (b) → accept additional material; merge with ILC brief (ILC brief = primary, additional = supplementary)
+9. If (c) → discard ILC brief; switch to Mode A/B/C; still record `Originating Idea` in state
+10. Proceed to Step 2
+
+**Note for Mode E:** The workflow depth will typically be "Standard" — ILC briefs are structured (they've been through evaluate + scope), so completeness is usually 60-80%. Complexity is assessed from the scope section, not the brief format.
+
+**Lesson 6 (OR-input) compliance:** Mode E is purely ADDITIVE — Modes A/B/C/D remain unchanged. If `ilc-state.md` is detected but the user prefers another mode, they can switch (option c above). The AI-ILC brief is an optional enrichment path, not a requirement.
+
 ---
 
 ### Step 2: Source Characterization

@@ -9,7 +9,7 @@
 **Version:** 1.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
-**Purpose:** Guide a user from a raw idea through a governed pipeline to a defensible go/no-go decision — with a clean, context-rich handoff to the appropriate next step (new project via AI-PILC, feature design via AI-ADLC, or build-ready feature to AI-DLC backlog).
+**Purpose:** Guide a user from a raw idea through a governed pipeline to a defensible go/no-go decision — with a clean, context-rich handoff to the appropriate next step (new project via AI-PILC, feature backlog via AI-POLC, or change request back to AI-PILC change management). When AI-FLO (router) is available, it dispatches; otherwise AI-ILC hands off directly to the target.
 
 **Methodology Alignment:** Stage-gate innovation process / Portfolio management best practices / Lean validation
 **Interaction Model:** Human-in-the-loop at every stage gate; adaptive depth per idea complexity.
@@ -36,9 +36,9 @@
     AI-UXD ───┤
     Design UX │
               ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POG ───┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POG ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POG (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POG (feedback)
+    AI-POLC ──┘     Prepare it       ▲                          
+    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
+                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
 
     AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
     Guard it   Test it
@@ -54,18 +54,18 @@
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
 | Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POG | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POG** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POG) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
 > ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POG**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POG (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POG run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POG consumes** (and AI-POG's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POG ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POG**.
+> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
 
-AI-ILC is the optional front door of the family. Its output (Approved Idea Brief or Change Request Brief) feeds into AI-PILC for new projects and significant changes, or routes small features directly to the AI-DLC backlog.
+AI-ILC is the optional front door of the family. Its output (Approved Idea Brief, Change Request Brief, or Feature Brief) routes via AI-FLO (when available) to the appropriate successor: AI-PILC for new projects and significant changes, AI-POLC for features/backlog items, or AI-DLC as a fallback for small features.
 
 ---
 
@@ -247,11 +247,11 @@ AI-ILC is the optional first entry point. It accepts raw ideas in any format:
 
 No input marker file. No predecessor package.
 
-### I Produce (Successors: AI-PILC / AI-DLC)
+### I Produce (Successors: AI-PILC / AI-POLC / AI-FLO / AI-DLC)
 
 | Aspect | Specification |
 |--------|--------------|
-| **Successors** | AI-PILC (new project OR existing project's change management) / AI-DLC backlog (small feature, no project-level impact) |
+| **Successors** | AI-PILC (new project OR change management) / AI-POLC (feature → product backlog) / AI-FLO (router dispatch, when available) / AI-DLC (small feature fallback) / AI-PPM (portfolio awareness, informational) |
 | **Marker file** | `ilc-state.md` |
 | **Output location** | `{user-chosen path}/` |
 
@@ -262,21 +262,25 @@ No input marker file. No predecessor package.
 | `ilc-state.md` | ✅ Always | State + routing decision + completion status |
 | Idea Register entry | ✅ Always | Idea tracked in portfolio funnel |
 | Decision Log entry | ✅ Always | Go/no-go rationale recorded |
-| `*_Approved_Idea_Brief.md` | ⚠️ Conditional | When route = new project (→ AI-PILC) |
-| `*_Change_Request_Brief.md` | ⚠️ Conditional | When route = big change to existing project (→ AI-PILC change management) |
-| `*_Feature_Brief.md` | ⚠️ Conditional | When route = small feature (→ AI-DLC backlog) |
+| `*_Approved_Idea_Brief.md` | ⚠️ Conditional | When route = `new-project` (→ AI-PILC) |
+| `*_Change_Request_Brief.md` | ⚠️ Conditional | When route = `change-request` (→ AI-PILC change management) |
+| `*_Feature_Brief.md` | ⚠️ Conditional | When route = `feature` (→ AI-POLC / fallback AI-DLC) |
 | `*_GoNoGo_Decision_Record.md` | ✅ Always | Formal decision with rationale (approve/park/reject) |
 
 **State file fields successors read:**
 - `Status`: Must be `Routed` for handoff (terminal success state — set when the brief is produced)
-- `Route`: `new-project` / `change-request` / `feature-backlog`
+- `Route`: `new-project` / `change-request` / `feature` / `portfolio-inform`
 - `Depth Level`: Indicates richness of brief content
 - `Idea Name`: Used as starting context by successor
+- `Project ID`: If routing to an existing project, carries the target project's ID (for AI-PPM correlation)
 
-**Successor detection:**
-- AI-PILC looks for `ilc-state.md` where `Route = new-project`; consumes `Approved_Idea_Brief.md` as one of its adaptive intake modes
-- AI-PILC looks for `ilc-state.md` where `Route = change-request`; consumes `Change_Request_Brief.md` and routes it through its change management registers
-- AI-DLC backlog receives `Feature_Brief.md` where `Route = feature-backlog`
+**Successor detection (forward-compatible — Lesson 6):**
+- **`Route = new-project`:** AI-FLO dispatches to AI-PILC (if AI-FLO available) → fallback: AI-PILC directly reads `ilc-state.md` and consumes `Approved_Idea_Brief.md` via Mode E intake
+- **`Route = change-request`:** AI-PILC consumes `Change_Request_Brief.md` and routes through its change management registers
+- **`Route = feature`:** AI-POLC consumes `Feature_Brief.md` into the Product Backlog Package (if AI-POLC available) → fallback: AI-DLC backlog receives `Feature_Brief.md` directly
+- **`Route = portfolio-inform`:** AI-PPM is notified of the new project/feature for portfolio register awareness (if AI-PPM available) → fallback: informational only (no action if AI-PPM absent)
+
+> **Forward-compatibility (Lesson 6):** AI-FLO, AI-POLC, and AI-PPM are pending build. Until they exist, routing falls through to the direct successor (AI-PILC for projects, AI-DLC for features). Once built, AI-FLO becomes the preferred dispatch layer and AI-POLC becomes the preferred feature intake. The `Route` field in `ilc-state.md` carries the *intent*; the consuming package resolves the *target* based on what's available.
 
 ### Contract Principles
 
@@ -286,12 +290,14 @@ No input marker file. No predecessor package.
 | **User owns WHERE** | User picks output folder; ILC defines WHAT files exist |
 | **Graceful standalone** | Every successor works without AI-ILC (all accept raw input directly) |
 | **Additive to AI-PILC** | AI-PILC keeps ALL existing intake modes; "AI-ILC brief" and "AI-ILC change request" are additional optional inputs (Lesson 6) |
+| **Forward-compatible routing** | Route values target packages that may not exist yet; fallback logic ensures handoff always succeeds (Lesson 6) |
 | **Single-project context** | v1.0 operates within one project per workspace |
 | **AI-ADLC is never a direct target** | If architecture needs rework, that flows THROUGH AI-PILC change management → AI-ADLC (not directly from AI-ILC) |
+| **AI-POLC preferred for features** | Feature ideas go to AI-POLC (product backlog owner) when available; AI-DLC is the fallback (Lesson 6 OR-input) |
 
-### Portfolio Connector (v1.0 = interface stub)
+### Portfolio Connector (v1.0 = informational awareness)
 
-When routing a feature, AI-ILC delivers to the project present in the workspace. Multi-project routing (finding and selecting from multiple projects) is a **v1.1+ capability** that will consume this connector interface.
+When a new project is approved, AI-ILC emits `Route = new-project` + optionally `portfolio-inform`. If AI-PPM is available, it reads the approved idea brief and registers the new project in the portfolio. If AI-PPM is absent, the `portfolio-inform` route is a no-op (informational intent, no blocking). Multi-project routing (finding and selecting from multiple projects) is a **v1.1+ capability** that will consume the AI-FLO router.
 
 ### Downstream Signal
 
@@ -477,28 +483,34 @@ Ready to shape this idea. Continue? [Yes / Adjust depth / Stop here]
 1. Load `idea-lifecycle/route-handoff.md` for detailed steps
 2. Determine routing (impact-driven):
 
-| Question | Answer | Route |
-|----------|--------|-------|
-| Does a project exist for this idea? | **No** — it's a new initiative | → **New Project** (AI-PILC) |
-| Does a project exist? | **Yes** — and the idea is a **BIG** change (impacts project scope, success criteria, or architecture) | → **Change Request** (AI-PILC change management) |
-| Does a project exist? | **Yes** — and the idea is a **SMALL** change (no impact on project criteria or architecture) | → **Feature Backlog** (AI-DLC backlog) |
+| Question | Answer | Route | Preferred Target | Fallback (if target absent) |
+|----------|--------|-------|------------------|-----------------------------|
+| Does a project exist for this idea? | **No** — it's a new initiative | `new-project` | AI-FLO → AI-PILC | AI-PILC directly |
+| Does a project exist? | **Yes** — and the idea is a **BIG** change (impacts scope, success criteria, or architecture) | `change-request` | AI-PILC change management | *(always available)* |
+| Does a project exist? | **Yes** — and the idea is a **SMALL** change (no project-level impact) | `feature` | AI-POLC (Product Backlog Package) | AI-DLC backlog |
 
 3. For the "project exists" path, perform a **lightweight impact assessment** (not a full feasibility study — AI-PILC handles the deep analysis):
    - Does this change the project's stated objectives or success criteria?
    - Does this alter the architecture significantly (new components, changed contracts, security model changes)?
    - Does this require budget/resource re-allocation beyond the current plan?
-   - If ANY answer is "yes" → BIG change (→ AI-PILC change management)
-   - If ALL answers are "no" → SMALL change (→ AI-DLC backlog as a new feature)
-4. Ask user to confirm routing decision
-5. Produce the appropriate brief:
-   - **New Project route:** Generate `Approved_Idea_Brief.md` (enriched raw requirement shaped for AI-PILC's intake)
-   - **Change Request route:** Generate `Change_Request_Brief.md` (shaped for AI-PILC's change management registers — includes impact assessment results)
-   - **Feature Backlog route:** Generate `Feature_Brief.md` (shaped for AI-DLC backlog — clear, bounded, ready to implement)
+   - If ANY answer is "yes" → BIG change → route = `change-request`
+   - If ALL answers are "no" → SMALL change → route = `feature`
+4. **Portfolio awareness:** If route = `new-project`, additionally set `portfolio-inform` flag so AI-PPM (if available) registers the new project in the portfolio. This is informational — it does not block the primary route.
+5. Ask user to confirm routing decision
+6. Produce the appropriate brief:
+
+> **Key design decision: forward-compatible routing.** Routes declare intent for packages that don't exist yet, with graceful fallback to existing packages (Lesson 6). No package breaks if AI-FLO/AI-POLC/AI-PPM are absent — the route value carries the *intent*; the consuming layer resolves the *target* based on what's available in the workspace.
+
+   - **`new-project` route:** Generate `Approved_Idea_Brief.md` (enriched raw requirement shaped for AI-PILC's intake Mode E)
+   - **`change-request` route:** Generate `Change_Request_Brief.md` (shaped for AI-PILC's change management registers — includes impact assessment results)
+   - **`feature` route:** Generate `Feature_Brief.md` (shaped for AI-POLC product backlog intake; fallback: AI-DLC backlog — clear, bounded, ready to elaborate)
 6. The brief carries forward ALL context from shaping + evaluation + scope — no information loss at handoff
 7. Update state file:
    - Status = Routed (terminal — workflow complete)
-   - Route = {new-project / change-request / feature-backlog}
+   - Route = {new-project / change-request / feature}
+   - Portfolio Inform = {true / false}
    - Brief file = {filename}
+   - Target Project ID = {project_id, if routing to an existing project; else "new"}
 8. Update Idea Register: status = Routed, route = {destination}
 9. Log routing decision in Decision Log
 10. Present completion message:
@@ -534,6 +546,23 @@ Idea Register and Decision Log updated. Audit trail complete.
 7. **Dynamic expertise.** The right persona leads each stage; the idea's domain pulls in the right support. No one-size-fits-all voice.
 8. **Parked is not dead.** Parked ideas have a revisit date and stay in the register. They re-enter the pipeline when conditions change.
 
+### Provenance Requirement (NAMING_AND_OWNERSHIP.md §5.2/§5.3)
+
+All output files generated by this package MUST include provenance front-matter:
+
+**For `.md` artifacts:**
+```yaml
+---
+generatedBy: AI-ILC
+generatedVersion: {version}
+source: {upstream-doc-path}
+generatedOn: {ISO-date}
+ownership: generated | hybrid | user
+---
+```
+
+Templates use `{placeholder}` syntax for these fields. See `ai-packages/NAMING_AND_OWNERSHIP.md` §5.2–§5.3 for full schema and ownership values.
+
 ---
 
 # CONDITIONAL GENERATION MAP (Lesson 7)
@@ -546,7 +575,7 @@ Idea Register and Decision Log updated. Audit trail complete.
 | `*_GoNoGo_Decision_Record.md` | ✅ Always | Created at Approve (even for Park/Reject) |
 | `*_Approved_Idea_Brief.md` | ⚠️ Conditional | Only when Route = new-project |
 | `*_Change_Request_Brief.md` | ⚠️ Conditional | Only when Route = change-request (big change to existing project) |
-| `*_Feature_Brief.md` | ⚠️ Conditional | Only when Route = feature-backlog (small change, no project impact) |
+| `*_Feature_Brief.md` | ⚠️ Conditional | Only when Route = feature (small change, no project impact) |
 
 ---
 
@@ -560,7 +589,7 @@ Idea Register and Decision Log updated. Audit trail complete.
 ├── {Idea_Name}_GoNoGo_Decision_Record.md  ← Formal decision artifact (always)
 ├── {Idea_Name}_Approved_Idea_Brief.md  ← IF route = new-project
 ├── {Idea_Name}_Change_Request_Brief.md ← IF route = change-request (big change)
-└── {Idea_Name}_Feature_Brief.md        ← IF route = feature-backlog (small change)
+└── {Idea_Name}_Feature_Brief.md        ← IF route = feature (small change)
 ```
 
 ---

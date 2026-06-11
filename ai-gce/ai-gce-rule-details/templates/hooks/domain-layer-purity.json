@@ -1,4 +1,7 @@
 {
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
   "name": "Domain Layer Purity Check",
   "version": "1.0.0",
   "description": "Tier B (agentStop): Verifies domain layer has no infrastructure dependencies. Fires after session — intermediate states may have temporary imports.",

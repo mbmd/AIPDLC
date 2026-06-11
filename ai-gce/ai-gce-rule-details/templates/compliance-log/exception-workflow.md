@@ -1,3 +1,10 @@
+---
+generatedBy: AI-GCE
+generatedVersion: "{version}"
+source: "{upstream-steering-file}"
+generatedOn: "{generation-date}"
+ownership: generated
+---
 # Exception Workflow — Template
 
 Generated into `.governance/compliance-log/exception-workflow.md` in the target workspace.

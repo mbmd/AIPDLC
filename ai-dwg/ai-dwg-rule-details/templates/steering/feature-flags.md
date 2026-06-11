@@ -1,3 +1,10 @@
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "{upstream-ap-artifact}"
+generatedOn: "{generation-date}"
+ownership: hybrid
+---
 # Template: feature-flags.md (CONDITIONAL — ADLC Extension)
 
 **Generate IF:** Feature Flags extension was active in AI-ADLC.

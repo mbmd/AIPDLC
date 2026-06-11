@@ -1,3 +1,10 @@
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "{upstream-ap-artifact}"
+generatedOn: "{generation-date}"
+ownership: hybrid
+---
 # Template: multi-tenancy.md (CONDITIONAL)
 
 **Generate IF:** AP contains Multi-Tenancy Architecture document.

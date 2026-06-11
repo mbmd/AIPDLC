@@ -79,7 +79,7 @@
 - **22 content files total** now carry the reshaped canonical (verified: `grep "PORTFOLIO LAYER"`).
 
 **AI-UXD canonical top-up (2026-06-10, Plan 1.5 / OI-028):**
-- The canonical was later extended to add **AI-UXD** (new Project-layer row, `AI-UXD ───┤` diagram node + `AI-UXD ⇢ AI-POG … AI-DLC ⇢ AI-UXD+AI-POG (feedback)` line, AI-DWG input `AP + PBP` → `AP + PBP + UXP`, footnote ³ expanded).
+- The canonical was later extended to add **AI-UXD** (new Project-layer row, `AI-UXD ───┤` diagram node + `AI-UXD ⇢ AI-POLC … AI-DLC ⇢ AI-UXD+AI-POLC (feedback)` line, AI-DWG input `AP + PBP` → `AP + PBP + UXP`, footnote ³ expanded).
 - Re-propagated verbatim to the same **22 content files** (20 full-table + 2 diagram-only) — verified line-exact: AI-UXD diagram node = 1, Design UX line = 1, feedback line = 1 in every file; AI-UXD table row = 1 and zero bare `| AP + PBP |` in all 20 full-table files.
 - **#26** (`ai-tge/ai-tge-rules/core-engine.md`) was authored already-current in Plan 1.4 — **excluded** from the top-up (not re-touched).
 - AI-TGE's **bespoke** companion sub-diagram in #19 (`### AI-TGE Position (Companion Pattern)`) was left untouched (already UXD-correct from OI-019/Plan 1.3).
@@ -114,10 +114,10 @@ files do not exist yet and will be added to the numbered registry above **as eac
 |---------|-------|--------|----------|
 | **AI-PPM** | Portfolio | Pending build | idea 007 (registered) |
 | **AI-FLO** | Edge (router) | Pending build | idea 008 (registered) |
-| **AI-POG** | Project | Pending build | idea 006 (Shaped) |
+| **AI-POLC** | Project | Pending build | idea 006 (Shaped) |
 | **AI-UXD** | Project | Pending build | idea 010 (Approved) |
 
-> **AI-UXD** was added to the canonical Project layer on 2026-06-10 (idea 010 approved) as a fourth pending package — separate from the reshape's original three. It runs parallel to AI-ADLC/AI-POG, produces personas/journeys consumed by AI-POG, feeds AI-DWG (design system → `frontend-standards.md` + new `design-system.md`) and AI-GCE (accessibility baseline → new `accessibility-compliance` rule), and receives AI-DLC feedback. Its table-bearing files will be added to the numbered registry as built.
+> **AI-UXD** was added to the canonical Project layer on 2026-06-10 (idea 010 approved) as a fourth pending package — separate from the reshape's original three. It runs parallel to AI-ADLC/AI-POLC, produces personas/journeys consumed by AI-POLC, feeds AI-DWG (design system → `frontend-standards.md` + new `design-system.md`) and AI-GCE (accessibility baseline → new `accessibility-compliance` rule), and receives AI-DLC feedback. Its table-bearing files will be added to the numbered registry as built.
 
 > **AI-TGE** already has a registry entry (#19, process-overview) and is now reflected in the
 > canonical Project layer. Its remaining table-bearing files follow the standard build flow.
@@ -165,9 +165,9 @@ Portfolio layer reasons across MANY projects; the Project layer executes ONE pro
     AI-UXD ───┤
     Design UX │
               ├──►  AI-DWG  ──►  AI-DLC (build) ¹
-    AI-POG ───┘     Prepare it       ▲
-    Own it      └───────────────────┘  AI-POG ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POG (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POG (feedback)
+    AI-POLC ──┘     Prepare it       ▲
+    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
+                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
 
     AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
     Guard it   Test it
@@ -183,17 +183,17 @@ Portfolio layer reasons across MANY projects; the Project layer executes ONE pro
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
 | Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POG | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POG** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POG) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
 > ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POG**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POG (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POG run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POG consumes** (and AI-POG's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POG ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POG**.
+> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
 
 ---
 
-*Created: 2026-06-07 | Last Updated: 2026-06-10 (added AI-UXD to canonical Project layer — idea 010 approved; reshaped into Portfolio + Project layers; added AI-PPM, AI-FLO, AI-POG, AI-TGE to canonical — see open items for propagation)*
+*Created: 2026-06-07 | Last Updated: 2026-06-10 (added AI-UXD to canonical Project layer — idea 010 approved; reshaped into Portfolio + Project layers; added AI-PPM, AI-FLO, AI-POLC, AI-TGE to canonical — see open items for propagation)*

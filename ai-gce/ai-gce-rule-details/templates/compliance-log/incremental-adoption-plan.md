@@ -1,3 +1,10 @@
+---
+generatedBy: AI-GCE
+generatedVersion: "{version}"
+source: "{upstream-steering-file}"
+generatedOn: "{generation-date}"
+ownership: generated
+---
 # Incremental Adoption Plan — Template
 
 Generated into `.governance/incremental-adoption-plan.md` when Mode 3 (Brownfield) runs.

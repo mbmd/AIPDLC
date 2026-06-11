@@ -1,3 +1,10 @@
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "{upstream-ap-artifact}"
+generatedOn: "{generation-date}"
+ownership: hybrid
+---
 # Template: performance-standards.md (CONDITIONAL)
 
 **Generate IF:** Quality Attributes include specific latency targets (p95/p99 SLOs).

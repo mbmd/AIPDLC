@@ -1,4 +1,7 @@
 {
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
   "name": "API Contract Check",
   "version": "1.0.0",
   "description": "When a controller/endpoint file is created, verifies an API contract (OpenAPI spec) exists first. Enforces contract-before-implementation.",

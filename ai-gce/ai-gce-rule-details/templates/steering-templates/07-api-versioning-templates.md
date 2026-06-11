@@ -1,3 +1,10 @@
+---
+generatedBy: AI-GCE
+generatedVersion: "{version}"
+source: "{upstream-steering-file}"
+generatedOn: "{generation-date}"
+ownership: generated
+---
 # API Versioning Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate API versioning steering files

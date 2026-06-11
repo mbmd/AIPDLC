@@ -1,4 +1,7 @@
 {
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
   "name": "Sensitive Data & Secret Detection",
   "version": "1.0.0",
   "description": "Tier A (fileEdited): Checks for hardcoded secrets and PII in code. Fires immediately — a secret in code is dangerous from the moment it's written.",

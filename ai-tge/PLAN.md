@@ -53,7 +53,7 @@ AI-DLC builds software but has no structured test governance. It generates test 
 
     AI-ADLC ─┐
     AI-UXD  ─┼─►  AI-DWG  ─►  AI-DLC (build) ¹
-    AI-POG  ─┘                    ▲
+    AI-POLC  ─┘                    ▲
                                   │ observes
     AI-GCE  +  AI-TGE  ── alongside AI-DLC (continuous quality) ──►
     Guard it   Test it
