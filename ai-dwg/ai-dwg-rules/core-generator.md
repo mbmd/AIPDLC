@@ -235,7 +235,7 @@ Proceed with reduced coverage? (User must explicitly approve)
 
 **Detection logic:**
 
-1. **Check package installation:** For each of {ADLC, POLC, UXD}, verify if the package's steering rules are installed in the workspace (i.e., the corresponding `ai-*-rules/` folder or kiro-setup exists).
+1. **Check package installation:** For each of {ADLC, POLC, UXD}, verify if the package's steering rules are installed in the workspace (i.e., the corresponding `ai-*-rules/` folder or setup exists).
 2. **Check output presence:** For each installed package, check whether its output marker (`adlc-state.md`, `polc-state.md`, `uxd-state.md`) exists for the current project.
 3. **Classify each peer:**
    - ✅ **Present** — marker found, output ready for consumption

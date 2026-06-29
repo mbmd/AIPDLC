@@ -101,7 +101,7 @@ Install each package one at a time — adding a package never requires reinstall
 
 ### 3. Each package picks its own AI platform
 
-Compatibility is **per package, not suite-wide**. Every package ships its own `kiro-setup/INSTALL.md` with platform-specific setup, so you can run different packages on different assistants in the same workspace if you want. Supported targets per package:
+Compatibility is **per package, not suite-wide**. Every package ships its own `setup/INSTALL.md` with platform-specific setup, so you can run different packages on different assistants in the same workspace if you want. Supported targets per package:
 
 - **Kiro** (VS Code-based)
 - **Amazon Q Developer**
@@ -198,12 +198,12 @@ When used in the chain, each package detects its predecessor's output markers an
 
 | Platform | Supported | Install Guide |
 |----------|:---------:|:-------------:|
-| Kiro | ✅ | Each package's `kiro-setup/INSTALL.md` |
-| Amazon Q Developer | ✅ | Each package's `kiro-setup/INSTALL.md` |
-| Cursor | ✅ | Each package's `kiro-setup/INSTALL.md` |
-| Cline | ✅ | Each package's `kiro-setup/INSTALL.md` |
-| Claude Code | ✅ | Each package's `kiro-setup/INSTALL.md` |
-| GitHub Copilot | ⚠️ Partial | Each package's `kiro-setup/INSTALL.md` (workspace-level instructions only) |
+| Kiro | ✅ | Each package's `setup/INSTALL.md` |
+| Amazon Q Developer | ✅ | Each package's `setup/INSTALL.md` |
+| Cursor | ✅ | Each package's `setup/INSTALL.md` |
+| Cline | ✅ | Each package's `setup/INSTALL.md` |
+| Claude Code | ✅ | Each package's `setup/INSTALL.md` |
+| GitHub Copilot | ⚠️ Partial | Each package's `setup/INSTALL.md` (workspace-level instructions only) |
 | Any other platform | ✅ | Universal Setup section in each `INSTALL.md` |
 
 > Compatibility is per package — every package ships the same platform coverage. For unlisted IDEs, follow the **Universal Setup** steps: place `core-workflow.md` where your AI reads always-loaded steering and `*-rule-details/` where the workflow can resolve it.

@@ -42,13 +42,13 @@
 | 37 | `ai-flo/ai-flo-rules/core-engine.md` | ✅ | ✅ | ✅ |
 | 41 | `ai-dfe/ai-dfe-rules/core-engine.md` | ✅ | ✅ (pending WFO_S01 diagram-only conversion) | ✅ |
 
-> **Note (2026-06-11, Step 5.3):** #28/#29/#30 added — AI-POLC built and test-validated (TR-016/102/301/501 all PASS). All three files authored with the **current AI-UXD-inclusive canonical** (verified during TR-016 Phase 1.2). AI-POLC ships `kiro-setup/INSTALL.md` only — no kiro-setup steering mirror (consistent with AI-DWG/AI-GCE/AI-TGE/AI-ILC).
+> **Note (2026-06-11, Step 5.3):** #28/#29/#30 added — AI-POLC built and test-validated (TR-016/102/301/501 all PASS). All three files authored with the **current AI-UXD-inclusive canonical** (verified during TR-016 Phase 1.2). AI-POLC ships `setup/INSTALL.md` only — no setup steering mirror (consistent with AI-DWG/AI-GCE/AI-TGE/AI-ILC).
 
-> **Note (2026-06-11, AI-PPM build):** #31/#32/#33 added — AI-PPM built and structural dry test PASSED (7/7 phases, zero failures). All three files authored with the **current AI-UXD-inclusive canonical**. AI-PPM ships `kiro-setup/INSTALL.md` only — no kiro-setup steering mirror (consistent with newer packages).
+> **Note (2026-06-11, AI-PPM build):** #31/#32/#33 added — AI-PPM built and structural dry test PASSED (7/7 phases, zero failures). All three files authored with the **current AI-UXD-inclusive canonical**. AI-PPM ships `setup/INSTALL.md` only — no setup steering mirror (consistent with newer packages).
 
-> **Note (2026-06-12, AI-UXD build):** #34/#35 added — AI-UXD built (42 files; 5 phases / 16 stages / 15 templates / 1 agent). Both files authored with the **current canonical**. AI-UXD ships `kiro-setup/INSTALL.md` only. Process-overview does NOT contain the family table (only internal workflow diagram) — therefore not registered.
+> **Note (2026-06-12, AI-UXD build):** #34/#35 added — AI-UXD built (42 files; 5 phases / 16 stages / 15 templates / 1 agent). Both files authored with the **current canonical**. AI-UXD ships `setup/INSTALL.md` only. Process-overview does NOT contain the family table (only internal workflow diagram) — therefore not registered.
 
-> **Note (2026-06-12, AI-FLO build):** #36/#37 added — AI-FLO built (30 files; 3 phases / 10 stages / 9 templates / 1 agent). Both files authored with the **current canonical**. AI-FLO ships `kiro-setup/INSTALL.md` only. Process-overview does NOT contain the family table — not registered. Footnote ³ updated (AI-FLO is now built; no pending packages remain).
+> **Note (2026-06-12, AI-FLO build):** #36/#37 added — AI-FLO built (30 files; 3 phases / 10 stages / 9 templates / 1 agent). Both files authored with the **current canonical**. AI-FLO ships `setup/INSTALL.md` only. Process-overview does NOT contain the family table — not registered. Footnote ³ updated (AI-FLO is now built; no pending packages remain).
 
 > **Note (2026-06-10, OI-027 / Plan 1.4):** #26 added — AI-TGE core file previously lacked the family table (gap). It was authored directly with the **current AI-UXD-inclusive canonical** (`AP+PBP+UXP`, AI-UXD row, footnote ³). It is therefore **ahead** of the 22 files awaiting the Step 1.5 AI-UXD top-up — Step 1.5 should treat #26 as already-current and not re-touch it.
 
@@ -103,7 +103,7 @@
 
 ## Total: 39 registry entries
 
-> **Count note (2026-06-27):** Highest entry ID is now #41 (`ai-dfe/ai-dfe-rules/core-engine.md`). Actual count = **39** because #14 (internal file — de-registered DISC-001) and #23 (`ai-ilc/.../kiro-setup/.../core-workflow.md`, non-existent — de-registered OI-022) are both removed (41 IDs − 2 de-registered = 39). AI-DFE added 2 entries (#40 README, #41 core-engine) without changing the canonical table (alongside-engine, E3-A).
+> **Count note (2026-06-27):** Highest entry ID is now #41 (`ai-dfe/ai-dfe-rules/core-engine.md`). Actual count = **39** because #14 (internal file — de-registered DISC-001) and #23 (`ai-ilc/.../setup/.../core-workflow.md`, non-existent — de-registered OI-022) are both removed (41 IDs − 2 de-registered = 39). AI-DFE added 2 entries (#40 README, #41 core-engine) without changing the canonical table (alongside-engine, E3-A).
 
 **OI-018 reshape propagation (2026-06-10):**
 - **20** full canonical-table files updated to the reshaped two-layer table (#1–15, #18, #19, #21, #22, #24).
@@ -116,10 +116,10 @@
 - **#26** (`ai-tge/ai-tge-rules/core-engine.md`) was authored already-current in Plan 1.4 — **excluded** from the top-up (not re-touched).
 - AI-TGE's **bespoke** companion sub-diagram in #19 (`### AI-TGE Position (Companion Pattern)`) was left untouched (already UXD-correct from OI-019/Plan 1.3).
 - **2** special-handling files (see table below): #20 (historical snapshot — pointer added), #25 (bespoke companion diagram — deferred to OI-019).
-- **De-registered:** former #23 (AI-ILC kiro-setup mirror) — does not exist; AI-ILC ships INSTALL-only (OI-022).
+- **De-registered:** former #23 (AI-ILC setup mirror) — does not exist; AI-ILC ships INSTALL-only (OI-022).
 - Old linear diagram intentionally retained in: the internal build assessment snapshot (excluded), `ai-ilc/PLAN.md` §4.1 (historical), and an archival idea record.
 
-> **Note:** Files #20–24 are AI-ILC's. #20 (PLAN.md) exists (historical snapshot); #21/#22/#24 updated to the reshaped canonical; **#23 de-registered (2026-06-10, OI-022)** — AI-ILC ships INSTALL-only kiro-setup, no steering mirror (consistent with AI-DWG/AI-GCE/AI-TGE). AI-ILC was added to the canonical chain as an optional pre-stage on 2026-06-08 (idea 002, approved).
+> **Note:** Files #20–24 are AI-ILC's. #20 (PLAN.md) exists (historical snapshot); #21/#22/#24 updated to the reshaped canonical; **#23 de-registered (2026-06-10, OI-022)** — AI-ILC ships INSTALL-only setup, no steering mirror (consistent with AI-DWG/AI-GCE/AI-TGE). AI-ILC was added to the canonical chain as an optional pre-stage on 2026-06-08 (idea 002, approved).
 > **#25** (`ai-tge/PLAN.md`) added to the registry 2026-06-10; reclassified as bespoke companion diagram (no canonical table).
 
 ### Intentionally Excluded (not propagation targets)
@@ -134,7 +134,7 @@
 | File | # | Treatment |
 |------|---|-----------|
 | `ai-ilc/PLAN.md` | 20 | **Historical snapshot.** Its §4.1 table documents the AI-ILC *addition* proposal (linear canonical). Table NOT overwritten; a "SUPERSEDED" pointer to the reshaped canonical was added instead (same principle as the excluded assessment file). |
-| `ai-ilc/.../kiro-setup/.../core-workflow.md` | ~~23~~ | **De-registered (OI-022, 2026-06-10).** Does not exist; AI-ILC ships INSTALL-only kiro-setup (no steering mirror), consistent with AI-DWG/AI-GCE/AI-TGE. Only AI-PILC (#9) and AI-ADLC (#10) pre-stage a mirror. |
+| `ai-ilc/.../setup/.../core-workflow.md` | ~~23~~ | **De-registered (OI-022, 2026-06-10).** Does not exist; AI-ILC ships INSTALL-only setup (no steering mirror), consistent with AI-DWG/AI-GCE/AI-TGE. Only AI-PILC (#9) and AI-ADLC (#10) pre-stage a mirror. |
 | `ai-tge/PLAN.md` | 25 | **Bespoke companion diagram, not the canonical table.** Carries the "Family Position (Companion Pattern)" illustration showing AI-TGE alongside the chain. Redraw for the reshaped (two-layer) topology is deferred to **OI-019** (AI-GCE/AI-TGE repositioning), not OI-018. |
 | `ai-tge/ai-tge-rule-details/common/process-overview.md` | 19 | Main canonical table updated (OI-018 ✅). It ALSO has a bespoke companion sub-diagram lower down → redraw deferred to **OI-019**. |
 

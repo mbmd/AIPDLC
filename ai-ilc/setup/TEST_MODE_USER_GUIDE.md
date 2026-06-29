@@ -391,4 +391,4 @@ The templates are available in the package source at `the package source under t
 ---
 
 *User Guide Version: 1.0 | Part of the AI-* Family Test Feedback Pipeline*
-*This guide ships with every AI-* package in `kiro-setup/TEST_MODE_USER_GUIDE.md`*
+*This guide ships with every AI-* package in `setup/TEST_MODE_USER_GUIDE.md`*
