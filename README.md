@@ -237,4 +237,4 @@ See [LICENSE](./LICENSE) and [NOTICE](./NOTICE) for full terms.
 
 ---
 
-*Part of [AIFLC](../README.md) — AI Full Life Cycle · The AI-* PDLC Family · See the [AIFLC Roadmap](../ROADMAP.md)*
+*Part of [AIFLC](https://github.com/mbmd/AIFLC) — AI Full Life Cycle · The AI-* PDLC Family · See the [AIFLC Roadmap](https://github.com/mbmd/AIFLC/blob/main/ROADMAP.md)*
