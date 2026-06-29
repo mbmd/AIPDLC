@@ -8,7 +8,7 @@ If you discover a security vulnerability in the AI-* Family packages, please rep
 
 ### How to Report
 
-Send an email to: **[mohammad.maheri@outlook.com](mailto:mohammad.maheri@outlook.com)**
+Send an email to: **[mohammad.maheri.work@gmail.com](mailto:mohammad.maheri.work@gmail.com)**
 
 Include:
 - Description of the vulnerability

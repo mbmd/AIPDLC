@@ -57,7 +57,7 @@ The source of truth remains the build workspace (`{build_workspace}/`). The publ
 ## Contact for Emergencies
 
 - GitHub Issues (primary)
-- Email: mohammad.maheri@outlook.com
+- Email: mohammad.maheri.work@gmail.com
 - LinkedIn: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 
 ---
