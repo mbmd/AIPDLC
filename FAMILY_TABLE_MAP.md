@@ -39,7 +39,7 @@
 | 29 | `ai-polc/ai-polc-rules/core-workflow.md` | ✅ | ✅ | ✅ |
 | 32 | `ai-ppm/ai-ppm-rules/core-engine.md` | ✅ | ✅ | ✅ |
 | 35 | `ai-uxd/ai-uxd-rules/core-workflow.md` | ✅ | ✅ | ✅ |
-| 37 | `ai-flo/ai-flo-rules/core-engine.md` | ✅ | ✅ | ✅ |
+| 37 | `ai-flo/ai-flo-rules/core-engine.md` | ✅ | ❌ (diagram-only — WFO_S01 converted) | ❌ |
 | 41 | `ai-dfe/ai-dfe-rules/core-engine.md` | ✅ | ✅ (pending WFO_S01 diagram-only conversion) | ✅ |
 
 > **Note (2026-06-11, Step 5.3):** #28/#29/#30 added — AI-POLC built and test-validated (TR-016/102/301/501 all PASS). All three files authored with the **current AI-UXD-inclusive canonical** (verified during TR-016 Phase 1.2). AI-POLC ships `setup/INSTALL.md` only — no setup steering mirror (consistent with AI-DWG/AI-GCE/AI-TGE/AI-ILC).
@@ -97,7 +97,7 @@
 | 30 | `ai-polc/ai-polc-rule-details/common/process-overview.md` | ✅ | ✅ | ✅ |
 | 33 | `ai-ppm/ai-ppm-rule-details/common/process-overview.md` | ✅ | ✅ | ✅ |
 
-> **Note (2026-06-27, AI-DFE build / Phase E3):** #40 (`ai-dfe/README.md`) + #41 (`ai-dfe/ai-dfe-rules/core-engine.md`) added. **AI-DFE is NOT added as a row to the canonical Package/Type/Input/Output table** — like AI-FLO, it is a continuous engine that operates *alongside* the whole family (it reads every package's marker as a gather trigger; it has no single Input→Output chain cell). It is represented by the existing "AI-DFE's role relative to the table" explanatory note carried beneath the verbatim table in its own files (decision E3-A, 2026-06-27). Both files reproduce the **current 11-row canonical verbatim** + the AI-DFE role note; they are registered here as diagram+table propagation targets. The core (#41) still carries the full table and is a **pending WFO_S01 diagram-only conversion** target (tracked by `WFO_FAMILY_ROLLOUT_PLAN.md`), consistent with the other un-converted cores (e.g. #37 AI-FLO).
+> **Note (2026-06-27, AI-DFE build / Phase E3):** #40 (`ai-dfe/README.md`) + #41 (`ai-dfe/ai-dfe-rules/core-engine.md`) added. **AI-DFE is NOT added as a row to the canonical Package/Type/Input/Output table** — like AI-FLO, it is a continuous engine that operates *alongside* the whole family (it reads every package's marker as a gather trigger; it has no single Input→Output chain cell). It is represented by the existing "AI-DFE's role relative to the table" explanatory note carried beneath the verbatim table in its own files (decision E3-A, 2026-06-27). Both files reproduce the **current 11-row canonical verbatim** + the AI-DFE role note; they are registered here as diagram+table propagation targets. The core (#41) still carries the full table and is a **pending WFO_S01 diagram-only conversion** target (tracked by `WFO_FAMILY_ROLLOUT_PLAN.md`), consistent with the WFO_S01 diagram-only conversion approach (#37 AI-FLO is already converted to diagram-only — see its row above).
 
 ---
 
@@ -229,4 +229,4 @@ Portfolio layer reasons across MANY projects; the Project layer executes ONE pro
 
 ---
 
-*Created: 2026-06-07 | Last Updated: 2026-06-18 (OI-114 Phase 1: canonical diagram + table + footnote ³ updated from parallel to sequential topology — POLC→UXD→ADLC→DWG; Input columns corrected: POLC=PIP, UXD=PIP+PBP, ADLC=PIP+PBP+UXP; DWG semantics note updated for sequential guarantee; row order corrected to match execution sequence; total 38 entries)*
+*Created: 2026-06-07 | Last Updated: 2026-06-18 (OI-114 Phase 1: canonical diagram + table + footnote ³ updated from parallel to sequential topology — POLC→UXD→ADLC→DWG; Input columns corrected: POLC=PIP, UXD=PIP+PBP, ADLC=PIP+PBP+UXP; DWG semantics note updated for sequential guarantee; row order corrected to match execution sequence; total 39 entries)*

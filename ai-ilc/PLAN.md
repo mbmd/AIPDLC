@@ -3,7 +3,6 @@
 **Package:** AI-ILC — AI-Driven Idea Life Cycle
 **Version (target):** 1.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
-**Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
 **Source idea:** Approved internal idea record (retained in the package-development environment; score 30/35)
 **Status:** ✅ Complete — package fully built (core-workflow, common files, stage details, templates, agents, INSTALL, README, LICENSE)
 

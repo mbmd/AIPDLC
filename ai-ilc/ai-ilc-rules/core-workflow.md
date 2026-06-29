@@ -12,7 +12,6 @@ inclusion: manual
 
 **Version:** 1.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
-**Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
 **Purpose:** Guide a user from a raw idea through a governed pipeline to a defensible go/no-go decision — with a clean, context-rich handoff to the appropriate next step (new project via AI-PILC, feature backlog via AI-POLC, or change request back to AI-PILC change management). When AI-FLO (router) is available, it dispatches; otherwise AI-ILC hands off directly to the target.
 
 **Methodology Alignment:** Stage-gate innovation process / Portfolio management best practices / Lean validation

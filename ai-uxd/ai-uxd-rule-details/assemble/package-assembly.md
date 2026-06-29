@@ -172,14 +172,19 @@ Update `uxd-state.md`:
 ║  • AI-GCE ✅ (accessibility baseline)                         ║
 ║                                                              ║
 ║  Next steps:                                                 ║
-║  • Run AI-POLC to prioritize based on personas/journeys      ║
+║  • Run AI-ADLC to design the system architecture             ║
 ║  • Run AI-DWG to generate workspace with design steering     ║
 ║  • Run AI-GCE to enforce accessibility + design compliance   ║
 ║  • Use UXC__ agent for ongoing design quality governance      ║
 ║                                                              ║
-║  ⚠️ IMPORTANT: Start the next package in a NEW session.      ║
-║  Each AI-* package loads a full workflow into context;        ║
-║  a fresh session keeps it fast and focused.                   ║
+║  🔀 Chain Navigation:                                         ║
+║  • Sequential next: AI-ADLC (_ADLC_) — Architecture Design  ║
+║  • Or ask AI-FLO: type _FLO_ for routing guidance            ║
+║  • Dashboard data: type DAT__ pdlc/uxd to update dashboard   ║
+║                                                              ║
+║  ⚠️ IMPORTANT: Start the next package (AI-ADLC) in a NEW    ║
+║  session. Each AI-* package loads a full workflow into        ║
+║  context; a fresh session keeps it fast and focused.          ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 ```

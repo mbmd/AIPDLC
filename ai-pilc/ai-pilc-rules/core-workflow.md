@@ -12,7 +12,6 @@ inclusion: manual
 
 **Version:** 1.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
-**Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
 **Purpose:** Guide a user step-by-step from receiving a raw requirement through delivering a complete, professional Project Initiation Package — ready for execution handoff.
 
 **Methodology Alignment:** PMBOK 7th Edition (or higher) / PRINCE2 / ITIL best practices

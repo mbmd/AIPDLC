@@ -9,6 +9,7 @@ desktop.ini
 *.swp
 *~
 .idea/
+.vscode/
 *.code-workspace
 
 # --- Runtime output (generated when a user RUNS the packages in a workspace) ---
@@ -29,4 +30,3 @@ tools/extensions/**/dist/*.map
 .env
 .env.*
 *.local
-.gitignore

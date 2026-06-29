@@ -4,7 +4,6 @@
 
 **Version:** 1.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
-**Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
 **License:** Apache 2.0 with Attribution Addendum — See `LICENSE` and `NOTICE`
 
 ---
@@ -276,7 +275,6 @@ AI-PILC draws from:
 - **PMBOK 7th Edition** — Principles, performance domains, and process groups
 - **PRINCE2** — Business case-driven, stage-gated, governance-focused
 - **ITIL** — Service management context where applicable
-- **AIDLC** — Adaptive workflow structure and interaction patterns (inspired by [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows))
 
 ---
 

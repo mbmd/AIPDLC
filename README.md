@@ -4,7 +4,6 @@
 
 **Version:** 0.1.0-beta.1
 **Author:** [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)
-**Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
 
 ---
 

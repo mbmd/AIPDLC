@@ -65,4 +65,4 @@ All filters compose — selecting a family + type + search narrows results acros
 
 ---
 
-*Part of [AIFLC](../../README.md) — the AI-* Family*
+*Part of [AIFLC](../../../README.md) — the AI-* Family*

@@ -4,7 +4,7 @@
 
 **Version:** 1.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
-**Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows), Double Diamond (UK Design Council), Atomic Design (Brad Frost), W3C Design Tokens
+**Inspired By:** Double Diamond (UK Design Council), Atomic Design (Brad Frost), W3C Design Tokens
 **License:** Apache 2.0 with Attribution
 
 ---

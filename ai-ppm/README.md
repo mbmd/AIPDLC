@@ -198,7 +198,6 @@ See `setup/INSTALL.md` for detailed multi-platform instructions.
 **Maheri** — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 
 Built with the AI-* Package Builder methodology.
-Inspired by [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0).
 
 ---
 

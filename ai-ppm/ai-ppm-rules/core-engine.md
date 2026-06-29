@@ -12,7 +12,6 @@ inclusion: manual
 
 **Version:** 1.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
-**Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
 **Purpose:** Govern a portfolio of multiple projects — registering, prioritizing, authorizing, monitoring, and optimizing the set of projects as a whole. AI-PPM answers the questions no single-project package can: "Which projects should we run? In what order? Are we healthy across the board? Should anything stop?"
 
 **Methodology Alignment:** PMI Standard for Portfolio Management / MoP (AXELOS) / SAFe Lean Portfolio Management / Stage-Gate governance

@@ -167,4 +167,4 @@ See `knowledge_docs/HOW_TO_USE_THE_DASHBOARD.md` for the complete operational gu
 
 ---
 
-*Part of [AIFLC](../../README.md) — the AI-* PDLC Family*
+*Part of [AIFLC](../../../README.md) — the AI-* PDLC Family*

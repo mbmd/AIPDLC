@@ -5,7 +5,6 @@
 **Author:** Maheri
 **Authored under:** `#persona-process-designer` (lead) + `#persona-cto-architect` (contracts)
 **Status:** ACTIVE
-**Canonical source:** `ai-packagebuilder/fabric/GATE_PROTOCOL.md`
 **Distribution:** copied to each family root (like LICENSE/NOTICE) — serves ALL families identically
 
 ---
@@ -609,4 +608,4 @@ A marker can pass integrity but fail gate matching (valid but incompatible). A m
 
 ---
 
-*Canonical source: `ai-packagebuilder/fabric/GATE_PROTOCOL.md` | Copied to each family root per the LICENSE/NOTICE bootstrap pattern | Authored under #persona-process-designer + #persona-cto-architect | CFA-04*
+*Copied to each family root per the LICENSE/NOTICE bootstrap pattern | Authored under #persona-process-designer + #persona-cto-architect | CFA-04*
