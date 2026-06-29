@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Compliance Log Governance — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives compliance log governance rules (GOV-LOG-*). These rules govern the comp
 
 ## MANDATORY: Stage Sub-Role — Audit & Compliance Specialist
 
-During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in audit trail integrity: the compliance log is the EVIDENCE that governance is working — corrupting it invalidates the entire system

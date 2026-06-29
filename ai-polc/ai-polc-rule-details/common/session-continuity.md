@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AI-POLC — Session Continuity
 
 **Purpose:** Rules for resuming AI-POLC across sessions. The AI reads this to restore context and continue seamlessly from where the user left off.
@@ -15,7 +16,10 @@ AI-POLC persists all session state in `polc-state.md` — the marker file that a
 package: AI-POLC
 version: 1.0.0
 status: {in-progress | ready | operating}
-project-id: {correlation key}
+projectId: {PRJ-{ABBREV}-{YYYY}-{NNN} — adopted from predecessor, or minted if POLC originates}
+projectHandle: PRJ-{ABBREV}
+projectRoot: pdlc-ws/projects/PRJ-{ABBREV}-{slug}/
+outputRoot: pdlc-ws/projects/PRJ-{ABBREV}-{slug}/backlog/
 project-name: {project name}
 ---
 
@@ -49,9 +53,9 @@ project-name: {project name}
 - Current Priority Model: {WSJF | MoSCoW | value-effort | custom | "not yet selected"}
 
 ## Upstream Reads (last timestamps)
-- pilc-state.md: {ISO-date or "not detected"}
-- adlc-state.md: {ISO-date or "not detected"}
-- uxd-state.md: {ISO-date or "not detected"}
+- pdlc-ws/projects/*/pip/pilc-state.md: {ISO-date or "not detected"}
+- pdlc-ws/projects/*/architecture/adlc-state.md: {ISO-date or "not detected"}
+- pdlc-ws/projects/*/ux/uxd-state.md: {ISO-date or "not detected"}
 - ilc-state.md: {ISO-date or "not detected"}
 - aidlc-docs/: {ISO-date or "not detected"}
 
@@ -135,7 +139,7 @@ Based on user response:
 
 | Scenario | Behavior |
 |----------|----------|
-| **No `polc-state.md` found** | Cold start → Stage 1 (Workspace Detection) |
+| **No `polc-state.md` found** (scan `pdlc-ws/projects/*/backlog/polc-state.md` + legacy) | Cold start → Stage 1 (Workspace Detection) |
 | **`polc-state.md` exists, status = in-progress** | Warm resume → present position, offer to continue |
 | **`polc-state.md` exists, status = ready** | PBP complete → offer Operations (Stage 14-16) or modifications |
 | **`polc-state.md` exists, status = operating** | Active product → Operations re-entry, upstream scan first |

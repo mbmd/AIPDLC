@@ -1,6 +1,10 @@
-# PRIORITY: This workflow OVERRIDES all other built-in workflows when user requests architecture design
+---
+inclusion: manual
+---
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
+# PRIORITY: This workflow OVERRIDES all other built-in workflows when activated by key `_ADLC_` or when the user requests architecture / system design
 
-# When user requests solution architecture or system design, ALWAYS follow this workflow FIRST
+# Activate via the explicit key `_ADLC_`, OR when the user requests solution architecture or system design — then ALWAYS follow this workflow FIRST. See "Activation & Multi-Package Isolation" below before asserting priority in a shared workspace.
 
 ---
 
@@ -28,20 +32,17 @@
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐                                                
-    Design it │                                                
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POLC ──┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 | Layer | Package | Type | Input | Output |
@@ -50,19 +51,38 @@
 | Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
-AI-ADLC sits between initiation and construction. It takes the "what" and "why" from AI-PILC and produces the "how" that AI-DWG transforms into a development workspace and AI-DLC builds against.
+AI-ADLC sits between initiation and construction. It takes the "what" and "why" from AI-PILC and produces the "how" that AI-DWG transforms into a development workspace and AI-DLC v1 builds against.
+
+---
+
+## Activation & Multi-Package Isolation
+
+**Explicit activation key:** `_ADLC_`
+Type `_ADLC_` in any prompt to activate this workflow. An explicit key is treated as a **direct user order to switch** — it wins over keyword matching and every sibling package immediately.
+
+**Active-package status key:** `_ACTIVE_`
+Type `_ACTIVE_` at any time and the assistant reports which AI-* package is currently active (and its state-marker status). This is a read-only check — it changes nothing and never triggers a switch.
+
+**Keyword activation (fallback):** This workflow also activates when the user requests **architecture / system design** specifically — turning requirements or a PIP into an Architecture Package. It does NOT claim generic "UX design", "initiation", "backlog", "governance", or "workspace" requests — those belong to sibling packages (AI-UXD, AI-PILC, AI-POLC, AI-GCE, AI-DWG).
+
+**Switching rule — NON-NEGOTIABLE: a package switch NEVER happens without a direct user order or explicit confirmation.**
+1. **Direct order:** the user types an explicit activation key (`_ADLC_`, or a sibling `_XXX_` key). Treat this as the order — switch immediately, no confirmation needed.
+2. **Otherwise, check for an active sibling:** scan for any sibling `*-state.md` (e.g. `pilc-state.md`, `uxd-state.md`, `polc-state.md`, `ilc-state.md`) whose status is not "complete". If one exists, that package is active — do NOT take over. Ask first: "AI-PILC is active — switch to AI-ADLC? (yes / no)" and proceed only on explicit confirmation.
+3. **Ambiguity:** if a request could match more than one installed package by keyword, ask which workflow to run rather than guessing.
+4. **Announce every switch:** on any switch (via key or confirmation), the **FIRST line of that response MUST name the now-active package** — e.g. `Active package: AI-ADLC`.
+5. This package's own marker is `adlc-state.md`; sibling packages extend it the same courtesy when it is active.
 
 ---
 
@@ -158,14 +178,16 @@ This role applies to ALL work done while this workflow is active. Do not revert 
 
 ## MANDATORY: State Management
 
-The workflow maintains state across sessions via `{output_root}/adlc-state.md`.
+The workflow maintains state across sessions via `{output_root}/adlc-state.md` (in the standard layout `{output_root}` = `{project_root}/architecture/`, so the marker is `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/architecture/adlc-state.md`).
 
 At workflow start:
-1. Check if `adlc-state.md` exists in the output directory
-2. If YES → load state, confirm position with user, resume from last completed stage
-3. If NO → fresh start; create state file after Workspace Detection
+1. Scan `pdlc-ws/projects/*/architecture/adlc-state.md` (default) + legacy locations. If projects exist, read `pdlc-ws/projects/PROJECTS.md` for the ★ active project and prompt: work on the active project, pick another, or start architecture for a project that has a PIP but no architecture (active-project flow — `OUTPUT_AND_STATE_CONTRACT.md` §8).
+2. If a chosen project's state exists → load it, confirm position, resume.
+3. If NO architecture state exists → fresh start at Workspace Detection (adopt the PIP's project, or originate one if no PIP).
 
 State file tracks:
+- Project identity (`Project ID` — the immutable family-wide correlation key — **adopted** from `pilc-state.md` when a PIP exists, or **minted** as `PRJ-{ABBREV}-{YYYY}-{NNN}` only if ADLC originates), plus `Project Handle` and `Project Root`
+- Routing intent (`Route: architecture-ready` — semantic handoff signal per; resolved today to AI-DWG, resolved in future to AI-FLO → AI-DWG + AI-POLC + AI-UXD in parallel)
 - Current phase and stage
 - Completed stages with timestamps
 - ADRs produced (numbered)
@@ -208,14 +230,13 @@ A living document maintained throughout all stages:
 
 ## MANDATORY: Output Structure Configuration
 
-At workflow start, ask the user to choose output folder structure:
+All output nests under the standard project folder `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/` (the always-on multi-project layout — `OUTPUT_AND_STATE_CONTRACT.md` §3). AI-ADLC writes into that project's `architecture/` folder; the shared spine sits at the project root. The document sub-structure inside `architecture/` is **deterministic — do NOT ask the user**:
 
-**Options:**
-- (a) **Numbered documents** — `01_Architecture_Vision.md`, `02_System_Context_C4L1.md`, etc.
-- (b) **Phase folders** — `foundation/`, `decomposition/`, `decisions/`, `design/`, `ADR/`
-- (c) **Custom** — User specifies structure
+**Structure (always):**
+- `architecture/01_Architecture_Vision.md`, `02_System_Context.md`, etc. (numbered)
+- `architecture/ADR/` subfolder for Architecture Decision Records
 
-Default if not specified: Option (a) with a separate `ADR/` subfolder.
+> The `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/` project folder + `architecture/` role folder + numbered sub-structure are the always-on layout — not optional, not user-configurable. This matches the numbered pattern used by AI-PILC (`pip/01_*`) and all other lifecycle packages. Brownfield/legacy flat layouts are detected and the user is informed; new work always targets the standard path. When a PIP exists, ADLC adopts its project root (never creates a sibling project).
 
 ---
 
@@ -251,23 +272,27 @@ Throughout this workflow, the AI operates as a **CTO / Chief Architect**:
 
 ## Stage 1: Workspace Detection & Context Loading (ALWAYS EXECUTE)
 
-1. Check for existing `adlc-state.md` — if found, load and offer to resume
+1. Scan `pdlc-ws/projects/*/architecture/adlc-state.md` (+ legacy). If found, read `pdlc-ws/projects/PROJECTS.md` and run the active-project prompt (resume / pick / start architecture for a PIP-only project).
 2. If fresh start:
-   a. Ask user for project/system name
-   b. Ask for output folder structure preference
-   c. Create output structure
-   d. Create Architecture Workbook (empty)
-   e. Create ADR folder
-   f. Create `adlc-state.md` with initial configuration
+   a. Detect AI-PILC output: scan `pdlc-ws/projects/*/pip/pilc-state.md` (+ legacy). If a PIP is found, **adopt** its `Project ID`, `Project Handle`, `Project Root` (never re-mint); `{project_root}` = the PIP's project root, output → `{project_root}/architecture/`.
+   b. If NO PIP (ADLC originates): ask for system name; **mint** `PRJ-{ABBREV}-{YYYY}-{NNN}`; create `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/`; seed `pdlc-ws/projects/PROJECTS.md` (★ active).
+   c. Initialize the numbered document sub-structure inside `architecture/` (deterministic — no user choice)
+   d. Create `architecture/`, the `ADR/` folder, and the Architecture Workbook
+   e. Contribute to the shared spine at `{project_root}/management_framework/` (append-if-exists, create-if-absent; IDs `ADLC-{ABBREV}-*`)
+   f. Update `pdlc-ws/projects/PROJECTS.md`: set this project's `ADLC` column to `wip`
+   g. Create `adlc-state.md` with initial configuration (Project ID, Project Handle, Project Root)
 3. Detect available inputs:
-   - Check for AI-PILC outputs (pilc-state.md, PIP artifacts)
+   - Check for AI-PILC outputs: `pdlc-ws/projects/*/pip/pilc-state.md` (+ legacy flat paths)
+   - Check for AI-UXD output (same-layer peer): `pdlc-ws/projects/*/ux/uxd-state.md` (+ legacy)
+   - Check for AI-POLC output (same-layer peer): `pdlc-ws/projects/*/backlog/polc-state.md` (+ legacy)
    - Check for existing requirements documents
    - Check for existing architecture artifacts (brownfield resume)
 4. Present detection results:
 
 ```
 ✅ Workspace initialized for: {system_name}
-📁 Output: {structure}
+🔑 Project ID: {project_id} (adopted from PIP / self-minted)
+📁 Project root: pdlc-ws/projects/PRJ-{ABBREV}-{slug}/  (architecture in architecture/, spine at management_framework/)
 📄 Inputs detected: {what was found}
 
 Ready to proceed to Requirements Ingestion.
@@ -641,6 +666,51 @@ The architecture package is ready for development team onboarding.
 
 ---
 
+## Post-Workflow: Agent Installation (ALWAYS EXECUTE)
+
+After the AP workflow completes (or at any point during AI-ADLC execution), install the AI-ADLC governance agent into the destination workspace. This step is **automatic** — no user interaction required.
+
+### What Gets Installed
+
+| Artifact | Destination | Action |
+|----------|-------------|--------|
+| `architecture-decision-agent.md` | `.kiro/agents/` | Copy from `templates/agents/` |
+| Shortcut rules block | `.kiro/steering/workspace-rules.md` | Append `<!-- BEGIN AI-ADLC AGENT SHORTCUTS -->` block (or replace if exists) |
+| Agent registry entries | `.governance/AGENT_REGISTRY.md` | Create file if absent; append AI-ADLC entries if exists |
+| Agent guide section | `.governance/AGENT-GUIDE.md` | Create file if absent; append AI-ADLC section if exists |
+
+### Installation Logic
+
+1. **Agent file:** Copy `templates/agents/architecture-decision-agent.md` to `.kiro/agents/architecture-decision-agent.md`. Populate `{version}` with current AI-ADLC version and `{ISO-date}` with today's date.
+
+2. **Shortcut block:** Check `.kiro/steering/workspace-rules.md` for `<!-- BEGIN AI-ADLC AGENT SHORTCUTS -->` marker:
+   - If found → replace the block (between BEGIN and END markers)
+   - If not found → append the block from `templates/agents/shortcut-rules-block.md`
+
+3. **Agent registry:** Check for `.governance/AGENT_REGISTRY.md`:
+   - If absent → create with header + AI-ADLC entry (ADLC-AG-01)
+   - If exists → append AI-ADLC entry using next available `ADLC-AG-{NN}` ID
+   - Entry: `| ADLC-AG-01 | architecture-decision-agent | Process | ADA__ | 1 | AI-ADLC | Active | {date} |`
+
+4. **Agent guide:** Check for `.governance/AGENT-GUIDE.md`:
+   - If absent → create with header + AI-ADLC section from `templates/agents/agent-guide.md`
+   - If exists → append AI-ADLC section (between `<!-- BEGIN AI-ADLC AGENT GUIDE SECTION -->` markers)
+
+### Self-Sufficiency Rule (AGENT_GOVERNANCE_CONTRACT §5)
+
+AI-ADLC installs its own agent independently. No dependency on AI-GCE or AI-PILC being present. If other packages run later, they will detect and preserve the AI-ADLC entries via marker-based ownership.
+
+### Post-Install Confirmation
+
+```
+🤖 AI-ADLC Governance Agent Installed
+   • Agent: architecture-decision-agent (ADLC-AG-01)
+   • Shortcut: ADA__ (active immediately)
+   • Call ADA__ after AP completion to validate architecture quality.
+```
+
+---
+
 ## Key Principles
 
 - **CTO Perspective:** All recommendations come from an experienced architect's viewpoint — pragmatic, operable, maintainable
@@ -669,54 +739,42 @@ The architecture package is ready for development team onboarding.
 
 ## Directory Structure (Generated Output)
 
-Default (numbered documents + ADR subfolder):
+Default (numbered documents + ADR subfolder), inside the project root. `{output_root}` = `{project_root}/architecture/`; the spine is a **sibling** of `architecture/` at the project root:
 
 ```
-{output_root}/
-├── adlc-state.md                         ← Workflow state & progress
-├── Architecture_Workbook.md              ← Living decisions/questions tracker
-├── 01_Architecture_Vision.md
-├── 02_System_Context_C4L1.md
-├── 03_Container_Diagram_C4L2.md
-├── 04_Technology_Stack.md
-├── 05_MultiTenancy_Architecture.md       (if applicable)
-├── 06_Security_Identity_Architecture.md
-├── 07_Data_Architecture.md
-├── 08_API_Architecture.md
-├── 09_Integration_Architecture.md
-├── 10_Infrastructure_Deployment.md
-├── 11_Component_Diagram_C4L3.md
-├── ADR/
-│   ├── ADR-000_Template.md
-│   ├── ADR-001_{Decision_Title}.md
-│   ├── ADR-002_{Decision_Title}.md
-│   └── ...
-├── management_framework/                 ← Architecture phase governance
-│   ├── Decision_Log.md                   ← Decisions below ADR threshold
-│   ├── Change_Log.md                     ← Architecture scope changes
-│   ├── Issue_Log.md                      ← Design blockers
-│   └── Lessons_Learned.md               ← Architecture design lessons
-└── ARCHITECTURE_PACKAGE_README.md        ← Final summary (Stage 13)
+pdlc-ws/projects/PRJ-{ABBREV}-{slug}/             ← {project_root}
+├── management_framework/                  ← shared governance spine (sibling of architecture/)
+│   ├── MANAGEMENT_FRAMEWORK.md
+│   ├── Decision_Log.md                    ← Decisions below ADR threshold
+│   ├── Change_Log.md                      ← Architecture scope changes
+│   ├── Issue_Log.md                       ← Design blockers
+│   └── Lessons_Learned.md                ← Architecture design lessons
+├── pip/                                   ← AI-PILC output (if PIP exists)
+└── architecture/                          ← {output_root} — AI-ADLC output
+    ├── adlc-state.md                      ← Workflow state & progress (marker)
+    ├── Architecture_Workbook.md           ← Living decisions/questions tracker
+    ├── 01_Architecture_Vision.md
+    ├── 02_System_Context_C4L1.md
+    ├── 03_Container_Diagram_C4L2.md
+    ├── 04_Technology_Stack.md
+    ├── 05_MultiTenancy_Architecture.md    (if applicable)
+    ├── 06_Security_Identity_Architecture.md
+    ├── 07_Data_Architecture.md
+    ├── 08_API_Architecture.md
+    ├── 09_Integration_Architecture.md
+    ├── 10_Infrastructure_Deployment.md
+    ├── 11_Component_Diagram_C4L3.md
+    ├── ADR/
+    │   ├── ADR-000_Template.md
+    │   └── ADR-{NNN}_{Decision_Title}.md
+    └── ARCHITECTURE_PACKAGE_README.md     ← Final summary (Stage 13)
 ```
 
 > **Register allocation:** AI-ADLC produces 4 governance registers (not 6 like AI-PILC). Actions are tracked in the Architecture Workbook (decision backlog + open questions). Assumptions are resolved during Foundation phase and captured in the Architecture Vision constraints table.
 
-> **Shared spine (Lesson 45):** In chain mode, AI-ADLC APPENDS its `ADLC-*` phase-tagged entries to the existing shared governance spine (created by AI-PILC). In standalone mode, it creates the spine from scratch. Detection is by marker: `management_framework/MANAGEMENT_FRAMEWORK.md`. All entries carry the Phase column and phase-prefixed IDs (`ADLC-D-001`, `ADLC-C-001`, etc.) per `MANAGEMENT_FRAMEWORK_CONTRACT.md` v1.1.0. ADR-threshold decisions go to `ADR/`, not the Decision_Log — see `templates/management-framework.md` for the boundary rule.
+> **Shared spine:** In chain mode, AI-ADLC APPENDS its `ADLC-{ABBREV}-*` project-qualified, phase-tagged entries to the existing shared governance spine at `{project_root}/management_framework/` (created by AI-PILC). In standalone/originating mode, it creates the spine from scratch. Detection is by marker: `management_framework/MANAGEMENT_FRAMEWORK.md`. All entries carry the Phase column and project-qualified IDs (`ADLC-{ABBREV}-D-1`, etc.) per `MANAGEMENT_FRAMEWORK_CONTRACT.md` v1.2.0 + `OUTPUT_AND_STATE_CONTRACT.md`. ADR-threshold decisions go to `ADR/`, not the Decision_Log — see `templates/management-framework.md` for the boundary rule.
 
-Alternative (phase folders):
-
-```
-{output_root}/
-├── adlc-state.md
-├── Architecture_Workbook.md
-├── foundation/
-├── decomposition/
-├── decisions/
-├── design/
-├── ADR/
-├── management_framework/
-└── ARCHITECTURE_PACKAGE_README.md
-```
+Alternative (phase folders): same project root + spine, with `architecture/{foundation,decomposition,decisions,design}/` + `ADR/` inside `architecture/`.
 
 ---
 
@@ -735,25 +793,37 @@ All customizations are logged in the Architecture Workbook.
 
 ## Chain Contract
 
-AI-ADLC is the **second node** in the AI-* Family chain. It consumes output from AI-PILC (or standalone input) and produces the Architecture Package (AP) that AI-DWG consumes.
+AI-ADLC is the **third node** in the AI-* PDLC Family sequential chain (POLC → UXD → **ADLC** → DWG). It consumes output from up to three predecessors: AI-PILC (PIP), AI-POLC (PBP), and AI-UXD (UXP) — any non-empty subset — and produces the Architecture Package (AP) that AI-DWG consumes.
 
-### I Read (from AI-PILC or Standalone)
+### I Read (from predecessors + standalone)
 
 | Source | What I Load | Required? |
 |--------|-------------|:---------:|
-| `pilc-state.md` | Project type, complexity assessment, brownfield flag, depth recommendation | If PIP mode |
-| PIP — Requirement Intake Form | Functional requirements, NFRs, constraints, scale estimates | If PIP mode |
-| PIP — Project Charter | Objectives, scope boundaries, constraints, approach | If PIP mode |
-| PIP — Scope Statement | Detailed in-scope items, WBS structure, deliverables | If PIP mode |
-| PIP — Feasibility Assessment | Technical feasibility score, tech risk signals | If PIP mode |
-| PIP — Risk Register | Technical risks (category = Technical) | If PIP mode |
-| PIP — Resource Plan | Team size, skills, experience level | If PIP mode |
-| PIP — Stakeholder Register | Technical stakeholders (Tech Lead, Security Lead, Infra Lead) | If PIP mode |
+| `pilc-state.md` | Project ID (correlation key), project type, complexity assessment, brownfield flag, depth recommendation | If PIP present |
+| PIP — Requirement Intake Form | Functional requirements, NFRs, constraints, scale estimates | If PIP present |
+| PIP — Project Charter | Objectives, scope boundaries, constraints, approach | If PIP present |
+| PIP — Scope Statement | Detailed in-scope items, WBS structure, deliverables | If PIP present |
+| PIP — Feasibility Assessment | Technical feasibility score, tech risk signals | If PIP present |
+| PIP — Risk Register | Technical risks (category = Technical) | If PIP present |
+| PIP — Resource Plan | Team size, skills, experience level | If PIP present |
+| PIP — Stakeholder Register | Technical stakeholders (Tech Lead, Security Lead, Infra Lead) | If PIP present |
+| `polc-state.md` + PBP artifacts | Product vision, prioritized epics, strategic themes, target segments, DoR/DoD, release plan, roadmap | If PBP present |
+| `uxd-state.md` + UXP artifacts | Personas, user flows, IA, design system tokens, component specs, accessibility baseline, platform/interaction constraints | If UXP present |
 | Standalone PRD / spec document | Requirements in any format | If Document mode |
 | Verbal description | User-provided context via interview | If Verbal mode |
 | Existing architecture artifacts | Current architecture docs, diagrams, ADRs | If Brownfield mode |
 
-**Detection of AI-PILC output:** Scan for `pilc-state.md` marker file → if found, PIP mode activates automatically.
+**Detection:** Scan `pdlc-ws/projects/*/` for all three markers (in order): `pip/pilc-state.md`, `backlog/polc-state.md`, `ux/uxd-state.md`. Load ALL that are present — not just the first one found. If none found, fall back to standalone modes.
+
+**How each input enriches the architecture:**
+
+| Input | Architecture Drivers Extracted |
+|-------|-------------------------------|
+| **PIP** (from PILC) | Functional scope, NFRs, constraints, team size, budget, technical risks, project boundaries |
+| **PBP** (from POLC) | Product priorities → what to optimize for, epic scale/volume → capacity planning, roadmap timing → phased architecture, DoR/DoD → quality attributes |
+| **UXP** (from UXD) | User flows → API surface, personas → auth/role model, design tokens → frontend tech constraints, accessibility target → NFR, platform decisions → deployment topology |
+
+**The rule:** When multiple predecessors are present, ADLC reads ALL of them and synthesizes — it does NOT pick one "mode." The architecture is richer when it accounts for product strategy (PBP) and user experience constraints (UXP) alongside project initiation (PIP). Absence of any predecessor never blocks — ADLC proceeds with whatever is available (graceful degradation,).
 
 ### I Produce (for AI-DWG)
 
@@ -796,10 +866,10 @@ AI-ADLC is the **second node** in the AI-* Family chain. It consumes output from
 When AI-DWG (or any downstream consumer) needs to find AI-ADLC output:
 
 1. **User provides path** → use directly
-2. **Scan common locations** → `./adlc-state.md`, `./{system_name}/adlc-state.md`, `./architecture/adlc-state.md`, `./{system_name}_Architecture/adlc-state.md`
+2. **Scan common locations** → `pdlc-ws/projects/*/architecture/adlc-state.md` (default), then `./adlc-state.md`, `./{system_name}/adlc-state.md`, `./architecture/adlc-state.md`, `./{system_name}_Architecture/adlc-state.md`
 3. **Ask user** → if not found in scan
 
-**Principle:** Detect by marker (`adlc-state.md`), not by path. User chooses WHERE output goes; AI-ADLC defines WHAT must exist there.
+**Principle:** Detect by marker (`adlc-state.md`), not by path. Output goes to `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/architecture/` (the fixed standard layout); AI-ADLC defines WHAT must exist there.
 
 ### Downstream Signal
 
@@ -807,6 +877,8 @@ AI-DWG reads the following from `adlc-state.md` to drive workspace generation:
 
 | State Field | What AI-DWG Uses It For |
 |-------------|------------------------|
+| **Project ID** | Embeds in workspace metadata for downstream correlation (AI-GCE audit trail, AI-PPM roll-up via AI-FLO) |
+| **Route** | Routing intent (`architecture-ready`); AI-FLO (when available) reads this to dispatch to DWG + POLC + UXD in parallel. Today AI-DWG reads this as informational only. |
 | **Enabled Extensions** | Enriches steering files with extension-specific rules (DDD, Microservices, BFF, etc.) |
 | **Containers** (name + technology) | Maps to workspace module structure and technology-specific steering |
 | **Technology decisions** | Drives tech-stack steering files (api-standards, database conventions, etc.) |
@@ -818,3 +890,62 @@ AI-DWG reads the following from `adlc-state.md` to drive workspace generation:
 **Signal format:** No active push — AI-DWG reads the state file on demand. The Architecture Package is a one-time handoff artifact.
 
 **Downstream notification:** When AI-ADLC completes (Stage 13), the completion message includes the AP location path. If architecture is revised post-completion (rare for lifecycle packages), the user manually triggers AI-DWG reconciliation.
+
+### Downstream Signal — AI-POLC (Architecture→Product cost loop, same-layer)
+
+In addition to the AI-DWG fan-in feed, AI-ADLC emits a **feasibility / cost-risk signal** for its same-layer peer **AI-POLC** (direct `adlc-state.md` read — no AI-FLO). This closes the real-world Architecture → Product cost/risk re-prioritization loop.
+
+| State Field | What AI-POLC Uses It For |
+|-------------|--------------------------|
+| **Downstream Signals → cost-risk-notes** | Per-epic / per-area **relative effort/complexity bands** (S/M/L/XL) + **technical-risk flags** — advisory, **NOT dollar estimates** — that AI-POLC folds into WSJF Job Duration / value-effort scoring and its "AP feasibility/cost-risk update" re-prioritization trigger |
+
+Produced at Stage 13 (`assembly/package-assembly.md` Step 9b). Standalone-safe: if no AI-POLC is present the table is simply recorded and unused; if the architecture changes later, the table is refreshed so POLC can re-score.
+
+
+---
+
+## Gate Contract
+
+> Conforms to `GATE_PROTOCOL.md` protocolVersion 1.2.0 · interfaceVersion 1.0
+
+### Gate-Out — What AI-ADLC GUARANTEES When Complete
+
+```yaml
+emits-type: architecture-design@1
+visibility: internal
+marker: adlc-state.md
+payloadRoot: pdlc-ws/projects/{projectId}/adlc/
+guarantees:
+  - status == complete
+  - projectId
+  - systemContext              # C4 Level 1
+  - containerDiagram           # C4 Level 2
+  - componentDesign            # C4 Level 3
+  - adrs                       # Architecture Decision Records
+  - nfrCoverage                # NFR traceability
+  - technicalEnvironment       # tech stack + constraints
+```
+
+### Gate-In — What AI-ADLC REQUIRES to Start
+
+```yaml
+consumes:
+  - type: project-initiation@^1      # satisfiable internally (AI-PILC)
+    mandatory: [charter | scope]     # needs at minimum the project charter OR scope
+    optional:  [riskRegister, stakeholderRegister, budgetCeiling]
+  - type: product-backlog@^1          # satisfiable internally (AI-POLC)
+    mandatory: []                    # entirely optional — enrichment
+    optional:  [productVision, epics, prioritizationRegister, releasePlan, roadmap]
+  - type: ux-design@^1               # satisfiable internally (AI-UXD)
+    mandatory: []                    # entirely optional — enrichment
+    optional:  [personas, userFlows, designSystem, accessibilityBaseline]
+on-missing-all: standalone     # accepts raw requirements + charter directly (P4)
+strictness-default: warn
+```
+
+> Universal floor (status==complete + projectId) enforced by marker integrity (GATE_PROTOCOL §18).
+
+### Visibility Note
+
+- `architecture-design` is `internal` — consumed by AI-DWG (and AI-UXD for constraint alignment) within PDLC.
+- Gate-in consumes only `internal` types; no external seam-in for AI-ADLC.

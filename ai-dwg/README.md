@@ -1,19 +1,25 @@
 # AI-DWG — AI-Driven Workspace Generator
 
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
+
+**Version:** 1.0.0
+
 **Transform architecture into a ready-to-code development workspace.**
 
 ---
 
 ## What It Does
 
-AI-DWG reads an Architecture Package (from AI-ADLC or equivalent) — optionally enriched by a Product Backlog Package (from AI-POLC) and a UX Design Package (from AI-UXD) — and generates a complete development workspace including Kiro steering files, project instructions, repository structure, configuration files, and operational documents.
+AI-DWG composes a complete development workspace from one or more design-time peer inputs — Architecture Package (from AI-ADLC), Product Backlog Package (from AI-POLC), and/or UX Design Package (from AI-UXD). Any non-empty combination is valid; none is privileged. It generates Kiro steering files, project instructions, repository structure, configuration files, and operational documents — scoped to the input clusters actually present.
 
-**Input:** Architecture Package (required) + optional Product Backlog Package (AI-POLC) and UX Design Package (AI-UXD) — all structured markdown documents
+**Input:** Any non-empty subset of {Architecture Package (AI-ADLC), Product Backlog Package (AI-POLC), UX Design Package (AI-UXD)} — all structured markdown documents. At least one is required; the more you provide, the richer the workspace.
 **Output:** Ready-to-code workspace with governance, structure, and rules
 
 ---
 
-## The AI-* Family
+## The AI-* PDLC Family
+
+AI-DWG is part of **AIFLC** (AI Full Life Cycle) — the AI-* PDLC Family of injectable workflow packages.
 
 ```
 ╔════════════════ PORTFOLIO LAYER · scope = MANY projects ════════════════╗
@@ -28,20 +34,17 @@ AI-DWG reads an Architecture Package (from AI-ADLC or equivalent) — optionally
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐                                                
-    Design it │                                                
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POLC ──┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 | Layer | Package | Type | Input | Output |
@@ -50,17 +53,17 @@ AI-DWG reads an Architecture Package (from AI-ADLC or equivalent) — optionally
 | Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 ---
 
@@ -90,9 +93,42 @@ AI-DWG reads an Architecture Package (from AI-ADLC or equivalent) — optionally
 
 ---
 
+## Output Directory Structure
+
+AI-DWG generates a self-contained dev workspace within the project folder. It reads peer inputs (AP, PBP, UXP) from the same project and outputs a workspace meant to be opened separately in its own IDE:
+
+```
+pdlc-ws/projects/
+├── PROJECTS.md                          ← workspace registry
+└── PRJ-{ABBREV}-{slug}/                  ← one project
+    ├── management_framework/             ← shared governance spine
+    ├── pip/                              ← AI-PILC output (read by DWG)
+    ├── architecture/                     ← AI-ADLC output (read by DWG)
+    ├── ux/                               ← AI-UXD output (read by DWG)
+    ├── backlog/                          ← AI-POLC output (read by DWG)
+    │
+    └── {slug}-workspace/                 ← AI-DWG output (dev workspace)
+        ├── .kiro/steering/               ← generated steering files
+        ├── .kiro/hooks/                  ← AI-GCE governs here
+        ├── management_framework/         ← spine carried forward
+        ├── src/                          ← code structure per C4 L3
+        ├── tests/                        ← test structure
+        └── configs …                     ← CI/CD, linting, etc.
+```
+
+> The dev workspace is opened **separately** in its own IDE instance. AI-GCE and AI-TGE operate inside it. The `projects/` structure is always-on — see `OUTPUT_AND_STATE_CONTRACT.md`.
+
+---
+
+## Activation
+
+**Explicit key:** type `_DWG_` in any prompt to activate AI-DWG unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-DWG`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
+
+---
+
 ## Installation
 
-See [kiro-setup/INSTALL.md](./kiro-setup/INSTALL.md)
+See [setup/INSTALL.md](./setup/INSTALL.md)
 
 ---
 
@@ -119,10 +155,10 @@ ai-dwg/
 │   └── core-generator.md       ← Master generation logic
 ├── ai-dwg-rule-details/
 │   ├── common/                  ← Process overview, AP reading guide, validation
-│   ├── mapping/                 ← 23 transformation rule files
+│   ├── mapping/                 ← 36 transformation rule files
 │   ├── reconciliation/          ← Diff, merge, provenance, signaling
 │   └── templates/               ← Output file templates (48 files)
-└── kiro-setup/
+└── setup/
     └── INSTALL.md               ← Installation instructions
 ```
 
@@ -167,6 +203,10 @@ ai-dwg/
 
 - **No warranty:** Provided "AS IS" without warranties of any kind
 
-See [LICENSE](./LICENSE) in this directory and the canonical licensing documents in `../ai-license/` for full terms and FAQ.
+See [LICENSE](./LICENSE) and [NOTICE](./NOTICE) in this directory for full terms.
 
 **Copyright:** © 2026 Mohammad Maheri
+
+---
+
+*Part of [AIFLC](../README.md) — the AI-* PDLC Family*

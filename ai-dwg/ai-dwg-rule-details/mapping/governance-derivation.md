@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Mapping: Governance Context → PROJECT_INSTRUCTIONS.md + CONTRIBUTING.md + ONBOARDING.md + PR Template
 
 ## Purpose

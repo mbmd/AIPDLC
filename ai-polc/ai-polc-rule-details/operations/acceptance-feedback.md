@@ -1,13 +1,14 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Stage 15: Acceptance & Feedback Loop
 
 **Phase:** Operations (repeating)
-**Purpose:** Accept or reject completed increments against the DoD, process execution feedback from AI-DLC, and translate learnings into backlog/priority adjustments.
+**Purpose:** Accept or reject completed increments against the DoD, process execution feedback from AI-DLC v1, and translate learnings into backlog/priority adjustments.
 
 ---
 
 ## Purpose
 
-This is the PO's acceptance authority in action. AI-DLC builds; AI-POLC judges whether what was built meets the product bar. This stage also processes blockers, velocity data, and runtime feedback to inform the next prioritization cycle.
+This is the PO's acceptance authority in action. AI-DLC v1 builds; AI-POLC judges whether what was built meets the product bar. This stage also processes blockers, velocity data, and runtime feedback to inform the next prioritization cycle.
 
 ---
 

@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Workspace Detection
 
 ## Stage: 1 of 16
@@ -23,12 +24,26 @@ N/A — This stage is depth-independent. Workspace setup is identical regardless
 ### Step 1: Check for Existing State
 
 1. Scan the workspace for `pilc-state.md` in these locations (in order):
+   - `pdlc-ws/projects/*/pip/pilc-state.md` (**default multi-project layout** — see Step 5)
    - `./pilc-state.md`
    - `./pilc-docs/pilc-state.md`
-   - `./01_Requirement_Submission/../pilc-state.md` (numbered folder root)
+   - `./{numbered_folder_root}/pilc-state.md`
    - Any directory the user has specified as output root
-2. If found → load state and follow **Session Resumption Flow** (see `common/session-continuity.md`)
-3. If NOT found → proceed to Step 1b (predecessor detection)
+2. **If one or more projects are found (multi-project active-project selection):**
+   - Read `pdlc-ws/projects/PROJECTS.md` (the registry, if present) → identify the ★ active project.
+   - Prompt the user:
+     ```
+     This workspace already has these projects:
+       ★ {active Project ID} — {folder}   (active)
+         {other Project ID} — {folder}
+     Work on the active project, start initiation for a different existing project, or create a NEW project? [active / pick / new]
+     ```
+   - On `active`/`pick` → load that project's `pilc-state.md` and follow the **Session Resumption Flow** (`common/session-continuity.md`).
+   - On `new` → proceed to Step 1b (origination of a new project).
+3. If a single `pilc-state.md` is found → load state and follow **Session Resumption Flow**.
+4. If NONE found → proceed to Step 1b (predecessor detection + origination).
+
+> **Active-project rule (`OUTPUT_AND_STATE_CONTRACT.md` §8):** exactly one project is ★ active at a time. AI-PILC operates on the chosen project and, if it switches the active project, updates the ★ pointer in `pdlc-ws/projects/PROJECTS.md`.
 
 ---
 
@@ -48,7 +63,7 @@ Scan for the AI-ILC predecessor marker `ilc-state.md` in common locations:
 
 **If NOT found → proceed to Step 2** (normal — AI-ILC is optional; its absence is the default path)
 
-> **Lesson 6 (OR-input):** AI-ILC is an optional pre-stage. AI-PILC works identically without it. Detection is informational — it enriches Stage 2's intake options but doesn't change workspace setup.
+> **OR-input (optional predecessor):** AI-ILC is an optional pre-stage. AI-PILC works identically without it. Detection is informational — it enriches Stage 2's intake options but doesn't change workspace setup.
 
 ---
 
@@ -103,133 +118,103 @@ The **Project ID** is the unique key that threads this project through the entir
 
 Wait for response. Store as `{project_id}`.
 
-3. **Optional — Idea lineage:** If this project originated from an AI-ILC Approved Idea Brief, capture the originating idea reference so the idea → project → portfolio chain is traceable:
+3. **Idea lineage (derivedFrom):** Record the originating idea reference for traceability (per `contracts/TRACEABILITY_CONTRACT.md`):
+
+   - **If `ilc-state.md` was detected (Mode D intake):** `derivedFrom` is **REQUIRED** — auto-populate from the idea ID found in `ilc-state.md`. Do NOT ask the user; the value is already known.
+   - **If standalone (no `ilc-state.md`):** Ask the user:
 
 ```markdown
 ### Q-CFG-01c: Originating Idea (Optional)
 
-**Context:** If this project came from an approved idea (AI-ILC), recording the idea reference preserves the idea → project → portfolio lineage.
+**Context:** If this project came from an approved idea (AI-ILC), recording the idea reference preserves the idea → project → portfolio lineage (Traceability Contract §4-A).
 
 **Your input:** Idea ID / brief reference, or "none".
 ```
 
-Store as `{idea_ref}` (default: `none`).
+Store as `{idea_ref}` (default: `none` for standalone; auto-populated for ILC intake).
 
 The Project ID and idea lineage are recorded as Decision `D-002` when the Decision Log is created (Step 6).
 
 ---
 
-### Step 3: Configure Output Structure
+### Step 3: Apply Output Structure (Numbered — Always)
 
-Ask the user:
+The deliverable sub-structure inside `pip/` is always **numbered**. This is not a user choice — do not ask. Record `Output Structure: numbered` in state and proceed.
 
-```markdown
-### Q-CFG-02: Output Folder Structure
-
-**Context:** All deliverables will be saved to a folder structure. Choose the layout that suits your organization.
-
-**Options:**
-- (a) **Numbered folders** — `01_Requirement_Submission/`, `02_Screening_Prioritization/`, ..., `10_Project_Kickoff/`, `management_framework/`
-- (b) **Flat docs folder** — `pilc-docs/inception/`, `pilc-docs/assessment/`, ..., `pilc-docs/mobilization/`, `management_framework/`
-- (c) **Custom** — Describe your preferred structure and I'll adapt
-
-**Recommended:** Option (a)
-**Rationale:** Numbered folders make the sequential flow visible and are familiar to PMO teams. Each folder clearly maps to a lifecycle phase.
-
-**Your Decision:** _[awaiting input]_
-```
-
-Wait for response. Store choice in state.
+Store in session context: `output_structure: numbered`
 
 ---
 
 ### Step 4: Configure Output Location
 
-Ask the user:
+Derive the **project handle** and **slug** for the folder name:
+- `{ABBREV}` — reuse the abbreviation from the Project ID minted in Step 2a (e.g. `PRJ-CRM-2026-001` → `CRM`).
+- `{slug}` — the project name lower-cased, spaces → hyphens, punctuation stripped (e.g. "CRM Platform Upgrade" → `crm-platform-upgrade`).
 
-```markdown
-### Q-CFG-03: Output Location
+The output location is **fixed** — `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/` with PILC deliverables in `pip/`. There is no user choice for the project folder path. This aligns with `OUTPUT_AND_STATE_CONTRACT.md` §3 (the Always-On Rule — `projects/` structure is mandatory in all conditions).
 
-**Context:** Where should I create the output folders?
+- Set `{project_root}` = `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/`.
+- Set `{output_root}` = `{project_root}/pip/` — PILC's own deliverables + `pilc-state.md` live here.
+- The governance spine lives at `{project_root}/management_framework/` (a sibling of `pip/`, shared across packages — Step 6).
 
-**Options:**
-- (a) **Current workspace root** — Files created here: `./`
-- (b) **Subdirectory** — I'll create a project folder: `./{project_name}/`
-- (c) **Custom path** — Specify the path
-
-**Recommended:** Option (b)
-**Rationale:** Keeps project initiation artifacts contained in their own directory, avoiding clutter in the workspace root.
-
-**Multi-project note:** If this workspace will hold more than one initiated project, use a `{project_id}`-keyed folder (e.g., `./{project_id}/`) so each project has a clean, collision-free boundary that AI-PPM and AI-FLO can address by ID.
-
-**Your Decision:** _[awaiting input]_
-```
-
-Wait for response. Store as `{output_root}`.
+> **Brownfield exception:** if the workspace already contains PILC output in an older flat layout, detect it on first run and inform the user: "Existing PILC output found at `{path}`. AI-PILC now uses `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/pip/` as the standard location. I'll operate in the standard location — you may migrate existing artifacts at your convenience." Never force-move existing files.
 
 ---
 
 ### Step 5: Create Folder Structure
 
-Based on user's choices, create the output structure.
+Create the project folder, PILC's `pip/` output folder, and the project-root spine. The numbered deliverable sub-structure lives **inside `pip/`**; the `management_framework/` spine is a **sibling of `pip/`** at the project root (shared across packages).
 
-**If Option (a) — Numbered folders:**
-
-```
-{output_root}/
-├── 01_Requirement_Submission/
-├── 02_Screening_Prioritization/
-├── 03_Business_Case/
-├── 04_Project_Charter/
-├── 05_Stakeholder_Management/
-├── 06_Scope_Planning/
-├── 07_Resource_Budget/
-├── 08_Risk_Management/
-├── 09_Governance_Communication/
-├── 10_Project_Kickoff/
-├── management_framework/
-└── pilc-state.md
-```
-
-**If Option (b) — Flat docs:**
+**Standard layout — numbered deliverables (always):**
 
 ```
-{output_root}/
-├── pilc-docs/
-│   ├── inception/
-│   ├── assessment/
-│   ├── justification/
-│   ├── authorization/
-│   ├── planning/
-│   └── mobilization/
-├── management_framework/
-└── pilc-state.md
+pdlc-ws/projects/
+├── PROJECTS.md                          ← registry (Step 6b)
+└── PRJ-{ABBREV}-{slug}/                  ← {project_root}
+    ├── management_framework/             ← governance spine (project root, shared)
+    └── pip/                              ← {output_root} — AI-PILC deliverables
+        ├── pilc-state.md                 ← marker
+        ├── 01_Requirement_Submission/
+        ├── 02_Screening_Prioritization/
+        ├── 03_Business_Case/
+        ├── 04_Project_Charter/
+        ├── 05_Stakeholder_Management/
+        ├── 06_Scope_Planning/
+        ├── 07_Resource_Budget/
+        ├── 08_Risk_Management/
+        ├── 09_Governance_Communication/
+        └── 10_Project_Kickoff/
 ```
 
-**If Option (c) — Custom:**
-
-- Ask user to describe structure
-- Create as specified
-- Ensure `management_framework/` and `pilc-state.md` are always present regardless of custom layout
+> **Why the spine is one level up from `pip/`:** the spine is the *shared* per-project governance record that ADLC/UXD/POLC also append to. It belongs to the **project**, not to PILC, so it sits at the project root beside the other packages' output folders (`architecture/`, `ux/`, `backlog/`).
 
 ---
 
-### Step 6: Create Management Registers
+### Step 6: Create the Governance Spine (Create-if-Absent)
 
-Create the six management registers using templates from `templates/`:
+The spine lives at `{project_root}/management_framework/` (sibling of `pip/`). Detect it by marker first (`management_framework/MANAGEMENT_FRAMEWORK.md`) — **append-if-exists, create-if-absent** per `MANAGEMENT_FRAMEWORK_CONTRACT.md` v1.2.0 and `templates/management-framework.md`.
 
-1. `management_framework/Decision_Log.md` — from `templates/decision-log.md`
-2. `management_framework/Change_Log.md` — from `templates/change-log.md`
-3. `management_framework/Issue_Log.md` — from `templates/issue-log.md`
-4. `management_framework/Action_Items.md` — from `templates/action-items.md`
-5. `management_framework/Assumptions_Dependencies.md` — from `templates/assumptions-dependencies.md`
-6. `management_framework/Lessons_Learned.md` — from `templates/lessons-learned.md`
+If absent, create the index marker + the six registers using templates from `templates/`:
+
+1. `{project_root}/management_framework/MANAGEMENT_FRAMEWORK.md` — index/marker
+2. `…/Decision_Log.md` · `…/Change_Log.md` · `…/Issue_Log.md` · `…/Action_Items.md` · `…/Assumptions_Dependencies.md` · `…/Lessons_Learned.md`
+
+**IDs are project-qualified** — `PILC-{ABBREV}-{TYPE}-{N}` (e.g. `PILC-CRM-D-1`) so they never collide across projects in one workspace.
 
 **Populate with initial entries:**
+- Decision Log → `PILC-{ABBREV}-D-1`: "Output structure: numbered (standard). Project name: {project_name}."
+- Decision Log → `PILC-{ABBREV}-D-2`: "Project ID assigned: {project_id}. Originating idea: {idea_ref}."
+- Assumptions → `PILC-{ABBREV}-AD-1`: "Source requirement document is available and represents stakeholder intent."
 
-- Decision Log → D-001: "Output structure chosen: {option}. Project name: {project_name}."
-- Decision Log → D-002: "Project ID assigned: {project_id}. Originating idea: {idea_ref}."
-- Assumptions → ASM-001: "Source requirement document is available and represents stakeholder intent."
+---
+
+### Step 6b: Create / Update the Projects Registry (Create-if-Absent)
+
+Maintain `pdlc-ws/projects/PROJECTS.md` per `PROJECTS_REGISTRY_SPEC.md` (shared, create-if-absent):
+
+1. If `pdlc-ws/projects/PROJECTS.md` is absent → create it from `templates/projects-registry.md`, add this project's row, and set it ★ active.
+2. If present → append this project's row (if missing); set `PILC = wip`/`done` in this project's row only; bump `Updated`. If the user chose to make this the active project, move the ★ pointer here (clearing the previous ★).
+3. Never edit another project's row.
 
 ---
 
@@ -246,12 +231,17 @@ Create `{output_root}/pilc-state.md` with initial content:
 |-----|-------|
 | Project Name | {project_name} |
 | Project ID | {project_id} |
+| Project Handle | PRJ-{ABBREV} |
+| Project Root | {project_root}  (= pdlc-ws/projects/PRJ-{ABBREV}-{slug}/) |
+| Route | project |
 | Originating Idea | {idea_ref} |
+| derivedFrom | {idea_ref} |
+| originType | project |
 | Started | {current_timestamp} |
 | Last Updated | {current_timestamp} |
 | Workflow Depth | _[To be determined at Stage 2]_ |
-| Output Structure | {numbered / flat / custom} |
-| Output Root | {output_root} |
+| Output Structure | numbered |
+| Output Root | {output_root}  (= {project_root}/pip/) |
 | Source Document | _[To be provided at Stage 2]_ |
 | Current Phase | INCEPTION |
 | Current Stage | 1 |
@@ -282,8 +272,8 @@ Create `{output_root}/pilc-state.md` with initial content:
 
 | Decision ID | Stage | Summary |
 |:-----------:|:-----:|---------|
-| D-001 | 1 | Output structure: {choice}. Project: {project_name}. |
-| D-002 | 1 | Project ID assigned: {project_id}. Originating idea: {idea_ref}. |
+| PILC-{ABBREV}-D-1 | 1 | Output structure: numbered. Project: {project_name}. |
+| PILC-{ABBREV}-D-2 | 1 | Project ID assigned: {project_id}. Originating idea: {idea_ref}. |
 
 ## Open Items
 
@@ -314,7 +304,8 @@ Display:
 
 📋 Project: {project_name}
 🆔 Project ID: {project_id}
-📁 Output: {output_root}/ ({structure_type})
+📁 Project root: {project_root}  (deliverables in pip/, spine at management_framework/)
+🗂  Registry: pdlc-ws/projects/PROJECTS.md  (this project set ★ active)
 📊 Management registers: 6 created
 🔄 State tracking: Active
 
@@ -344,7 +335,8 @@ This stage auto-proceeds to Stage 2 after user provides their source preference.
 | User provides no project name | Use "Untitled Project" and note: "You can rename at any time" |
 | Folder creation fails (permissions) | Inform user; suggest alternative path; do NOT proceed without a writable output location |
 | State file already exists but user says "fresh start" | Archive existing: rename to `pilc-state-{timestamp}.archived.md`; create new |
-| User wants to skip setup questions | Use defaults (numbered folders, workspace root); log as decision |
+| User wants to skip setup questions | Use defaults (standard `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/` layout, numbered deliverables); log as decision |
+| **Brownfield — existing flat layout found** | If a pre-existing flat `{name}-pip/` or root-level `pilc-state.md` is detected (older single-project layout), do NOT force-relocate. Inform the user: "Existing PILC output found at `{path}`. AI-PILC now uses `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/pip/` as the standard location. I'll operate in the standard location — you may migrate existing artifacts at your convenience." Offer a **one-time, user-approved, non-destructive** restructure into `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/` if the user wants. Never renumber existing human entries. |
 
 ---
 
@@ -354,8 +346,10 @@ If user says "just use defaults" or "skip setup":
 
 | Setting | Default Value |
 |---------|---------------|
-| Output structure | Numbered folders (option a) |
-| Output location | `./{project_name}/` |
+| Output structure | Standard `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/` layout — deliverables in `pip/` (numbered), spine at the project root |
+| Output location | `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/` (project root); PILC deliverables under `pip/` |
 | Project name | Must still be provided (no default) |
 | Project ID | Auto-generated `PRJ-{ABBREV}-{YEAR}-001` from project name; user may override |
 | Originating idea | `none` |
+
+> **Note:** The numbered folder structure is always used — there is no flat-folder option. This is a fixed convention, not a user-configurable setting.

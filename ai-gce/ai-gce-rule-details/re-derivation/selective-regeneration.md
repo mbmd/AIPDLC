@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Selective Regeneration — Re-Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Defines HOW AI-GCE regenerates ONLY the affected rules and hooks when steering f
 
 ## MANDATORY: Stage Sub-Role — Automation Engineer
 
-During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in surgical precision: touch ONLY what's affected, leave everything else exactly as-is
@@ -140,7 +141,7 @@ After rule/hook regeneration, update:
 |----------|-------------|
 | `knowledge-map.md` (in docs/) | Updated source references for re-derived rules |
 | `COMPLIANCE_README.md` | Updated rule list if categories added/removed |
-| `INSTALL-GUIDE.md` | Updated if hooks added/removed/renamed |
+| `ENFORCEMENT-GUIDE.md` | Updated if hooks added/removed/renamed |
 | `.compliance-state.json` | Updated `lastAudit` field is NOT changed (re-derivation ≠ audit) |
 
 ---

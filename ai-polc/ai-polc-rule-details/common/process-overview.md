@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AI-POLC — Process Overview
 
 **Purpose:** Quick-reference map of the entire AI-POLC workflow. Use this to understand where you are, what comes next, and how the phases connect.
@@ -19,20 +20,17 @@
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐
-    Design it │
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹
-    AI-POLC ──┘     Prepare it       ▲
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 | Layer | Package | Type | Input | Output |
@@ -41,17 +39,17 @@
 | Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 ---
 
@@ -107,7 +105,7 @@ PHASE 5: ASSEMBLY                      PHASE 6: OPERATIONS (repeating)
 
 ---
 
-## Input Modes (Lesson 4/6)
+## Input Modes
 
 AI-POLC supports multiple intake modes:
 
@@ -125,16 +123,16 @@ AI-POLC supports multiple intake modes:
 
 ### Product Backlog Package (PBP)
 
-The complete output of AI-POLC. Contains: vision, charter, roadmap, epics, prioritization, release plan, DoR/DoD, risks, traceability, stakeholder map, and governance spine entries. This is what AI-DWG reads for workspace generation and what AI-DLC's user references for development.
+The complete output of AI-POLC. Contains: vision, charter, roadmap, epics, prioritization, release plan, DoR/DoD, risks, traceability, stakeholder map, and governance spine entries. This is what AI-DWG reads for workspace generation and what AI-DLC v1's user references for development.
 
 ### Tier Model
 
 - **Tier 1 (always active):** Full PO governance — everything except story elaboration
-- **Tier 2 (user-activated):** Story elaboration — INVEST stories + Given/When/Then AC. Off by default in chain mode (AI-DLC does this).
+- **Tier 2 (user-activated):** Story elaboration — INVEST stories + Given/When/Then AC. Off by default in chain mode (AI-DLC v1 does this).
 
 ### Session-Based Operation
 
-AI-POLC and AI-DLC never run simultaneously in one session. The user alternates:
+AI-POLC and AI-DLC v1 never run simultaneously in one session. The user alternates:
 1. POLC session → refine backlog, reprioritize, accept last increment
 2. DLC session → build the next priority item
 3. POLC session → review what DLC built, accept/reject, update plan

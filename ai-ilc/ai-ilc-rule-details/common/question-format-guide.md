@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AI-ILC — Question Format Guide
 
 **Purpose:** Define how AI-ILC collects decisions from the user. Consistent formatting ensures every decision is clear, traceable, and immediately loggable in the Decision Log.

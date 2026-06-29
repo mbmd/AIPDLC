@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Source Document Ingestion
 
 ## Stage: 2 of 16
@@ -124,7 +125,8 @@ When `ilc-state.md` is detected (AI-ILC ran before AI-PILC) or the user says "I 
 4. Save extracted content to: `{output_root}/__input/source_from_ilc_brief.md`
 5. Store in state file:
    - `Source Document: __input/source_from_ilc_brief.md (from AI-ILC)`
-   - `Originating Idea: {idea_id}` (auto-populated from `ilc-state.md`)
+   - `derivedFrom: {idea_id}` (auto-populated from `ilc-state.md` — REQUIRED per Traceability Contract §4-A)
+   - `Originating Idea: {idea_id}` (legacy alias — kept for backward compatibility)
    - `Intake Mode: AI-ILC Brief`
 6. Present summary for user confirmation:
    ```
@@ -148,12 +150,12 @@ When `ilc-state.md` is detected (AI-ILC ran before AI-PILC) or the user says "I 
    ```
 7. If (a) → proceed to Step 2 with the ILC brief as source
 8. If (b) → accept additional material; merge with ILC brief (ILC brief = primary, additional = supplementary)
-9. If (c) → discard ILC brief; switch to Mode A/B/C; still record `Originating Idea` in state
+9. If (c) → discard ILC brief; switch to Mode A/B/C; still record `derivedFrom` in state (lineage preserved even if source is replaced)
 10. Proceed to Step 2
 
 **Note for Mode E:** The workflow depth will typically be "Standard" — ILC briefs are structured (they've been through evaluate + scope), so completeness is usually 60-80%. Complexity is assessed from the scope section, not the brief format.
 
-**Lesson 6 (OR-input) compliance:** Mode E is purely ADDITIVE — Modes A/B/C/D remain unchanged. If `ilc-state.md` is detected but the user prefers another mode, they can switch (option c above). The AI-ILC brief is an optional enrichment path, not a requirement.
+**OR-input (optional predecessor) compliance:** Mode E is purely ADDITIVE — Modes A/B/C/D remain unchanged. If `ilc-state.md` is detected but the user prefers another mode, they can switch (option c above). The AI-ILC brief is an optional enrichment path, not a requirement.
 
 ---
 

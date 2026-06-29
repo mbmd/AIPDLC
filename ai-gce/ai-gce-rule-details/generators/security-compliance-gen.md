@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Security Compliance — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives security compliance rules from `security-rules.md` and `observability-se
 
 ## MANDATORY: Stage Sub-Role — Security Architect
 
-During THIS activity, ALSO adopt the mindset of a **Security Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of a **Security Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Apply defense-in-depth thinking: baseline security is the floor, steering enrichment adds project-specific layers

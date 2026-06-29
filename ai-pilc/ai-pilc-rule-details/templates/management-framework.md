@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Management Framework — Consolidated Spine Template (AI-PILC)
 
 | Field | Value |
@@ -6,7 +7,7 @@
 | **Phase Code** | `PILC` |
 | **Role** | Required producer — first chain package to create-or-append the spine |
 | **Registers Produced** | 6 (Decision, Change, Issue, Action, Assumptions, Lessons) |
-| **Contract Reference** | `ai-packages/MANAGEMENT_FRAMEWORK_CONTRACT.md` v1.1.0 |
+| **Contract Reference** | Management Framework Contract v1.2.0 + Multi-Project Output & State Contract v1.0.0 |
 
 ---
 
@@ -21,22 +22,43 @@ AI-PILC is typically the **first package** in the chain to run, so in most chain
 ## Behavior: Append-if-Exists / Create-if-Absent
 
 ```
-1. DETECT the spine by marker (Lesson 14):
+1. DETECT the spine by marker:
    → Scan for management_framework/MANAGEMENT_FRAMEWORK.md
-   → Detection path: user-provided path → ./management_framework/ → project root → ask user.
+   → Multi-project default location: {project_root}/management_framework/ (sibling of pip/),
+     where {project_root} = pdlc-ws/projects/PRJ-{ABBREV}-{slug}/.
+   → Detection path: user-provided path → {project_root}/management_framework/ →
+     pdlc-ws/projects/*/management_framework/ → ./management_framework/ → ask user.
 
 2. IF marker found (spine exists):
    → APPEND PILC-phase entries to the existing registers.
-   → Use ID prefix PILC-{TYPE}-{NNN}.
+   → Use project-qualified ID prefix PILC-{ABBREV}-{TYPE}-{N} (e.g. PILC-CRM-D-1).
    → Add/update the PILC row in the index's "Contributing Phases" table.
    → DO NOT touch other phases' rows (additive, non-destructive).
 
 3. IF marker NOT found (no spine):
-   → CREATE management_framework/ at the configured location.
+   → CREATE management_framework/ at the project root ({project_root}/management_framework/).
    → Generate the index file (MANAGEMENT_FRAMEWORK.md) from the template below.
    → Generate all 6 registers from the schemas below.
-   → This package operates exactly as standalone (Lesson 19 / Lesson 45).
+   → This package operates exactly as standalone (self-contained spine, one consolidated record).
 ```
+
+---
+
+## ID Assignment Protocol (Numbering — OI-031)
+
+Every entry ID uses the format `PILC-{ABBREV}-{TYPE}-{N}` where `{N}` is a sequential integer. To assign `{N}`:
+
+```
+1. READ the target register file (e.g. Decision_Log.md).
+2. SCAN all existing rows for this phase+project prefix (PILC-{ABBREV}-{TYPE}-*).
+3. FIND the highest {N} value currently present.
+4. ASSIGN {N} = highest + 1 (or 1 if no existing entries for this prefix).
+5. WRITE the new entry with the assigned ID.
+```
+
+**Concurrency model:** The AI-* Family operates in a single-user, single-agent model. The scan-and-increment protocol is safe because only one writer operates on a given register at a time. If future parallelism is introduced (multiple agents writing the same register concurrently), a reservation or locking mechanism would be required — that is explicitly deferred.
+
+**Carry-forward continuity:** When a spine is carried forward into a dev workspace (DWG hinge), numbering continues from the last assigned `{N}` — never resets to 1.
 
 ---
 
@@ -45,7 +67,7 @@ AI-PILC is typically the **first package** in the chain to run, so in most chain
 > This is `management_framework/MANAGEMENT_FRAMEWORK.md` — the marker AND human entry point.
 
 ```markdown
-<!-- Shared governance spine | contract v1.1.0 -->
+<!-- Shared governance spine | contract v1.2.0 -->
 
 # Management Framework
 
@@ -68,7 +90,7 @@ Each phase of the AI-* chain appends its decisions, changes, issues, and lessons
 | PILC | AI-PILC | {date} | Decision, Change, Issue, Action, Assumptions, Lessons |
 
 ## Conventions
-- Entry IDs are phase-prefixed: `{PHASE}-{TYPE}-{NNN}`.
+- Entry IDs are project-qualified, phase-prefixed: `{PHASE}-{ABBREV}-{TYPE}-{N}`.
 - Entries are append-only — never edit or delete another phase's rows.
 - Filter by the Phase column to view a single phase's governance.
 - Detection by marker: this file's presence means "a consolidated spine exists here."
@@ -88,14 +110,14 @@ All schemas carry the **Phase** column per the contract. AI-PILC uses prefix `PI
 
 | ID | Phase | Date | Decision | Context / Options Considered | Rationale | Decision Maker | Impact | Status |
 |----|-------|------|----------|------------------------------|-----------|----------------|--------|:------:|
-| PILC-D-001 | PILC | {date} | {decision} | {context} | {rationale} | {maker} | {impact} | ✅ Final |
+| PILC-{ABBREV}-D-1 | PILC | {date} | {decision} | {context} | {rationale} | {maker} | {impact} | ✅ Final |
 ```
 
 **Status values:** ✅ Final · ☐ Pending · 🔄 Under Review · ⏸️ Deferred · ❌ Reversed
 
 **Governance rules:**
 1. All decisions with scope, budget, or timeline impact MUST be recorded.
-2. Numbered sequentially within the PILC phase (`PILC-D-001`, `PILC-D-002`, ...).
+2. Numbered sequentially per the ID Assignment Protocol above, project-qualified (`PILC-{ABBREV}-D-1`, `PILC-{ABBREV}-D-2`, ...).
 3. Entries never deleted — only status-updated.
 4. Architecture decisions that warrant an ADR → recorded in `ADR/` (AI-ADLC), NOT here.
 
@@ -109,7 +131,7 @@ All schemas carry the **Phase** column per the contract. AI-PILC uses prefix `PI
 
 | ID | Phase | Date Raised | Description | Raised By | Impact Assessment | Approval Status | Approved By | Date Approved | Implemented |
 |----|-------|:-----------:|-------------|-----------|-------------------|:---------------:|-------------|:-------------:|:-----------:|
-| PILC-C-001 | PILC | {date} | {description} | {name} | {scope/schedule/budget impact} | ☐ Pending | _[TBD]_ | — | ☐ No |
+| PILC-{ABBREV}-C-1 | PILC | {date} | {description} | {name} | {scope/schedule/budget impact} | ☐ Pending | _[TBD]_ | — | ☐ No |
 ```
 
 **Status values:** ☐ Pending · 🔄 Under Assessment · ✅ Approved · ✅ Implemented · ❌ Rejected · ⏸️ Deferred
@@ -126,7 +148,7 @@ All schemas carry the **Phase** column per the contract. AI-PILC uses prefix `PI
 
 | ID | Phase | Date Raised | Issue | Severity | Area | Owner | Status | Resolution | Resolved |
 |----|-------|:-----------:|-------|:--------:|------|:-----:|:------:|-----------|:--------:|
-| PILC-I-001 | PILC | {date} | {issue} | {H/M/L} | {area} | {owner} | ☐ Open | — | — |
+| PILC-{ABBREV}-I-1 | PILC | {date} | {issue} | {H/M/L} | {area} | {owner} | ☐ Open | — | — |
 ```
 
 **Status values:** ☐ Open · 🔄 Investigating · ✅ Resolved · ⏸️ On Hold · ❌ Escalated
@@ -141,7 +163,7 @@ All schemas carry the **Phase** column per the contract. AI-PILC uses prefix `PI
 
 | ID | Phase | Date Raised | Description | Owner | Due Date | Priority | Source | Status |
 |----|-------|:-----------:|-------------|:-----:|:--------:|:--------:|--------|:------:|
-| PILC-A-001 | PILC | {date} | {action} | {role} | {due} | {H/M/L} | {meeting/stage/review} | ☐ Open |
+| PILC-{ABBREV}-A-1 | PILC | {date} | {action} | {role} | {due} | {H/M/L} | {meeting/stage/review} | ☐ Open |
 ```
 
 **Status values:** ☐ Open · 🔄 In Progress · ✅ Complete · ❌ Cancelled · ⏸️ On Hold
@@ -158,7 +180,7 @@ All schemas carry the **Phase** column per the contract. AI-PILC uses prefix `PI
 
 | ID | Phase | Date | Assumption / Dependency | Type | Impact if Invalid | Owner | Status |
 |----|-------|------|-------------------------|:----:|-------------------|:-----:|:------:|
-| PILC-AD-001 | PILC | {date} | {statement} | {A/D} | {impact} | {owner} | ☐ Open |
+| PILC-{ABBREV}-AD-1 | PILC | {date} | {statement} | {A/D} | {impact} | {owner} | ☐ Open |
 ```
 
 **Type:** A = Assumption · D = Dependency
@@ -174,12 +196,14 @@ All schemas carry the **Phase** column per the contract. AI-PILC uses prefix `PI
 
 | ID | Phase | Date | Lesson | Context | Action Taken | Category |
 |----|-------|------|--------|---------|--------------|----------|
-| PILC-L-001 | PILC | {date} | {lesson} | {what happened} | {corrective action} | {Process/People/Technology/Governance} |
+| PILC-{ABBREV}-L-1 | PILC | {date} | {lesson} | {what happened} | {corrective action} | {Process/People/Technology/Governance} |
 ```
 
 ---
 
 ## When AI-PILC Records (Mapping to Stages)
+
+> Example IDs below omit the project handle for brevity; actual IDs are project-qualified `PILC-{ABBREV}-{TYPE}-{N}` (e.g. `PILC-CRM-D-1`).
 
 | PILC Stage | Registers Typically Touched | Example Entry |
 |:----------:|---------------------------|---------------|
@@ -199,8 +223,8 @@ All schemas carry the **Phase** column per the contract. AI-PILC uses prefix `PI
 
 | Mode | What Happens |
 |------|-------------|
-| **Standalone** (no predecessor has run) | AI-PILC creates the spine from scratch. Self-contained output (Lesson 19 intent). |
-| **Chain** (spine already exists from AI-ILC or manual seeding) | AI-PILC appends `PILC-*` entries. One consolidated record (Lesson 45). |
+| **Standalone** (no predecessor has run) | AI-PILC creates the spine from scratch. Self-contained output. |
+| **Chain** (spine already exists from AI-ILC or manual seeding) | AI-PILC appends `PILC-*` entries. One consolidated record. |
 
 ---
 
@@ -215,4 +239,4 @@ This file is the **spine-aware master** — it governs how registers are created
 
 ---
 
-*Template Version: 1.0.0 | Contract: MANAGEMENT_FRAMEWORK_CONTRACT.md v1.1.0 | Package: AI-PILC | Phase code: PILC*
+*Template Version: 1.2.0 | Contract: MANAGEMENT_FRAMEWORK_CONTRACT.md v1.3.0 + OUTPUT_AND_STATE_CONTRACT.md v1.0.0 | Package: AI-PILC | Phase code: PILC | IDs: project-qualified PILC-{ABBREV}-{TYPE}-{N}*

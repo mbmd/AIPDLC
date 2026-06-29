@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Session Continuity
 
 ## Purpose
@@ -10,7 +11,9 @@ AI-PILC workflows may span multiple sessions (days, weeks, or longer). This docu
 
 ### Location
 
-The state file is always located at: `{output_root}/pilc-state.md`
+The state file is always located at: `{output_root}/pilc-state.md`.
+
+In the standard multi-project layout, `{output_root}` = `{project_root}/pip/` where `{project_root}` = `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/`. So the marker resolves to `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/pip/pilc-state.md`. The governance spine is a sibling of `pip/` at `{project_root}/management_framework/`. (See `OUTPUT_AND_STATE_CONTRACT.md` §4.)
 
 ### Structure
 
@@ -23,13 +26,18 @@ The state file is always located at: `{output_root}/pilc-state.md`
 |-----|-------|
 | Project Name | {project_name} |
 | Project ID | {project_id} |
+| Project Handle | PRJ-{ABBREV} |
+| Project Root | {project_root}  (= pdlc-ws/projects/PRJ-{ABBREV}-{slug}/) |
+| Route | project |
 | Originating Idea | {idea_ref} |
+| derivedFrom | {idea_ref} |
+| originType | project |
 | Started | {ISO 8601 timestamp} |
 | Last Updated | {ISO 8601 timestamp} |
 | Producer Version | AI-PILC v1.0.0 |
 | Workflow Depth | {Minimal / Standard / Comprehensive} |
-| Output Structure | {numbered / flat / custom} |
-| Output Root | {path} |
+| Output Structure | numbered |
+| Output Root | {path}  (= {project_root}/pip/) |
 | Source Document | {path or "inline"} |
 | Current Phase | {phase_name} |
 | Current Stage | {stage_number} |
@@ -84,12 +92,15 @@ When a new session begins, the AI MUST follow this sequence:
 
 ### Step 1: Detect State
 
-1. Check if `pilc-state.md` exists in the expected location
-2. If NOT found → check common alternative paths:
+1. Scan for `pilc-state.md`, in order:
+   - `pdlc-ws/projects/*/pip/pilc-state.md` (**default multi-project layout**)
+   - `{output_root}/pilc-state.md` (the expected location from state, if known)
    - `./pilc-state.md`
    - `./pilc-docs/pilc-state.md`
    - `./{numbered_folder_root}/pilc-state.md`
-3. If still NOT found → treat as fresh start (go to core-workflow Stage 1)
+2. **If multiple projects are found:** read `pdlc-ws/projects/PROJECTS.md` for the ★ active project and run the active-project selection prompt (see `inception/workspace-detection.md` Step 1) — resume the chosen project, or originate a new one.
+3. If exactly one is found → load it and resume.
+4. If still NOT found → treat as fresh start (go to core-workflow Stage 1).
 
 ### Step 2: Load State
 
@@ -249,73 +260,56 @@ If user explicitly requests a fresh start:
 
 ## Output Structure Conventions
 
-The `Output Structure` field in `pilc-state.md` determines file organization:
+The `Output Structure` field in `pilc-state.md` is always `numbered` — the deliverable layout **inside `pip/`** is fixed (not a user choice). In the standard multi-project layout everything nests under the project root; the spine is a sibling of `pip/`. The "Flat" layout below is retained for **backwards-compatibility detection only** (older single-project output) — it is never offered to the user for new work.
 
-### Numbered (Default)
-
-```
-{output_root}/
-├── pilc-state.md
-├── 01_Requirement_Intake_Form.md
-├── 02_Requirements_Analysis_Report.md
-├── 03_Clarification_Questionnaire.md
-├── 04_Feasibility_Assessment.md
-├── 05_Business_Case.md
-├── 06_Project_Charter.md
-├── 07_Stakeholder_Register.md
-├── 08_Scope_Statement.md
-├── 09_Resource_Plan.md
-├── 10_Risk_Register.md
-├── 11_RACI_Matrix.md
-├── 12_Kickoff_Agenda.md
-├── management_framework/
-│   ├── Decision_Log.md
-│   ├── Change_Log.md
-│   ├── Issue_Log.md
-│   ├── Action_Items.md
-│   ├── Assumptions_Dependencies.md
-│   └── Lessons_Learned.md
-└── PROJECT_INITIATION_PACKAGE_README.md
-```
-
-### Flat
+### Numbered (Always — Standard)
 
 ```
-{output_root}/
-├── pilc-state.md
-├── pilc-docs/
-│   ├── inception/
-│   │   └── Requirement_Intake_Form.md
-│   ├── assessment/
-│   │   ├── Requirements_Analysis_Report.md
-│   │   ├── Clarification_Questionnaire.md
-│   │   ├── Feasibility_Assessment.md
-│   │   └── Prioritization.md
-│   ├── justification/
-│   │   └── Business_Case.md
-│   ├── authorization/
-│   │   └── Project_Charter.md
-│   ├── planning/
-│   │   ├── Stakeholder_Register.md
-│   │   ├── Scope_Statement.md
-│   │   ├── Resource_Plan.md
-│   │   ├── Risk_Register.md
-│   │   └── RACI_Matrix.md
-│   └── mobilization/
-│       └── Kickoff_Agenda.md
-├── management_framework/
-│   ├── Decision_Log.md
-│   ├── Change_Log.md
-│   ├── Issue_Log.md
-│   ├── Action_Items.md
-│   ├── Assumptions_Dependencies.md
-│   └── Lessons_Learned.md
-└── PROJECT_INITIATION_PACKAGE_README.md
+pdlc-ws/projects/
+├── PROJECTS.md                          ← registry + active pointer
+└── PRJ-{ABBREV}-{slug}/                  ← {project_root}
+    ├── management_framework/             ← governance spine (project root, shared)
+    │   ├── MANAGEMENT_FRAMEWORK.md
+    │   ├── Decision_Log.md · Change_Log.md · Issue_Log.md
+    │   ├── Action_Items.md · Assumptions_Dependencies.md · Lessons_Learned.md
+    │   └── dashboards/                   ← per-project dashboards (DASHBOARD contract §2)
+    └── pip/                              ← {output_root} — AI-PILC deliverables
+        ├── pilc-state.md
+        ├── 01_Requirement_Intake_Form.md
+        ├── 02_Requirements_Analysis_Report.md
+        ├── … (03–12 deliverables) …
+        └── PROJECT_INITIATION_PACKAGE_README.md
 ```
 
-**Detection guarantee:** Regardless of output structure, these files are ALWAYS findable:
-- `pilc-state.md` — always at `{output_root}/` (the marker file)
+### Flat (Legacy — Backwards-Compat Detection Only)
+
+```
+pdlc-ws/projects/PRJ-{ABBREV}-{slug}/
+├── management_framework/                 ← governance spine (project root, shared)
+└── pip/                                  ← {output_root}
+    ├── pilc-state.md
+    ├── pilc-docs/
+    │   ├── inception/ · assessment/ · justification/
+    │   ├── authorization/ · planning/ · mobilization/
+    └── PROJECT_INITIATION_PACKAGE_README.md
+```
+
+**Detection guarantee:** Regardless of deliverable structure, these are ALWAYS findable:
+- `pilc-state.md` — always at `{output_root}/` (= `{project_root}/pip/`) — the marker file
 - `PROJECT_INITIATION_PACKAGE_README.md` — always at `{output_root}/`
-- `management_framework/` — always at `{output_root}/management_framework/`
+- `management_framework/` — always at `{project_root}/management_framework/` (one level up from `pip/`)
 
-**Why this matters:** AI-ADLC scans for `pilc-state.md` as its input marker. Once found, it knows the PIP root and can locate all artifacts regardless of structure choice.
+**Why this matters:** AI-ADLC scans `pdlc-ws/projects/*/pip/pilc-state.md` (and legacy locations) for its input marker. Once found, it knows the project root, reads the shared spine one level up, and writes its own output into `{project_root}/architecture/` — regardless of PILC's deliverable structure choice.
+
+---
+
+## Skipping and Customization
+
+Users may request to:
+- **Skip a stage** → Log decision with rationale; mark as "Skipped" in state
+- **Combine stages** → Execute both but produce a single merged deliverable
+- **Add custom stages** → Insert at user-specified position; track in state
+- **Change depth mid-workflow** → Update state; adjust remaining stages accordingly
+- **Stop early** → Generate partial package with completeness report noting what's missing
+
+All customizations are logged in the Decision Log.

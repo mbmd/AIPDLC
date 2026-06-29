@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # API Compliance — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives API-first compliance rules (GOV-API-*) from `api-standards.md` and optio
 
 ## MANDATORY: Stage Sub-Role — API Designer
 
-During THIS activity, ALSO adopt the mindset of an **API Designer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **API Designer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think contract-first: the API spec (OpenAPI/Swagger) is the source of truth — code implements the contract, never the reverse

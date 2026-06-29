@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Naming Conventions — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives naming convention rules (NC-*) from `naming-conventions.md`. 100% steeri
 
 ## MANDATORY: Stage Sub-Role — Workspace Architect
 
-During THIS activity, ALSO adopt the mindset of a **Workspace Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of a **Workspace Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in consistency patterns: naming rules exist so that ANY file's purpose is immediately clear from its name

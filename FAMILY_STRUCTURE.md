@@ -1,8 +1,10 @@
 # AI-* Family — Complete Package & Output Structure
 
-**Version:** 1.0.0
-**Date:** 2026-06-06
+**Version:** 2.1.0
+**Date:** 2026-06-17
 **Author:** Maheri
+
+> **Amendment (2026-06-22 — family-workspace prefix + install split):** PART 2 runtime trees now nest all output under the family workspace `pdlc-ws/` (`pdlc-ws/projects/…`, `pdlc-ws/ideas/`, `pdlc-ws/portfolio/`, `pdlc-ws/data/`). PART 1 gains an "Installed Location" subsection documenting the Kiro split — core files → `.kiro/steering/{family}/`, rule-details → `.kiro/{family}/`. See the install-lock design + `OUTPUT_AND_STATE_CONTRACT.md`.
 
 ---
 
@@ -21,20 +23,17 @@
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐                                                
-    Design it │                                                
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POLC ──┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 | Layer | Package | Type | Input | Output |
@@ -43,17 +42,19 @@
 | Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+
+> **AI-DWG Input semantics (peer-input model, OI-069 / decision 0.2 — 2026-06-15c):** The `AP + PBP + UXP` cell lists AI-DWG's three **peer inputs** (AP = AI-ADLC, PBP = AI-POLC, UXP = AI-UXD). It does **not** mean all three are required. AI-DWG accepts **any non-empty subset (≥1 of the three)** and generates only the output clusters whose input is present; absent inputs trigger a quality-impact disclosure + user approval (per `DWG_CONVERGENCE_DESIGN.md` Law 1). The cell text is kept **verbatim** as a compact input list — this note carries the semantics so no per-file table change/propagation is required.
 
 ---
 
@@ -61,9 +62,9 @@
 
 All file naming and provenance across the family follows one ratified convention:
 
-> **See `ai-packages/NAMING_AND_OWNERSHIP.md` (the source of truth).**
+> **See `contracts/NAMING_AND_OWNERSHIP.md` (the source of truth).**
 
-**The A-dominant hybrid in one paragraph:** every generated `.md` artifact carries a provenance front-matter block (`generated-by`, `source`, `ownership: generated|hybrid|user`); hooks carry a `generatedBy` field. Filenames stay generic so artifacts read as the team's own — except *tool-owned* files, which are separated by **folder** (`.governance/`, `.kiro/hooks/`), never by filename prefix. Chain **marker files** (`pilc-state.md`, `adlc-state.md`, `workspace-rules.md`, the `.kiro/hooks/` folder) keep their exact names — renaming them breaks detection (Lesson 14).
+**The A-dominant hybrid in one paragraph:** every generated `.md` artifact carries a provenance front-matter block (`generated-by`, `source`, `ownership: generated|hybrid|user`); hooks carry a `generatedBy` field. Filenames stay generic so artifacts read as the team's own — except *tool-owned* files, which are separated by **folder** (`.governance/`, `.kiro/hooks/`), never by filename prefix. Chain **marker files** (`pilc-state.md`, `adlc-state.md`, `workspace-rules.md`, the `.kiro/hooks/` folder) keep their exact names — renaming them breaks detection.
 
 **Ownership legend** (used to annotate PART 2 below):
 
@@ -78,604 +79,409 @@ All file naming and provenance across the family follows one ratified convention
 
 ## PART 1: Package Source Structure (What We Build & Publish)
 
+> **These trees are compact by design** — they show each package's folder skeleton and key files, not every file. Each package's own `CONCEPTUAL_MAP.md` (navigation) and `PLAN.md` (rationale) hold the exhaustive, authoritative file list.
+
+**Shared shell (every package).** All 10 packages ship the same outer shell, so it is shown once here and omitted from the per-package trees below:
+
 ```
-ai-packages/
-│
-├── ai-pilc/                                    ← AI-Driven Project Initiation Life Cycle
-│   ├── README.md
-│   ├── LICENSE
-│   ├── ai-pilc-rules/
-│   │   └── core-workflow.md                    ← Master orchestration
-│   ├── ai-pilc-rule-details/
-│   │   ├── common/
-│   │   │   ├── process-overview.md
-│   │   │   ├── session-continuity.md
-│   │   │   ├── question-format-guide.md
-│   │   │   ├── content-validation.md
-│   │   │   └── welcome-message.md
-│   │   ├── inception/                          ← Phase 1 stages
-│   │   │   ├── workspace-detection.md
-│   │   │   ├── source-ingestion.md
-│   │   │   └── requirement-structuring.md
-│   │   ├── assessment/                         ← Phase 2 stages
-│   │   │   ├── requirements-analysis.md
-│   │   │   ├── clarification-cycle.md
-│   │   │   ├── feasibility-assessment.md
-│   │   │   └── prioritization.md
-│   │   ├── justification/                      ← Phase 3 stages
-│   │   │   └── business-case.md
-│   │   ├── authorization/                      ← Phase 4 stages
-│   │   │   └── project-charter.md
-│   │   ├── planning/                           ← Phase 5 stages
-│   │   │   ├── stakeholder-management.md
-│   │   │   ├── scope-definition.md
-│   │   │   ├── resource-budget.md
-│   │   │   ├── risk-management.md
-│   │   │   └── governance-communication.md
-│   │   ├── mobilization/                       ← Phase 6 stages
-│   │   │   ├── kickoff-preparation.md
-│   │   │   └── package-assembly.md
-│   │   └── templates/
-│   │       ├── requirement-intake-form.md
-│   │       ├── feasibility-assessment.md
-│   │       ├── business-case.md
-│   │       ├── project-charter.md
-│   │       ├── stakeholder-register.md
-│   │       ├── scope-statement.md
-│   │       ├── resource-plan.md
-│   │       ├── risk-register.md
-│   │       ├── raci-matrix.md
-│   │       ├── kickoff-agenda.md
-│   │       ├── decision-log.md
-│   │       ├── change-log.md
-│   │       ├── issue-log.md
-│   │       ├── action-items.md
-│   │       ├── assumptions-dependencies.md
-│   │       └── lessons-learned.md
-│   └── kiro-setup/
-│       └── INSTALL.md
-│
-├── ai-adlc/                                    ← AI-Driven Architecture Design Life Cycle
-│   ├── README.md
-│   ├── LICENSE
-│   ├── ROADMAP.md
-│   ├── ai-adlc-rules/
-│   │   └── core-workflow.md                    ← Master orchestration
-│   ├── ai-adlc-rule-details/
-│   │   ├── common/
-│   │   │   ├── process-overview.md
-│   │   │   ├── session-continuity.md
-│   │   │   ├── question-format-guide.md
-│   │   │   ├── content-validation.md
-│   │   │   ├── diagram-standards.md
-│   │   │   └── welcome-message.md
-│   │   ├── foundation/                         ← Phase 1 stages
-│   │   │   ├── workspace-detection.md
-│   │   │   ├── requirements-ingestion.md
-│   │   │   └── architecture-vision.md
-│   │   ├── decomposition/                      ← Phase 2 stages
-│   │   │   ├── system-context.md
-│   │   │   └── container-design.md
-│   │   ├── decisions/                          ← Phase 3 stages
-│   │   │   ├── technology-stack.md
-│   │   │   ├── multi-tenancy.md
-│   │   │   └── security-identity.md
-│   │   ├── design/                             ← Phase 4 stages
-│   │   │   ├── data-architecture.md
-│   │   │   ├── api-architecture.md
-│   │   │   ├── integration-infrastructure.md
-│   │   │   └── component-design.md
-│   │   ├── assembly/                           ← Phase 5 stages
-│   │   │   └── package-assembly.md
-│   │   ├── templates/
-│   │   │   ├── adr-template.md
-│   │   │   ├── brownfield-strategy-adr.md
-│   │   │   ├── architecture-vision.md
-│   │   │   ├── system-context.md
-│   │   │   ├── container-diagram.md
-│   │   │   ├── technology-stack.md
-│   │   │   ├── multi-tenancy.md
-│   │   │   ├── security-architecture.md
-│   │   │   ├── data-architecture.md
-│   │   │   ├── api-architecture.md
-│   │   │   ├── integration-architecture.md
-│   │   │   ├── component-design.md
-│   │   │   └── architecture-workbook.md
-│   │   └── extensions/                         ← v1.1 opt-in patterns
-│   │       ├── README.md
-│   │       ├── ddd-tactical/
-│   │       │   ├── ddd-tactical.opt-in.md
-│   │       │   └── ddd-tactical.md
-│   │       ├── microservices/
-│   │       │   ├── microservices.opt-in.md
-│   │       │   └── microservices.md
-│   │       ├── bff-pattern/
-│   │       │   ├── bff-pattern.opt-in.md
-│   │       │   └── bff-pattern.md
-│   │       ├── event-sourcing-cqrs/
-│   │       │   ├── event-sourcing-cqrs.opt-in.md
-│   │       │   └── event-sourcing-cqrs.md
-│   │       ├── resilience-patterns/
-│   │       │   ├── resilience-patterns.opt-in.md
-│   │       │   └── resilience-patterns.md
-│   │       └── feature-flags/
-│   │           ├── feature-flags.opt-in.md
-│   │           └── feature-flags.md
-│   └── kiro-setup/
-│       └── INSTALL.md
-│
-├── ai-dwg/                                     ← AI-Driven Workspace Generator
-│   ├── README.md
-│   ├── LICENSE
-│   ├── PLAN.md
-│   ├── ai-dwg-rules/
-│   │   └── core-generator.md                   ← Master generation logic
-│   ├── ai-dwg-rule-details/
-│   │   ├── common/
-│   │   │   ├── process-overview.md
-│   │   │   ├── ap-reading-guide.md
-│   │   │   └── validation-rules.md
-│   │   ├── mapping/                            ← AP → Workspace transformation rules
-│   │   │   ├── vision-to-workspace-rules.md
-│   │   │   ├── techstack-to-config.md
-│   │   │   ├── components-to-structure.md
-│   │   │   ├── components-to-domain-context.md
-│   │   │   ├── security-to-steering.md
-│   │   │   ├── api-to-steering.md
-│   │   │   ├── data-to-steering.md
-│   │   │   ├── tenancy-to-steering.md
-│   │   │   ├── infra-to-config.md
-│   │   │   ├── infra-to-cicd.md
-│   │   │   ├── infra-to-observability.md
-│   │   │   ├── components-to-error-handling.md
-│   │   │   ├── integration-to-resilience.md
-│   │   │   ├── quality-to-performance.md
-│   │   │   ├── containers-to-frontend.md
-│   │   │   ├── governance-derivation.md
-│   │   │   ├── quality-to-dod.md
-│   │   │   ├── team-to-agreements.md
-│   │   │   ├── extension-ddd-enrichment.md
-│   │   │   ├── extension-microservices-enrichment.md
-│   │   │   ├── extension-eventsourcing-enrichment.md
-│   │   │   ├── extension-featureflags-enrichment.md
-│   │   │   └── brownfield-to-steering.md
-│   │   ├── reconciliation/                     ← Delta update logic
-│   │   │   ├── diff-strategy.md
-│   │   │   ├── merge-strategy.md
-│   │   │   ├── provenance-tracking.md
-│   │   │   └── downstream-signaling.md
-│   │   └── templates/                          ← Generic templates for output
-│   │       ├── steering/
-│   │       │   ├── workspace-rules.md
-│   │       │   ├── architecture-principles.md
-│   │       │   ├── tech-stack.md
-│   │       │   ├── coding-standards.md
-│   │       │   ├── project-governance.md
-│   │       │   ├── scope-and-risks.md
-│   │       │   ├── session-governance.md
-│   │       │   ├── role-isolation.md
-│   │       │   ├── domain-context.md
-│   │       │   ├── multi-tenancy.md
-│   │       │   ├── api-standards.md
-│   │       │   ├── api-versioning.md
-│   │       │   ├── security-rules.md
-│   │       │   ├── module-structure.md
-│   │       │   ├── testing-strategy.md
-│   │       │   ├── database-rules.md
-│   │       │   ├── naming-conventions.md
-│   │       │   ├── git-workflow.md
-│   │       │   ├── error-handling.md
-│   │       │   ├── resilience-standards.md
-│   │       │   ├── observability-logging.md
-│   │       │   ├── observability-tracing.md
-│   │       │   ├── observability-sensitive.md
-│   │       │   ├── performance-standards.md
-│   │       │   ├── workflow-engine.md
-│   │       │   ├── frontend-standards.md
-│   │       │   ├── event-sourcing.md
-│   │       │   ├── feature-flags.md
-│   │       │   └── brownfield-patterns.md
-│   │       ├── operational/
-│   │       │   ├── project-instructions.md
-│   │       │   ├── definition-of-done.md
-│   │       │   ├── contributing.md
-│   │       │   ├── cicd-guide.md
-│   │       │   ├── team-agreements.md
-│   │       │   ├── onboarding.md
-│   │       │   └── pr-template.md
-│   │       ├── planning/
-│   │       │   ├── session-planning.md
-│   │       │   ├── sprint-planning.md
-│   │       │   └── estimation-guide.md
-│   │       ├── config/
-│   │       │   ├── readme-skeleton.md
-│   │       │   ├── editorconfig.md
-│   │       │   └── codeowners.md
-│   │       └── docker-compose/
-│   │           ├── node-typescript.md
-│   │           ├── python-django.md
-│   │           ├── dotnet.md
-│   │           ├── java-spring.md
-│   │           └── generic.md
-│   └── kiro-setup/
-│       └── INSTALL.md
-│
-└── ai-gce/                                     ← AI-Driven Governance & Compliance Engine
-    ├── README.md
-    ├── LICENSE
-    ├── PLAN.md
-    ├── ai-gce-rules/
-    │   └── core-generator.md                   ← Master derivation logic (4 modes, tier model, two-source)
-    ├── ai-gce-rule-details/
-    │   ├── common/
-    │   │   ├── process-overview.md
-    │   │   ├── workspace-reading-guide.md
-    │   │   ├── validation-rules.md
-    │   │   ├── scoring-model.md
-    │   │   └── knowledge-map-guide.md
-    │   ├── generators/                         ← Derivation logic per output category (23 files)
-    │   │   ├── --- ARCHITECTURAL ---
-    │   │   ├── architecture-compliance-gen.md
-    │   │   ├── api-compliance-generator.md
-    │   │   ├── security-compliance-gen.md
-    │   │   ├── data-governance-generator.md
-    │   │   ├── module-boundary-generator.md
-    │   │   ├── naming-generator.md
-    │   │   ├── error-handling-generator.md
-    │   │   ├── logging-generator.md
-    │   │   ├── domain-context-generator.md
-    │   │   ├── conditional-arch-generator.md   (covers tenant-isolation, resilience, tracing, etc.)
-    │   │   ├── hooks-from-steering.md
-    │   │   ├── --- NON-ARCHITECTURAL ---
-    │   │   ├── phase-gates-generator.md
-    │   │   ├── session-governance-generator.md
-    │   │   ├── role-isolation-generator.md
-    │   │   ├── team-topology-generator.md
-    │   │   ├── sprint-governance-generator.md
-    │   │   ├── pr-governance-generator.md
-    │   │   ├── cicd-gates-generator.md
-    │   │   ├── devops-generator.md
-    │   │   ├── steering-governance-gen.md
-    │   │   ├── compliance-log-gov-gen.md
-    │   │   ├── change-management-gen.md
-    │   │   └── mcp-governance-gen.md           (conditional)
-    │   ├── re-derivation/                      ← Delta re-derivation logic
-    │   │   ├── change-detection.md
-    │   │   ├── selective-regeneration.md
-    │   │   └── upstream-signaling.md
-    │   └── templates/
-    │       ├── hooks/                          ← 15 files (14 JSON + INSTALL-GUIDE)
-    │       │   ├── session-discipline.json
-    │       │   ├── pre-code-spec-check.json
-    │       │   ├── api-contract-check.json
-    │       │   ├── module-boundary-check.json
-    │       │   ├── security-gate-check.json
-    │       │   ├── naming-check.json
-    │       │   ├── migration-safety.json
-    │       │   ├── coverage-check.json
-    │       │   ├── post-task-governance.json
-    │       │   ├── pre-pr-checklist.json
-    │       │   ├── periodic-audit.json
-    │       │   ├── sensitive-data-check.json
-    │       │   ├── domain-layer-purity.json
-    │       │   ├── segregation-check.json
-    │       │   └── INSTALL-GUIDE.md
-    │       ├── agents/
-    │       │   ├── compliance-audit-agent.md
-    │       │   ├── project-init-agent.md
-    │       │   └── compliance-readme.md
-    │       ├── compliance-log/
-    │       │   ├── compliance-log-schema.md
-    │       │   ├── exception-workflow.md
-    │       │   ├── remediation-workflow.md
-    │       │   ├── brownfield-baseline.md
-    │       │   ├── incremental-adoption-plan.md
-    │       │   └── compliance-dashboard-template.md
-    │       └── steering-templates/             ← Used by project-init-agent
-    │           ├── 01-architecture-templates.md
-    │           ├── 02-domain-templates.md
-    │           ├── 03-security-templates.md
-    │           ├── 04-error-resilience-templates.md
-    │           ├── 05-observability-templates.md
-    │           ├── 06-testing-templates.md
-    │           ├── 07-api-versioning-templates.md
-    │           ├── 08-frontend-templates.md
-    │           ├── 09-multi-tenancy-templates.md
-    │           ├── 10-event-sourcing-templates.md
-    │           ├── 11-feature-flags-templates.md
-    │           ├── 12-session-context-templates.md
-    │           └── 13-brownfield-templates.md
-    └── kiro-setup/
-        └── INSTALL.md
+ai-{pkg}/
+├── README.md  ·  LICENSE  ·  NOTICE                ← overview + Apache-2.0 + attribution
+├── PLAN.md  ·  CONCEPTUAL_MAP.md                   ← rationale + navigation (authoritative file list)
+├── USER_GUIDE.md  ·  WHITEPAPER.md                 ← end-user walkthrough + design narrative
+├── ai-{pkg}-rules/        core-{workflow|engine|generator}.md   ← master orchestration (always loaded) + § Gate Contract
+├── ai-{pkg}-rule-details/ common/ + {phase|concern folders}/ + data-schema/ + templates/
+│                          └ data-schema/   {pkg}-data.schema.json + SOURCE_MAP.md + SCHEMA_README.md   ← AI-DFE data interface
+└── setup/                 INSTALL.md               ← multi-platform install (Kiro, Cursor, Claude, …)
 ```
+
+### Family Root Files
+
+The family root (``) carries family-wide files alongside the package folders:
+
+```
+
+├── README.md  ·  LICENSE  ·  NOTICE  ·  CLA.md     ← family overview + license set
+├── FAMILY_STRUCTURE.md                             ← this file (master structure reference)
+├── FAMILY_TABLE_MAP.md                             ← canonical family table + registry
+├── GATE_PROTOCOL.md            ← [Communication Fabric] universal gate & seam protocol (copied from canonical source)
+├── FAMILY_INTERFACE.md         ← [Communication Fabric] public seam surface — Tier 1 seam packages + Tier 2 roster
+├── FAMILY_BINDINGS.md          ← [Communication Fabric] generated topology — internal + external edges (do-not-edit)
+├── TRIGGER_KEYS_REFERENCE.md                       ← destination-workspace trigger keys
+└── INSTALL_GUIDE_*.md                              ← per-platform install guides
+```
+
+> **Communication Fabric (the three new root files).** Every package declares a `§ Gate Contract` in its core file (capability types it emits/consumes + per-type field requirements). `GATE_PROTOCOL.md` defines the universal matching behavior; `FAMILY_INTERFACE.md` is the family's discoverable seam surface; `FAMILY_BINDINGS.md` is the generated routing graph (internal edges auto-derived from gate contracts + external cross-family edges). See `knowledge_docs/HOW_COMMUNICATION_FABRIC_WORKS.md`.
+
+### Portfolio Layer
+
+```
+
+│
+├── ai-ilc/                                         ← AI-Driven Idea Life Cycle (optional pre-stage)
+│   ├── ai-ilc-rules/core-workflow.md               ← 6 stages, adaptive depth, intent-based routing (L47)
+│   └── ai-ilc-rule-details/
+│       ├── common/                                 ← process-overview, session-continuity, question-format, content-validation
+│       ├── idea-lifecycle/                         ← capture · shape · evaluate · scope · approve · route-handoff
+│       ├── connectors/                             ← portfolio-connector (AI-PPM funnel)
+│       └── templates/                              ← approved-idea/feature/change-request briefs, idea-entry/register,
+│           └── agents/                                 ilc-state, management-framework + idea-quality-agent (IQC__)
+│
+├── ai-pilc/                                        ← AI-Driven Project Initiation Life Cycle
+│   ├── ai-pilc-rules/core-workflow.md              ← 6 phases, mints projectId + derivedFrom
+│   └── ai-pilc-rule-details/
+│       ├── common/                                 ← process-overview, session-continuity, question-format, content-validation, welcome
+│       ├── inception/ assessment/ justification/   ← Phases 1-3 (workspace-detection → business-case)
+│       ├── authorization/ planning/ mobilization/  ← Phases 4-6 (charter → package-assembly)
+│       └── templates/                              ← intake, feasibility, business-case, charter, registers, RACI,
+│           └── agents/                                 management-framework + initiation-quality-agent (IQA__)
+│
+└── ai-ppm/                                         ← AI-Driven Portfolio Management (adaptive engine)
+    ├── ai-ppm-rules/core-engine.md                 ← 5 phases / 10 stages, continuous engine, L53 layered comms
+    └── ai-ppm-rule-details/
+        ├── common/                                 ← process-overview, session-continuity, question-format
+        ├── intake/ prioritization/ authorization/  ← Phases 1-3 (registration → dispatch via AI-FLO)
+        ├── monitoring/ optimization/               ← Phases 4-5 (roll-up ingestion → rebalance/retire)
+        ├── extensions/                             ← 7 opt-in (balancing, what-if, dependency, capacity, themes, finance, benefits)
+        └── templates/                              ← portfolio-register, alignment-map, prioritization-scorecard,
+                                                        governance-decision, dispatch-authorization, ppm-state + agent (PGA__)
+```
+
+### Edge (Router)
+
+```
+└── ai-flo/                                         ← AI-Driven Flow / Router (orchestration engine)
+    ├── ai-flo-rules/core-engine.md                 ← 3 phases / 10 stages, 3 topology modes, flag-and-hold conflicts
+    └── ai-flo-rule-details/
+        ├── common/                                 ← process-overview, session-continuity, routing-conventions, question-format, welcome
+        ├── configure/                              ← Phase 1: workspace-detection · routing-table-build · flow-state-init
+        ├── route/                                  ← Phase 2: dispatch-down · fan-out-fan-in · handoff-execution · exceptions-overrides
+        ├── monitor/                                ← Phase 3: position-tracking · roll-up-relay · health-conflicts-alerts
+        └── templates/                              ← flo-state, routing-table, routing-log, dispatch-record, roll-up-report,
+            └── agents/                                 route-map, readiness-check, conflict-alert + flow-integrity-agent (FIA__)
+```
+
+### Project Layer
+
+```
+├── ai-adlc/                                        ← AI-Driven Architecture Design Life Cycle
+│   ├── ROADMAP.md                                  ← (intentional — ADLC ships a roadmap; other packages don't)
+│   ├── ai-adlc-rules/core-workflow.md              ← 5 phases, C4 progressive decomposition, ADRs
+│   └── ai-adlc-rule-details/
+│       ├── common/                                 ← + diagram-standards
+│       ├── foundation/ decomposition/ decisions/   ← Phases 1-3 (vision → container → tech/tenancy/security)
+│       ├── design/ assembly/                       ← Phases 4-5 (data/api/integration/component → package-assembly)
+│       ├── templates/                              ← ADRs, vision, C4 diagrams, tech-stack, data/api/integration, workbook
+│       └── extensions/                             ← opt-in: ddd-tactical, microservices, bff, event-sourcing-cqrs, resilience, feature-flags
+│
+├── ai-uxd/                                         ← AI-Driven UX Design (lifecycle)
+│   ├── ai-uxd-rules/core-workflow.md               ← 5 phases / 16 stages, persona→journey→flow→screen→component→token traceability
+│   └── ai-uxd-rule-details/
+│       ├── common/                                 ← + design-standards
+│       ├── discover/ define/ design/               ← research/personas → journeys/IA/flows → wireframes/design-system/components
+│       ├── validate/ assemble/                     ← accessibility-baseline/usability/QA → polc-handoff · dwg-gce-handoff · package-assembly
+│       └── templates/                              ← 15 (persona, journey, IA, flow, wireframe, design-system, tokens, components,
+│           └── agents/                                 a11y-baseline, …, uxd-state, UXP-README) + ux-consistency-agent (UXC__)
+│
+├── ai-polc/                                        ← AI-Driven Product Ownership Life Cycle
+│   ├── ai-polc-rules/core-workflow.md              ← 6 phases / 16 stages, Tier 2 story elaboration (user-activated)
+│   └── ai-polc-rule-details/
+│       ├── common/                                 ← process-overview, session-continuity, content-validation
+│       ├── foundation/ strategy/ governance/       ← vision/charter → discovery/epics/prioritization/release → DoR-DoD/risk/traceability
+│       ├── stakeholders/ assembly/ operations/     ← stakeholder mgmt/docs → PBP-assembly → backlog-ops/acceptance-feedback/value-metrics
+│       ├── tier2/                                  ← story-elaboration (INVEST, Given/When/Then — off by default in chain mode)
+│       ├── extensions/                             ← 6 opt-in (advanced-discovery, full-traceability, full-risk, full-docs, quality-review, mvp-mmp)
+│       └── templates/                              ← vision, roadmap, epics, prioritization, DoR/DoD, polc-state,
+│           └── agents/                                 management-framework + backlog-health-agent (BLH__)
+│
+├── ai-dwg/                                         ← AI-Driven Workspace Generator (one-time generator)
+│   ├── ai-dwg-rules/core-generator.md              ← peer-input composition (≥1 of AP∥PBP∥UXP), 3 modes, per-cluster generation
+│   └── ai-dwg-rule-details/
+│       ├── common/                                 ← process-overview, ap-reading-guide (peer reading + a11y relay), validation-rules
+│       ├── mapping/                                ← 27 transforms incl. polc-uxd-to-vision-document, ap-uxp-to-tech-environment,
+│       │                                              uxd-to-design-system, containers-to-frontend, extension-rules-assembly
+│       ├── reconciliation/                         ← diff · merge · provenance-tracking · downstream-signaling (Mode 2)
+│       └── templates/                              ← steering/, operational/ (incl. ui-implementation-spec, definition-of-done),
+│                                                      planning/, config/, docker-compose/, examples/
+│
+├── ai-gce/                                         ← AI-Driven Governance & Compliance Engine (adaptive, companion)
+│   ├── ai-gce-rules/core-generator.md              ← 4 modes, tier model, two-source derivation
+│   └── ai-gce-rule-details/
+│       ├── common/                                 ← + scoring-model, knowledge-map-guide
+│       ├── generators/                             ← ~23 derivation generators (architectural + non-architectural + hooks-from-steering)
+│       ├── re-derivation/                          ← change-detection · selective-regeneration · upstream-signaling
+│       └── templates/                              ← hooks/ (14 JSON + guide), agents/ (8 + registry), compliance-log/, steering-templates/
+│
+└── ai-tge/                                         ← AI-Driven Test Governance Engine (hybrid, companion)
+    ├── ai-tge-rules/core-engine.md                 ← 2 phases / 12 stages, 4 modes, two-source model, ISTQB taxonomy
+    └── ai-tge-rule-details/
+        ├── common/                                 ← + test-taxonomy, two-source-model
+        ├── strategy/                               ← Stages 1-6: detection · architecture-reading · derivation · brownfield · strategy · risk-scoring
+        ├── observation/                            ← Stages 7-12: state-observation · acceptance-mapping · coverage · reconciliation · defects · debt
+        └── templates/                              ← test-strategy, test-register, coverage-report, debt-scorecard, defect-log,
+            └── agents/                                 tge-state, quality-dashboard + test-governance-agent (TGV__) + coverage-review-agent (CVR__)
+```
+
+---
+
+### Installed Location — Where Package Files Land (Kiro core/rule-details split)
+
+The package **source** above (`ai-{pkg}-rules/` + `ai-{pkg}-rule-details/`) is installed into a user's workspace **family-scoped**, and on Kiro it is **split** across two locations because Kiro auto-loads steering **only** from `.kiro/steering/`:
+
+```
+{AIFLC-workspace-root}/
+└──.kiro/
+    ├── steering/
+    │   └── pdlc/                                ← PDLC family CORE files (auto-loaded)
+    │       ├── ai-pilc-rules/core-workflow.md
+    │       ├── ai-adlc-rules/core-workflow.md
+    │       └── … one {pkg}-rules/ per installed package
+    └── pdlc/                                    ← PDLC family RULE-DETAILS (on-demand, NOT auto-loaded)
+        ├── ai-pilc-rule-details/
+        ├── ai-adlc-rule-details/
+        └── … one {pkg}-rule-details/ per installed package
+```
+
+- **Core file** (`core-{workflow|engine|generator}.md`) → `.kiro/steering/{family}/{pkg}-rules/` — must sit where Kiro auto-loads.
+- **Rule-details** → `.kiro/{family}/{pkg}-rule-details/` — read on demand by the core file (kept out of `steering/` to keep it lean).
+- Runtime paths in the rules are **workspace-root-relative** (`{family}-ws/…`), so they resolve identically regardless of this split.
+- **Other platforms differ** (Amazon Q nests under `.amazonq/`; Cursor/Cline/Claude Code/Copilot use a `{family}-` filename prefix). The installer applies the verified per-platform path table — see the per-platform `INSTALL_GUIDE_*.md` and each package's `setup/INSTALL.md`.
 
 ---
 
 ## PART 2: Runtime Output Structure (What Each Package Produces When Run)
 
-> **Ownership map** (per `NAMING_AND_OWNERSHIP.md`; legend defined above):
+> **Ownership map** (per `contracts/NAMING_AND_OWNERSHIP.md`; legend defined above). Every generated `.md` carries the front-matter block from §5.2; every hook carries the `generatedBy` field from §5.3.
 >
 > | Package output | Default ownership | Notes |
 > |---|---|---|
+> | AI-ILC briefs + idea register | `[hyb]` | Team owns; `ilc-state.md` is `[marker]` |
 > | AI-PILC docs (`project-initiation/`) | `[hyb]` | Team owns and edits; `pilc-state.md` is `[marker]` |
+> | AI-PPM portfolio registers | `[hyb]` | Portfolio-scope; `ppm-state.md` is `[marker]` (NOT the per-project spine) |
+> | AI-FLO routing artifacts | `[gen]` | Advisory routing records; `flo-state.md` is `[marker]` |
 > | AI-ADLC docs (`architecture/`) | `[hyb]` | Team owns and edits; `adlc-state.md` is `[marker]` |
+> | AI-UXD docs (`ux-design/`) | `[hyb]` | Team owns and edits; `uxd-state.md` is `[marker]` |
+> | AI-POLC docs (`product-backlog/`) | `[hyb]` | Team owns and edits; `polc-state.md` is `[marker]` |
 > | AI-DWG steering (`.kiro/steering/*.md`) | `[hyb]` | Living team docs; `workspace-rules.md` is `[marker]` |
+> | AI-DWG AI-DLC v1 inputs (`vision.md`, `technical-environment.md`, …) | `[hyb]` | Assembled from peers; platform-independent |
 > | AI-DWG config (`.editorconfig`, `docker-compose.yml`, …) | `[gen]` | Regenerated; ecosystem-standard names |
 > | AI-GCE hooks (`.kiro/hooks/*.kiro.hook`) | `[tool]` | Folder boundary; carry `generatedBy` |
-> | AI-GCE rules (`.governance/rules/*.md`) | `[tool]` | Folder boundary; carry provenance front-matter |
-> | AI-GCE steering enrichments (`compliance-*.md`) | `[hyb]` | `compliance-` namespace + front-matter |
->
-> Every generated `.md` carries the front-matter block from `NAMING_AND_OWNERSHIP.md` §5.2; every hook carries the `generatedBy` field from §5.3.
+> | AI-GCE agents + governance docs (`.governance/`) | `[gen]` | Process agents + manual + registry; `<!-- custom -->` preserved |
+> | AI-TGE outputs (`.tge/`) | `[gen]`/`[hyb]` | Strategy `[hyb]`, register/coverage `[gen]`; `tge-state.md` is `[marker]` |
 
-When a user installs and runs these packages on their own project:
+When a user installs and runs these packages on their own project, each produces a distinct output cluster. **Reference docs** (PIP, AP, UXP, PBP) live in their own folders; **AI-DWG IS the workspace**; **AI-GCE and AI-TGE layer on top of it.**
+
+### Multi-Project Layout (canonical — `OUTPUT_AND_STATE_CONTRACT.md`)
+
+A workspace holds **many projects**. Every per-project producer nests its output in a **role folder** under a per-project root `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/`; the governance spine is their **sibling** at the project root; AI-DWG generates a per-project **dev workspace** opened separately. The sub-trees in the rest of PART 2 show each cluster's *internal* contents — in the multi-project layout they sit at the paths shown below.
 
 ```
-{user-project}/                                 ← The user's project workspace
+{AIFLC-workspace-root}/                           ← opened as IDE root
+└── pdlc-ws/                                     ← PDLC FAMILY WORKSPACE (all family output nests here)
+    ├── ideas/                                   ← AI-ILC (pre-project funnel)
+    ├── projects/
+    │   ├── PROJECTS.md                          ← registry + ★ active pointer (PROJECTS_REGISTRY_SPEC.md)
+    │   ├── PRJ-{ABBREV}-{slug}/                  ← one project (★ may be active)
+    │   │   ├── management_framework/            ← ONE shared spine (sibling of role folders; {PHASE}-{ABBREV}-* IDs)
+    │   │   ├── pip/          ← AI-PILC (PIP)      · pilc-state.md
+    │   │   ├── architecture/ ← AI-ADLC (AP)       · adlc-state.md
+    │   │   ├── ux/           ← AI-UXD (UXP)       · uxd-state.md
+    │   │   ├── backlog/      ← AI-POLC (PBP)      · polc-state.md
+    │   │   └── {slug}-workspace/                 ← AI-DWG dev workspace (opened SEPARATELY; spine carried forward)
+    │   │       ├──.kiro/{steering,hooks}/  ← AI-GCE governs here
+    │   │       ├──.tge/                    ← AI-TGE here
+    │   │       ├── management_framework/    ← spine carried forward (DWG/GCE/TGE append)
+    │   │       └── src/ · tests/ · configs …
+    │   └── PRJ-{ABBREV2}-{slug2}/  …             ← another project (own role folders + spine)
+    ├── portfolio/                               ← AI-PPM (cross-project) + AI-FLO reasons over pdlc-ws/projects/PROJECTS.md
+    │   ├── ppm-state.md · Portfolio_Register.md
+    │   └── dashboards/                          ← portfolio dashboards (per DASHBOARD_FRAMEWORK_CONTRACT v1.1.0)
+    └── data/                                    ← AI-DFE territory (bootstrapped at install)
+```
+
+**Producer → role folder → spine ID prefix:**
+
+| Producer | Role folder (under `pdlc-ws/projects/PRJ-…/`) | Marker | Spine prefix | Originator-eligible? |
+|----------|----------------------------------------|--------|--------------|:--------------------:|
+| AI-PILC | `pip/` | `pilc-state.md` | `PILC-{ABBREV}-*` | ✅ default |
+| AI-ADLC | `architecture/` | `adlc-state.md` | `ADLC-{ABBREV}-*` | ✅ |
+| AI-UXD | `ux/` | `uxd-state.md` | `UXD-{ABBREV}-*` | ✅ |
+| AI-POLC | `backlog/` | `polc-state.md` | `POLC-{ABBREV}-*` | ✅ |
+| AI-DWG | `{slug}-workspace/` (generated) | `.kiro/steering/workspace-rules.md` | `DWG-{ABBREV}-*` (in carried-forward spine) | ❌ generates from peers |
+| AI-GCE / AI-TGE | inside `{slug}-workspace/` | `.kiro/hooks/` · `.tge/tge-state.md` | `GCE-/TGE-{ABBREV}-*` | ❌ own-root |
+| AI-PPM | `pdlc-ws/portfolio/` | `ppm-state.md` | — (portfolio register) | ❌ registry-wide |
+| AI-FLO | — (reasons over `pdlc-ws/projects/PROJECTS.md`) | `flo-state.md` | — (no artifacts) | ❌ router |
+
+> The legacy flat layout (output at workspace root, e.g. `project-initiation/`, `architecture/`) remains supported for **brownfield** — detected and offered a non-destructive restructure, never forced. The `projects/` layout is the always-on default for new work.
+
+### Portfolio + Edge outputs (reference / coordination artifacts)
+
+```
+{user-project}/  (or a portfolio root for PPM/FLO)
 │
-│ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-│ 📦 AI-PILC OUTPUT — Project Initiation Package
-│ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+├── idea-management/                ← 📦 AI-ILC — funnel before the funnel
+│   ├── ilc-state.md                                ← [marker] workflow state
+│   ├── idea-register.md                            ← all ideas (funnel view)
+│   ├── {NNN}-{idea}.md                             ← per-idea register entry
+│   └── {Approved_Idea|Feature|Change_Request}_Brief.md  ← routed output (one per approved idea)
 │
-├── project-initiation/                         ← User-chosen folder (or root)
-│   ├── pilc-state.md                           ← Workflow state
-│   ├── 01_Requirement_Intake_Form.md
-│   ├── 02_Requirements_Analysis_Report.md
-│   ├── 03_Clarification_Questionnaire.md      (conditional)
-│   ├── 04_Feasibility_Assessment.md
-│   ├── 05_Business_Case.md
-│   ├── 06_Project_Charter.md
-│   ├── 07_Stakeholder_Register.md
-│   ├── 08_Scope_Statement.md
-│   ├── 09_Resource_Plan.md
-│   ├── 10_Risk_Register.md
-│   ├── 11_RACI_Matrix.md
-│   ├── 12_Kickoff_Agenda.md
-│   └── PROJECT_INITIATION_PACKAGE_README.md    ← Final assembled PIP (summary + reading guide)
+├── project-initiation/             ← 📦 AI-PILC — Project Initiation Package (PIP)
+│   ├── pilc-state.md                               ← [marker] mints projectId + derivedFrom
+│   ├── 01_*.md … 12_*.md                           ← intake, analysis, feasibility, business-case, charter, registers
+│   └── PROJECT_INITIATION_PACKAGE_README.md        ← assembled PIP (summary + reading guide)
 │
-│ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-│ 📦 AI-ADLC OUTPUT — Architecture Package
-│ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+├── portfolio/                      ← 📦 AI-PPM — portfolio register (governs the SET of projects)
+│   ├── ppm-state.md                                ← [marker] keyed by projectId
+│   ├── portfolio-register.md  ·  strategic-alignment-map.md  ·  prioritization-scorecard.md
+│   ├── governance-decision-records/  ·  dispatch-authorizations/   ← admit/pause/retire + DA-*.md (dispatched via AI-FLO)
+│   └── portfolio-health-dashboard.md
 │
-├── architecture/                               ← User-chosen folder (or root)
-│   ├── adlc-state.md                           ← Workflow state + extension tracking
-│   ├── Architecture_Workbook.md                ← Living decisions tracker
-│   ├── 01_Architecture_Vision.md
-│   ├── 02_System_Context_C4L1.md
-│   ├── 03_Container_Diagram_C4L2.md
-│   ├── 04_Technology_Stack.md
-│   ├── 05_MultiTenancy_Architecture.md         (conditional)
-│   ├── 06_Security_Identity_Architecture.md
-│   ├── 07_Data_Architecture.md
-│   ├── 08_API_Architecture.md
-│   ├── 09_Integration_Architecture.md
-│   ├── 10_Infrastructure_Deployment.md
-│   ├── 11_Component_Diagram_C4L3.md
-│   ├── ADR/
-│   │   ├── ADR-000_Template.md
-│   │   ├── ADR-001_{Decision}.md
-│   │   ├── ADR-002_{Decision}.md
-│   │   └── ...
-│   ├── management_framework/              ← Shared governance spine (ADLC appends ADLC-* entries; Lesson 45)
-│   │   ├── MANAGEMENT_FRAMEWORK.md       ← Spine marker + index
-│   │   ├── Decision_Log.md               ← Phase-tagged decisions (below ADR threshold)
-│   │   ├── Change_Log.md                 ← Phase-tagged scope changes
-│   │   ├── Issue_Log.md                  ← Phase-tagged blockers
-│   │   └── Lessons_Learned.md            ← Architecture design lessons
+└──.flo/                           ← 📦 AI-FLO — routing & orchestration (advisory in v1.0)
+    ├── flo-state.md                                ← [marker] per-project positions + topology mode
+    ├── routing-table.md  ·  routing-log.md         ← active routes + append-only audit trail
+    ├── dispatch-record.md  ·  roll-up-report.md    ← PPM authorization carried down / status relayed up
+    └── route-map.md  ·  readiness-check.md  ·  conflict-alert.md   ← flow viz, fan-in readiness, flag-and-hold
+```
+
+### Project Layer reference packages (AP · UXP · PBP)
+
+```
+├── architecture/                   ← 📦 AI-ADLC — Architecture Package (AP)
+│   ├── adlc-state.md                               ← [marker] projectId, Output Structure, Enabled Extensions, ADR Register
+│   ├── 01_*.md … 11_*.md  ·  ADR/                  ← vision, C4 L1-L3, tech-stack, security, data, api, integration, ADRs
+│   ├── Architecture_Workbook.md  ·  management_framework/   ← living decisions + shared governance spine (ADLC-* entries, L45)
 │   └── ARCHITECTURE_PACKAGE_README.md
 │
-│ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-│ 📦 AI-DWG OUTPUT — Development Workspace (writes to project root)
-│ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+├── ux-design/                      ← 📦 AI-UXD — UX Design Package (UXP)
+│   ├── uxd-state.md                                ← [marker] mode, depth, projectId, downstream signals
+│   ├── personas/  journeys/  information-architecture/  user-flows/   ← research → structure
+│   ├── design-system/ (+ tokens, components)  ·  accessibility-baseline.md   ← surface + WCAG 2.2 target
+│   └── UXP_README.md                               ← feeds AI-POLC (personas/journeys), AI-DWG (design-system + frontend-standards), AI-GCE (a11y)
 │
-├── .kiro/
-│   └── steering/
-│       ├── workspace-rules.md                  ← ALWAYS
-│       ├── architecture-principles.md          ← ALWAYS
-│       ├── tech-stack.md                       ← ALWAYS
-│       ├── coding-standards.md                 ← ALWAYS
-│       ├── project-governance.md               ← ALWAYS
-│       ├── scope-and-risks.md                  ← ALWAYS
-│       ├── session-governance.md               ← ALWAYS
-│       ├── role-isolation.md                   ← ALWAYS
-│       ├── domain-context.md                   ← ALWAYS
-│       ├── api-standards.md                    ← ALWAYS
-│       ├── security-rules.md                   ← ALWAYS
-│       ├── module-structure.md                 ← ALWAYS
-│       ├── testing-strategy.md                 ← ALWAYS
-│       ├── database-rules.md                   ← ALWAYS
-│       ├── naming-conventions.md               ← ALWAYS
-│       ├── git-workflow.md                     ← ALWAYS
-│       ├── error-handling.md                   ← ALWAYS
-│       ├── observability-logging.md            ← ALWAYS
-│       ├── observability-sensitive.md          ← ALWAYS
-│       ├── [multi-tenancy.md]                  ← IF multi-tenant
-│       ├── [api-versioning.md]                 ← IF multi-version API
-│       ├── [resilience-standards.md]           ← IF distributed / >3 integrations / extension
-│       ├── [observability-tracing.md]          ← IF tracing tool specified / extension
-│       ├── [performance-standards.md]          ← IF latency SLOs defined
-│       ├── [workflow-engine.md]                ← IF workflow component exists
-│       ├── [frontend-standards.md]             ← IF UI containers / BFF extension
-│       ├── [event-sourcing.md]                 ← IF Event Sourcing extension active
-│       └── [feature-flags.md]                  ← IF Feature Flags extension active
-│
-├── PROJECT_INSTRUCTIONS.md                     ← Master developer guide
-├── DEFINITION_OF_DONE.md                       ← Quality criteria
-├── CONTRIBUTING.md                             ← Commit/PR/branching process
-├── TEAM_AGREEMENTS.md                          ← Operating rules
-├── ONBOARDING.md                               ← New developer checklist
-├── README.md                                   ← Project README
-│
-├── .github/
-│   └── pull_request_template.md                ← PR checklist
-│
-├── templates/
-│   ├── session-planning.md                     ← AI session planning
-│   ├── sprint-planning.md                      ← Sprint structure
-│   └── estimation-guide.md                     ← Size estimation
-│
-├── .gitignore                                  ← Tech-stack appropriate
-├── .editorconfig                               ← Code style
-├── docker-compose.yml                          ← Infrastructure skeleton
-├── CODEOWNERS                                  ← Module ownership
-│
-├── management_framework/                       ← Shared governance spine (DWG appends DWG-* entries; Lesson 45)
-│   ├── MANAGEMENT_FRAMEWORK.md                 ← Spine marker + index
-│   ├── Decision_Log.md                         ← Phase-tagged decisions
-│   ├── Change_Log.md                           ← Phase-tagged scope changes
-│   ├── Issue_Log.md                            ← Phase-tagged blockers
-│   └── Lessons_Learned.md                      ← Sprint/session insights
-│
-├── {src-structure}/                            ← Folder layout from C4 L3
-│   ├── {module-1}/
-│   ├── {module-2}/
-│   ├── {module-n}/
-│   └── {shared-kernel}/                        (if applicable)
-│
-│ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-│ 📦 AI-GCE OUTPUT — Compliance & Enforcement Layer (on top of AI-DWG)
-│ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-│
-├── .compliance-state.json                      ← Tier tracking, readiness, score history
-│
-├── .kiro/
-│   ├── hooks/                                  ← Auto-generated compliance hooks
-│   │   ├── INSTALL-GUIDE.md                    ← Tier-based installation roadmap
-│   │   │── — TIER A (fileEdited — security-critical) —
-│   │   ├── security-gate-check.json
-│   │   ├── secret-detection.json
-│   │   ├── migration-safety.json
-│   │   ├── sensitive-data-check.json
-│   │   ├── [tenant-isolation-check.json]       (IF multi-tenancy)
-│   │   │── — TIER B (agentStop — advisory) —
-│   │   ├── domain-layer-purity.json
-│   │   ├── module-boundary-check.json
-│   │   ├── coverage-check.json
-│   │   ├── naming-check.json
-│   │   ├── documentation-reminder.json
-│   │   ├── steering-quality-check.json
-│   │   │── — OTHER EVENT TYPES —
-│   │   ├── session-discipline.json             (promptSubmit)
-│   │   ├── pre-code-spec-check.json            (preToolUse/write)
-│   │   ├── post-task-governance.json           (postTaskExecution)
-│   │   ├── segregation-check.json              (postTaskExecution, Tier 2+)
-│   │   ├── api-contract-check.json             (fileCreated)
-│   │   ├── pre-pr-checklist.json               (userTriggered, Tier 2+)
-│   │   ├── periodic-audit.json                 (userTriggered)
-│   │   └── [change-readiness-gate.json]        (preTaskExecution, Tier 3)
-│   │
-│   └── steering/                               ← May enrich existing steering (Step 4b)
-│       ├── [compliance-phase-context.md]        (fileMatch — IF team ≥ 3)
-│       ├── [compliance-code-rules.md]           (fileMatch — IF team ≥ 3)
-│       ├── [compliance-test-conventions.md]     (fileMatch — IF team ≥ 3)
-│       └── [compliance-api-conventions.md]      (fileMatch — IF team ≥ 3)
-│
-├── docs/
-│   └── compliance-dashboard.md                 ← Generated by audit agent (maintained ongoing)
-│
-└── .governance/                                ← Full governance infrastructure
-    ├── COMPLIANCE_README.md                    ← How compliance works in THIS project
-    │
-    ├── rules/
-    │   ├── — ARCHITECTURAL (always) —
-    │   ├── architecture-compliance.md
-    │   ├── api-first-compliance.md
-    │   ├── security-compliance.md
-    │   ├── data-governance.md
-    │   ├── module-boundaries.md
-    │   ├── naming-conventions.md
-    │   ├── error-handling-compliance.md
-    │   ├── logging-compliance.md
-    │   ├── sensitive-data-protection.md
-    │   ├── domain-context-enforcement.md
-    │   ├── — NON-ARCHITECTURAL (tier-gated) —
-    │   ├── phase-gates.md                      (Tier 1 basic → Tier 3 full)
-    │   ├── session-governance.md               (Tier 1 basic / Tier 2 full)
-    │   ├── governance-checklist.md             (Tier 2+)
-    │   ├── role-isolation.md                   (Tier 2+)
-    │   ├── team-topology.md                    (Tier 2+)
-    │   ├── sprint-governance.md                (Tier 2+)
-    │   ├── pr-governance.md                    (Tier 2+)
-    │   ├── cicd-gates.md                       (Tier 2+)
-    │   ├── devops-deployment.md                (Tier 2+)
-    │   ├── steering-governance.md              (Tier 2+)
-    │   ├── compliance-log-governance.md        (Tier 2+)
-    │   ├── change-management.md                (Tier 3)
-    │   ├── — CONDITIONAL —
-    │   ├── [tenant-isolation.md]               (IF multi-tenancy.md)
-    │   ├── [api-versioning-compliance.md]      (IF api-versioning.md)
-    │   ├── [resilience-compliance.md]          (IF resilience-standards.md)
-    │   ├── [performance-compliance.md]         (IF performance-standards.md)
-    │   ├── [frontend-compliance.md]            (IF frontend-standards.md)
-    │   ├── [event-sourcing-compliance.md]      (IF event-sourcing.md)
-    │   ├── [feature-flag-compliance.md]        (IF feature-flags.md)
-    │   └── [mcp-governance.md]                 (IF .kiro/settings/mcp.json configured)
-    │
-    ├── agents/
-    │   ├── compliance-audit-agent.md           ← 9-step with scoring, dashboard, tiers
-    │   └── project-init-agent.md               ← 5-question scaffolding agent
-    │
-    ├── compliance-log/
-    │   ├── compliance-log-schema.md            ← JSONL schema (CHECK/EXCEPTION/REMEDIATION/AUDIT/REDERIVATION)
-    │   ├── exception-workflow.md               ← 5-step formal bypass process
-    │   └── remediation-workflow.md             ← Violation resolution with SLAs
-    │
-    ├── [brownfield-baseline.md]                (IF brownfield-patterns.md exists)
-    └── [incremental-adoption-plan.md]          (IF brownfield-patterns.md exists)
+└── product-backlog/                ← 📦 AI-POLC — Product Backlog Package (PBP)
+    ├── polc-state.md                               ← [marker] projectId, tier, prioritization model
+    ├── product-vision.md  ·  roadmap.md  ·  epics/  ·  prioritization-scorecard.md   ← Now/Next/Later, WSJF/MoSCoW
+    ├── definition-of-ready-done.md  ·  product-risk-register.md  ·  management_framework/   ← quality bar (→ DWG/GCE) + spine (POLC-*)
+    └── PRODUCT_BACKLOG_PACKAGE_README.md           ← [stories elaborated only if Tier 2 active]
 ```
+
+### AI-DWG output — the development workspace (peer-composed; generated at `pdlc-ws/projects/PRJ-…/{slug}-workspace/`)
+
+AI-DWG composes the workspace from whichever **peers** are present — `{ADLC}`, `{POLC}`, `{UXD}`, or any combination (≥1). Each input owns a **distinct output cluster**; an absent input simply skips its cluster (with quality-impact disclosure + user approval). `workspace-rules.md` is always produced as the marker. The dev workspace is generated at `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/` and **opened separately** in its own Kiro IDE to build; the per-project spine is **carried forward** into it (Option A).
+
+```
+{slug}-workspace/                   ← 📦 AI-DWG OUTPUT — IS the workspace (at pdlc-ws/projects/PRJ-…/{slug}-workspace/; opened separately)
+│
+├──.kiro/steering/
+│   ├── workspace-rules.md                          ← [marker] ALWAYS · § Architecture Identity (IF ADLC) | Product Identity (IF POLC-only) | deferred (UXD-only)
+│   ├── {tech steering ×13+}                         ← IF ADLC  (tech-stack, security-rules, api-standards, database-rules,
+│   │                                                   module-structure, error-handling, observability-*, naming, git-workflow, …)
+│   ├── testing-strategy.md                         ← IF ADLC AND AI-TGE NOT activated (delegation-on-activation)
+│   ├── design-system.md                            ← IF UXD  (tokens, component system)
+│   ├── frontend-standards.md                       ← IF UXD or ADLC-UI
+│   └── [conditional steering]                      ← multi-tenancy, api-versioning, resilience, tracing, event-sourcing, feature-flags …
+│
+├── vision.md                                       ← IF POLC (+ UXD personas/journeys)        → AI-DLC v1 Vision Document
+├── technical-environment.md                        ← IF ADLC (+ UXD frontend patterns)        → AI-DLC v1 Technical Environment Document
+├── ui-implementation-spec.md                       ← IF UXD                                    → AI-DLC v1 UI codegen input
+├── aidlc-rules/extensions/                         ← IF ADLC security + UXD a11y (+ testing ext: from TGE if active, else DWG)
+│
+├── DEFINITION_OF_DONE.md                           ← IF POLC (or ADLC quality attributes)
+├── PROJECT_INSTRUCTIONS.md  ·  CONTRIBUTING.md  ·  TEAM_AGREEMENTS.md  ·  ONBOARDING.md  ·  README.md
+├── examples/                                       ← skeleton, UXD-seeded for UI patterns
+├── templates/                                      ← session-planning, sprint-planning, estimation-guide
+├──.github/pull_request_template.md  ·.editorconfig  ·  docker-compose.yml  ·  CODEOWNERS  ·.gitignore
+├── management_framework/                           ← shared governance spine (DWG-* entries; marker MANAGEMENT_FRAMEWORK.md, L45)
+│
+└── {src-structure}/                                ← IF ADLC (folder layout from C4 L3: modules + shared-kernel)
+```
+
+> **Why the src folder is ADLC-gated is NOT dominance:** it is the same rule as `design-system.md` being UXD-gated and `vision.md` being POLC-gated — every output traces to exactly one input cluster, and no peer is privileged. (`DWG_CONVERGENCE_DESIGN.md` Laws 1-2.)
+
+### AI-GCE + AI-TGE outputs — continuous companions (layer on top of the workspace)
+
+Both run **alongside AI-DLC v1** (not as forward chain stages). They consume the DW and re-derive when the workspace updates.
+
+```
+{workspace-root}/
+│
+├── 📦 AI-GCE — Compliance & Enforcement Layer
+│   ├──.compliance-state.json                      ← tier tracking, readiness, score history
+│   ├──.kiro/hooks/*.kiro.hook                     ← [marker: folder] 9 always + up to 6 conditional (Tier A fileEdited / Tier B agentStop)
+│   ├──.kiro/agents/*.md                           ← 8 process agents (shortcut-triggered, GCE-AG-01..08)
+│   ├──.governance/                                ← COMPLIANCE_README, rules/ (10 always + 12 tier-gated + conditional),
+│   │                                                  agents/, AGENT-GUIDE, AGENT_REGISTRY, compliance-log/ (JSONL schema + workflows)
+│   └── management_framework/dashboards/compliance-dashboard.md
+│
+└── 📦 AI-TGE — Test Governance & Quality Layer
+    └──.tge/
+        ├── tge-state.md                            ← [marker] mode, depth, projectId (reads adlc-state.md + aidlc-docs/aidlc-state.md)
+        ├── test-strategy.md  ·  test-register.md   ← strategy (IF TGE owns it) + commitment-based register
+        ├── coverage-report.md  ·  debt-scorecard.md  ·  defect-log.md
+        └── management_framework/dashboards/quality-dashboard.md
+```
+
+> **Note:** AI-GCE produces a **continuous JSONL compliance log**; AI-TGE produces a **quality dashboard + defect/debt trend**. Neither executes code or runs tests — they govern discipline. Both consume `.kiro/steering/workspace-rules.md` and re-derive selectively on workspace change.
 
 ---
 
 ## PART 3: Data Flow Between Packages
 
 ```
-┌─────────────┐         ┌─────────────┐         ┌─────────────┐         ┌─────────────┐
-│             │         │             │         │             │         │             │
-│   AI-PILC   │────────►│   AI-ADLC   │────────►│   AI-DWG    │────────►│   AI-GCE    │
-│             │         │             │         │             │         │             │
-└─────────────┘         └─────────────┘         └─────────────┘         └─────────────┘
-       │                       │                       │                       │
-       ▼                       ▼                       ▼                       ▼
-┌─────────────┐         ┌─────────────┐         ┌─────────────┐         ┌─────────────┐
-│   OUTPUT:   │         │   OUTPUT:   │         │   OUTPUT:   │         │   OUTPUT:   │
-│             │         │             │         │             │         │             │
-│ PIP folder  │         │ AP folder   │         │ Project     │         │.kiro/hooks  │
-│ (governance │         │ (arch docs  │         │ root itself │         │.governance/ │
-│  documents) │         │  + ADRs)    │         │ (.kiro/     │         │.compliance- │
-│             │         │             │         │  steering,  │         │ state.json  │
-│             │         │             │         │  configs,   │         │(enforcement │
-│             │         │             │         │  structure) │         │ layer on    │
-│             │         │             │         │             │         │ top of DW)  │
-└─────────────┘         └─────────────┘         └─────────────┘         └─────────────┘
-                                                                               
-  Separate folder          Separate folder         IS the workspace         Layered on
-  (reference docs)         (reference docs)        (you work inside it)     workspace
+   PORTFOLIO LAYER                                   EDGE                 PROJECT LAYER
+   ───────────────                                   ────                 ─────────────
+
+   AI-ILC ⇢ AI-PILC ⇢ AI-PPM  ───(dispatch DA-*)──►  AI-FLO  ──(sequential)──►  AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG
+   (briefs)  (PIP)   (register)        ▲             (router)                                                          │
+                                       │                │                                                              ▼
+                                       └──(roll-up status, project status UP)                                     DW ──►  AI-DLC v1 (build) ──► Working software
+                                                        │                                                              ▲  │  ▲
+                                                        └──────────────────────────────────────────────────────────────┘  │  └── runtime feedback
+                                                                                                                          │        ⇣ ⇣
+                                                                                     GCE + TGE (companions, alongside) ──┘   AI-UXD + AI-POLC
+                                                                                                                         (revise → DWG Mode 2)
 ```
+
+Cross-layer hops are carried by **AI-FLO** (the router); same-layer exchanges are **direct marker reads**. The Project-layer design chain runs **sequentially** (AI-POLC → AI-UXD → AI-ADLC → AI-DWG) — each package feeds the next. Bidirectional flows: AI-FLO relays project status **up** to AI-PPM; AI-DLC v1 runtime feedback flows **back** to AI-UXD + AI-POLC; AI-POLC ⇄ AI-DLC v1 exchange backlog/acceptance throughout delivery; an upstream-peer revision loops back through **AI-DWG Mode 2** (reconcile). **Feedback loops** (same-layer, no AI-FLO): ADLC loops cost/risk back to POLC and constraints back to UXD — these are non-destructive re-entry triggers that refine without changing the forward sequence. AI-DWG validates **all three inputs present** (guaranteed by the sequential model; fewer = brownfield user-approved exception).
 
 ### Input/Output Contract Summary
 
-| Package | Reads From | Produces At | Key File to Detect |
-|---------|-----------|------------|-------------------|
-| **AI-PILC** | Raw requirements (any format) | `{pilc-output}/` folder | `pilc-state.md` |
-| **AI-ADLC** | PIP or standalone requirements | `{adlc-output}/` folder | `adlc-state.md` |
-| **AI-DWG** | `{adlc-output}/` (reads `adlc-state.md` for extensions) | `{project-root}/` directly | `.kiro/steering/workspace-rules.md` |
-| **AI-GCE** | `{project-root}/.kiro/steering/` (AI-DWG output) | `{project-root}/.kiro/hooks/` + enrichments | `.kiro/hooks/` folder exists |
+| Package | Reads From | Produces At | Marker (detect by) |
+|---------|-----------|------------|--------------------|
+| **AI-ILC** | Raw idea (any format) | `{idea-management}/` | `ilc-state.md` |
+| **AI-PILC** | Raw requirement, or `ilc-state.md` (Approved Idea Brief) | `{project-initiation}/` | `pilc-state.md` |
+| **AI-PPM** | `pilc-state.md` + Approved Idea Briefs (+ roll-up via AI-FLO) | `{portfolio}/` | `ppm-state.md` |
+| **AI-FLO** | Any package output marker (`*-state.md`) | `{.flo}/` | `flo-state.md` |
+| **AI-ADLC** | PIP (`pilc-state.md`) or standalone requirements | `{architecture}/` | `adlc-state.md` |
+| **AI-UXD** | PIP / AP (`pilc-state.md` / `adlc-state.md`); strategy exchange with AI-POLC | `{ux-design}/` | `uxd-state.md` |
+| **AI-POLC** | PIP and/or AP (`pilc-state.md` / `ilc-state.md` / `adlc-state.md`) | `{product-backlog}/` | `polc-state.md` |
+| **AI-DWG** | Peer set — `adlc-state.md` ∥ `polc-state.md` ∥ `uxd-state.md` (any non-empty subset, ≥1) | `{workspace-root}/` directly | `.kiro/steering/workspace-rules.md` |
+| **AI-GCE** | `.kiro/steering/workspace-rules.md` (the DW) | same workspace root (layered) | `.kiro/hooks/` folder |
+| **AI-TGE** | `workspace-rules.md` + `adlc-state.md` + `aidlc-docs/aidlc-state.md` | `{workspace-root}/.tge/` | `.tge/tge-state.md` |
+
+> `projectId` (camelCase) is the correlation key minted by AI-PILC and threaded through every downstream marker and the compliance/quality logs.
 
 ### Standalone vs. Chain Usage
 
-Each package can be used independently OR as part of the chain:
+Each package works **standalone** (the user is the orchestrator when AI-FLO is absent) OR as part of the chain:
 
 | Package | Standalone Input | Chain Input |
 |---------|-----------------|-------------|
-| **AI-PILC** | Raw requirement document, verbal brief, or existing PRD | — (first in chain) |
-| **AI-ADLC** | Requirements + Charter, existing architecture to extend | PIP from AI-PILC |
-| **AI-DWG** | Any Architecture Package (structured markdown) | AP from AI-ADLC |
+| **AI-ILC** | Raw idea / brainstorm note | — (funnel before the funnel) |
+| **AI-PILC** | Raw requirement, verbal brief, existing PRD | Approved Idea Brief from AI-ILC |
+| **AI-PPM** | Manual project list + status | PIPs + briefs + AI-FLO roll-up |
+| **AI-FLO** | Manual topology config | Any installed package's markers |
+| **AI-ADLC** | Requirements + Charter, existing architecture | PIP from AI-PILC |
+| **AI-UXD** | Product brief + user research | PIP / AP (+ AI-POLC value goals) |
+| **AI-POLC** | Product brief, existing backlog | PIP / AP (+ AI-UXD personas/journeys) |
+| **AI-DWG** | Any one structured package (AP, PBP, or UXP) | Peer set {AP, PBP, UXP} from the Project layer |
 | **AI-GCE** | Any workspace with `.kiro/steering/` files | DW from AI-DWG |
+| **AI-TGE** | Any AP and/or codebase with tests | DW from AI-DWG + AI-DLC v1 state |
 
 ---
 
 ## PART 4: Chain Contracts (Detection by Marker, Not by Path)
 
-Each package is **contract-aware** — it knows what its predecessor produces and what its successor expects. But paths are NEVER hardcoded. Users choose WHERE things go; packages define WHAT files must exist.
+Each package is **contract-aware** — it knows what its predecessor(s) produce and what its successor expects. But paths are NEVER hardcoded. Users choose WHERE things go; packages define WHAT files must exist.
 
 ### Contract Design Principles
 
@@ -685,226 +491,281 @@ Each package is **contract-aware** — it knows what its predecessor produces an
 | **User owns WHERE** | Output folder location is always user's choice |
 | **Package owns WHAT** | File names, state file schema, and internal structure are fixed |
 | **Graceful standalone** | Every package works without the chain (accepts equivalent manual input) |
-| **Format tolerant** | Supports both numbered docs and phase-folder structures from predecessor |
+| **Format tolerant** | Supports both numbered docs and phase-folder structures from predecessors |
 | **Cross-repo capable** | Predecessor output can be anywhere — different folder, repo, or drive |
+| **Layered communication** | Cross-layer hops go via AI-FLO; same-layer exchanges are direct marker reads (L53) |
 
 ---
+
+### AI-ILC Contract
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  AI-ILC  (Portfolio layer · optional pre-stage)             │
+├─────────────────────────────────────────────────────────────┤
+│  READS:  Raw idea (any format). No predecessor.              │
+│  MARKER (input): none — funnel before the funnel             │
+│                                                              │
+│  PRODUCES: Approved Idea Brief / Feature Brief /             │
+│            Change-Request Brief + idea register              │
+│  MARKER (output): ilc-state.md                               │
+│                                                              │
+│  TRACEABILITY: mints Idea ID; route field carries intent     │
+│    (new-project | feature | change-request) — L47            │
+│  GOVERNANCE AGENT: idea-quality-agent (IQC__)                │
+│                                                              │
+│  SUCCESSORS: AI-PILC (new-project) reads ilc-state.md;       │
+│    AI-PPM reads Approved Idea Briefs (same-layer direct)     │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ### AI-PILC Contract
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  AI-PILC                                                     │
+│  AI-PILC  (Portfolio layer)                                 │
 ├─────────────────────────────────────────────────────────────┤
+│  READS:  Raw requirements (any format) OR AI-ILC brief       │
+│  MARKER (input): ilc-state.md (optional)                     │
 │                                                              │
-│  READS: Raw requirements (any format, any location)          │
-│  ─────  No predecessor in chain.                             │
-│         Accepts: document, verbal, existing artifacts         │
-│                                                              │
-│  MARKER (input): None — first in chain                       │
-│                                                              │
-│  ─────────────────────────────────────────────────────────── │
-│                                                              │
-│  PRODUCES: Project Initiation Package                         │
-│  ────────  Location: {user-chosen path}                      │
-│                                                              │
+│  PRODUCES: Project Initiation Package (PIP)                  │
 │  MARKER (output): pilc-state.md                              │
 │                                                              │
-│  GUARANTEED FILES (relative to marker):                       │
-│  • pilc-state.md (state + completion status)                 │
-│  • Numbered artifacts (01_*.md through 12_*.md)              │
-│  • PROJECT_INITIATION_PACKAGE.md (final assembly)            │
+│  TRACEABILITY: MINTS projectId (camelCase correlation key);  │
+│    records derivedFrom (idea-ID, REQUIRED when ILC intake);  │
+│    originType = project                                       │
+│  GOVERNANCE AGENT: initiation-quality-agent (IQA__)          │
 │                                                              │
-│  SUCCESSOR EXPECTS: AI-ADLC looks for pilc-state.md         │
-│                                                              │
+│  GUARANTEED FILES: pilc-state.md · 01_*.md … 12_*.md ·       │
+│    PROJECT_INITIATION_PACKAGE_README.md                      │
+│  SUCCESSORS: AI-ADLC / AI-UXD / AI-POLC look for pilc-state  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
+### AI-PPM Contract
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  AI-PPM  (Portfolio layer · adaptive engine, continuous)    │
+├─────────────────────────────────────────────────────────────┤
+│  READS:  Multiple pilc-state.md + Approved Idea Briefs       │
+│    (same-layer direct reads); project status via AI-FLO      │
+│    roll-up (cross-layer)                                      │
+│  MARKER (input): pilc-state.md (+ ilc-state.md)              │
+│                                                              │
+│  PRODUCES: Portfolio register + cross-project                │
+│    prioritization + governance decisions + dispatch auth     │
+│  MARKER (output): ppm-state.md                               │
+│                                                              │
+│  TRACEABILITY: keys portfolio roll-up by projectId;          │
+│    aggregates downstream data, never recomputes it           │
+│  GOVERNANCE AGENT: portfolio-governance-agent (PGA__)        │
+│                                                              │
+│  NOTE: portfolio-scope — NOT on the per-project spine (L45). │
+│  DISPATCHES DOWN via AI-FLO (DA-*.md); never talks to        │
+│    Project-layer packages directly (L53)                     │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### AI-FLO Contract
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  AI-FLO  (Edge · router/orchestration engine, continuous)   │
+├─────────────────────────────────────────────────────────────┤
+│  READS:  Any package output marker (*-state.md) across both  │
+│    layers; 3 topology modes (co-located / hub / portfolio)   │
+│  MARKER (input): any *-state.md                              │
+│                                                              │
+│  PRODUCES: routing decision + handoff instruction; carries   │
+│    PPM dispatch DOWN, relays project status UP (roll-up)     │
+│  MARKER (output): flo-state.md                               │
+│                                                              │
+│  KEY ROUTES: sequential dispatch PPM → POLC → UXD → ADLC;               │
+│    sequential guarantee {PBP, UXP, AP} → AI-DWG (all present by sequence)    │
+│  CONFLICTS: flag-and-hold (never silently resolved);         │
+│    every hold has a timeout + operator force-through         │
+│  TRACEABILITY: carries projectId on every routing hop        │
+│  GOVERNANCE AGENT: flow-integrity-agent (FIA__)              │
+│                                                              │
+│  NOTE: advisory in v1.0 (records routes; does not            │
+│    auto-execute sessions). Family works without it.          │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ### AI-ADLC Contract
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  AI-ADLC                                                     │
+│  AI-ADLC  (Project layer)                                   │
 ├─────────────────────────────────────────────────────────────┤
+│  READS:  PIP (from AI-PILC) OR standalone requirements       │
+│  MARKER (input): pilc-state.md (scan./,../project-          │
+│    initiation/; fallback: ask OR accept raw requirements)    │
 │                                                              │
-│  READS: PIP (from AI-PILC) OR standalone requirements        │
-│  ─────  Detection: scan for pilc-state.md                    │
-│         Fallback: ask user for requirements location         │
-│                                                              │
-│  MARKER (input): pilc-state.md                               │
-│  DETECTION STRATEGY:                                         │
-│    1. User provides path → use it                            │
-│    2. Scan: ./, ../project-initiation/, ../pip/              │
-│    3. Not found → ask user OR accept raw requirements        │
-│                                                              │
-│  ─────────────────────────────────────────────────────────── │
-│                                                              │
-│  PRODUCES: Architecture Package                               │
-│  ────────  Location: {user-chosen path}                      │
-│                                                              │
+│  PRODUCES: Architecture Package (AP)                         │
 │  MARKER (output): adlc-state.md                              │
 │                                                              │
-│  GUARANTEED FILES (relative to marker):                       │
-│  • adlc-state.md (state + extensions + structure choice)     │
-│  • Architecture docs (numbered OR phase-folder)              │
-│    - Architecture Vision                                     │
-│    - System Context (C4 L1)                                  │
-│    - Container Diagram (C4 L2)                               │
-│    - Technology Stack                                        │
-│    - Security & Identity Architecture                        │
-│    - Data Architecture                                       │
-│    - API Architecture                                        │
-│    - Integration Architecture                                │
-│    - Infrastructure & Deployment                             │
-│    - Component Design (C4 L3)                                │
-│  • ADR/ folder (Architecture Decision Records)               │
-│  • Architecture_Workbook.md                                  │
-│  • ARCHITECTURE_PACKAGE_README.md                            │
-│  • [Multi-Tenancy Architecture] (conditional)                │
+│  GUARANTEED FILES: adlc-state.md · vision · C4 L1-L3 ·       │
+│    tech-stack · security · data · api · integration ·        │
+│    ADR/ · Architecture_Workbook.md · AP_README              │
+│  STATE SCHEMA (DWG/UXD/TGE read): projectId · derivedFrom ·  │
+│    Output Structure {numbered|phase-folder} · Enabled        │
+│    Extensions · Completed Stages · ADR Register               │
+│  EXTENSIONS: opt-in v1.1 (ddd, microservices, bff,           │
+│    event-sourcing, resilience, feature-flags)                 │
+│  GOVERNANCE AGENT: architecture-decision-agent (ADA__)       │
+│  NOTE: ships ROADMAP.md (intentional)                        │
 │                                                              │
-│  STATE FILE SCHEMA (fields AI-DWG reads):                    │
-│  • Output Structure: {numbered | phase-folder}               │
-│  • Enabled Extensions: {list of active v1.1 extensions}      │
-│  • Completed Stages: {list with timestamps}                  │
-│  • ADR Register: {ADR-001: title, ADR-002: title, ...}      │
-│                                                              │
-│  SUCCESSOR EXPECTS: AI-DWG looks for adlc-state.md          │
-│                                                              │
+│  FILE-OWNERSHIP BOUNDARIES (DDD) ORIGINATE HERE → relayed    │
+│    DEFINE→GENERATE→ENFORCE (ADLC → AI-DWG → AI-GCE)          │
+│  SUCCESSORS: AI-UXD, AI-DWG, AI-TGE read adlc-state.md       │
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
-
-### AI-DWG Contract
+### AI-UXD Contract
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  AI-DWG                                                      │
+│  AI-UXD  (Project layer · step 2 in POLC→UXD→ADLC sequence)       │
 ├─────────────────────────────────────────────────────────────┤
+│  READS:  PIP / AP; strategy-stage exchange with AI-POLC      │
+│    (POLC value goals focus UX research)                       │
+│  MARKER (input): pilc-state.md / adlc-state.md               │
 │                                                              │
-│  READS: Architecture Package (from AI-ADLC) OR equivalent    │
-│  ─────  Detection: scan for adlc-state.md                    │
-│         Fallback: ask user to point to architecture docs     │
+│  PRODUCES: UX Design Package (UXP) — personas/journeys, IA,  │
+│    user flows, design system + tokens, components,           │
+│    accessibility baseline (WCAG 2.2)                          │
+│  MARKER (output): uxd-state.md                               │
 │                                                              │
-│  MARKER (input): adlc-state.md                               │
-│  DETECTION STRATEGY:                                         │
-│    1. User provides path → use it                            │
-│    2. Scan: ./architecture/, ./docs/architecture/,           │
-│       ../, ./ (current directory)                            │
-│    3. Not found → ask: "Where is your Architecture Package?" │
-│    4. No adlc-state.md at all → manual mode (user maps docs) │
-│                                                              │
-│  FORMAT TOLERANCE:                                           │
-│  • Numbered: 01_Architecture_Vision.md, 02_System_Context... │
-│  • Phase-folder: foundation/, decomposition/, decisions/...  │
-│  • Determined by reading adlc-state.md "Output Structure"    │
-│                                                              │
-│  ─────────────────────────────────────────────────────────── │
-│                                                              │
-│  PRODUCES: Development Workspace                              │
-│  ────────  Location: {user-chosen workspace root}            │
-│                                                              │
-│  MARKER (output): .kiro/steering/workspace-rules.md          │
-│                                                              │
-│  GUARANTEED FILES (relative to workspace root):               │
-│  • .kiro/steering/workspace-rules.md                         │
-│  • .kiro/steering/architecture-principles.md                 │
-│  • .kiro/steering/tech-stack.md                              │
-│  • .kiro/steering/coding-standards.md                        │
-│  • .kiro/steering/project-governance.md                      │
-│  • .kiro/steering/scope-and-risks.md                         │
-│  • .kiro/steering/session-governance.md                      │
-│  • .kiro/steering/role-isolation.md                          │
-│  • .kiro/steering/domain-context.md                          │
-│  • .kiro/steering/api-standards.md                           │
-│  • .kiro/steering/security-rules.md                          │
-│  • .kiro/steering/module-structure.md                        │
-│  • .kiro/steering/testing-strategy.md                        │
-│  • .kiro/steering/database-rules.md                          │
-│  • .kiro/steering/naming-conventions.md                      │
-│  • .kiro/steering/git-workflow.md                            │
-│  • .kiro/steering/error-handling.md                          │
-│  • .kiro/steering/observability-logging.md                   │
-│  • .kiro/steering/observability-sensitive.md                 │
-│  • PROJECT_INSTRUCTIONS.md                                   │
-│  • DEFINITION_OF_DONE.md                                     │
-│  • CONTRIBUTING.md                                           │
-│  • TEAM_AGREEMENTS.md                                        │
-│  • ONBOARDING.md                                             │
-│  • CODEOWNERS                                                │
-│  • management_framework/ (shared governance spine — DWG      │
-│    appends DWG-* entries; marker: MANAGEMENT_FRAMEWORK.md)   │
-│  • .kiro/steering/[conditional files based on AP]            │
-│                                                              │
-│  SIGNAL FORMAT (sent after generation/reconciliation):       │
-│  ⚡ From: AI-DWG | To: AI-GCE                                │
-│     Event: workspace-generated | steering-files-updated      │
-│     Workspace root: {path}                                   │
-│     Affected files: {list}                                   │
-│                                                              │
-│  SUCCESSOR EXPECTS: AI-GCE looks for                         │
-│    .kiro/steering/workspace-rules.md                         │
-│                                                              │
+│  FEEDS: AI-POLC (personas/journeys) · AI-DWG (design-        │
+│    system.md + frontend-standards.md) · AI-GCE (accessibility│
+│    -compliance rule)                                          │
+│  TRACEABILITY: reads/persists projectId + derivedFrom        │
+│  GOVERNANCE AGENT: ux-consistency-agent (UXC__)              │
+│  RECEIVES: AI-DLC v1 runtime usability/accessibility feedback   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
+### AI-POLC Contract
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  AI-POLC  (Project layer · step 1 in POLC→UXD→ADLC sequence)       │
+├─────────────────────────────────────────────────────────────┤
+│  READS:  PIP and/or AP; consumes AI-UXD personas/journeys    │
+│  MARKER (input): pilc-state.md / ilc-state.md / adlc-state   │
+│                                                              │
+│  PRODUCES: Product Backlog Package (PBP) — vision, roadmap,  │
+│    epics, value-based prioritization, DoR/DoD, risk register │
+│  MARKER (output): polc-state.md                              │
+│                                                              │
+│  FEEDS: AI-DWG (DoR/DoD + prioritization → vision.md +       │
+│    DEFINITION_OF_DONE.md)                                     │
+│  TRACEABILITY: reads/persists projectId + derivedFrom        │
+│  GOVERNANCE AGENT: backlog-health-agent (BLH__)              │
+│    [POLC-AG-01]                                              │
+│  EXCHANGE: AI-POLC ⇄ AI-DLC v1 backlog/acceptance throughout    │
+│    delivery; receives AI-DLC v1 runtime feedback                 │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### AI-DWG Contract (peer-input model — OI-069)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  AI-DWG  (Project layer · one-time generator + reconciler)  │
+├─────────────────────────────────────────────────────────────┤
+│  READS:  THREE EQUAL PEERS — AP (AI-ADLC) ∥ PBP (AI-POLC)    │
+│    ∥ UXP (AI-UXD). Accepts ANY non-empty subset (≥1);        │
+│    none is mandatory-singular, none dominates.                │
+│  MARKERS (input): adlc-state.md / polc-state.md / uxd-state  │
+│    Detection: scan for any peer marker; fallback: ask user.  │
+│                                                              │
+│  PER-CLUSTER GENERATION (one input → one output cluster):    │
+│   • AP  → technical-environment.md + tech steering + src/    │
+│   • PBP → vision.md + DEFINITION_OF_DONE.md + planning       │
+│   • UXP → design-system.md + frontend-standards.md +         │
+│           ui-implementation-spec.md + a11y relay             │
+│   Absent input → cluster SKIPPED, with quality-impact        │
+│   disclosure + explicit user approval (acknowledged, not     │
+│   silent, degradation). Peer conflict = anomaly → DWG gives  │
+│   root-cause analysis; user resolves upstream or via ADR.    │
+│                                                              │
+│  PRODUCES: Development Workspace (DW) + AI-DLC v1 inputs         │
+│    (vision.md, technical-environment.md,                     │
+│     ui-implementation-spec.md, aidlc-rules/extensions/)      │
+│  MARKER (output):.kiro/steering/workspace-rules.md          │
+│                                                              │
+│  TESTING-STRATEGY = delegation-on-activation:                │
+│    AI-TGE active → TGE owns testing-strategy.md (DWG skips); │
+│    else DWG produces a basic one from ADLC quality attrs.    │
+│  IDENTITY: ADLC→"Architecture Identity"; POLC-only→"Product  │
+│    Identity"; UXD-only→identity deferred.                    │
+│  TRACEABILITY: reads projectId → embeds § Project Identity    │
+│  GOVERNANCE AGENT: workspace-integrity-agent (WIA__)         │
+│                                                              │
+│  MODES: 1 = generate (forward) · 2 = reconcile (reverse-     │
+│    triggered when an upstream peer revises) · 3 = brownfield │
+│  SIGNAL: ⚡ AI-DWG → AI-GCE/AI-TGE: workspace-generated |     │
+│    steering-files-updated (+ affected files)                 │
+│  SUCCESSORS: AI-GCE + AI-TGE read workspace-rules.md          │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ### AI-GCE Contract
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  AI-GCE                                                      │
+│  AI-GCE  (Project layer · governance engine · companion)    │
 ├─────────────────────────────────────────────────────────────┤
+│  READS:  Development Workspace —.kiro/steering/*.md,        │
+│    DEFINITION_OF_DONE, TEAM_AGREEMENTS, CODEOWNERS, folder   │
+│    structure (the actual module layout)                      │
+│  MARKER (input):.kiro/steering/workspace-rules.md           │
 │                                                              │
-│  READS: Development Workspace (from AI-DWG) OR equivalent    │
-│  ─────  Detection: scan for .kiro/steering/workspace-rules.md│
-│         Fallback: ask user to point to workspace root        │
+│  PRODUCES: Compliance & Enforcement Layer (continuous)       │
+│  MARKER (output):.kiro/hooks/ folder exists                 │
 │                                                              │
-│  MARKER (input): .kiro/steering/workspace-rules.md           │
-│  DETECTION STRATEGY:                                         │
-│    1. Current directory contains .kiro/steering/ → use it    │
-│    2. User provides workspace path → use it                  │
-│    3. Not found → ask: "Where is your workspace root?"       │
-│    4. No workspace-rules.md → cannot proceed                 │
-│       (AI-DWG must run first, or user provides equivalent)   │
+│  GUARANTEED:.compliance-state.json ·.kiro/hooks/*.kiro.hook│
+│    (9 always + ≤6 conditional) ·.kiro/agents/*.md (8,       │
+│    GCE-AG-01..08) ·.governance/ (rules, log, README,        │
+│    AGENT-GUIDE, AGENT_REGISTRY) · compliance-dashboard.md    │
+│  TRACEABILITY: includes projectId in every JSONL event       │
+│    (CHECK/EXCEPTION/REMEDIATION/AUDIT/REDERIVATION)           │
+│  GOVERNANCE AGENTS: 8-agent compliance suite (GCE-AG-01..08) │
 │                                                              │
-│  READS ALL FILES IN:                                         │
-│  • .kiro/steering/*.md (every steering file present)         │
-│  • DEFINITION_OF_DONE.md (quality criteria)                  │
-│  • TEAM_AGREEMENTS.md (PR process, commit conventions)       │
-│  • CODEOWNERS (ownership mapping)                            │
-│  • PROJECT_INSTRUCTIONS.md (project context)                 │
-│  • Folder structure (actual module layout)                   │
+│  COMPANION: runs ALONGSIDE AI-DLC v1 (not a forward stage);     │
+│    RE-DERIVES selectively when the workspace updates.        │
+│  ENFORCE end of the ADLC → DWG → GCE relay (file ownership). │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### AI-TGE Contract
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  AI-TGE  (Project layer · test governance engine · companion)│
+├─────────────────────────────────────────────────────────────┤
+│  READS:  AP (AI-ADLC) + DW (AI-DWG) + aidlc-docs (AI-DLC v1     │
+│    state). Reads adlc-state.md directly (feedback loop)    │
+│    AND workspace-rules.md + aidlc-docs/aidlc-state.md.        │
+│  MARKER (input):.kiro/steering/workspace-rules.md           │
+│    (+ adlc-state.md + aidlc-docs/aidlc-state.md)             │
 │                                                              │
-│  ─────────────────────────────────────────────────────────── │
+│  PRODUCES: test strategy + register + coverage + debt        │
+│    scorecard + defect log + quality dashboard                │
+│  MARKER (output):.tge/tge-state.md                          │
 │                                                              │
-│  PRODUCES: Compliance & Enforcement Layer                     │
-│  ────────  Location: same workspace root (layered on top)    │
+│  OWNS testing-strategy.md WHEN activated (delegation rule);  │
+│    enrichment: ADLC required + POLC/UXD optional             │
+│  TRACEABILITY: reads projectId → audit trail + dashboard     │
+│  GOVERNANCE AGENTS: test-governance-agent (TGV__) +          │
+│    coverage-review-agent (CVR__)  [TGE-AG-01 / TGE-AG-02]    │
 │                                                              │
-│  MARKER (output): .kiro/hooks/ folder exists                 │
-│                                                              │
-│  GUARANTEED FILES (relative to workspace root):               │
-│  • .compliance-state.json (tier tracking, readiness, scores) │
-│  • .kiro/hooks/INSTALL-GUIDE.md (tier-based roadmap)         │
-│  • .kiro/hooks/*.json (18+ compliance hooks, tier-gated)     │
-│  • .governance/COMPLIANCE_README.md                          │
-│  • .governance/rules/*.md (10 always + 12 tier-gated +       │
-│    up to 8 conditional)                                      │
-│  • .governance/agents/compliance-audit-agent.md              │
-│  • .governance/agents/project-init-agent.md                  │
-│  • .governance/compliance-log/compliance-log-schema.md       │
-│  • .governance/compliance-log/exception-workflow.md          │
-│  • .governance/compliance-log/remediation-workflow.md        │
-│  • docs/compliance-dashboard.md                              │
-│  • [.governance/brownfield-baseline.md] (IF brownfield)      │
-│  • [.governance/incremental-adoption-plan.md] (IF brownfield)│
-│                                                              │
-│  SUCCESSOR: None — last in chain                             │
-│  (Development teams + AI-DLC consume the workspace)          │
-│                                                              │
+│  COMPANION: runs ALONGSIDE AI-DLC v1; Stage 10 (architecture-   │
+│    reconciliation) mirrors DWG Mode 2 on the test side.      │
+│  GOVERNS discipline only — never writes or runs test code.   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -912,64 +773,81 @@ Each package is **contract-aware** — it knows what its predecessor produces an
 
 ### Cross-Package Marker File Summary
 
-| Package | Input Marker | Output Marker |
-|---------|:------------:|:-------------:|
-| **AI-PILC** | — (first) | `pilc-state.md` |
-| **AI-ADLC** | `pilc-state.md` | `adlc-state.md` |
-| **AI-DWG** | `adlc-state.md` | `.kiro/steering/workspace-rules.md` |
-| **AI-GCE** | `.kiro/steering/workspace-rules.md` | `.kiro/hooks/` folder |
+| Package | Input Marker | Output Marker | Traceability Keys Carried |
+|---------|:------------:|:-------------:|:-------------------------:|
+| **AI-PILC** | `ilc-state.md` (optional) | `pilc-state.md` | Mints `projectId` + `derivedFrom` |
+| **AI-ADLC** | `pilc-state.md` | `adlc-state.md` | Reads + persists `projectId` + `derivedFrom` |
+| **AI-UXD** | `pilc-state.md` / `adlc-state.md` | `uxd-state.md` | Reads + persists `projectId` + `derivedFrom` |
+| **AI-POLC** | `pilc-state.md` / `ilc-state.md` | `polc-state.md` | Reads + persists `projectId` + `derivedFrom` |
+| **AI-DWG** | `adlc-state.md` / `polc-state.md` / `uxd-state.md` (peer inputs, ≥1) | `.kiro/steering/workspace-rules.md` | Reads `projectId` → embeds in § Project Identity |
+| **AI-GCE** | `.kiro/steering/workspace-rules.md` | `.kiro/hooks/` folder | Reads `projectId` → includes in compliance log |
+| **AI-TGE** | `.kiro/steering/workspace-rules.md` | `.tge/` folder | Reads `projectId` → audit trail + quality dashboard |
+| **AI-FLO** | any package output marker | `flo-state.md` | Carries `projectId` on every routing hop |
+| **AI-PPM** | `pilc-state.md` (+ roll-up reads) | `ppm-state.md` | Keys portfolio roll-up by `projectId` |
 
 **Rule:** These marker file names are NON-NEGOTIABLE. Everything else (folder paths, project names, file ordering) is user's choice.
 
+> **Traceability Contract reference:** The full provenance stamp schema (`derivedFrom`, `originType`, `mergedFrom`, `aliasOf`, `projectId`, `provenanceVersion`) and per-package obligations are defined in `contracts/TRACEABILITY_CONTRACT.md`.
+
 ---
 
-### Design Decision: One-Directional Signal Flow
+### Design Decision: Layered Communication & Bidirectional Flow
 
-**Decision:** The AI-* chain communicates strictly forward (PILC → ADLC → DWG → GCE). There is no backward signal from downstream to upstream.
+**Decision:** The AI-* family communicates by a **layered communication law**, not a strictly forward one-way chain. **Cross-layer** communication goes through **AI-FLO** (the router); **same-layer** communication is **direct marker reads**. Within that law, several **bidirectional** flows exist.
 
-**Rationale:**
-- Packages are independent and can be used standalone
-- The user is always the orchestrator between packages
-- Backward signals would create coupling that complicates standalone usage
-- If AI-DWG detects a gap in the AP, it asks the user (who then returns to AI-ADLC if needed)
+**The flows:**
+- **Sequential Project-layer chain:** AI-PILC routes to AI-PPM (register · authorize), which dispatches to AI-POLC via AI-FLO. The Project-layer chain is **sequential: AI-POLC → AI-UXD → AI-ADLC → AI-DWG**. Each package feeds the next. By the time AI-ADLC completes (the terminal predecessor), all three inputs (PBP, UXP, AP) are guaranteed present for AI-DWG. For brownfield/partial scenarios (package skipped via profile), proceeding with fewer is a user-approved exception. If AI-PPM is absent, PILC degrades to AI-POLC directly.
+- **Feedback loops (same-layer, direct — pre-build refinement):** AI-ADLC loops cost/risk bands back to AI-POLC (re-prioritization trigger) and architecture constraints back to AI-UXD (adjust flows). AI-UXD personas/journeys feed back to AI-POLC (backlog refinement). These are non-destructive re-entry triggers that refine without changing the forward sequence. Exchange is via direct peer marker reads (no AI-FLO — same layer). A peer-state change after work exists triggers a non-destructive reconciliation review.
+- **Portfolio roll-up (up):** AI-FLO relays project status UP to AI-PPM; AI-PPM dispatches authorization DOWN via AI-FLO.
+- **Runtime feedback (back):** AI-DLC v1 runtime feedback flows back to **AI-UXD** + **AI-POLC**; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery.
+- **Reconciliation loop (hinge):** when an upstream peer revises (often due to downstream feedback), the change loops back into the workspace through **AI-DWG Mode 2 (reconcile)**.
+- **Continuous companions:** **AI-GCE** + **AI-TGE** run alongside AI-DLC v1 (not as sequential forward stages) and re-derive when the workspace updates.
 
-**Reconsider when:** Automated end-to-end chain execution becomes a requirement (v2.0+).
+**Standalone principle (unchanged):** every package still works alone. When AI-FLO is absent, the **user is the orchestrator** — cross-layer coordination degrades to manual handoff, while same-layer marker detection works regardless. AI-FLO is additive coordination, never a single point of failure.
+
+**Why this superseded the old "one-directional signal flow" model:** automated, multi-package coordination became a real requirement (portfolio governance, parallel Project-layer packages, runtime feedback). The router (AI-FLO) provides the coupling without breaking standalone usage — the concern the original one-way decision was protecting against.
 
 ---
 
 ## PART 5: Reconciliation & Signal Flow
 
-```
-Architecture changes during development:
+AI-DWG is the **hinge** of the family's change loop: it runs **forward (Mode 1: generate)** from the present peers, and **reverse-triggered (Mode 2: reconcile)** when an upstream peer revises — typically because AI-DLC v1 runtime feedback flowed back to AI-UXD or AI-POLC (or a tech lesson reached AI-ADLC). When the workspace updates, **AI-GCE and AI-TGE both re-derive** the affected hooks/rules and test register.
 
-┌──────────────────────────────────────────────────────────────────────┐
-│                                                                      │
-│  User updates AP artifact (new ADR, changed principle, new module)   │
-│                              │                                       │
-│                              ▼                                       │
-│                     ┌─────────────────┐                              │
-│                     │    AI-DWG       │                              │
-│                     │    Mode 2:      │                              │
-│                     │    Reconcile    │                              │
-│                     └────────┬────────┘                              │
-│                              │                                       │
-│                    Proposes workspace changes                        │
-│                    User approves                                     │
-│                              │                                       │
-│                              ▼                                       │
-│                    Steering files updated                            │
-│                              │                                       │
-│                              ▼                                       │
-│                     ┌─────────────────┐                              │
-│                     │    AI-GCE       │                              │
-│                     │    Re-derive    │                              │
-│                     │    affected     │                              │
-│                     │    hooks/rules  │                              │
-│                     └─────────────────┘                              │
-│                                                                      │
-└──────────────────────────────────────────────────────────────────────┘
 ```
+┌────────────────────────────────────────────────────────────────────────────┐
+│                                                                            │
+│   UPSTREAM PEERS (any of)                                                  │
+│   ┌──────────┐  ┌──────────┐  ┌──────────┐                                 │
+│   │  AI-ADLC │  │  AI-POLC │  │  AI-UXD  │  ◄──── runtime feedback ────┐   │
+│   │   (AP)   │  │  (PBP)   │  │  (UXP)   │       (UX gaps → UXD,        │   │
+│   └────┬─────┘  └────┬─────┘  └────┬─────┘        backlog/acceptance    │   │
+│        │             │             │             → POLC, tech → ADLC)    │   │
+│        └─────────────┼─────────────┘                                     │   │
+│            peer revision re-emits                                        │   │
+│                      ▼                                                   │   │
+│             ┌─────────────────┐   forward = Mode 1 (generate)           │   │
+│             │     AI-DWG      │   reverse = Mode 2 (reconcile)           │   │
+│             │   (the hinge)   │   → proposes workspace changes → approve │   │
+│             └────────┬────────┘                                          │   │
+│                      │  steering / vision / tech-env / design-system     │   │
+│                      ▼  updated                                          │   │
+│             ┌─────────────────┐                                          │   │
+│             │   DW (workspace)│ ───►  AI-DLC v1 (build) ────────────────────┘   │
+│             └────────┬────────┘                                              │
+│                      │  workspace-generated | steering-files-updated         │
+│         ┌────────────┴────────────┐                                          │
+│         ▼                         ▼                                          │
+│   ┌──────────┐              ┌──────────┐                                     │
+│   │  AI-GCE  │              │  AI-TGE  │   continuous companions —           │
+│   │ re-derive│              │ re-derive│   re-derive hooks/rules + test       │
+│   │  hooks   │              │ register │   register on workspace change       │
+│   └──────────┘              └──────────┘   (TGE Stage 10 mirrors DWG Mode 2)  │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Directionality rule:** the only feedback that crosses back *through AI-DWG* is an **upstream-peer revision (Mode 2)**. AI-DLC v1's internal loops stay inside `aidlc-docs/`; GCE/TGE findings can *trigger* a human upstream revision but never *author* upstream content.
 
 ---
 
-*Created: 2026-06-06 | Author: Maheri*
+*Created: 2026-06-06 | Author: Maheri | Rebuilt 2026-06-15 (v2.0.0): PART 1–5 to all 10 packages + DWG peer model (OI-053/OI-069) | Amended 2026-06-17 (v2.1.0): multi-project `projects/` layout — per-project role folders + sibling spine + per-project dev workspace + registry (OI-089)*

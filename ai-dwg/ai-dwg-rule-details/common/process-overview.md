@@ -1,10 +1,13 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AI-DWG Process Overview
 
 ## What is AI-DWG?
 
-AI-DWG (AI-Driven Workspace Generator) is a **one-time generator** that transforms an Architecture Package (produced by AI-ADLC) into a complete, ready-to-code development workspace. It produces Kiro steering files, project instructions, repository structure, configuration files, planning templates, and operational documents — everything a team needs to start building on day one.
+AI-DWG (AI-Driven Workspace Generator) is a **convergence-point generator** that composes a complete, ready-to-code development workspace from one or more design-time peer inputs: Architecture Package (from AI-ADLC), Product Backlog Package (from AI-POLC), and/or UX Design Package (from AI-UXD). Any non-empty subset of these three is a valid starting point.
 
-Unlike AI-PILC and AI-ADLC (interactive lifecycles with stages and gates), AI-DWG is a **transformation engine**: Architecture Package in → Development Workspace out.
+It produces Kiro steering files, project instructions, repository structure, configuration files, planning templates, and operational documents — **scoped to the input clusters actually present.** Each input unlocks its own output cluster; absent inputs mean that cluster is simply not generated (with quality-impact disclosure to the user).
+
+Unlike AI-PILC and AI-ADLC (interactive lifecycles with stages and gates), AI-DWG is a **transformation engine**: Peer inputs in → Development Workspace out.
 
 ---
 
@@ -23,23 +26,20 @@ Unlike AI-PILC and AI-ADLC (interactive lifecycles with stages and gates), AI-DW
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐                                                
-    Design it │                                                
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POLC ──┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
-AI-DWG sits between **architecture** and **construction**. It takes the "how" from AI-ADLC and transforms it into the operational environment that AI-DLC builds within and AI-GCE enforces against.
+AI-DWG is the **convergence point** between design and construction. It receives peer inputs from up to three design-time packages (AI-ADLC, AI-POLC, AI-UXD) — any non-empty subset — and composes the operational environment that AI-DLC v1 builds within and AI-GCE enforces against.
 
 ---
 
@@ -82,32 +82,54 @@ AI-DWG sits between **architecture** and **construction**. It takes the "how" fr
 | Workspace EXISTS with code but NO `.kiro/steering/` (or partial) | Mode 3: Brownfield Overlay |
 | User says "add governance" / "overlay" / "retrofit steering" / "brownfield" | Mode 3: Brownfield Overlay |
 
+### Pre-Mode Gate: Input Selection & Conflict Surfacing
+
+After mode is determined but **before** execution begins, DWG runs a mandatory two-phase gate:
+
+```
+Phase A: PEER-INPUT SELECTION
+──────────────────────────────
+• Scan for markers (adlc-state.md, polc-state.md, uxd-state.md)
+• If zero found → BLOCK, ask user
+• If <3 found → quality-impact disclosure → user approves
+• Record {present_inputs} set
+
+Phase B: CROSS-INPUT CONFLICT SURFACING (if 2+ inputs present)
+───────────────────────────────────────────────────────────────
+• Scan for contradictions between present inputs (frontier overlap zones)
+• If conflict detected → surface with root-cause analysis + suggested fix
+• HARD GATE: DWG does NOT proceed until all conflicts resolved
+• If no conflicts → proceed silently
+```
+
+This gate applies to **all three modes**. Full protocol details in `core-generator.md` → "Input Selection & Conflict Surfacing."
+
 ---
 
 ## Full Generation Pipeline (Mode 1)
 
 ```
 ┌──────────┐     ┌──────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────┐
-│  READ    │ ──► │   MAP    │ ──► │   GENERATE   │ ──► │   VALIDATE   │ ──► │  OUTPUT  │
-│  (AP)    │     │(Transform)│    │  (Produce)   │     │ (Cross-check)│     │(Summary) │
+│ DETECT & │ ──► │   MAP    │ ──► │   GENERATE   │ ──► │   VALIDATE   │ ──► │  OUTPUT  │
+│  READ    │     │(Per-Clust)│    │  (Produce)   │     │ (Cross-check)│     │(Summary) │
 └──────────┘     └──────────┘     └──────────────┘     └──────────────┘     └──────────┘
      │                │                   │                    │                    │
      ▼                ▼                   ▼                    ▼                    ▼
-Load all AP      AP artifact →       Files with real     AP↔Workspace         Present to
-artifacts +      workspace           content (not        consistency          user; signal
-detect           artifact(s)         placeholders)       verified             AI-GCE
-extensions       mapping rules
+Scan markers,    Present input →     Files with real     Input↔Workspace      Present to
+load present     workspace           content (not        consistency          user; signal
+peers, quality   artifact(s)         placeholders)       verified per         AI-GCE
+impact disclose  mapping rules       per cluster         cluster
 ```
 
 ### Step Details
 
 | Step | What Happens | Guided By |
 |------|-------------|-----------|
-| **READ** | Load all AP artifacts (vision, tech stack, C4 L1-L3, security, API, data, infra, multi-tenancy). Detect active AI-ADLC extensions via `adlc-state.md`. | `common/ap-reading-guide.md` |
-| **MAP** | Transform each AP artifact into workspace artifact(s) using mapping rules. Extension-enrichment mappings loaded if extensions were active. | `mapping/*.md` files |
-| **GENERATE** | Produce all steering files, operational docs, configs, folder structure. Content is populated from AP decisions — NOT placeholders. | `templates/*.md` files |
-| **VALIDATE** | Cross-check: all principles encoded? All constraints reflected? No contradictions? Folder structure matches C4 L3? | `common/validation-rules.md` |
-| **OUTPUT** | Present summary (file count, conditional files generated/skipped, next steps). Signal AI-GCE if applicable. | Core generator |
+| **DETECT & READ** | Scan for all three peer markers. Load present inputs. Quality-impact disclosure for absent inputs. If ADLC present: load AP artifacts, detect extensions via `adlc-state.md`. If POLC present: load PBP. If UXD present: load UXP. | `common/ap-reading-guide.md` |
+| **MAP** | Transform each present input into workspace artifact(s) using per-cluster mapping rules. Extension-enrichment mappings loaded if ADLC present with extensions. | `mapping/*.md` files |
+| **GENERATE** | Produce steering files, operational docs, configs, folder structure — only for clusters whose input is present. Content is populated from input decisions — NOT placeholders. | `templates/*.md` files |
+| **VALIDATE** | Cross-check per cluster: principles encoded? Constraints reflected? No contradictions? Folder structure matches C4 L3 (if ADLC)? | `common/validation-rules.md` |
+| **OUTPUT** | Present summary (input coverage, file count, conditional files generated/skipped, next steps). Signal AI-GCE if applicable. | Core generator |
 
 ---
 
@@ -167,21 +189,21 @@ extensions       mapping rules
 
 ---
 
-## What Gets Generated (Output Inventory)
+## What Gets Generated (Output Inventory — Per Cluster)
 
-### Steering Files (19 always + up to 10 conditional)
+### ADLC Cluster — Tech Steering (IF `adlc-state.md` present)
 
-| Category | Files | Always/Conditional |
+| Category | Files | Always/Conditional (within cluster) |
 |----------|:-----:|:------------------:|
 | Core Rules | `workspace-rules.md`, `architecture-principles.md` | Always |
 | Technology | `tech-stack.md`, `coding-standards.md`, `naming-conventions.md` | Always |
-| Governance | `project-governance.md`, `session-governance.md`, `role-isolation.md`, `scope-and-risks.md` | Always |
+| Governance | `project-governance.md`, `session-governance.md`, `role-isolation.md` | Always |
 | Domain | `domain-context.md`, `module-structure.md` | Always |
 | API | `api-standards.md` | Always |
 | API (extended) | `api-versioning.md` | Conditional |
 | Security | `security-rules.md` | Always |
 | Data | `database-rules.md` | Always |
-| Quality | `testing-strategy.md` | Always |
+| Quality | `testing-strategy.md` | Always (unless TGE activated — delegation rule) |
 | Error Handling | `error-handling.md` | Always |
 | Observability | `observability-logging.md`, `observability-sensitive.md` | Always |
 | Observability (extended) | `observability-tracing.md` | Conditional |
@@ -194,40 +216,41 @@ extensions       mapping rules
 | Event Sourcing | `event-sourcing.md` | Conditional (ADLC extension) |
 | Feature Flags | `feature-flags.md` | Conditional (ADLC extension) |
 | Brownfield | `brownfield-patterns.md` | Conditional (ADLC brownfield mode) |
+| AI-DLC v1 Input | `technical-environment.md` | Always |
 
-### Operational Documents (7 files)
+Plus: **src folder structure** (derived from C4 L3), config files (`.gitignore`, `.editorconfig`, `docker-compose.yml`, `CODEOWNERS`)
+
+### POLC Cluster — Product Governance (IF `polc-state.md` present)
+
+| Output | Purpose |
+|--------|---------|
+| `vision.md` | AI-DLC v1 Vision Document (executive summary, problem, success metrics, MVP IN/OUT, personas/journeys from UXD if present) |
+| `DEFINITION_OF_DONE.md` | Quality criteria with product acceptance bar |
+| `scope-and-risks.md` | Scope boundary + risk register + assumptions |
+| `templates/session-planning.md` | AI-DLC v1 session planning |
+| `templates/sprint-planning.md` | Sprint structure and capacity |
+| `templates/estimation-guide.md` | Size estimation (S/M/L/XL) with multipliers |
+
+### UXD Cluster — UX Governance (IF `uxd-state.md` present)
+
+| Output | Purpose |
+|--------|---------|
+| `design-system.md` | Steering file: design tokens, component rules, pattern inventory |
+| `frontend-standards.md` | Prescriptive UI patterns (or enriches ADLC-generated version if both present) |
+| `ui-implementation-spec.md` | AI-DLC v1 UI codegen input (wireframes + components + flows) |
+| Accessibility baseline relay | Signaled to AI-GCE for enforcement |
+
+### Always Generated (Regardless of Which Inputs)
 
 | Document | Purpose |
 |----------|---------|
 | `PROJECT_INSTRUCTIONS.md` | Master developer guide — single entry point |
-| `DEFINITION_OF_DONE.md` | Quality criteria for completion |
 | `CONTRIBUTING.md` | Commit strategy, PR process, branching model |
-| `CICD_GUIDE.md` | CI/CD pipeline setup, quality gates, deployment, rollback |
-| `TEAM_AGREEMENTS.md` | Operating rules, ownership, review standards |
 | `ONBOARDING.md` | New developer checklist |
 | `.github/pull_request_template.md` | PR checklist template |
-
-### Planning Templates (3 files)
-
-| Template | Purpose |
-|----------|---------|
-| `templates/session-planning.md` | AI-DLC session planning |
-| `templates/sprint-planning.md` | Sprint structure and capacity |
-| `templates/estimation-guide.md` | Size estimation (S/M/L/XL) with multipliers |
-
-### Configuration Files
-
-| File | Derived From |
-|------|-------------|
-| `.gitignore` | Technology Stack |
-| `.editorconfig` | Technology Stack + coding standards |
-| `docker-compose.yml` | Infrastructure & Deployment |
-| `CODEOWNERS` | Component Design (C4 L3) ownership |
+| `CICD_GUIDE.md` | CI/CD pipeline setup, quality gates, deployment, rollback |
+| `TEAM_AGREEMENTS.md` | Operating rules, ownership, review standards |
 | `README.md` | Project skeleton |
-
-### Source Structure
-
-Folder layout derived from C4 Level 3 component design — modules, bounded contexts, and layer separation reflected in directory hierarchy.
 
 ---
 
@@ -266,15 +289,15 @@ When AI-ADLC extensions were active during architecture design, AI-DWG detects t
 
 ## Adaptive Depth Model
 
-AI-DWG adapts output scope and detail based on AP complexity:
+AI-DWG adapts output scope and detail based on **which peer inputs are present** and (for the tech cluster) AP complexity:
 
-| Depth Level | AP Indicators | Generation Behavior |
-|-------------|--------------|---------------------|
-| **Minimal** | ≤5 components, single-stack, no multi-tenancy, ≤2 integrations | 19 core steering files, basic operational docs, standard folder layout |
-| **Standard** | 5-15 components, moderate integrations, typical security | Full steering set (19 + applicable conditional), complete operational docs, detailed folder layout |
-| **Comprehensive** | >15 components, polyglot, multi-tenant, >5 integrations, compliance-heavy | All steering files, extended operational docs, granular folder layout with sub-module structure |
+| Depth Level | Indicators | Generation Behavior |
+|-------------|-----------|---------------------|
+| **Minimal** | Single peer input; or ADLC present with ≤5 components, single-stack, no multi-tenancy, ≤2 integrations | Core cluster files only, basic operational docs, standard layout |
+| **Standard** | 2-3 peer inputs; or ADLC present with 5-15 components, moderate integrations, typical security | Full cluster sets (+ applicable conditional), complete operational docs, detailed layout |
+| **Comprehensive** | All 3 peer inputs + ADLC has >15 components, polyglot, multi-tenant, >5 integrations, compliance-heavy | All clusters in full, extended operational docs, granular layout with sub-module structure |
 
-**Depth is determined automatically** from the AP content — not from user configuration. The AP already encodes complexity through its component count, integration points, and constraint density.
+**Depth is determined automatically** from the present inputs and their content — not from user configuration. The peer inputs already encode complexity through their artifacts.
 
 ---
 
@@ -283,21 +306,28 @@ AI-DWG adapts output scope and detail based on AP complexity:
 ### Mode 1: Initial Generation
 
 ```
-User: "Generate the development workspace from my architecture package"
+User: "Generate the development workspace from my design packages"
   │
   ▼
+AI scans for peer input markers (adlc-state.md, polc-state.md, uxd-state.md)
+  │
+  ▼ (if < 3 found)
+AI discloses quality impact of absent inputs:
+  "Present: {list}. Absent: {list}. Impact: {cluster details}. Proceed?"
+  │
+  ▼ (user approves)
 AI asks 2-4 config questions:
   • Workspace root path? (default: ./)
-  • Project display name? (default: from AP system name)
+  • Project display name? (default: from AP system name or POLC product name)
   • Team size? (affects operational doc depth)
   • Target Kiro autonomy mode? (affects session-governance)
   │
   ▼
-AI generates all files in one pass
+AI generates files for all present clusters in one pass
   │
   ▼
 AI presents summary:
-  "✅ Generated {n} steering files, {m} config files, repo structure with {p} modules"
+  "✅ Generated from {n}/3 inputs: {m} steering files, {p} config files, {q} operational docs"
   │
   ▼
 Done. User verifies and starts working.
@@ -338,9 +368,11 @@ AI presents proposed changes:
 
 ---
 
-## Mapping Logic (How AP → Workspace)
+## Mapping Logic (How Peer Inputs → Workspace)
 
-Each AP artifact maps to specific workspace artifacts:
+Each present peer input maps to specific workspace artifacts through its cluster:
+
+### ADLC Cluster (Tech) — IF `adlc-state.md` present
 
 | AP Artifact | Produces (Workspace) | Mapping File |
 |-------------|---------------------|--------------|
@@ -359,16 +391,33 @@ Each AP artifact maps to specific workspace artifacts:
 | Integration Architecture | `resilience-standards.md` | `mapping/integration-to-resilience.md` |
 | Quality Attributes (latency) | `performance-standards.md` | `mapping/quality-to-performance.md` |
 | Container Design (UI) | `frontend-standards.md` | `mapping/containers-to-frontend.md` |
-| Quality Attributes (all) | `DEFINITION_OF_DONE.md` | `mapping/quality-to-dod.md` |
+| AP + UXP (combined) | `technical-environment.md` | `mapping/ap-uxp-to-tech-environment.md` |
+| Brownfield context (conditional) | `brownfield-patterns.md` | `mapping/brownfield-to-steering.md` |
+
+### POLC Cluster (Product) — IF `polc-state.md` present
+
+| PBP Artifact | Produces (Workspace) | Mapping File |
+|-------------|---------------------|--------------|
+| Product Vision + UXD personas | `vision.md` | `mapping/polc-uxd-to-vision-document.md` |
+| Quality Attributes + DoR/DoD | `DEFINITION_OF_DONE.md` | `mapping/quality-to-dod.md` |
 | Team Context + Methodology | `TEAM_AGREEMENTS.md`, `role-isolation.md`, templates/ | `mapping/team-to-agreements.md` |
 | Governance context | `CONTRIBUTING.md`, `ONBOARDING.md`, `PROJECT_INSTRUCTIONS.md`, PR template | `mapping/governance-derivation.md` |
-| Brownfield context (conditional) | `brownfield-patterns.md` | `mapping/brownfield-to-steering.md` |
+| Risk register + assumptions | `scope-and-risks.md` | (product-cluster scope derivation) |
+
+### UXD Cluster (UX) — IF `uxd-state.md` present
+
+| UXP Artifact | Produces (Workspace) | Mapping File |
+|-------------|---------------------|--------------|
+| Design system + tokens | `design-system.md` | `mapping/uxd-to-design-system.md` |
+| Component/pattern inventory | `frontend-standards.md` (UI patterns) | `mapping/containers-to-frontend.md` |
+| Wireframes + user flows | `ui-implementation-spec.md` | (new mapping) |
+| Accessibility baseline | Relay to GCE + `frontend-standards.md` a11y | (accessibility relay logic) |
 
 ---
 
 ## What AI-DWG Does NOT Do
 
-- ❌ Generate application code (AI-DLC's job)
+- ❌ Generate application code (AI-DLC v1's job)
 - ❌ Set up CI/CD pipelines fully (produces skeleton; team configures)
 - ❌ Install dependencies (produces dependency file skeleton; team runs install)
 - ❌ Make architecture decisions (already made in AI-ADLC)
@@ -376,12 +425,25 @@ Each AP artifact maps to specific workspace artifacts:
 - ❌ Overwrite team customizations during reconciliation
 - ❌ Delete modules/folders during reconciliation
 - ❌ Require full regeneration for small architecture changes
-- ❌ Ask questions the Architecture Package already answers
-- ❌ Generate steering for patterns the AP doesn't use
+- ❌ Ask questions the peer inputs already answer
+- ❌ Generate steering for patterns the inputs don't justify
+- ❌ Silently degrade when inputs are missing (quality-impact disclosure is mandatory)
+- ❌ Resolve conflicts between peer inputs (DWG surfaces them; user decides)
+- ❌ Treat any single input as "required" or "dominant" (all peers are equal)
 
 ---
 
-## Key Principle: Prescriptive Over Descriptive
+## Key Principle: Peer Inputs, No Master — Per-Cluster Generation
+
+AI-DWG treats {ADLC, POLC, UXD} as **equal-impact peer inputs**. None dominates. Each unlocks its own output cluster:
+
+| ❌ Old Model (AP-Anchored) | ✅ Correct Model (Peer) |
+|----------------------------|------------------------|
+| "AP is required; PBP and UXP are optional enrichment" | "Any non-empty subset of {ADLC, POLC, UXD} is valid. Each has its own output cluster." |
+| "Generation blocks without AP" | "Generation proceeds with whatever inputs are present (with quality-impact disclosure)" |
+| "PBP/UXP sharpen specific AP-derived outputs" | "PBP/UXD produce their OWN outputs; they don't merely enrich ADLC outputs" |
+
+### Prescriptive Over Descriptive (Unchanged)
 
 Generated steering files are **rules**, not documentation:
 

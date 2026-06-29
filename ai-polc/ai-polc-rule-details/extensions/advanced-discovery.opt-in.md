@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Extension: Advanced Discovery (Opt-In Prompt)
 
 **Trigger:** User mentions "OKRs", "jobs to be done", "JTBD", "hypothesis testing", "opportunity scoring"

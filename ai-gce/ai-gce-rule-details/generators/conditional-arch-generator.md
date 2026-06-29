@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Conditional Architecture — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives rules from CONDITIONAL steering files (those that only exist if the arch
 
 ## MANDATORY: Stage Sub-Role — Systems Engineer
 
-During THIS activity, ALSO adopt the mindset of a **Systems Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of a **Systems Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in conditional system boundaries: each conditional pattern (multi-tenancy, event-sourcing, resilience) is a discrete subsystem with its own invariants

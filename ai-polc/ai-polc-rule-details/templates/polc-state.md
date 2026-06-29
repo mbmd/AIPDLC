@@ -1,8 +1,9 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 ---
 package: AI-POLC
 version: 1.0.0
 status: "{in-progress | ready | operating}"
-project-id: "{correlation key from pilc-state.md or user-assigned}"
+projectId: "{correlation key from pilc-state.md or user-assigned}"
 project-name: "{product/project name}"
 ---
 
@@ -52,6 +53,22 @@ project-name: "{product/project name}"
 
 - DoR: {version or "not defined"}
 - DoD: {version or "not defined"}
+
+## Dashboard Summary (machine-readable — AI-DFE reads this)
+
+> A small structured block for the dashboard `po` pane (PO tab). Capture the few facts that are otherwise only in free-form docs. AI-DFE reads this when present and falls back to safe defaults otherwise. Keep it current at Governance/Assembly.
+
+```yaml
+dashboard-summary:
+  vision:
+    status: "{draft | approved}"
+    statement: "{one-line product vision}"
+  velocity:
+    trend: "{stable | up | down}"
+  acceptance:
+    totalCriteria: {N}
+    validated: {N}
+```
 
 ## Pending Decisions
 

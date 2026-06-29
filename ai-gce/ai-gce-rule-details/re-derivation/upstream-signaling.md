@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Upstream Signaling — How AI-DWG Triggers AI-GCE Re-Derivation
 
 ## Purpose
@@ -8,7 +9,7 @@ Defines the signaling mechanism between AI-DWG (upstream) and AI-GCE (downstream
 
 ## MANDATORY: Stage Sub-Role — Systems Engineer
 
-During THIS activity, ALSO adopt the mindset of a **Systems Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of a **Systems Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in inter-system contracts: the upstream signal is a formal interface between AI-DWG and AI-GCE — its format must be precise and reliable
@@ -114,7 +115,7 @@ AI-GCE does:
 
 ## AI-GCE Does NOT Signal Downstream
 
-AI-GCE runs as a **continuous compliance companion alongside AI-DLC** — no package we own consumes its output downstream. AI-DLC (external) consumes hooks from the filesystem at trigger time. No signal is needed — updated hooks take effect automatically on next IDE event.
+AI-GCE runs as a **continuous compliance companion alongside AI-DLC v1** — no package we own consumes its output downstream. AI-DLC v1 (external) consumes hooks from the filesystem at trigger time. No signal is needed — updated hooks take effect automatically on next IDE event.
 
 However: AI-GCE DOES log a `REDERIVATION` event in `compliance-log/events/{date}.jsonl` so the team knows enforcement changed:
 

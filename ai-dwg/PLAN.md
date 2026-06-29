@@ -24,20 +24,17 @@
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐                                                
-    Design it │                                                
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POLC ──┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 | Layer | Package | Type | Input | Output |
@@ -46,17 +43,17 @@
 | Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 ---
 
@@ -82,8 +79,8 @@ A **one-time generator** (not a lifecycle) that reads an Architecture Package pr
 │       ├── coding-standards.md             ← Derived from tech + principles
 │       ├── project-governance.md           ← Sprint cadence, DoD, gates
 │       ├── scope-and-risks.md              ← From PIP scope + AP constraints
-│       ├── session-governance.md           ← AI-DLC session rules
-│       ├── role-isolation.md               ← Who does what in AI-DLC workflow
+│       ├── session-governance.md           ← AI-DLC v1 session rules
+│       ├── role-isolation.md               ← Who does what in AI-DLC v1 workflow
 │       ├── domain-context.md              ← Ubiquitous language, bounded contexts, domain rules
 │       ├── multi-tenancy.md                ← From AP multi-tenancy (conditional)
 │       ├── api-standards.md                ← From AP API architecture
@@ -115,7 +112,7 @@ A **one-time generator** (not a lifecycle) that reads an Architecture Package pr
 │   └── pull_request_template.md            ← PR template with checklist (or platform equivalent)
 │
 ├── templates/                              ← Planning templates for team use
-│   ├── session-planning.md                 ← AI-DLC session planning template
+│   ├── session-planning.md                 ← AI-DLC v1 session planning template
 │   ├── sprint-planning.md                  ← Sprint structure and capacity template
 │   └── estimation-guide.md                 ← Size estimation (S/M/L/XL) with multipliers
 │
@@ -247,7 +244,7 @@ When AI-ADLC extensions were active during architecture design, AI-DWG enriches 
 │  ────────────                                                     │
 │  Complete workspace ready for:                                    │
 │  • git init                                                       │
-│  • AI-DLC workflow start                                          │
+│  • AI-DLC v1 workflow start                                          │
 │  • Team onboarding                                                │
 │                                                                   │
 └─────────────────────────────────────────────────────────────────┘
@@ -255,7 +252,7 @@ When AI-ADLC extensions were active during architecture design, AI-DWG enriches 
 
 ### Mode 2: Delta Reconciliation
 
-Triggered when architecture changes during AI-DLC execution (new ADRs, principle amendments, module additions, technology changes).
+Triggered when architecture changes during AI-DLC v1 execution (new ADRs, principle amendments, module additions, technology changes).
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -354,7 +351,7 @@ ai-dwg/
 │   └── core-generator.md                   ← Master generation logic (THE spec)
 ├── ai-dwg-rule-details/
 │   ├── common/                             ← 3 files (process overview, AP reading, validation)
-│   ├── mapping/                            ← 23 transformation rule files (AP → DW)
+│   ├── mapping/                            ← 36 transformation rule files (AP → DW)
 │   ├── reconciliation/                     ← 4 files (diff, merge, provenance, signaling)
 │   └── templates/                          ← 48 output file templates
 │       ├── steering/                       ← 29 files (19 always + 10 conditional)
@@ -362,7 +359,7 @@ ai-dwg/
 │       ├── planning/                       ← 3 files
 │       ├── config/                         ← 3 files
 │       └── docker-compose/                 ← 5 files (per tech stack)
-└── kiro-setup/
+└── setup/
     └── INSTALL.md                          ← Multi-platform installation guide
 ```
 
@@ -382,16 +379,16 @@ ai-dwg/
 | Extension-awareness (v1.1) | Detect active AI-ADLC extensions via `adlc-state.md`; enrich generation accordingly | Extensions produce richer AP — workspace must reflect that richness; no manual reconfiguration needed |
 | PROJECT_INSTRUCTIONS as master guide | Single entry-point document for all developers | Provides a single entry-point consolidating essential information for immediate productivity |
 | Operational docs included | DoD, CONTRIBUTING, CICD_GUIDE, TEAM_AGREEMENTS, ONBOARDING, PR template | Developers need process clarity from day one — not just architecture rules |
-| Planning templates included | Session planning, sprint planning, estimation guide | Team needs to plan AI-DLC work immediately; templates accelerate this |
+| Planning templates included | Session planning, sprint planning, estimation guide | Team needs to plan AI-DLC v1 work immediately; templates accelerate this |
 | Domain context steering | Ubiquitous language + bounded context + domain rules from C4 L3 | Prevents AI from inventing synonyms or violating domain boundaries |
-| Role isolation steering | Who does what in AI-DLC (Architect, Developer, QA, Security, PM) | Prevents role confusion; supports segregation of duties |
+| Role isolation steering | Who does what in AI-DLC v1 (Architect, Developer, QA, Security, PM) | Prevents role confusion; supports segregation of duties |
 | Reconciliation mode | Non-destructive delta updates when architecture changes | Projects evolve; workspace must evolve with them without data loss |
 
 ---
 
 ## What AI-DWG Does NOT Do
 
-- ❌ Generate application code (that's AI-DLC's job)
+- ❌ Generate application code (that's AI-DLC v1's job)
 - ❌ Set up CI/CD pipelines fully (produces skeleton; team configures)
 - ❌ Install dependencies (produces package.json skeleton; team runs install)
 - ❌ Make architecture decisions (those are already made in AI-ADLC)

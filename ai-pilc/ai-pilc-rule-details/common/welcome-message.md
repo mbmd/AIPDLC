@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Welcome Message
 
 ## Display Instructions
@@ -19,6 +20,10 @@ Display the following to the user:
 Welcome. I'll guide you through a structured project initiation
 process — from raw requirement to a complete, professional
 Project Initiation Package ready for execution.
+
+💡 TIP — best in a fresh session: run this package in its own new chat.
+   Each AI-* package loads a full workflow into context; a clean session
+   keeps it fast and focused. Finished here? Start the next package fresh.
 
 📋 WHAT WE'LL PRODUCE:
    • Requirement Intake Form

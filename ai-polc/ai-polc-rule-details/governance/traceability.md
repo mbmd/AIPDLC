@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Stage 10: Traceability Spine
 
 **Phase:** Governance
@@ -78,7 +79,7 @@ During Operations (Stage 15), extend the chain downward:
 | EPIC-001 | Story 1.1, 1.2, 1.3 | 2/3 done | R1-Sprint3 |
 | EPIC-003 | Story 3.1, 3.2 | 2/2 done ✅ | R1-Sprint2 |
 
-This is populated as AI-DLC completes work — not at initial creation.
+This is populated as AI-DLC v1 completes work — not at initial creation.
 
 ### Step 10.5: Persist Traceability Matrix
 

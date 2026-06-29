@@ -1,13 +1,17 @@
 # AI-PILC (AI-Driven Project Initiation Life Cycle)
 
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
+
 **Version:** 1.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
-**License:** Apache 2.0 with Attribution Addendum — See `LICENSE` and `../ai-license/`
+**License:** Apache 2.0 with Attribution Addendum — See `LICENSE` and `NOTICE`
 
 ---
 
-## The AI-* Family
+## The AI-* PDLC Family
+
+AI-PILC is part of **AIFLC** (AI Full Life Cycle) — the AI-* PDLC Family of injectable workflow packages.
 
 ```
 ╔════════════════ PORTFOLIO LAYER · scope = MANY projects ════════════════╗
@@ -22,20 +26,17 @@
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐                                                
-    Design it │                                                
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POLC ──┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 | Layer | Package | Type | Input | Output |
@@ -44,17 +45,17 @@
 | Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 ---
 
@@ -115,13 +116,46 @@ A complete Project Initiation Package containing:
 
 ---
 
+## Activation
+
+**Explicit key:** type `_PILC_` in any prompt to activate AI-PILC unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-PILC`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
+
+---
+
 ## Installation
 
 1. Download or clone this repository
 2. The package contains two key directories:
    - `ai-pilc-rules/` — the core workflow (always loaded by the AI)
    - `ai-pilc-rule-details/` — phase details and templates (loaded on demand)
-3. Follow the platform-specific instructions in [kiro-setup/INSTALL.md](./kiro-setup/INSTALL.md)
+3. Follow the platform-specific instructions in [setup/INSTALL.md](./setup/INSTALL.md)
+
+---
+
+## Output Directory Structure
+
+AI-PILC outputs into the standard multi-project layout. Each project gets its own folder under `projects/`, with PILC deliverables in a `pip/` subfolder and the shared governance spine at the project root:
+
+```
+pdlc-ws/projects/
+├── PROJECTS.md                          ← workspace registry (active pointer ★)
+└── PRJ-{ABBREV}-{slug}/                  ← one project
+    ├── management_framework/             ← shared governance spine (Decision Log, etc.)
+    └── pip/                              ← AI-PILC output
+        ├── pilc-state.md                 ← progress marker
+        ├── 01_Requirement_Submission/
+        ├── 02_Screening_Prioritization/
+        ├── 03_Business_Case/
+        ├── 04_Project_Charter/
+        ├── 05_Stakeholder_Management/
+        ├── 06_Scope_Planning/
+        ├── 07_Resource_Budget/
+        ├── 08_Risk_Management/
+        ├── 09_Governance_Communication/
+        └── 10_Project_Kickoff/
+```
+
+> The `projects/` structure is always-on — solo, single-project, and multi-project alike. See `OUTPUT_AND_STATE_CONTRACT.md` for full details.
 
 ---
 
@@ -246,9 +280,9 @@ AI-PILC draws from:
 
 ---
 
-## Differences from AI-DLC
+## Differences from AI-DLC v1
 
-| Aspect | AI-DLC | AI-PILC |
+| Aspect | AI-DLC v1 | AI-PILC |
 |--------|--------|---------|
 | **Domain** | Software development | Project initiation (pre-execution) |
 | **Output** | Code + documentation | Project management deliverables |
@@ -289,8 +323,12 @@ Conceptualized and designed based on real-world PPM/PMO practice, combining stru
 
 - **No warranty:** Provided "AS IS" without warranties of any kind
 
-See `LICENSE` in this directory and the canonical licensing documents in `../ai-license/` for full terms and FAQ.
+See `LICENSE` and `NOTICE` in this directory for full terms.
 
 **Copyright:** © 2026 Mohammad Maheri
 
-> **Note:** AI-DLC (Development Life Cycle) is NOT part of the AI-* Family — it is a separate AWS product ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) licensed under MIT-0.
+> **Note:** AI-DLC v1 (Development Life Cycle) is NOT part of the AI-* Family — it is a separate AWS product ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) licensed under MIT-0.
+
+---
+
+*Part of [AIFLC](../README.md) — the AI-* PDLC Family*

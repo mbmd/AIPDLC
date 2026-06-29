@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AI-POLC — Question Format Guide
 
 **Purpose:** Rules for how the AI asks questions during the product ownership workflow. Consistent question formatting improves decision quality and reduces user fatigue.

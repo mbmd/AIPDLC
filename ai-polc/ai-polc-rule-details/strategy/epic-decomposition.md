@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Stage 5: Epic Decomposition
 
 **Phase:** Strategy
@@ -17,7 +18,7 @@ During this stage, also adopt the **Business Analyst** sub-role:
 
 ### Anti-Patterns
 - Do NOT produce epics that are just re-worded goals — epics are concrete capabilities, not aspirations
-- Do NOT prescribe implementation decomposition — that's AI-DLC's job (epic-to-story breakdown is DLC Inception)
+- Do NOT prescribe implementation decomposition — that's AI-DLC v1's job (epic-to-story breakdown is DLC Inception)
 - Do NOT create epics without acceptance criteria — every epic needs a testable definition of "done at epic level"
 - Do NOT skip dependency mapping — undetected dependencies cause sprint failures
 
@@ -143,7 +144,7 @@ If Tier 2 is active (story elaboration enabled):
 
 If Tier 2 is inactive (default in chain mode):
 - Epics are the terminal output of this stage
-- AI-DLC's Inception will decompose epics into stories later
+- AI-DLC v1's Inception will decompose epics into stories later
 
 ---
 

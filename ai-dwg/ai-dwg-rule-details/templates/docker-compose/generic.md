@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Docker Compose Template: Generic (Any Stack)
 
 Use when technology stack doesn't match Node/Python/.NET/Java, or for mixed/polyglot architectures.

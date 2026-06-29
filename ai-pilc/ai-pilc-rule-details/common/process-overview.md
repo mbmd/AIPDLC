@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AI-PILC Process Overview
 
 ## What is AI-PILC?
@@ -129,7 +130,7 @@ Six registers are maintained continuously throughout all phases:
 | Assumptions & Dependencies | Captures what's assumed true and what's needed | At every analysis stage |
 | Lessons Learned | Insights and improvements | At each phase gate |
 
-**Numbering:** Entries are sequentially numbered (D-001, C-001, I-001, A-001, ASM-001/DEP-001, LL-001) and never deleted — only status-updated.
+**Numbering:** Entries are project-qualified and sequentially numbered within each phase (`PILC-{ABBREV}-D-1`, `PILC-{ABBREV}-C-1`, `PILC-{ABBREV}-I-1`, `PILC-{ABBREV}-A-1`, `PILC-{ABBREV}-AD-1`, `PILC-{ABBREV}-L-1`) and never deleted — only status-updated. (Per `MANAGEMENT_FRAMEWORK_CONTRACT.md` v1.2.0.)
 
 ---
 
@@ -167,3 +168,36 @@ All deliverables produced by the workflow:
 - ❌ Proceed after a "halt" recommendation without user override
 - ❌ Delete or overwrite source/input documents
 - ❌ Provide legal, financial, or regulatory advice (flags when expert input needed)
+
+---
+
+## Key Principles
+
+- **Adaptive Execution:** Depth adjusts to project complexity; simple projects move fast
+- **Transparent Planning:** Always show what's coming next before starting
+- **User Control:** User can skip, revisit, reorder, or stop at any phase gate
+- **Progress Tracking:** `pilc-state.md` updated after every stage
+- **Complete Audit Trail:** All interactions, decisions, and rationale logged
+- **Source-Driven:** Never invent scope not present in the source document
+- **Register Hygiene:** Management registers maintained in real-time, not retroactively
+- **Question-Driven:** Structured options with recommendations; user decides
+- **Template-Based:** Consistent deliverable quality via reusable templates
+- **Resumable:** Session continuity via state file; workflow resumes gracefully
+
+---
+
+## Checkpoint Enforcement (MANDATORY)
+
+### Stage Completion Rules
+
+1. NEVER proceed to the next stage without explicit user approval at gates
+2. IMMEDIATELY update `pilc-state.md` after any stage completion
+3. Log ALL decisions in the Decision Log as they occur (not batched)
+4. If user requests to skip a stage, log it as a decision with rationale
+5. If user requests to revisit a completed stage, update state and re-enter
+
+### Interaction Logging
+
+- Log every significant user input with timestamp in state file
+- Capture decisions verbatim — never paraphrase user's choice
+- Use ISO 8601 timestamps (YYYY-MM-DDTHH:MM:SSZ)

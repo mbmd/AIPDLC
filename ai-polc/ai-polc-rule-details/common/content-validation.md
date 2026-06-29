@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AI-POLC — Content Validation Rules
 
 **Purpose:** Quality rules that every AI-POLC output must satisfy. The AI checks these before presenting any artifact to the user.

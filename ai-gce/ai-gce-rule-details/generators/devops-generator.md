@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # DevOps & Deployment — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives DevOps and deployment rules (GOV-DEVOPS-*) from `git-workflow.md` and `d
 
 ## MANDATORY: Stage Sub-Role — Automation Engineer
 
-During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in deployment safety: every rule should prevent a class of production incident (data loss, downtime, unauthorized change)

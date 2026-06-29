@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 ---
 generatedBy: AI-GCE
 generatedVersion: "{version}"
@@ -15,9 +16,10 @@ A custom agent specification that scans a project for compliance against all app
 
 ## Trigger
 
-- **On demand:** User-triggered hook (`periodic-audit.json`)
+- **Shortcut:** `CAA__` (typed anywhere in a prompt)
 - **Post-tier-activation:** After Mode 4 completes
-- **Pre-phase-transition:** Before moving to next AI-DLC phase
+- **Pre-phase-transition:** Before moving to next AI-DLC v1 phase
+- **On schedule:** Team-configured cadence (e.g., weekly)
 
 ---
 
@@ -67,7 +69,7 @@ Rating: 90+ = ✅ | 70-89 = 🟡 | 50-69 = 🟠 | 0-49 = 🔴
 - Update `.compliance-state.json` → `lastAudit`, `complianceScore`
 
 ### Step 9: Update Dashboard
-- Regenerate `docs/compliance-dashboard.md` with current data
+- Regenerate `management_framework/dashboards/compliance-dashboard.md` with current data
 - Update score history, tier progress, improvement actions
 
 ---
@@ -75,7 +77,7 @@ Rating: 90+ = ✅ | 70-89 = 🟡 | 50-69 = 🟠 | 0-49 = 🔴
 ## Output
 
 - Compliance report at `docs/compliance-reports/{date}-audit.md`
-- Updated `docs/compliance-dashboard.md`
+- Updated `management_framework/dashboards/compliance-dashboard.md`
 - Updated `.compliance-state.json`
 - Audit snapshot in `compliance-log/snapshots/`
 - Summary message with top findings + recommendations

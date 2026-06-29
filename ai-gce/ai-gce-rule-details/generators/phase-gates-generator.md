@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Phase Gates — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives phase gate rules (PG-*) from `project-governance.md` and `DEFINITION_OF_
 
 ## MANDATORY: Stage Sub-Role — Audit & Compliance Specialist
 
-During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in control gates: phase transitions are the highest-stakes governance moments — missing a gate criterion risks delivering incomplete work

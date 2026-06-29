@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Steering File Governance — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives steering file governance rules (GOV-STEER-*). UNIQUE: this category is s
 
 ## MANDATORY: Stage Sub-Role — Audit & Compliance Specialist
 
-During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think meta-governantly: these rules govern the governance infrastructure itself — ensuring steering files maintain their own quality

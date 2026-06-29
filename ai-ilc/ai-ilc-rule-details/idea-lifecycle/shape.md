@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Stage 2: Shape
 
 **Lead persona:** `#persona-product-manager`
@@ -150,7 +151,7 @@ Does this accurately capture what you're thinking?
 
 ### Step 7: Finalize
 
-1. Save the final Idea Statement (internal working doc — NOT the handoff brief)
+1. Save the final Idea Statement (internal working doc — NOT the handoff brief) into the idea's subfolder as `{NNN}-{idea-slug}/Idea_Statement.md` (path from `ilc-state.md` → Idea Folder)
 2. Update `ilc-state.md`:
    - Status: Shaped
    - Current Stage: 3 (ready for Evaluate)

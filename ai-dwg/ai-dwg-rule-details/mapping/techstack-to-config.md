@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Mapping: Technology Stack → tech-stack.md + .gitignore + docker-compose.yml + .editorconfig
 
 ## Purpose
@@ -16,7 +17,7 @@ During THIS activity, ALSO adopt the mindset of a **Workspace Architect**. This 
 
 ### Behavioral Shifts
 - tech-stack.md is RESTRICTIVE, not descriptive — it defines what's ALLOWED; unauthorized additions are architecture violations
-- Generate docker-compose for infrastructure services only — databases, caches, queues; never application containers (those are AI-DLC's domain)
+- Generate docker-compose for infrastructure services only — databases, caches, queues; never application containers (those are AI-DLC v1's domain)
 - Match .gitignore patterns to the specific technology stack — better to over-ignore than accidentally commit node_modules or .env files
 - Ensure ADR references are included for every major technology choice — "why PostgreSQL and not MongoDB?" should have a documented answer
 - Think about version policy as governance — major upgrades require ADR, patches are free, security fixes are immediate

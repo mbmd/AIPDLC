@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Stage 6: Value-Based Prioritization
 
 **Phase:** Strategy
@@ -68,7 +69,7 @@ For each epic, score:
 | Business Value | 1-10 | Revenue/user impact if delivered |
 | Time Criticality | 1-10 | Cost of delay — what's lost by waiting? |
 | Risk Reduction | 1-10 | Uncertainty/risk removed by doing this |
-| Job Duration | 1-10 | Relative effort/complexity (higher = longer) |
+| Job Duration | 1-10 | Relative effort/complexity (higher = longer) — **inform with the AI-ADLC feasibility/cost-risk band for the affected area when present** (effort band S/M/L/XL → Job Duration); raise the score where ADLC flags technical risk/debt |
 
 **WSJF Score = (Business Value + Time Criticality + Risk Reduction) / Job Duration**
 
@@ -119,7 +120,8 @@ Document when the priority order should be revisited:
 |---------|--------|
 | New feature brief from AI-ILC | Assess and insert into ranked list |
 | Approved change request from AI-PILC | Re-evaluate affected epics |
-| Blocker from AI-DLC | Move blocked epic down; pull alternative forward |
+| **AP feasibility / cost-risk update (AI-ADLC)** | **Re-score affected epics — fold the updated effort/complexity band into WSJF Job Duration (or value/effort); a "3× the cost" verdict can reorder the roadmap. This is the Architecture→Product cost loop (same-layer read of `adlc-state.md`).** |
+| Blocker from AI-DLC v1 | Move blocked epic down; pull alternative forward |
 | Market change / competitor move | Full re-prioritization session |
 | Sprint/increment review reveals new data | Selective re-score of affected epics |
 | {cadence}: every {N} sprints | Scheduled re-prioritization review |

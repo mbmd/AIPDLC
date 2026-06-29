@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AI-GCE Process Overview
 
 ## What is AI-GCE?
@@ -23,23 +24,20 @@ Unlike AI-PILC and AI-ADLC (interactive lifecycles with stages and gates), AI-GC
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐                                                
-    Design it │                                                
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POLC ──┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
-AI-GCE sits at the **end of the preparation chain**. It reads what AI-DWG encoded — architecture AND governance — and converts that intent into automated, continuous enforcement. A developer working inside AI-DLC should never manually check project rules. AI-GCE ensures the workspace enforces them automatically.
+AI-GCE sits at the **end of the preparation chain**. It reads what AI-DWG encoded — architecture AND governance — and converts that intent into automated, continuous enforcement. A developer working inside AI-DLC v1 should never manually check project rules. AI-GCE ensures the workspace enforces them automatically.
 
 ---
 
@@ -105,9 +103,9 @@ AI-GCE generates rules from TWO sources that combine:
 │  If silent: Category gets baseline-only rules                    │
 │  If contradicts baseline: Steering WINS                          │
 ├─────────────────────────────────────────────────────────────────┤
-│  SOURCE 2: BUILT-IN BASELINE (AI-DLC methodology floor)          │
+│  SOURCE 2: BUILT-IN BASELINE (AI-DLC v1 methodology floor)          │
 │  ─────────────────────────────────────────────────               │
-│  What: 10 universal rules that apply to ANY AI-DLC project       │
+│  What: 10 universal rules that apply to ANY AI-DLC v1 project       │
 │  Covers: Spec-before-code, never-vibe-code, author≠approver,    │
 │          no secrets, migration rollback, append-only log, etc.   │
 │  If steering enriches: Baseline PLUS steering-specific detail    │
@@ -175,14 +173,14 @@ All output is installed INTO the development workspace:
 | Output | Path | Purpose |
 |--------|------|---------|
 | **Hooks** (15+) | `.kiro/hooks/*.json` | Real-time enforcement on IDE events |
-| **Hook Install Guide** | `.kiro/hooks/INSTALL-GUIDE.md` | Tier-based adoption roadmap |
+| **Hook Enforcement Guide** | `.kiro/hooks/ENFORCEMENT-GUIDE.md` | Tier-based adoption roadmap |
 | **Rules** (18+ always, 9 conditional) | `.governance/rules/*.md` | Compliance rule definitions |
 | **Audit Agent** | `.governance/agents/compliance-audit-agent.md` | 9-step scoring audit |
 | **Init Agent** | `.governance/agents/project-init-agent.md` | 5-question project scaffolding |
 | **Compliance Log Schema** | `.governance/compliance-log/` | JSONL event schema + workflows |
 | **COMPLIANCE_README** | `.governance/COMPLIANCE_README.md` | Developer-facing guide |
 | **State File** | `.compliance-state.json` | Tier tracking, readiness, scores |
-| **Dashboard** | `docs/compliance-dashboard.md` | 30+ variable compliance dashboard |
+| **Dashboard** | `management_framework/dashboards/compliance-dashboard.md` | 30+ variable compliance dashboard |
 | **Phase/Role Steering** | `.kiro/steering/compliance-*.md` | Optional enforcement steering (Step 4b) |
 | **Brownfield Baseline** | `.governance/brownfield-baseline.md` | IF brownfield — acknowledged violations |
 | **Adoption Plan** | `.governance/incremental-adoption-plan.md` | IF brownfield — progressive timeline |
@@ -250,7 +248,7 @@ Depth is determined automatically from workspace content — not from user confi
 | "Show tier readiness" | Next tier criteria + blockers |
 | "Why does this hook fire?" | Explain rule source + steering derivation |
 | "Request exception for {rule}" | Start exception workflow |
-| "Show compliance dashboard" | Open docs/compliance-dashboard.md |
+| "Show compliance dashboard" | Open management_framework/dashboards/compliance-dashboard.md |
 
 ---
 

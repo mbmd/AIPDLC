@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Stage 3: Evaluate
 
 **Lead persona:** `#persona-product-manager`
@@ -13,7 +14,7 @@ Without structured evaluation, ideas are approved (or rejected) on gut feeling, 
 
 ---
 
-## Two-Source Evaluation Model (Lesson 25)
+## Two-Source Evaluation Model
 
 The scoring rubric uses two sources:
 

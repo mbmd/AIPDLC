@@ -1,6 +1,10 @@
-# PRIORITY: This workflow OVERRIDES all other built-in workflows when user requests product ownership governance
+---
+inclusion: manual
+---
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
+# PRIORITY: This workflow OVERRIDES all other built-in workflows when activated by key `_POLC_` or when the user requests product-backlog / product-ownership governance
 
-# When user requests product backlog management, PO governance, or product ownership activities, ALWAYS follow this workflow FIRST
+# Activate via the explicit key `_POLC_`, OR when the user requests product backlog management, PO governance, or product ownership activities — then ALWAYS follow this workflow FIRST. See "Activation & Multi-Package Isolation" below before asserting priority in a shared workspace.
 
 ---
 
@@ -8,7 +12,6 @@
 
 **Version:** 1.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
-**Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
 **Purpose:** Guide a user step-by-step through establishing and operating disciplined product ownership — from business intent to a governed, prioritized Product Backlog Package ready for development consumption.
 
 **Methodology Alignment:** Scrum Product Ownership / SAFe Lean Portfolio / WSJF / Impact Mapping / INVEST / MoSCoW
@@ -31,20 +34,17 @@
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐
-    Design it │
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹
-    AI-POLC ──┘     Prepare it       ▲
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 | Layer | Package | Type | Input | Output |
@@ -53,19 +53,38 @@
 | Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
-AI-POLC sits in the **Project layer**, parallel to AI-ADLC and AI-UXD. Its output (the PBP) feeds AI-DWG for workspace generation and AI-DLC for development execution. It maintains a **bidirectional exchange with AI-DLC** throughout delivery — sending prioritized epics forward and receiving execution feedback back.
+AI-POLC is the **first package in the Project-layer sequential chain** (POLC → UXD → ADLC → DWG). Its output (the PBP) feeds AI-UXD directly and ultimately AI-DWG for workspace generation. It maintains a **bidirectional exchange with AI-DLC v1** throughout delivery — sending prioritized epics forward and receiving execution feedback back.
+
+---
+
+## Activation & Multi-Package Isolation
+
+**Explicit activation key:** `_POLC_`
+Type `_POLC_` in any prompt to activate this workflow. An explicit key is treated as a **direct user order to switch** — it wins over keyword matching and every sibling package immediately.
+
+**Active-package status key:** `_ACTIVE_`
+Type `_ACTIVE_` at any time and the assistant reports which AI-* package is currently active (and its state-marker status). This is a read-only check — it changes nothing and never triggers a switch.
+
+**Keyword activation (fallback):** This workflow also activates when the user requests **product-backlog / product-ownership governance** specifically — epics, prioritization, backlog, acceptance. It does NOT claim generic "compliance governance", "architecture / UX design", "initiation", or "workspace" requests — those belong to sibling packages (notably AI-GCE for compliance governance).
+
+**Switching rule — NON-NEGOTIABLE: a package switch NEVER happens without a direct user order or explicit confirmation.**
+1. **Direct order:** the user types an explicit activation key (`_POLC_`, or a sibling `_XXX_` key). Treat this as the order — switch immediately, no confirmation needed.
+2. **Otherwise, check for an active sibling:** scan for any sibling `*-state.md` (e.g. `adlc-state.md`, `uxd-state.md`, `pilc-state.md`, `ilc-state.md`) whose status is not "complete". If one exists, that package is active — do NOT take over. Ask first: "AI-ADLC is active — switch to AI-POLC? (yes / no)" and proceed only on explicit confirmation.
+3. **Ambiguity:** if a request could match more than one installed package by keyword (e.g. bare "governance" → AI-POLC vs AI-GCE), ask which workflow to run rather than guessing.
+4. **Announce every switch:** on any switch (via key or confirmation), the **FIRST line of that response MUST name the now-active package** — e.g. `Active package: AI-POLC`.
+5. This package's own marker is `polc-state.md`; sibling packages extend it the same courtesy when it is active.
 
 ---
 
@@ -73,7 +92,7 @@ AI-POLC sits in the **Project layer**, parallel to AI-ADLC and AI-UXD. Its outpu
 
 > **AI-POLC turns business intent into a prioritized, value-justified product backlog, and is the single source of truth for *what gets built, in what order, and why*.**
 
-**Inclusion rule:** If an artifact answers *what / why / in what order* → AI-POLC scope. If it answers *how / when-built / is-it-compliant* → out of scope (AI-DLC, AI-DWG, AI-GCE respectively).
+**Inclusion rule:** If an artifact answers *what / why / in what order* → AI-POLC scope. If it answers *how / when-built / is-it-compliant* → out of scope (AI-DLC v1, AI-DWG, AI-GCE respectively).
 
 ---
 
@@ -116,6 +135,35 @@ All subsequent rule detail file references are relative to whichever rule detail
 
 ---
 
+## MANDATORY: Incremental File Output
+
+CRITICAL: Every stage produces one or more output files. You MUST write these files to the workspace filesystem **immediately upon gate approval** — do NOT defer artifact creation to a later stage or to the Assembly phase (Stage 13).
+
+**The rule:** When a user approves a gate, the stage's "Persist" / "Write" step has already happened or happens NOW. The file(s) listed in that stage's detail file are created/updated on disk before you transition to the next stage. The user should be able to see their project's artifacts building up incrementally as they progress through the workflow.
+
+**Why:** Users lose confidence when they approve 4 phases of work and see nothing on disk. The Assembly stage (13) is for verification and packaging — not for first-time file creation.
+
+**Minimum per-stage writes:**
+| Stage | File(s) Written on Gate Approval |
+|-------|----------------------------------|
+| 1 | `polc-state.md` + `management_framework/` skeleton |
+| 2 | `product-vision.md` |
+| 3 | `po-charter.md` |
+| 4 | `roadmap.md` |
+| 5 | `epics/EPIC-NNN_*.md` (one per epic) |
+| 6 | `prioritization-register.md` |
+| 7 | `release-plan.md` |
+| 8 | `definition-of-ready.md` + `definition-of-done.md` |
+| 9 | `product-risk-register.md` |
+| 10 | `traceability-matrix.md` |
+| 11 | `stakeholder-map.md` |
+| 12 | `release-notes-governance.md` |
+| 13 | `PBP_README.md` (assembly summary) |
+
+If a gate is approved but you haven't yet written the file, write it NOW before presenting the next stage's opening.
+
+---
+
 ## MANDATORY: Welcome Message
 
 CRITICAL: When starting ANY product ownership request, display the welcome message.
@@ -150,7 +198,7 @@ Every product decision must be value-justified, stakeholder-accountable, and tra
 - Do NOT prioritize by loudest voice or recency bias — use the declared prioritization model
 - Do NOT produce stories without acceptance criteria (even in Tier 1 governance mode, epics need epic-level AC)
 - Do NOT confuse project governance (AI-PILC territory) with product governance — this package owns the "what/why/order," not the "when/budget/resources"
-- Do NOT prescribe implementation approach — that is AI-DLC's domain; define the WHAT, never the HOW
+- Do NOT prescribe implementation approach — that is AI-DLC v1's domain; define the WHAT, never the HOW
 - Do NOT skip the traceability link — every item must connect upward to a goal and downward to an acceptance bar
 - Do NOT auto-progress past a gate without explicit user approval
 
@@ -176,7 +224,7 @@ The complete professional PO function. Active in all modes (chain and standalone
 
 ### Tier 2 — Story Elaboration Layer (user-activated)
 
-The single capability that overlaps with AI-DLC's Inception phase. **Off by default in chain mode** (AI-DLC elaborates stories); user-activated when standalone or when the user explicitly wants PO-quality pre-elaboration.
+The single capability that overlaps with AI-DLC v1's Inception phase. **Off by default in chain mode** (AI-DLC v1 elaborates stories); user-activated when standalone or when the user explicitly wants PO-quality pre-elaboration.
 
 **Covers:** INVEST-compliant user stories + Given/When/Then acceptance criteria authoring.
 
@@ -184,9 +232,9 @@ The single capability that overlaps with AI-DLC's Inception phase. **Off by defa
 
 | Context | Tier 1 | Tier 2 |
 |---------|:------:|:------:|
-| Chain with AI-DLC (default) | ✅ Active | ⬜ Off (DLC Inception elaborates) |
-| Chain with AI-DLC + user enables | ✅ Active | ✅ Active |
-| Standalone (no AI-DLC) | ✅ Active | User choice |
+| Chain with AI-DLC v1 (default) | ✅ Active | ⬜ Off (DLC Inception elaborates) |
+| Chain with AI-DLC v1 + user enables | ✅ Active | ✅ Active |
+| Standalone (no AI-DLC v1) | ✅ Active | User choice |
 
 ### Tier 2 Activation
 
@@ -311,8 +359,8 @@ Context factors are persisted in `polc-state.md` once established and reused acr
 **Purpose:** Ongoing PO activities across the product's lifetime — backlog maintenance, acceptance, and value measurement.
 
 **Behavior by mode:**
-- **Standalone (no AI-DLC):** Stages 14-16 form a repeating cycle. AI-POLC drives the product cadence.
-- **Chain with AI-DLC:** Stages 14-16 are re-entry points. User opens a POLC session when needed to accept work, reprioritize, or process feedback.
+- **Standalone (no AI-DLC v1):** Stages 14-16 form a repeating cycle. AI-POLC drives the product cadence.
+- **Chain with AI-DLC v1:** Stages 14-16 are re-entry points. User opens a POLC session when needed to accept work, reprioritize, or process feedback.
 
 | Stage | Name | Detail File | Primary Output |
 |-------|------|-------------|---------------|
@@ -359,8 +407,13 @@ The marker file that persists AI-POLC's state across sessions and enables downst
 package: AI-POLC
 version: 1.0.0
 status: {in-progress | ready | operating}
-project-id: {correlation key from pilc-state.md or user-assigned}
+projectId: {PRJ-{ABBREV}-{YYYY}-{NNN} — adopted from predecessor marker, or minted if POLC originates}
+projectHandle: PRJ-{ABBREV}
+projectRoot: pdlc-ws/projects/PRJ-{ABBREV}-{slug}/
+outputRoot: pdlc-ws/projects/PRJ-{ABBREV}-{slug}/backlog/
 project-name: {project name}
+derivedFrom: {upstream idea-ID or feature-ID — auto-populated from ilc-state.md/pilc-state.md when detected}
+originType: feature
 ---
 
 ## Current State
@@ -381,9 +434,9 @@ project-name: {project name}
 - Current Priority Model: {WSJF | MoSCoW | value-effort | custom}
 
 ## Upstream Reads (last timestamps)
-- pilc-state.md: {ISO-date or "not detected"}
-- adlc-state.md: {ISO-date or "not detected"}
-- uxd-state.md: {ISO-date or "not detected"}
+- pdlc-ws/projects/*/pip/pilc-state.md: {ISO-date or "not detected"}
+- pdlc-ws/projects/*/architecture/adlc-state.md: {ISO-date or "not detected"}
+- pdlc-ws/projects/*/ux/uxd-state.md: {ISO-date or "not detected"}
 - ilc-state.md: {ISO-date or "not detected"}
 - aidlc-docs/: {ISO-date or "not detected"}
 
@@ -392,22 +445,30 @@ project-name: {project name}
 - DoD: {version or hash}
 ```
 
+> **Multi-project layout:** `polc-state.md` lives at `{outputRoot}` = `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/backlog/`; the shared governance spine is a sibling at `{projectRoot}/management_framework/`. POLC **adopts** the Project ID from a predecessor (never re-mints) or **mints** `PRJ-{ABBREV}-{YYYY}-{NNN}` when it originates (`OUTPUT_AND_STATE_CONTRACT.md` §3, §7).
+
 ---
 
 ## Chain Contracts
 
-### I Read (Detection by Marker — Lesson 14)
+### I Read (Detection by Marker)
 
 | Source | Marker | What I Extract |
 |--------|--------|---------------|
-| AI-PILC | `pilc-state.md` | Business intent, scope, stakeholder register, project risks, project-id |
-| AI-ADLC | `adlc-state.md` | Architecture decisions, tech constraints, brownfield flag, bounded contexts |
-| AI-UXD | `uxd-state.md` | Personas, journeys, user research findings |
-| AI-ILC | `ilc-state.md` (Route=feature) | Feature briefs for backlog intake |
-| AI-DLC | `aidlc-docs/` | Bolt completions, blockers, velocity data |
-| Spine | `management_framework/MANAGEMENT_FRAMEWORK.md` | Existing governance entries for traceability linking |
+| AI-PILC | `pdlc-ws/projects/*/pip/pilc-state.md` | Business intent, scope, stakeholder register, project risks, projectId, projectHandle/Root, **derivedFrom** (idea lineage) |
+| AI-ADLC | `pdlc-ws/projects/*/architecture/adlc-state.md` | Architecture decisions, tech constraints, brownfield flag, bounded contexts, **feasibility/cost-risk bands** (relative effort/complexity + tech-risk flags → re-prioritization) |
+| AI-UXD | `pdlc-ws/projects/*/ux/uxd-state.md` | Personas, journeys, user research findings |
+| AI-ILC | `ilc-state.md` (Route=feature) | Feature briefs for backlog intake — **extract idea ID as `derivedFrom` source** |
+| AI-DLC v1 | `aidlc-docs/` | Bolt completions, blockers, velocity data |
+| Spine | `{project_root}/management_framework/MANAGEMENT_FRAMEWORK.md` | Existing governance entries for traceability linking |
+
+> Scan the **default multi-project layout** first (`pdlc-ws/projects/*/...`), then legacy locations; use the active-project flow (`pdlc-ws/projects/PROJECTS.md` ★) if multiple projects exist. **Adopt** the project's Project ID — never re-mint.
+
+> **Traceability obligation (Traceability Contract §7):** When intake originates from AI-ILC (`ilc-state.md` Route=feature), auto-populate `derivedFrom` in `polc-state.md` from the idea ID. When intake is from `pilc-state.md`, inherit that file's `derivedFrom` value. Every epic/story created in `epics/` SHOULD carry a `derivedFrom` field in its front-matter linking to the originating idea or feature brief.
 
 ### I Produce (Guaranteed Output)
+
+> Output location: `{project_root}/backlog/` (= `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/backlog/`). The `management_framework/` spine is a sibling at the project root, not inside `backlog/`.
 
 | Artifact | Description |
 |----------|-------------|
@@ -432,16 +493,61 @@ project-name: {project name}
 | Event | Mechanism | Consumer |
 |-------|-----------|----------|
 | PBP ready | `polc-state.md` status = `ready` | AI-DWG |
-| Reprioritization | Priority list updated in `polc-state.md` | AI-DLC (at bolt boundary) |
+| Reprioritization | Priority list updated in `polc-state.md` | AI-DLC v1 (at bolt boundary) |
 | DoR/DoD change | `POLC-C-NNN` in spine + version bump in state | AI-DWG re-derives |
 
 ---
 
-## What AI-POLC Sends to AI-DLC (the Exchange)
+## Post-Workflow: Agent Installation (ALWAYS EXECUTE)
 
-> **Critical constraint:** AI-DLC is NOT our product. We do not integrate directly. We prepare the workspace so that any AI operating within it encounters our governance decisions as rules.
+After the PBP workflow completes (or at any point during AI-POLC execution), install the AI-POLC governance agent into the destination workspace. This step is **automatic** — no user interaction required.
 
-### Direct (via files AI-DLC's user points to)
+### What Gets Installed
+
+| Artifact | Destination | Action |
+|----------|-------------|--------|
+| `backlog-health-agent.md` | `.kiro/agents/` | Copy from `templates/agents/` |
+| Shortcut rules block | `.kiro/steering/workspace-rules.md` | Append `<!-- BEGIN AI-POLC AGENT SHORTCUTS -->` block (or replace if exists) |
+| Agent registry entries | `.governance/AGENT_REGISTRY.md` | Create file if absent; append AI-POLC entries if exists |
+| Agent guide section | `.governance/AGENT-GUIDE.md` | Create file if absent; append AI-POLC section if exists |
+
+### Installation Logic
+
+1. **Agent file:** Copy `templates/agents/backlog-health-agent.md` to `.kiro/agents/backlog-health-agent.md`. Populate `{version}` with current AI-POLC version and `{ISO-date}` with today's date.
+
+2. **Shortcut block:** Check `.kiro/steering/workspace-rules.md` for `<!-- BEGIN AI-POLC AGENT SHORTCUTS -->` marker:
+   - If found → replace the block (between BEGIN and END markers)
+   - If not found → append the block from `templates/agents/shortcut-rules-block.md`
+
+3. **Agent registry:** Check for `.governance/AGENT_REGISTRY.md`:
+   - If absent → create with header + AI-POLC entry (POLC-AG-01)
+   - If exists → append AI-POLC entry using next available `POLC-AG-{NN}` ID
+   - Entry: `| POLC-AG-01 | backlog-health-agent | Process | BLH__ | 1 | AI-POLC | Active | {date} |`
+
+4. **Agent guide:** Check for `.governance/AGENT-GUIDE.md`:
+   - If absent → create with header + AI-POLC section from `templates/agents/agent-guide.md`
+   - If exists → append AI-POLC section (between `<!-- BEGIN AI-POLC AGENT GUIDE SECTION -->` markers)
+
+### Self-Sufficiency Rule (AGENT_GOVERNANCE_CONTRACT §5)
+
+AI-POLC installs its own agent independently. No dependency on AI-GCE being present. If AI-GCE runs later, it will detect and preserve the AI-POLC entries via marker-based ownership.
+
+### Post-Install Confirmation
+
+```
+🤖 AI-POLC Governance Agent Installed
+   • Agent: backlog-health-agent (POLC-AG-01)
+   • Shortcut: BLH__ (active immediately)
+   • Call BLH__ before PBP handoff to validate backlog health.
+```
+
+---
+
+## What AI-POLC Sends to AI-DLC v1 (the Exchange)
+
+> **Critical constraint:** AI-DLC v1 is NOT our product. We do not integrate directly. We prepare the workspace so that any AI operating within it encounters our governance decisions as rules.
+
+### Direct (via files AI-DLC v1's user points to)
 
 | What | How | What DLC Does |
 |------|-----|---------------|
@@ -469,7 +575,7 @@ project-name: {project name}
 
 ---
 
-## Governance Spine Contribution (Lesson 45/46)
+## Governance Spine Contribution
 
 AI-POLC appends to the shared `management_framework/` using the `POLC-` namespace prefix:
 
@@ -505,7 +611,7 @@ When AI-POLC runs on a user's project, it produces:
 ├── epics/                               ← One file per epic
 │   ├── EPIC-001_{name}.md
 │   ├── EPIC-002_{name}.md
-│   └── ...
+│   └──...
 ├── PBP_README.md                        ← Package assembly summary [gen]
 └── management_framework/                ← Governance spine (append or create)
     ├── MANAGEMENT_FRAMEWORK.md          ← Index [marker]
@@ -519,7 +625,7 @@ When AI-POLC runs on a user's project, it produces:
 
 ## Provenance Requirement
 
-All output files MUST include provenance front-matter per `NAMING_AND_OWNERSHIP.md` §5.2:
+All output files MUST include provenance front-matter per `contracts/NAMING_AND_OWNERSHIP.md` §5.2:
 
 ```yaml
 ---
@@ -601,13 +707,58 @@ This mirrors AI-GCE's brownfield approach: baseline existing state, enforce on n
 | Concern | Owner | AI-POLC's relationship |
 |---------|-------|----------------------|
 | Project initiation (charter, business case, budget) | AI-PILC | Consumes PIP; does not reproduce |
-| Architecture & technical design | AI-ADLC | References AP for feasibility; does not decide |
+| Architecture & technical design | AI-ADLC | Consumes AP feasibility/cost-risk to (re)prioritize the backlog; does not decide the architecture |
 | UX research, personas, journeys | AI-UXD | Consumes UXP; does not produce |
-| Implementation (code, tests, deployment) | AI-DLC | Sends epics + rules; does not build |
+| Implementation (code, tests, deployment) | AI-DLC v1 | Sends epics + rules; does not build |
 | Compliance enforcement (hooks, rules) | AI-GCE | Defines product governance rules; GCE enforces them |
-| Sprint execution, velocity tracking | AI-DLC / team | Receives feedback; does not run sprints |
+| Sprint execution, velocity tracking | AI-DLC v1 / team | Receives feedback; does not run sprints |
 | Workspace generation | AI-DWG | Produces PBP that DWG reads; does not generate workspace files |
 
 ---
 
 *Version 1.0.0 | Created: 2026-06-11 | Author: Maheri*
+
+
+---
+
+## Gate Contract
+
+> Conforms to `GATE_PROTOCOL.md` protocolVersion 1.2.0 · interfaceVersion 1.0
+
+### Gate-Out — What AI-POLC GUARANTEES When Complete
+
+```yaml
+emits-type: product-backlog@1
+visibility: internal
+marker: polc-state.md
+payloadRoot: pdlc-ws/projects/{projectId}/polc/
+guarantees:
+  - status == complete
+  - projectId
+  - productBacklog             # prioritized, governance-ready backlog
+  - acceptanceCriteria         # per user story
+  - valueGoals                 # product value framework
+  - releaseStrategy            # release planning
+  - definitionOfReady          # DoR for development handoff
+```
+
+### Gate-In — What AI-POLC REQUIRES to Start
+
+```yaml
+consumes:
+  - type: project-initiation@^1      # satisfiable internally (AI-PILC)
+    optional:  [charter, scope]
+  - type: architecture-design@^1     # satisfiable internally (AI-ADLC) — enriches technical feasibility
+    optional:  [systemContext, nfrCoverage]
+  - type: ux-design@^1               # satisfiable internally (AI-UXD) — personas/journeys feed stories
+    optional:  [personas, userJourneys]
+on-missing-all: standalone     # accepts raw requirements directly (P4)
+strictness-default: warn
+```
+
+> No type-specific mandatory payload — AI-POLC can lead from any single feed. Universal floor (status==complete + projectId) enforced by marker integrity (GATE_PROTOCOL §18).
+
+### Visibility Note
+
+- `product-backlog` is `internal` — consumed by AI-DWG within PDLC.
+- Gate-in consumes only `internal` types; no external seam-in for AI-POLC.

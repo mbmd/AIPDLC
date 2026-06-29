@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Portfolio Connector — Interface Specification (v1.0 Stub)
 
 **Purpose:** Define the interface seam where future multi-project portfolio management capability will plug into AI-ILC. In v1.0, this is a **stub only** — AI-ILC operates in single-project-per-workspace context. This file documents what the connector looks like so v1.1+ can implement it without breaking the v1.0 contract.
@@ -99,7 +100,7 @@ To route effectively, the connector needs a **Project Registry** (v1.1+ artifact
 | Domain | What domain the project covers (for matching) |
 | Status | Active / On-hold / Completed |
 | Has AI-PILC output? | Can receive change requests? |
-| Has AI-DLC backlog? | Can receive feature briefs? |
+| Has AI-DLC v1 backlog? | Can receive feature briefs? |
 | Key stakeholders | For impact assessment context |
 | Architecture summary | For determining if an idea impacts architecture |
 

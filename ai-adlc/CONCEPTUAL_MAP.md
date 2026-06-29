@@ -139,6 +139,14 @@ Every stage ends with a gate — user must approve before proceeding. Extensions
 
 → `assembly/package-assembly.md` assembles all artifacts into the Architecture Package (AP). This is what AI-DWG receives as its input.
 
+### "How does the Project ID flow through ADLC?"
+
+→ ADLC reads the `Project ID` from `pilc-state.md` (or mints its own if running standalone — Lesson 6, OR-input) and persists it in `adlc-state.md`. All governance spine entries carry this ID as context. It's read from the ADLC chain contract's "I Read" section and guaranteed in the "I Produce" section. (Lesson 39/43 — correlation key threading)
+
+### "What is the Route field in adlc-state.md?"
+
+→ `adlc-state.md` carries a `Route: architecture-ready` intent field (Lesson 47 — forward-compatible routing). This signals to downstream packages that ADLC produced a complete Architecture Package and workspace generation can proceed. The field is forward-declared for AI-FLO routing consumption.
+
 ### "How do extensions work?"
 
 → Each extension's `.opt-in.md` file is always scanned. If activation conditions are met (detected during decisions or decomposition), the full extension file loads and adds mandatory stages/rules. See `extensions/README.md` for the full registry.
@@ -158,3 +166,17 @@ core-workflow.md   ← How it executes (runtime orchestration)
 ---
 
 *Created: June 2026 | Package: AI-ADLC v1.1*
+
+---
+
+## AI-DFE Data Interface (`ai-adlc-rule-details/data-schema/`)
+
+This package ships a machine-readable data interface consumed by **AI-DFE** (the family data fabric). AI-DFE reads these files to gather this package's output into `{family}-ws/data/adlc-data.json`.
+
+| File | Purpose |
+|------|---------|
+| `adlc-data.schema.json` | JSON Schema — the shape AI-DFE produces for this package |
+| `SOURCE_MAP.md` | Declares where this package's raw output lives + field extraction rules |
+| `SCHEMA_README.md` | Human documentation of the schema, fields, and consumers |
+
+> These files do not change this package's runtime behavior — they are a read-only contract for the data fabric. See AI-DFE for how the data surface is gathered, shaped, and distributed.

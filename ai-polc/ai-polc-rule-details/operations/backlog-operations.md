@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Stage 14: Backlog Operations
 
 **Phase:** Operations (repeating)
@@ -62,7 +63,7 @@ Define (or re-confirm) the refinement rhythm:
 
 ### Step 14.3: Splitting Criteria (Not Patterns)
 
-AI-POLC defines WHEN to split (criteria). AI-DLC defines HOW to split (patterns).
+AI-POLC defines WHEN to split (criteria). AI-DLC v1 defines HOW to split (patterns).
 
 **Split triggers:**
 - Epic estimated as XL → must split before entering a sprint

@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Stage 13: PBP Assembly & Handoff
 
 **Phase:** Assembly
@@ -94,7 +95,7 @@ ownership: generated
 
 ## How to Use This Package
 - **AI-DWG:** Reads DoR/DoD, release cadence, AC format for workspace generation
-- **AI-DLC:** User references prioritized epics as development intent seeds
+- **AI-DLC v1:** User references prioritized epics as development intent seeds
 - **AI-GCE:** Derives product governance hooks from DoR/DoD rules
 - **Stakeholders:** Use traceability matrix + roadmap for status visibility
 
@@ -146,9 +147,19 @@ Product Backlog Package assembled:
 ✅ PBP_README.md written
 
 The PBP is now ready for:
+• AI-UXD to read (UX design)
 • AI-DWG to read (workspace generation)
-• AI-DLC to reference (development execution)
+• AI-DLC v1 to reference (development execution)
 • Stakeholders to review
+
+🔀 **Chain Navigation (what's next in the AI-* Family):**
+   • Sequential next: **AI-UXD** (`_UXD_`) — UX Design Life Cycle
+   • Or ask AI-FLO: type `_FLO_` for routing guidance based on your project state
+   • Dashboard data: type `DAT__ pdlc/polc` to update the family dashboard
+
+⚠️ **IMPORTANT: Start the next package (AI-UXD) in a NEW session.**
+   Each AI-* package loads a full workflow into context;
+   a fresh session keeps it fast and focused.
 
 Approve to mark Phase 5 complete.
 The product now enters Operations mode (Phase 6) for ongoing governance.

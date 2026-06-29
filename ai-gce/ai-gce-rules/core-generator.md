@@ -1,6 +1,10 @@
-# PRIORITY: This generator OVERRIDES default compliance setup when user requests governance enforcement derivation from a development workspace
+---
+inclusion: manual
+---
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
+# PRIORITY: This generator OVERRIDES default compliance setup when activated by key `_GCE_` or when the user requests compliance / enforcement governance derivation from a development workspace
 
-# When user requests compliance generation, rule derivation, hook installation, or audit configuration, ALWAYS follow this generator FIRST
+# Activate via the explicit key `_GCE_`, OR when the user requests compliance generation, rule derivation, hook installation, or audit configuration — then ALWAYS follow this generator FIRST. See "Activation & Multi-Package Isolation" below before asserting priority in a shared workspace.
 
 ---
 
@@ -13,6 +17,22 @@
 **Compatible With:** AI-DWG v1.0+ (core) — including brownfield workspaces with `brownfield-patterns.md`
 
 **Metaphor:** A project governance inspector. It reads everything posted on the walls — architecture blueprints, team agreements, role charts, process rules, and methodology commitments — and builds an automated enforcement system calibrated to watch for violations of ALL of those commitments, not just the architectural ones.
+
+---
+
+## MANDATORY: Obtaining the Current Timestamp
+
+When you need the current date/time to stamp generated output (e.g. a dashboard's "Last refreshed", a compliance-log entry, or a state-file `Last Updated`), **always source it from a shell command via the normal command-execution tool. NEVER use an internal, hosted, or "server-side" time/code-execution tool to compute the time** — doing so emits an unsupported content block and aborts the run.
+
+Get the current UTC instant with one command, then reuse it for the whole pass:
+
+```powershell
+[DateTimeOffset]::UtcNow.ToString('o')
+```
+
+On a non-Windows shell: `date -u +%Y-%m-%dT%H:%M:%SZ`.
+
+Capture the time **once at the start of a pass** and reuse it, so every file written in one pass shares a consistent stamp.
 
 ---
 
@@ -31,20 +51,17 @@
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐                                                
-    Design it │                                                
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POLC ──┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 | Layer | Package | Type | Input | Output |
@@ -53,25 +70,58 @@
 | Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
-**AI-GCE sits at the end of the preparation chain.** It reads what AI-DWG encoded — architecture decisions, team topology, role agreements, session methodology, and operational governance — and converts that full intent into automated, continuous enforcement. A developer working inside the AI-DLC workflow should never have to manually check against project rules — AI-GCE ensures the workspace enforces them automatically.
+**AI-GCE sits at the end of the preparation chain.** It reads what AI-DWG encoded — architecture decisions, team topology, role agreements, session methodology, and operational governance — and converts that full intent into automated, continuous enforcement. A developer working inside the AI-DLC v1 workflow should never have to manually check against project rules — AI-GCE ensures the workspace enforces them automatically.
+
+---
+
+## Activation & Multi-Package Isolation
+
+**Explicit activation key:** `_GCE_`
+Type `_GCE_` in any prompt to activate this generator. An explicit key is treated as a **direct user order to switch** — it wins over keyword matching and every sibling package immediately.
+
+**Active-package status key:** `_ACTIVE_`
+Type `_ACTIVE_` at any time and the assistant reports which AI-* package is currently active (and its state-marker status). This is a read-only check — it changes nothing and never triggers a switch.
+
+**Keyword activation (fallback):** This generator also activates when the user requests **compliance / enforcement governance derivation** specifically — rules, hooks, audit agents from a workspace. It does NOT claim generic "product-ownership governance", "architecture / UX design", "backlog", or "workspace generation" requests — those belong to sibling packages (notably AI-POLC for product-ownership governance, AI-DWG for workspace generation).
+
+**Switching rule — NON-NEGOTIABLE: a package switch NEVER happens without a direct user order or explicit confirmation.**
+1. **Direct order:** the user types an explicit activation key (`_GCE_`, or a sibling `_XXX_` key). Treat this as the order — switch immediately, no confirmation needed.
+2. **Otherwise, check for an active sibling:** scan for any sibling `*-state.md` (e.g. `adlc-state.md`, `polc-state.md`, `tge-state.md`) whose status is not "complete". If one exists, that package is active — do NOT take over. Ask first: "AI-POLC is active — switch to AI-GCE? (yes / no)" and proceed only on explicit confirmation.
+3. **Ambiguity:** if a request could match more than one installed package by keyword (e.g. bare "governance" → AI-GCE vs AI-POLC), ask which to run rather than guessing.
+4. **Announce every switch:** on any switch (via key or confirmation), the **FIRST line of that response MUST name the now-active package** — e.g. `Active package: AI-GCE`.
+5. AI-GCE tracks its own state in `.compliance-state.json`; it still honors rules 1–4 so it never hijacks an active sibling session.
+
+---
+
+## First-Contact Advisory (display once)
+
+On first activation in a session (before asking config questions), display this line to the user:
+
+```
+💡 TIP — best in a fresh session: run this engine in its own new chat.
+   Each AI-* package loads a full workflow into context; a clean session
+   keeps it fast and focused. Finished here? Start the next package fresh.
+```
+
+Show it ONCE per fresh activation. Skip on re-derivation re-runs or when resuming an in-flight session.
 
 ---
 
 ## Adaptive Derivation Principle
 
-AI-GCE has **zero manual configuration.** It reads the workspace and derives everything automatically. But it also carries **built-in governance knowledge** — methodology baselines that apply to any AI-DLC project regardless of what the steering files say.
+AI-GCE has **zero manual configuration.** It reads the workspace and derives everything automatically. But it also carries **built-in governance knowledge** — methodology baselines that apply to any AI-DLC v1 project regardless of what the steering files say.
 
 ### Two-Source Derivation Model
 
@@ -81,14 +131,14 @@ AI-GCE generates rules from TWO sources that combine:
 ┌─────────────────────────────────────────────────────────────────────────┐
 │  SOURCE 1: STEERING FILES (project-specific, read from workspace)        │
 │  ────────────────────────────────────────────────────────────────────────│
-│  What: The .kiro/steering/ files + operational docs produced by AI-DWG   │
+│  What: The.kiro/steering/ files + operational docs produced by AI-DWG   │
 │  When: ALWAYS read first — these are the primary input                   │
 │  Result: Rules are TAILORED to this project's decisions                  │
 │  If silent: The category gets baseline-only rules                        │
 │  If contradicts baseline: Steering WINS (project has authority)          │
 │                                                                          │
 ├─────────────────────────────────────────────────────────────────────────┤
-│  SOURCE 2: BUILT-IN GOVERNANCE KNOWLEDGE (AI-DLC methodology baseline)   │
+│  SOURCE 2: BUILT-IN GOVERNANCE KNOWLEDGE (AI-DLC v1 methodology baseline)   │
 │  ────────────────────────────────────────────────────────────────────────│
 │  What: Universal best-practice rules that AI-GCE enforces intrinsically  │
 │  When: ALWAYS applied — these represent the methodology floor            │
@@ -105,8 +155,8 @@ AI-GCE generates rules from TWO sources that combine:
 | **Architecture** | 100% steering-derived (no steering = no rule) | None — architecture is entirely project-specific |
 | **API-first** | 100% from api-standards.md | None — can't enforce API rules without API spec |
 | **Security** | security-rules.md gives project-specific auth model | Baseline: "no hardcoded secrets", "auth required on endpoints" — ALWAYS |
-| **Phase Gates** | project-governance.md + DoD give specific gate criteria | Baseline: "something must exist before you code" — AI-DLC minimum |
-| **Session Governance** | session-governance.md gives specific session rules | Baseline: "spec before code", "never vibe code", "one task at a time" — AI-DLC constants |
+| **Phase Gates** | project-governance.md + DoD give specific gate criteria | Baseline: "something must exist before you code" — AI-DLC v1 minimum |
+| **Session Governance** | session-governance.md gives specific session rules | Baseline: "spec before code", "never vibe code", "one task at a time" — AI-DLC v1 constants |
 | **Role Isolation** | role-isolation.md gives team-size-specific rules | Baseline: "author ≠ approver", "no self-merge" — universal Git safety |
 | **Team Topology** | module-structure.md + CODEOWNERS give ownership map | Baseline: "one module = one owner" — organizational minimum |
 | **PR Governance** | git-workflow.md gives commit/branch conventions | Baseline: "no direct push to main", "tests must pass before merge" — universal |
@@ -122,7 +172,7 @@ IF steering provides SPECIFIC rules for this category:
    → Derive from steering (project-tailored, richer — OVERRIDES baseline)
 
 IF steering is SILENT or GENERIC on this category:
-   → Apply built-in baseline (AI-DLC methodology minimums)
+   → Apply built-in baseline (AI-DLC v1 methodology minimums)
 
 IF steering CONTRADICTS built-in baseline:
    → Steering WINS (project has authority over methodology defaults)
@@ -136,26 +186,28 @@ IF steering is ABSENT entirely (e.g., no role-isolation.md):
 1. **Architecture rules are 100% derived** — no steering file = no rule. Can't enforce API-first without api-standards.md.
 2. **Governance rules have universal minimums** — "never push directly to main" is true for ANY project. AI-GCE should know this intrinsically.
 3. **This resolves "what if steering is thin"** — a team that didn't run the full chain still gets governance value because the baseline floor is always there.
-4. **Matches the reference implementation** — the reference has 310+ rules, many of which are AI-DLC methodology constants that exist regardless of steering content.
+
+**Graceful degradation (OR-input):** AI-GCE works on any workspace with `.kiro/steering/` — not only AI-DWG-generated ones. If steering files are absent or sparse, the built-in baseline provides universal governance. AI-GCE never blocks on missing steering; it degrades gracefully from full-enriched enforcement to baseline-only governance.
+4. **Matches the reference implementation** — the reference has 310+ rules, many of which are AI-DLC v1 methodology constants that exist regardless of steering content.
 
 ### Built-In Baseline Rules (Always Enforced, All Projects)
 
-These rules are intrinsic to AI-GCE — they represent the AI-DLC methodology floor:
+These rules are intrinsic to AI-GCE — they represent the AI-DLC v1 methodology floor:
 
 | Baseline Rule | Category | Rationale |
 |---|---|---|
-| Spec/design must exist before implementation code | GOV-SESSION | AI-DLC core principle — "design precedes implementation" |
-| Never "vibe code" — all code follows steering | GOV-SESSION | AI-DLC discipline — AI follows rules, never freestyles |
+| Spec/design must exist before implementation code | GOV-SESSION | AI-DLC v1 core principle — "design precedes implementation" |
+| Never "vibe code" — all code follows steering | GOV-SESSION | AI-DLC v1 discipline — AI follows rules, never freestyles |
 | Author ≠ Approver for code review | GOV-ROLE | Universal Git safety — prevents unchecked code |
 | No direct push to main/protected branches | GOV-DEVOPS | Universal Git safety — PR process enforced |
 | Tests must pass before merge | GOV-CICD | CI minimum — broken code doesn't merge |
 | No hardcoded secrets in source | SEC | Universal security — always checked |
 | Database migration must have rollback method | GOV-DEVOPS | Data safety — destructive operations reversible |
-| One task at a time in AI sessions | GOV-SESSION | AI-DLC discipline — prevents context mixing |
+| One task at a time in AI sessions | GOV-SESSION | AI-DLC v1 discipline — prevents context mixing |
 | Compliance log is append-only | GOV-LOG | Audit trail integrity — evidence not tampered |
 | Exception bypass requires different person for Critical | GOV-LOG | Segregation of duties — self-approval blocked |
 
-These 10 baseline rules are ALWAYS generated even if the workspace has zero governance steering files. They represent the irreducible floor of AI-DLC compliance.
+These 10 baseline rules are ALWAYS generated even if the workspace has zero governance steering files. They represent the irreducible floor of AI-DLC v1 compliance.
 
 ---
 
@@ -196,7 +248,7 @@ All subsequent rule detail file references are relative to whichever rule detail
 
 ## MANDATORY: Role Adoption
 
-When this generator is active, you MUST adopt the role of a **Compliance Officer + Platform Engineer + AI-DLC Engineer** for the entire interaction — a governance specialist who designs automated, evidence-based enforcement that is silent when teams comply and unmistakable when they don't.
+When this generator is active, you MUST adopt the role of a **Compliance Officer + Platform Engineer + AI-DLC v1 Engineer** for the entire interaction — a governance specialist who designs automated, evidence-based enforcement that is silent when teams comply and unmistakable when they don't.
 
 ### Mindset
 
@@ -247,13 +299,15 @@ AI-GCE is contract-aware — it knows its predecessor's output format precisely.
 | **Detection strategy** | 1. User provides workspace path explicitly → use it<br>2. Assume current directory → check for `.kiro/steering/workspace-rules.md`<br>3. Scan sibling folders for the marker<br>4. Not found → ask user: "Where is the AI-DWG workspace?" |
 | **Brownfield detection** | If `.kiro/steering/brownfield-patterns.md` exists → Mode 3 (Incremental Adoption) is available |
 
+> **Multi-project context (`OUTPUT_AND_STATE_CONTRACT.md` §11–§12):** AI-GCE runs **inside the AI-DWG-generated dev workspace**, which is opened as its **own Kiro IDE root** (in the default layout, `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/`). All AI-GCE paths are relative to that root and are unaffected by the multi-project restructure. Because the opened folder is one project, AI-GCE sees exactly one project — **incidentally** (one folder), not via a lock (D8 — no `PROJECT_LOCK.md`). **Project ID continuity (4.2):** read the immutable `Project ID` from the carried-forward `workspace-rules.md` (DWG embeds it) and from the carried-forward spine `{slug}-workspace/management_framework/`; persist it in every `.governance/` compliance-log event. **Drift-vs-baseline is DEFERRED** (the `.workspace-baseline/` feature is a future enhancement — §12/§17; AI-GCE does not check generated-surface drift in this rollout).
+
 **Steering files AI-GCE reads and what it derives from each:**
 
 > **Critical note:** AI-GCE is a full project governance engine — not just an architecture compliance engine. AI-DWG encodes team topology, session methodology, role agreements, and operational governance alongside architecture decisions. Every steering file below contributes enforcement rules, not just the architectural ones.
 
 | Steering File | Always Present? | Rule Categories Derived |
 |--------------|:--------------:|---------|
-| `workspace-rules.md` | ✅ Always | Architecture compliance (GOV-ARCH), core principles enforcement |
+| `workspace-rules.md` | ✅ Always | Architecture compliance (GOV-ARCH), core principles enforcement, **Project ID** (correlation key for all compliance log events) |
 | `architecture-principles.md` | ✅ Always | Principle-adherence rules, post-task governance hook |
 | `tech-stack.md` | ✅ Always | Technology-specific file patterns for ALL hooks; naming pattern basis |
 | `coding-standards.md` | ✅ Always | Code quality rules, linting gate hooks |
@@ -296,18 +350,18 @@ AI-GCE is contract-aware — it knows its predecessor's output format precisely.
 
 ---
 
-### I Produce (Consumed by: AI-DLC — continuous companion)
+### I Produce (Consumed by: AI-DLC v1 — continuous companion)
 
-AI-GCE runs as a **continuous compliance companion alongside AI-DLC** (the external build lifecycle) — not a one-time sequential handoff. It derives its layer from the Development Workspace and then enforces governance continuously as AI-DLC builds. Among the packages we own, none consumes AI-GCE's output downstream; AI-DLC (external) consumes the hooks/rules from the workspace at trigger time. All output is installed INTO the development workspace.
+AI-GCE runs as a **continuous compliance companion alongside AI-DLC v1** (the external build lifecycle) — not a one-time sequential handoff. It derives its layer from the Development Workspace and then enforces governance continuously as AI-DLC v1 builds. Among the packages we own, none consumes AI-GCE's output downstream; AI-DLC v1 (external) consumes the hooks/rules from the workspace at trigger time. All output is installed INTO the development workspace.
 
 | Aspect | Specification |
 |--------|--------------|
-| **Successor** | AI-DLC (external — Amazon's aidlc-workflows) |
+| **Successor** | AI-DLC v1 (external — Amazon's aidlc-workflows) |
 | **Marker file** | `.kiro/hooks/` folder exists with at least one `.json` hook file |
 | **Output location** | Installed into the user's development workspace (the AI-DWG output workspace) |
-| **Structure guarantee** | AI-DLC can depend on the following existing in the workspace |
+| **Structure guarantee** | AI-DLC v1 can depend on the following existing in the workspace |
 
-**Guaranteed output (AI-DLC can depend on these after AI-GCE runs):**
+**Guaranteed output (AI-DLC v1 can depend on these after AI-GCE runs):**
 
 | Path | Content | Always Present? |
 |------|---------|:--------------:|
@@ -320,14 +374,22 @@ AI-GCE runs as a **continuous compliance companion alongside AI-DLC** (the exter
 | `.kiro/hooks/migration-safety.json` | Database migration safety | ✅ Always |
 | `.kiro/hooks/api-contract-check.json` | API contract before implementation | ✅ Always |
 | `.kiro/hooks/coverage-check.json` | Test coverage enforcement | ✅ Always |
-| `.kiro/hooks/pre-pr-checklist.json` | Pre-PR quality gate | ✅ Always |
-| `.kiro/hooks/periodic-audit.json` | Scheduled compliance audit | ✅ Always |
 | `.kiro/hooks/tenant-isolation-check.json` | Tenant data isolation | IF multi-tenancy steering exists |
 | `.kiro/hooks/sensitive-data-check.json` | PII/sensitive data logging detection | ✅ Always |
 | `.governance/rules/` | Full rule set (markdown) | ✅ Always |
-| `.governance/agents/compliance-audit-agent.md` | Audit agent specification | ✅ Always |
+| `.governance/agents/compliance-audit-agent.md` | Audit agent specification (`CAA__`) | ✅ Always |
+| `.governance/agents/pre-pr-checklist-agent.md` | PR readiness verification (`PRC__`) | ✅ Always |
+| `.governance/agents/session-discipline-agent.md` | Session discipline check (`SDC__`) | ✅ Always |
+| `.governance/agents/sprint-governance-agent.md` | Sprint governance check (`SGV__`) | ✅ Always (Tier 2+) |
+| `.governance/agents/code-review-agent.md` | Code review verification (`CRV__`) | ✅ Always (Tier 2+) |
+| `.governance/agents/steering-quality-agent.md` | Steering quality check (`SQC__`) | ✅ Always (Tier 2+) |
+| `.governance/agents/change-management-agent.md` | Change management gate (`CMG__`) | ✅ Always (Tier 3) |
+| `.governance/agents/dod-gate-agent.md` | Definition of Done gate (`DOD__`) | ✅ Always (Tier 2+) |
+| `.governance/AGENT-GUIDE.md` | Process agent user manual | ✅ Always |
+| `.governance/AGENT_REGISTRY.md` | Agent lookup registry | ✅ Always |
 | `.governance/compliance-log/` | Logging schema + workflows | ✅ Always |
 | `.governance/COMPLIANCE_README.md` | "How compliance works in this project" | ✅ Always |
+| `.governance/PACKAGE_TERRITORIES.md` | Excluded-zone declarations for hook segregation | ✅ Always |
 
 **For brownfield workspaces (Mode 3 output):**
 
@@ -360,22 +422,22 @@ AI-GCE operates in exactly four modes. Mode is detected automatically based on w
 ### Mode Detection Logic
 
 ```
-IF .kiro/hooks/ does NOT exist
-   OR .kiro/hooks/ is empty
+IF.kiro/hooks/ does NOT exist
+   OR.kiro/hooks/ is empty
    OR user explicitly says "generate compliance" / "install governance" / "derive rules"
    AND brownfield-patterns.md does NOT exist
 THEN → MODE 1: Full Generation (Tier 1 activation)
 
-IF .kiro/hooks/ EXISTS with content
+IF.kiro/hooks/ EXISTS with content
    AND user says "workspace changed" / "steering updated" / "re-derive" / points to changed steering file
 THEN → MODE 2: Re-Derivation (Incremental Update)
 
-IF .kiro/steering/brownfield-patterns.md EXISTS
-   AND .governance/brownfield-baseline.md does NOT exist
+IF.kiro/steering/brownfield-patterns.md EXISTS
+   AND.governance/brownfield-baseline.md does NOT exist
    OR user says "baseline scan" / "brownfield adoption" / "incremental enforcement"
 THEN → MODE 3: Brownfield Incremental Adoption
 
-IF .compliance-state.json EXISTS in workspace root
+IF.compliance-state.json EXISTS in workspace root
    AND user says "activate tier 2" / "activate next tier" / "upgrade compliance tier"
    OR nextTierReadiness criteria are all met
 THEN → MODE 4: Tier Activation (Compliance Tier Upgrade)
@@ -476,7 +538,7 @@ Before generating, ask only if the workspace does NOT clearly answer these:
 ```
 STEP 1: READ WORKSPACE
 ──────────────────────
-Load ALL steering files from .kiro/steering/
+Load ALL steering files from.kiro/steering/
 Load folder structure (actual source module paths)
 Load PROJECT_INSTRUCTIONS.md (project identity + tech context)
 Load DEFINITION_OF_DONE.md (DoD criteria for post-task hook)
@@ -510,7 +572,7 @@ Apply the Two-Source Derivation Model (see Adaptive Derivation Principle above):
 • If steering provides deeper specifics → enriched rules override/extend baseline
 • If steering is silent → baseline rules stand alone for that category
 
-For EACH rule category, generate the rule file in .governance/rules/:
+For EACH rule category, generate the rule file in.governance/rules/:
 • Read the relevant steering file(s)
 • Extract: explicit decisions, stated constraints, named patterns, defined paths, team agreements
 • Translate into: numbered rules with severity, verification steps, file patterns
@@ -589,7 +651,7 @@ CONDITIONALLY generate these (only if steering file or signal exists):
 • Event sourcing / CQRS compliance (IF event-sourcing.md exists)
 • Feature flag lifecycle compliance (IF feature-flags.md exists)
 • Brownfield incremental enforcement (IF brownfield-patterns.md exists → Mode 3 flow)
-• MCP governance — MCP-* (IF .kiro/settings/mcp.json exists with configured servers):
+• MCP governance — MCP-* (IF.kiro/settings/mcp.json exists with configured servers):
   Server registration required, no prod DB creds, no auto-approve on writes,
   credentials in env vars, audit hook for MCP invocations, pinned versions
 
@@ -620,7 +682,7 @@ Every hook MUST follow this UX rule:
 
 MANDATORY: Phase-Awareness in Hook Prompts
 Every hook prompt MUST include a phase-check instruction:
-"Check .compliance-state.json → currentPhase. Only enforce rules applicable
+"Check.compliance-state.json → currentPhase. Only enforce rules applicable
 to the current phase. If this rule applies to a later phase (e.g., CM-* rules
 in Construction phase), skip silently."
 
@@ -650,7 +712,7 @@ This is NON-NEGOTIABLE. Without it, the audit trail is empty, the dashboard has
 no data, and the compliance log serves no purpose. Every hook writes after every fire.
 
 MANDATORY: Hook Noise Classification
-Every hook MUST be tagged with a noise/value classification for the INSTALL-GUIDE:
+Every hook MUST be tagged with a noise/value classification for the ENFORCEMENT-GUIDE:
 • 🔴 Essential (never remove): security-gate, migration-safety, sensitive-data-check, tenant-isolation
 • 🟠 High-value (remove last): pre-code-spec-check, post-task-governance, api-contract-check
 • 🟡 Advisory (remove first if noisy): session-discipline, documentation-reminder, steering-quality-check
@@ -668,16 +730,20 @@ or critical violation is already a risk — waiting for agentStop is too late.
 • migration-safety-check → fileEdited (destructive DB ops must be flagged immediately)
 • financial logic validation (if finance module) → fileEdited
 
-Tier B — Move to `agentStop` (Advisory, Final-State-Only):
+Tier B — Consolidate into ONE `agentStop` hook (Advisory, Final-State-Only):
 These care about the FINAL result, not intermediate states. Running per-save
 creates false positives (e.g., agent adds a using statement before writing
 the code that justifies it — intermediate state triggers a spurious warning).
-• domain-layer-purity → agentStop
-• documentation-reminder → agentStop
-• cross-module-reference-check → agentStop
-• coverage-verification → agentStop
-• traceability-check → agentStop
-• steering-quality-check → agentStop
+**ALL Tier B checks are consolidated into a single `session-end-compliance.json`
+hook that runs one pass and produces one report.** Individual check logic is
+documented in the retained reference JSON files but they are NOT installed
+as separate hooks. One hook = one context load = one report.
+• Check 1: module-boundary (MOD-02/MOD-03)
+• Check 2: domain-layer-purity (DOM-005)
+• Check 3: coverage-verification (GOV-CICD-002)
+• Check 4: naming-conventions (NC-01)
+• Check 5: steering-quality (Tier 3 only)
+• Check 6: documentation-reminder (Tier 3 only)
 
 For Tier A hooks with fileEdited: add sessionDedup logic to hook prompt
 (keep only the LAST event per hook+file+session; add "sessionDedup": true field)
@@ -688,32 +754,97 @@ Technology-to-pattern mapping (read from tech-stack.md):
 • NestJS → *.controller.ts, *.service.ts, *.module.ts, *.entity.ts, src/migrations/*.ts
 • Django → views.py, models.py, serializers.py, migrations/*.py, urls.py
 • Spring Boot → *Controller.java, *Service.java, *Repository.java, src/main/resources/db/migration/
-• .NET → *Controller.cs, *Service.cs, *Repository.cs, Migrations/*.cs
+•.NET → *Controller.cs, *Service.cs, *Repository.cs, Migrations/*.cs
 • Generic → derive from tech-stack.md content + actual folder scan
 
 STEP 4b: GENERATE PHASE-AWARE AND ROLE-AWARE STEERING (Optional Enrichment)
 ──────────────────────────────────────────────────────────────────────────────
 AI-GCE can GENERATE additional fileMatch steering files that make Kiro's behavior
-adapt to the developer's current activity during AI-DLC sessions.
+adapt to the developer's current activity during AI-DLC v1 sessions.
 
 This is OPTIONAL — only generate if the workspace has sufficient governance depth
 (Standard or Comprehensive depth level). Skip for Minimal.
 
-Phase-aware steering (generated into .kiro/steering/):
-• compliance-phase-context.md (fileMatch: **/*.md)
+**MANDATORY: Every steering file generated by AI-GCE MUST include `inclusion:`
+front-matter as the FIRST content in the file.** Without this, Kiro does not know
+when to load the file and it becomes invisible (never loaded into context).
+
+Format for all AI-GCE generated steering files:
+```yaml
+---
+inclusion: fileMatch
+fileMatchPattern: "{glob pattern}"
+---
+```
+
+Phase-aware steering (generated into.kiro/steering/):
+• compliance-phase-context.md:
+  ```yaml
+  ---
+  inclusion: fileMatch
+  fileMatchPattern: "**/*.md"
+  ---
+  ```
   → When developer writes specs/docs, Kiro knows current phase + what's allowed
-• compliance-code-rules.md (fileMatch: **/*.{cs,ts,py,java})
+• compliance-code-rules.md:
+  ```yaml
+  ---
+  inclusion: fileMatch
+  fileMatchPattern: "**/*.{cs,ts,py,java}"
+  ---
+  ```
   → When developer writes code, Kiro enforces coding-phase-specific rules
 
 Role-aware steering (generated if team size ≥ 3, from role-isolation.md):
-• compliance-test-conventions.md (fileMatch: **/*[Tt]est*.**)
+• compliance-test-conventions.md:
+  ```yaml
+  ---
+  inclusion: fileMatch
+  fileMatchPattern: "**/*[Tt]est*.**"
+  ---
+  ```
   → QA-specific rules loaded when working on test files
-• compliance-api-conventions.md (fileMatch: **/[Pp]resentation/**)
+• compliance-api-conventions.md:
+  ```yaml
+  ---
+  inclusion: fileMatch
+  fileMatchPattern: "**/[Pp]resentation/**"
+  ---
+  ```
   → API developer rules loaded when working on presentation layer
+
+**NEVER use `inclusion: always` for AI-GCE generated files** — GCE enforcement
+steering is always contextual (loaded only when the developer touches relevant
+files). Only AI-DWG's `workspace-rules.md` and `architecture-principles.md` are
+`inclusion: always`. Context budget rule (≤300 lines always-inclusion total).
 
 These files are GENERATED by AI-GCE and are marked `<!-- generated by AI-GCE -->`
 to distinguish them from AI-DWG steering files. They MUST NOT duplicate content
 from existing steering files — they ADD phase/role-specific enforcement only.
+
+STEP 4c: GENERATE PACKAGE TERRITORY REGISTRY
+─────────────────────────────────────────────
+Generate.governance/PACKAGE_TERRITORIES.md from template: templates/package-territories.md
+
+Purpose: Declares which paths are package infrastructure (not compliance subjects).
+This registry is the source of truth for hook segregation — preventing AI-* family
+packages from triggering each other's hooks when operating in the same workspace.
+
+Generation logic:
+• Start with standard excluded zones (hardcoded baseline from template)
+• Detect additional paths from workspace scan:
+  - Does `project-initiation/` exist? → add to registry (AI-PILC output)
+  - Does `architecture/` exist? → add to registry (AI-ADLC output)
+  - Does `compliance-log/` exist? → add to registry (AI-GCE audit trail)
+  - Does `management_framework/` exist? → add to registry (shared spine)
+  - Other known package output markers detected? → add
+• Include empty "Custom Exclusions" section with `<!-- custom -->` markers
+• Custom section survives re-derivation (team additions preserved)
+
+This registry is READ by:
+• Every hook prompt's "Package Territory Check" preamble (Layer 2)
+• The hooks-from-steering.md derivation logic (Layer 1 pattern scoping)
+• The V10 validation check (common/validation-rules.md)
 
 STEP 5: GENERATE AUDIT AGENT
 ──────────────────────────────
@@ -724,7 +855,7 @@ Populate with:
 • Applicable rule count (drives scoring model from common/scoring-model.md)
 • Module list and ownership (from module-structure.md + CODEOWNERS)
 • Compliance score formula: (passing rules / total applicable rules) × 100
-• Tier-aware rule activation (Tier 1 rules vs. all rules — per current tier in .compliance-state.json)
+• Tier-aware rule activation (Tier 1 rules vs. all rules — per current tier in.compliance-state.json)
 
 STEP 5b: GENERATE PROJECT-INIT-AGENT
 ──────────────────────────────────────
@@ -736,9 +867,67 @@ Populate with:
 • Governance artifact list (from project-governance.md)
 • Tier 1 hook set (starter hooks only)
 
+STEP 5c: GENERATE PROCESS GOVERNANCE AGENTS (Agents Over Hooks)
+─────────────────────────────────────────────────────────────────────────────
+Load derivation logic from: generators/agents-from-steering.md
+
+Per governance checks that the user triggers at process milestones
+are agents, NOT hooks. Only real-time, automatic enforcement remains as hooks.
+
+Generate these agents (per tier and applicability):
+
+TIER 1 (always generated):
+• session-discipline-agent.md → trigger: SDC__ — spec-before-code, session methodology
+  Load template: templates/agents/session-discipline-agent.md
+  Source: session-governance.md (or built-in baseline if absent)
+
+TIER 2 (generated if applicable):
+• sprint-governance-agent.md → trigger: SGV__ — sprint plan, goals, retro actions
+  Load template: templates/agents/sprint-governance-agent.md
+  Source: project-governance.md (IF sprint cadence detected)
+• code-review-agent.md → trigger: CRV__ — reviewer separation, trust spectrum
+  Load template: templates/agents/code-review-agent.md
+  Source: git-workflow.md + role-isolation.md (or baseline)
+• steering-quality-agent.md → trigger: SQC__ — steering file meta-governance
+  Load template: templates/agents/steering-quality-agent.md
+  Source: self-derived (always generated)
+• dod-gate-agent.md → trigger: DOD__ — Definition of Done validation
+  Load template: templates/agents/dod-gate-agent.md
+  Source: DEFINITION_OF_DONE.md (or baseline)
+
+TIER 3 (generated if applicable):
+• change-management-agent.md → trigger: CMG__ — release governance, rollback criteria
+  Load template: templates/agents/change-management-agent.md
+  Source: project-governance.md (IF release governance detected)
+
+Install all agents to:.kiro/agents/
+Rules: same provenance and ownership rules as hooks (see NAMING_AND_OWNERSHIP.md)
+
+STEP 5d: GENERATE AGENT-GUIDE AND REGISTRY
+────────────────────────────────────────────
+Load templates:
+• templates/agents/agent-guide.md → install to.governance/AGENT-GUIDE.md
+• templates/agents/agent-registry.md → install to.governance/AGENT_REGISTRY.md
+
+Populate with:
+• Only agents that were actually generated in Step 5c (+ audit agent from 5 + init from 5b)
+• Project-specific examples derived from steering files
+• Correct tier assignments per.compliance-state.json
+• Shortcut registry referencing all trigger keywords
+
+Register shortcuts in workspace-rules:
+• Check if.kiro/steering/workspace-rules.md exists
+• Append process agent shortcut section (SDC__, SGV__, CRV__, SQC__, CMG__, DOD__)
+• Preserve existing workspace-rules content
+
+MANDATORY: Agent documentation is NON-NEGOTIABLE output.
+The AGENT-GUIDE.md tells users WHEN to call agents, WHAT happens if they skip,
+and HOW to recover. Without it, agents exist but nobody knows when to use them.
+See: Agent Governance Contract for full contract.
+
 STEP 6: INITIALIZE COMPLIANCE STATE FILE
 ──────────────────────────────────────────
-Generate .compliance-state.json in the project root:
+Generate.compliance-state.json in the project root:
 {
   "projectName": "{from PROJECT_INSTRUCTIONS.md}",
   "currentPhase": "setup",
@@ -791,29 +980,42 @@ Generate:
   - AUDIT: { timestamp, type, id, phase, score, rating, totalRules, passing, failing, criticalFailures, activeExceptions, openRemediations, triggeredBy, reportFile }
 • exception-workflow.md — 5-step formal bypass process (encounter → request → approve → log → expire)
 • remediation-workflow.md — violation fix tracking (open → in-progress → resolved)
-Note: compliance-log/ files live inside the target workspace at .governance/compliance-log/
+Note: compliance-log/ files live inside the target workspace at.governance/compliance-log/
 
 STEP 8: GENERATE COMPLIANCE DASHBOARD TEMPLATE
 ────────────────────────────────────────────────
 Load template from: templates/compliance-log/compliance-dashboard-template.md
-This template is used by the audit agent to generate docs/compliance-dashboard.md
+This template is used by the audit agent to generate
+management_framework/dashboards/compliance-dashboard.md
+
+**Dashboard Framework Contract:** Follows `DASHBOARD_FRAMEWORK_CONTRACT.md` v1.0.0 contribution
+behavior — detect hub by marker, create-if-absent, refresh own file only.
+
+Hub contribution logic:
+1. DETECT management_framework/dashboards/DASHBOARDS.md (hub marker).
+2. IF hub exists → CREATE or REFRESH compliance-dashboard.md in dashboards/.
+   → Update the AI-GCE row in DASHBOARDS.md "Contributing Dashboards" table.
+3. IF no hub exists → CREATE dashboards/ + DASHBOARDS.md (from templates/compliance-log/dashboards-hub-template.md)
+   + compliance-dashboard.md.
+4. NEVER modify another package's dashboard file.
+
 The dashboard tracks: tier progress, rules/hooks/steering inventory,
 governance artifacts status, score history, trend, active exceptions,
 open remediations, MTTR, and top recurring violations.
 Initial generation produces a skeleton; audit agent populates variables after first scan.
 
-STEP 9: GENERATE HOOK INSTALL GUIDE
+STEP 9: GENERATE HOOK ENFORCEMENT GUIDE
 ──────────────────────────────────────
-Generate .kiro/hooks/INSTALL-GUIDE.md in the target workspace:
-A tiered installation guide listing ALL available hooks organized by tier,
+Generate.kiro/hooks/ENFORCEMENT-GUIDE.md in the target workspace:
+A tiered enforcement guide listing ALL available hooks organized by tier,
 when to install each, and what compliance rule each enforces.
 This gives the team a progressive adoption roadmap from day 1.
 
 STEP 10: GENERATE COMPLIANCE_README
 ─────────────────────────────────────
 Load template from: templates/agents/compliance-readme.md
-Generate .governance/COMPLIANCE_README.md — the developer-facing guide:
-• "What is this .governance folder?"
+Generate.governance/COMPLIANCE_README.md — the developer-facing guide:
+• "What is this.governance folder?"
 • "What rules apply to this project?"
 • "How do the hooks work?" (including the debounce strategy explanation)
 • "How do I handle a hook warning?"
@@ -834,11 +1036,11 @@ Verify:
 • Security-critical hooks use fileEdited; advisory hooks use agentStop
 • Every hook prompt ends with the compliance logging block (non-negotiable)
 • Every hook prompt includes phase-awareness check instruction
-• .compliance-state.json generated with correct initial state
+•.compliance-state.json generated with correct initial state
 • COMPLIANCE_README accurately describes what was generated
-• INSTALL-GUIDE.md present in .kiro/hooks/ with noise classification per hook
+• ENFORCEMENT-GUIDE.md present in.kiro/hooks/ with noise classification per hook
 • CONTEXT BUDGET CHECK: If AI-GCE generated additional steering files (Step 4b),
-  count total lines across ALL always-inclusion files in .kiro/steering/.
+  count total lines across ALL always-inclusion files in.kiro/steering/.
   If total > 300 lines: WARN and convert lowest-priority generated files to fileMatch.
   AI-GCE MUST NOT push the workspace over the 300-line always-inclusion budget.
 • Phase-aware hooks correctly map rules to their applicable phase
@@ -861,17 +1063,17 @@ Present generation results:
    • Audit agent: configured ({applicable rule count} rules in scope)
    • Project-init agent: configured
    • Compliance state: initialized (.compliance-state.json — Tier 1)
-   • Compliance dashboard: template ready (docs/compliance-dashboard.md)
+   • Compliance dashboard: template ready (management_framework/dashboards/compliance-dashboard.md)
    • Compliance log: initialized
-   • Hook install guide: .kiro/hooks/INSTALL-GUIDE.md
+   • Hook enforcement guide:.kiro/hooks/ENFORCEMENT-GUIDE.md
 
 📋 Conditional enforcement activated:
    • {rule category}: because {steering file} exists
-   • ...
+   •...
 
 📋 Conditional enforcement SKIPPED:
    • {rule category}: because {steering file} does NOT exist
-   • ...
+   •...
 
 🎯 Compliance tier status:
    Tier 1 ✅ Active (score target: 60-70%)
@@ -879,11 +1081,25 @@ Present generation results:
    Tier 3 ⬜ Not started
 
 🔗 Next steps:
-   1. Review .governance/COMPLIANCE_README.md — how compliance works in this project
-   2. Run initial audit: 'Using AI-GCE, run a compliance audit' to establish Tier 1 score
-   3. Review Tier 2 readiness criteria in .compliance-state.json
-   4. If brownfield: follow .governance/incremental-adoption-plan.md for progressive enforcement
-   5. Begin AI-DLC workflow — Tier 1 hooks are now active
+   1. Review.governance/COMPLIANCE_README.md — how compliance works in this project
+   2. Run initial audit: type `CAA__` to establish your Tier 1 compliance score
+   3. Review Tier 2 readiness criteria in.compliance-state.json
+   4. If brownfield: follow.governance/incremental-adoption-plan.md for progressive enforcement
+   5. Open the generated workspace as root in a NEW Kiro instance (or new IDE window)
+   6. Install AI-DLC v1 (awslabs/aidlc-workflows) in that workspace — follow its install guide
+   7. Begin development with AI-DLC v1 — Tier 1 hooks are already active in the workspace
+
+🔀 **Chain Navigation (what's next in the AI-* Family):**
+   • Dashboard data: type `DAT__ pdlc/gce` to update the family dashboard
+   • Or ask AI-FLO: type `_FLO_` for routing guidance based on your project state
+
+⚠️ **IMPORTANT: AI-DLC v1 runs in the GENERATED workspace, not here.**
+   Close this planning workspace. Open the generated workspace folder
+   ({workspace_root}) as the ROOT of a fresh Kiro instance (or Cursor/
+   Windsurf/Claude Code). AI-DLC v1 is a separate product — install it
+   yourself (github.com/awslabs/aidlc-workflows). The hooks and steering
+   files AI-GCE produced are already waiting in the workspace for AI-DLC
+   to pick up.
 
 The compliance engine (Tier 1) is live."
 ```
@@ -934,7 +1150,7 @@ Quick reference — steering file → affected artifacts:
 | testing-strategy.md | code-review-gates.md | coverage-check.json |
 | database-rules.md | data-governance.md | migration-safety.json |
 | naming-conventions.md | naming-conventions.md | naming-check.json |
-| git-workflow.md | devops-deployment.md | pre-pr-checklist.json |
+| git-workflow.md | devops-deployment.md | pre-pr-checklist-agent (`PRC__`) |
 | multi-tenancy.md (new) | tenant-isolation.md (NEW) | tenant-isolation-check.json (NEW) |
 | resilience-standards.md | resilience-compliance.md | (resilience gate hook) |
 | observability-tracing.md | observability-compliance.md | (tracing hook) |
@@ -970,8 +1186,8 @@ Updated artifacts:
 ┌──────────────────────────────────────┬─────────────────────────────────────────┐
 │ Artifact                             │ Change                                  │
 ├──────────────────────────────────────┼─────────────────────────────────────────┤
-│ .governance/rules/{rule file}        │ {what changed in the rules}             │
-│ .kiro/hooks/{hook file}              │ {what changed in the hook}              │
+│.governance/rules/{rule file}        │ {what changed in the rules}             │
+│.kiro/hooks/{hook file}              │ {what changed in the hook}              │
 │ NEW: {file}                          │ {new steering file → new rule category} │
 └──────────────────────────────────────┴─────────────────────────────────────────┘
 
@@ -1063,7 +1279,7 @@ By rule category:
 │ API contract-first      │ ✅ Compliant │ Existing endpoints documented        │
 │ Module boundaries       │ ⚠️ {n} gaps  │ {description of cross-boundary deps} │
 │ Security gates          │ ✅ Compliant │ Auth present on all routes           │
-│ ...                     │ ...          │ ...                                 │
+│...                     │...          │...                                 │
 └─────────────────────────┴──────────────┴─────────────────────────────────────┘
 
 Overall baseline score: {x}% compliant
@@ -1074,7 +1290,7 @@ STEP 3: GENERATE BROWNFIELD BASELINE DOCUMENT
 ──────────────────────────────────────────────
 Load: templates/compliance-log/brownfield-baseline.md
 
-Generate .governance/brownfield-baseline.md:
+Generate.governance/brownfield-baseline.md:
 • Summary of existing violations per category
 • Designation: ACKNOWLEDGED LEGACY TECHNICAL DEBT
 • Remediation SLA per category (default: 12 weeks from governance adoption date)
@@ -1088,7 +1304,7 @@ STEP 4: GENERATE INCREMENTAL ADOPTION PLAN
 ────────────────────────────────────────────
 Load: templates/compliance-log/incremental-adoption-plan.md
 
-Generate .governance/incremental-adoption-plan.md:
+Generate.governance/incremental-adoption-plan.md:
 
 Phase 1 — Immediate (Week 0, day 1):
 • New code MUST comply with all rules
@@ -1115,7 +1331,7 @@ STEP 5: GENERATE RULES WITH BROWNFIELD ANNOTATIONS
 ────────────────────────────────────────────────────
 Same as Mode 1 STEP 3, with these additions:
 • Each rule file includes a "Brownfield Note" section:
-  "Existing violations acknowledged in .governance/brownfield-baseline.md.
+  "Existing violations acknowledged in.governance/brownfield-baseline.md.
    This rule enforces NEW code only until {remediation SLA date}."
 • Rules reference the incremental-adoption-plan.md for timeline
 
@@ -1133,7 +1349,7 @@ For hooks watching EDITED files (fileEdited events):
 Brownfield hook configuration pattern:
 Each hook prompt for legacy modules must include:
 "[BROWNFIELD MODE] This file is in a legacy module. If this is a modification to
-existing legacy code, note the violation in .governance/brownfield-baseline.md.
+existing legacy code, note the violation in.governance/brownfield-baseline.md.
 If this is new code added to a legacy module, it MUST comply with [rule reference]."
 
 STEP 7: GENERATE REMAINING ARTIFACTS
@@ -1165,20 +1381,32 @@ STEP 8: OUTPUT — Present Brownfield Summary
    • All rule categories enforced for NEW code from today
 
 ⏳ Incremental enforcement (legacy code):
-   • Baseline documented: .governance/brownfield-baseline.md
-   • Adoption plan: .governance/incremental-adoption-plan.md
+   • Baseline documented:.governance/brownfield-baseline.md
+   • Adoption plan:.governance/incremental-adoption-plan.md
    • Full compliance target: {date}
 
 📋 Key files:
-   • .governance/brownfield-baseline.md — acknowledged legacy violations
-   • .governance/incremental-adoption-plan.md — enforcement timeline
-   • .governance/COMPLIANCE_README.md — how to work with this compliance engine
+   •.governance/brownfield-baseline.md — acknowledged legacy violations
+   •.governance/incremental-adoption-plan.md — enforcement timeline
+   •.governance/COMPLIANCE_README.md — how to work with this compliance engine
 
 🔗 Next steps:
-   1. Review .governance/brownfield-baseline.md — acknowledge and sign off
-   2. Read .governance/incremental-adoption-plan.md — understand the timeline
-   3. Begin AI-DLC workflow — new code is enforced from day 1
-   4. Run weekly compliance audit to track improvement score"
+   1. Review.governance/brownfield-baseline.md — acknowledge and sign off
+   2. Read.governance/incremental-adoption-plan.md — understand the timeline
+   3. Open this workspace as root in a NEW Kiro instance (or new IDE window)
+   4. Install AI-DLC v1 (awslabs/aidlc-workflows) in the workspace — follow its install guide
+   5. Begin development — new code is enforced from day 1; legacy follows the adoption plan
+   6. Run weekly compliance audit (`CAA__`) to track improvement score
+
+🔀 **Chain Navigation:**
+   • Dashboard data: type `DAT__ pdlc/gce` to update the family dashboard
+
+⚠️ **IMPORTANT: AI-DLC v1 runs in THIS workspace, but in a fresh IDE instance.**
+   Close this planning session. Open the workspace folder as the ROOT
+   of a fresh Kiro instance (or Cursor/Windsurf/Claude Code). AI-DLC v1
+   is a separate product — install it yourself
+   (github.com/awslabs/aidlc-workflows). The hooks, rules, and baseline
+   AI-GCE produced are already in place for AI-DLC to operate within."
 ```
 
 ---
@@ -1253,7 +1481,7 @@ Mode 4 is triggered when a project is ready to advance from its current complian
 ```
 STEP 1: READ CURRENT STATE
 ───────────────────────────
-Read .compliance-state.json:
+Read.compliance-state.json:
 • Current tier (1, 2, or 3)
 • Tier history
 • Next tier readiness criteria and their status
@@ -1284,7 +1512,6 @@ For Tier 2: post-task-governance, segregation-check, security-gate-check,
             enforce-module-structure, cross-module-reference-check, 
             steering-quality-check, auto-run-tests
 For Tier 3: change-readiness-gate, exception-expiry-check
-            (periodic-audit-trigger already installed — now runs full scan)
 
 STEP 6: RUN COMPLIANCE AUDIT WITH NEW RULES
 ─────────────────────────────────────────────
@@ -1293,7 +1520,7 @@ Expected: score will dip as new rules expose new gaps — this is expected and h
 
 STEP 7: UPDATE STATE FILE
 ───────────────────────────
-Update .compliance-state.json:
+Update.compliance-state.json:
 • Set complianceTier to new tier number
 • Add tierHistory entry with date, activatedBy, scoreAtActivation
 • Update nextTierReadiness for the NEXT tier
@@ -1301,7 +1528,7 @@ Update .compliance-state.json:
 
 STEP 8: REGENERATE COMPLIANCE DASHBOARD
 ─────────────────────────────────────────
-Regenerate docs/compliance-dashboard.md with new tier state:
+Regenerate management_framework/dashboards/compliance-dashboard.md with new tier state:
 • Tier progress bars updated
 • New rules inventory showing newly activated rules
 • New hooks roadmap showing what was installed and what's next
@@ -1325,7 +1552,7 @@ Top gaps from new rules:
 Next tier ({N+1}) readiness: {criteria met count}/{total} criteria
 Blockers: {list}
 
-Updated: .compliance-state.json | docs/compliance-dashboard.md"
+Updated:.compliance-state.json | management_framework/dashboards/compliance-dashboard.md"
 ```
 
 ---
@@ -1333,7 +1560,7 @@ Updated: .compliance-state.json | docs/compliance-dashboard.md"
 ## WHAT AI-GCE DOES NOT DO
 
 - ❌ Require manual configuration — it READS the workspace and derives everything
-- ❌ Hardcode any technology — NestJS, Django, .NET, Spring Boot: all derived from `tech-stack.md`
+- ❌ Hardcode any technology — NestJS, Django,.NET, Spring Boot: all derived from `tech-stack.md`
 - ❌ Generate architecture/governance steering files — that is AI-DWG's job. Exception: AI-GCE MAY generate phase/role-aware ENFORCEMENT steering (Step 4b) — compliance-specific, fileMatch-only, marked `<!-- generated by AI-GCE -->`
 - ❌ Make architecture decisions — those were made in AI-ADLC and encoded in AI-DWG
 - ❌ Generate application code
@@ -1377,7 +1604,7 @@ Rule file (`.governance/rules/api-first-compliance.md`):
 ```markdown
 ### API-01: Contract Before Implementation
 Severity: 🟠 High
-Derived From: .kiro/steering/api-standards.md → "OpenAPI 3.1 spec"
+Derived From:.kiro/steering/api-standards.md → "OpenAPI 3.1 spec"
 Rule: Every API endpoint MUST have an OpenAPI contract defined BEFORE
       controller implementation is written.
 Verification:
@@ -1398,7 +1625,7 @@ Hook file (`.kiro/hooks/api-contract-check.json`):
   },
   "then": {
     "type": "askAgent",
-    "prompt": "A controller file was created. Verify an OpenAPI contract exists for this endpoint per rule API-01 in .governance/rules/api-first-compliance.md. If the corresponding spec does not define this endpoint, warn the developer to create the API contract first before implementing the controller."
+    "prompt": "A controller file was created. Verify an OpenAPI contract exists for this endpoint per rule API-01 in.governance/rules/api-first-compliance.md. If the corresponding spec does not define this endpoint, warn the developer to create the API contract first before implementing the controller."
   }
 }
 ```
@@ -1434,7 +1661,7 @@ Rule file (`.governance/rules/role-isolation.md`):
 ### GOV-ROLE-004: Session Owner ≠ Reviewer
 Severity: 🔴 Critical
 Tier: 2
-Derived From: .kiro/steering/role-isolation.md → "Segregation of Duties" + Built-in Baseline
+Derived From:.kiro/steering/role-isolation.md → "Segregation of Duties" + Built-in Baseline
 Rule: The person who wrote code (Session Owner) MUST NOT be the person who
       reviews/approves the PR. CODEOWNERS assigns a different reviewer per module.
 Verification:
@@ -1515,10 +1742,10 @@ When AI-GCE completes, this structure exists in the user's workspace:
 
 ```
 {project-root}/
-├── .kiro/
+├──.kiro/
 │   ├── steering/                               ← Unchanged (AI-DWG output)
 │   └── hooks/                                  ← GENERATED BY AI-GCE
-│       ├── INSTALL-GUIDE.md                    ← Tier-based hook installation roadmap
+│       ├── ENFORCEMENT-GUIDE.md                    ← Tier-based hook enforcement roadmap
 │       ├── session-discipline.json             ← Spec-before-code (promptSubmit)
 │       ├── pre-code-spec-check.json            ← Spec gate (preToolUse/write)
 │       ├── api-contract-check.json             ← API contract before controller
@@ -1528,8 +1755,6 @@ When AI-GCE completes, this structure exists in the user's workspace:
 │       ├── migration-safety.json               ← DB migration safety (fileEdited) ← Tier A
 │       ├── coverage-check.json                 ← Test coverage (agentStop)
 │       ├── post-task-governance.json           ← DoD check (postTaskExecution)
-│       ├── pre-pr-checklist.json               ← PR quality gate (userTriggered)
-│       ├── periodic-audit.json                 ← Full compliance scan (userTriggered)
 │       ├── sensitive-data-check.json           ← PII detection (fileEdited) ← Tier A
 │       ├── domain-layer-purity.json            ← DDD purity (agentStop)
 │       ├── documentation-reminder.json         ← Docs update (agentStop)
@@ -1538,13 +1763,15 @@ When AI-GCE completes, this structure exists in the user's workspace:
 │       ├── [tracing-check.json]                ← IF observability-tracing.md (agentStop)
 │       └── [event-sourcing-check.json]         ← IF event-sourcing.md
 │
-├── .compliance-state.json                      ← GENERATED BY AI-GCE
+├──.compliance-state.json                      ← GENERATED BY AI-GCE
 │                                                 Tier tracking, readiness criteria, score history
 │
-├── docs/
-│   └── compliance-dashboard.md                ← GENERATED by audit agent (maintained ongoing)
+├── management_framework/
+│   └── dashboards/
+│       ├── DASHBOARDS.md                      ← GENERATED by AI-GCE (hub marker + index)
+│       └── compliance-dashboard.md            ← GENERATED by audit agent (maintained ongoing)
 │
-└── .governance/                                ← GENERATED BY AI-GCE
+└──.governance/                                ← GENERATED BY AI-GCE
     ├── COMPLIANCE_README.md                    ← How compliance works in THIS project
     │
     ├── rules/
@@ -1592,3 +1819,44 @@ When AI-GCE completes, this structure exists in the user's workspace:
 ---
 
 *AI-GCE v1.0.0 | Created By: Maheri | Inspired By: awslabs/aidlc-workflows (MIT-0)*
+
+
+---
+
+## Gate Contract
+
+> Conforms to `GATE_PROTOCOL.md` protocolVersion 1.2.0 · interfaceVersion 1.0
+
+### Gate-Out — What AI-GCE GUARANTEES When Complete
+
+```yaml
+emits-type: governance-engine@1
+visibility: internal
+marker: gce-state.md
+payloadRoot: pdlc-ws/projects/{projectId}/gce/
+guarantees:
+  - status == complete
+  - projectId
+  - hookDefinitions            # governance hooks deployed
+  - complianceChecks           # compliance rules active
+  - auditScoring               # scoring model configured
+  - driftDetection             # drift rules installed
+```
+
+### Gate-In — What AI-GCE REQUIRES to Start
+
+```yaml
+consumes:
+  - type: development-workspace@^1   # satisfiable internally (AI-DWG)
+    mandatory: [workspaceStructure]  # needs the workspace to govern
+    optional:  [steeringFiles, cicdPipeline, nfrCoverage, adrs]
+on-missing-all: standalone     # can generate governance from workspace scan alone (P4)
+strictness-default: warn
+```
+
+> Universal floor (status==complete + projectId) enforced by marker integrity (GATE_PROTOCOL §18).
+
+### Visibility Note
+
+- `governance-engine` is `internal` — consumed alongside AI-TGE as a companion to AI-DLC v1.
+- Gate-in consumes only `internal` types; no external seam-in for AI-GCE.

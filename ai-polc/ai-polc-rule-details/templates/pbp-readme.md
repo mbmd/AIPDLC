@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 ---
 generatedBy: AI-POLC
 generatedVersion: 1.0.0
@@ -40,7 +41,7 @@ ownership: generated
 | Consumer | What to Read | Purpose |
 |----------|-------------|---------|
 | **AI-DWG** | DoR/DoD, release cadence, AC format | Workspace generation |
-| **AI-DLC user** | Prioritized epics, DoR, epic AC | Development intent seeds |
+| **AI-DLC v1 user** | Prioritized epics, DoR, epic AC | Development intent seeds |
 | **AI-GCE** | DoR/DoD rules | Product governance hook derivation |
 | **Stakeholders** | Roadmap, traceability, stakeholder map | Status visibility |
 | **Development team** | Epics, DoR, release plan | Sprint planning input |

@@ -1,12 +1,13 @@
-# Mapping: Container Design (UI Containers) → frontend-standards.md (CONDITIONAL)
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
+# Mapping: Container Design (UI Containers) + UXP → frontend-standards.md (CONDITIONAL)
 
 ## Purpose
 
-Transforms frontend/UI container definitions from C4 L2 into a steering file governing component patterns, state management, accessibility, and UI conventions.
+Transforms frontend/UI container definitions from C4 L2 into a steering file governing component patterns, state management, accessibility, and UI conventions. **When UXD peer input is also present**, enriches the output with design-system-derived patterns, component architecture from UXP, and the accessibility baseline.
 
 **Output:** `.kiro/steering/frontend-standards.md`
 
-**Condition:** Generate IF Container Design (C4 L2) includes SPA/UI containers OR BFF Pattern extension was active.
+**Condition:** Generate IF Container Design (C4 L2) includes SPA/UI containers OR BFF Pattern extension was active OR `uxd-state.md` is present (UXD peer input provides frontend patterns independently of ADLC).
 
 ---
 
@@ -35,8 +36,27 @@ A good output from this activity sounds like:
 
 ## Source
 
-**From:** Container Diagram (C4 L2) — UI container definitions
+**From:** Container Diagram (C4 L2) — UI container definitions (IF ADLC present)
 **Also from:** Technology Stack (UI framework), API Architecture (BFF endpoints if applicable)
+**UXD enrichment (IF `uxd-state.md` present):** Design System Document (component architecture, tokens reference), Component Inventory (pattern rules), Accessibility Baseline (WCAG enforcement)
+
+### UXD Wiring — How UXP Enriches This Mapping
+
+When `uxd-state.md` is detected alongside ADLC's C4 L2 UI containers, this mapping reads UXP artifacts to enrich the frontend-standards output:
+
+| UXP Document | Enriches Section | How |
+|---|---|---|
+| Design System Document | Component Architecture (FE-COMP) | Adds component structure rules from UXP's atomic design hierarchy |
+| Component Inventory | Component Architecture (FE-COMP) | References `design-system.md` for component usage — "MUST use DS components per design-system.md" |
+| Design Tokens Specification | Frontend Identity | Adds token format reference; adds "MUST use design tokens — NEVER hardcode values" rule |
+| Accessibility Baseline | Accessibility (FE-A11Y) | Overrides generic WCAG rules with specific UXP-derived requirements |
+| Interaction Patterns | Performance + Anti-Patterns | Adds pattern-specific performance rules (skeleton loading, lazy-load thresholds) |
+
+**If UXD present WITHOUT ADLC:** This mapping still executes (generating frontend-standards from UXP alone), but the Technology Profile section uses UXP's stated framework preferences (from design tokens format) or marks framework as `{to-be-decided}`. The file focuses on design governance rather than technical implementation.
+
+**If ADLC present WITHOUT UXD:** Original behavior — derive from C4 L2 + Technology Stack only. Accessibility rules use ADLC Quality Attributes as source (less specific than a UXP baseline).
+
+**Cross-reference:** When BOTH UXD and ADLC are present, `frontend-standards.md` references `design-system.md` for token/component governance. No duplication — `frontend-standards` handles code patterns; `design-system` handles visual/interaction governance.
 
 ---
 
@@ -178,11 +198,32 @@ inclusion: always
 
 ## Transformation Rules
 
-| AP Content | Output |
-|-----------|--------|
-| UI framework from Technology Stack | Frontend Identity |
-| Component patterns from C4 L3 (if detailed) | FE-COMP rules |
-| State management choice | FE-STATE rules |
-| BFF pattern (if extension active) | FE-API-06 |
-| Accessibility requirements from Quality Attributes | FE-A11Y rules |
-| Performance targets (page load time) | FE-PERF rules |
+| Source Content | Output | Condition |
+|-----------|--------|-----------|
+| UI framework from Technology Stack | Frontend Identity | IF ADLC |
+| Component patterns from C4 L3 (if detailed) | FE-COMP rules | IF ADLC |
+| State management choice | FE-STATE rules | IF ADLC |
+| BFF pattern (if extension active) | FE-API-06 | IF ADLC + BFF ext |
+| Accessibility requirements from Quality Attributes | FE-A11Y rules | IF ADLC (baseline) |
+| Performance targets (page load time) | FE-PERF rules | IF ADLC |
+| UXP Design Tokens format reference | Frontend Identity (token format line) | IF UXD |
+| UXP Component Inventory → "use DS components" | FE-COMP rules (reference to design-system.md) | IF UXD |
+| UXP Accessibility Baseline → specific requirements | FE-A11Y rules (enriched/overridden) | IF UXD |
+| UXP Interaction Patterns → loading/empty/error | Anti-Patterns + Performance | IF UXD |
+| Cross-file reference to design-system.md | Added to header/footer | IF UXD |
+
+### UXD-Enriched Output Additions
+
+When UXD is present, add these rules to the generated `frontend-standards.md`:
+
+```markdown
+## Design System Integration
+<!-- begin: UXP-sourced -->
+| Rule | Standard |
+|------|----------|
+| FE-DS-01 | MUST use design tokens from design-system.md — NEVER hardcode color/spacing/typography values |
+| FE-DS-02 | MUST use design system components — see design-system.md Component Inventory |
+| FE-DS-03 | New UI elements MUST follow the component proposal process in design-system.md DS-GOV-05 |
+| FE-DS-04 | Token format: {from UXP — e.g., CSS custom properties / Style Dictionary} |
+<!-- end: UXP-sourced -->
+```

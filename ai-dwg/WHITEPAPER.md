@@ -115,17 +115,17 @@ Typically 30-40 files in one generation pass. Every file ready for immediate use
 
 ---
 
-## Part of the AI-* Family
+## Part of AIFLC — the AI-* PDLC Family
 
-AI-DWG is the third node in the AI-* Family chain. It consumes an Architecture Package from AI-ADLC and produces the Development Workspace that AI-GCE uses for compliance derivation. But it works standalone — if you have architecture documentation from any source (even hand-written), AI-DWG can transform it into a governed workspace.
+AI-DWG is the third node in the AI-* PDLC Family chain. It consumes an Architecture Package from AI-ADLC and produces the Development Workspace that AI-GCE uses for compliance derivation. But it works standalone — if you have architecture documentation from any source (even hand-written), AI-DWG can transform it into a governed workspace.
 
-Learn more: [AI-* Family Whitepaper](../WHITEPAPER.md)
+Learn more: [AI-* Family Whitepaper](../narrative/WHITEPAPER.md)
 
 ---
 
 ## Getting Started
 
-See [kiro-setup/INSTALL.md](./kiro-setup/INSTALL.md) for platform-specific installation instructions.
+See [setup/INSTALL.md](./setup/INSTALL.md) for platform-specific installation instructions.
 
 **Activation:** After installation, start a chat and say:
 ```

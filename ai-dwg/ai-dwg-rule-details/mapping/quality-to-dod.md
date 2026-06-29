@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Mapping: Quality Attributes → DEFINITION_OF_DONE.md
 
 ## Purpose
@@ -17,7 +18,7 @@ During THIS activity, ALSO adopt the mindset of a **Workspace Architect**. This 
 - Trace every DoD section back to a specific steering file — "follows coding-standards.md" not "writes good code"
 - Ensure security items are non-negotiable regardless of task type — no PR skips security verification
 - Think about conditional sections (Database, API) — not every task touches every layer; make applicability clear
-- Consider DoD as the quality gate contract between AI-DLC and human reviewers — it defines "done" for both
+- Consider DoD as the quality gate contract between AI-DLC v1 and human reviewers — it defines "done" for both
 
 ### Anti-Patterns for This Activity
 - Do NOT write aspirational quality statements ("code should be clean") — write enforceable checks

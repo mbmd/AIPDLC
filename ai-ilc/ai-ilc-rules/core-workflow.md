@@ -1,6 +1,10 @@
-# PRIORITY: This workflow OVERRIDES all other built-in workflows when user requests idea capture, evaluation, or go/no-go decisions
+---
+inclusion: manual
+---
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
+# PRIORITY: This workflow OVERRIDES all other built-in workflows when activated by key `_ILC_` or when the user requests idea capture, evaluation, or go/no-go decisions
 
-# When user has a new idea for a project or feature, ALWAYS follow this workflow FIRST
+# Activate via the explicit key `_ILC_`, OR when the user has a new idea for a project or feature — then ALWAYS follow this workflow FIRST. See "Activation & Multi-Package Isolation" below before asserting priority in a shared workspace.
 
 ---
 
@@ -31,20 +35,17 @@
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐                                                
-    Design it │                                                
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POLC ──┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 | Layer | Package | Type | Input | Output |
@@ -53,19 +54,38 @@
 | Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
-AI-ILC is the optional front door of the family. Its output (Approved Idea Brief, Change Request Brief, or Feature Brief) routes via AI-FLO (when available) to the appropriate successor: AI-PILC for new projects and significant changes, AI-POLC for features/backlog items, or AI-DLC as a fallback for small features.
+AI-ILC is the optional front door of the family. Its output (Approved Idea Brief, Change Request Brief, or Feature Brief) routes via AI-FLO (when available) to the appropriate successor: AI-PILC for new projects and significant changes, AI-POLC for features/backlog items, or AI-DLC v1 as a fallback for small features.
+
+---
+
+## Activation & Multi-Package Isolation
+
+**Explicit activation key:** `_ILC_`
+Type `_ILC_` in any prompt to activate this workflow. An explicit key is treated as a **direct user order to switch** — it wins over keyword matching and every sibling package immediately.
+
+**Active-package status key:** `_ACTIVE_`
+Type `_ACTIVE_` at any time and the assistant reports which AI-* package is currently active (and its state-marker status). This is a read-only check — it changes nothing and never triggers a switch.
+
+**Keyword activation (fallback):** This workflow also activates when the user requests **idea capture, evaluation, or a go/no-go decision** specifically — shaping a raw idea into an approved brief. It does NOT claim generic "initiation", "design", "backlog", "governance", or "workspace" requests — those belong to sibling packages.
+
+**Switching rule — NON-NEGOTIABLE: a package switch NEVER happens without a direct user order or explicit confirmation.**
+1. **Direct order:** the user types an explicit activation key (`_ILC_`, or a sibling `_XXX_` key). Treat this as the order — switch immediately, no confirmation needed.
+2. **Otherwise, check for an active sibling:** scan for any sibling `*-state.md` (e.g. `pilc-state.md`, `adlc-state.md`, `polc-state.md`, `uxd-state.md`) whose status is not "complete". If one exists, that package is active — do NOT take over. Ask first: "AI-PILC is active — switch to AI-ILC? (yes / no)" and proceed only on explicit confirmation.
+3. **Ambiguity:** if a request could match more than one installed package by keyword, ask which workflow to run rather than guessing.
+4. **Announce every switch:** on any switch (via key or confirmation), the **FIRST line of that response MUST name the now-active package** — e.g. `Active package: AI-ILC`.
+5. This package's own marker is `ilc-state.md`; sibling packages extend it the same courtesy when it is active.
 
 ---
 
@@ -188,7 +208,47 @@ The workflow creates and maintains two registers:
 - Registers are created at first use (during Capture stage)
 - Entries are added in real-time as they arise (not batched)
 - Each entry is sequentially numbered and never deleted
-- Registers live in `{output_root}/`
+- Registers live in `{output_root}/` (flat — shared across all ideas)
+
+---
+
+## MANDATORY: Output Folder Structure
+
+AI-ILC organizes output so a workspace with many ideas stays navigable, **without** encoding status in folder names (which would force files to move as status changes and break successor detection). The structure follows two principles:
+
+1. **Shared artifacts stay flat** at `pdlc-ws/ideas/` — the state marker, the Idea Register, and the governance spine. These are cross-idea and never move.
+2. **Per-idea artifacts live in a per-idea subfolder** keyed by the idea's **stable Register ID** (never by status). Status is read from the Idea Register (its status-sectioned tables) and from each artifact's `Status` field — not from the folder.
+
+### Fixed Output Root — `pdlc-ws/ideas/`
+
+**The output root is ALWAYS `pdlc-ws/ideas/` relative to the workspace root.** This is a deterministic, non-negotiable path — the user is NOT asked where to place output. This aligns with `OUTPUT_AND_STATE_CONTRACT.md` §4, which designates `pdlc-ws/ideas/` as the pre-project, multi-idea funnel area.
+
+**Rationale:** removing path-selection authority from the user eliminates ambiguity in successor detection, ensures consistent workspace topology across all AI-ILC installations, and aligns with the Always-On Rule (§3 of the multi-project contract — no layout variance, no adaptive activation, no user-customizable root).
+
+**Brownfield exception:** if the workspace already contains AI-ILC output in a non-standard location (older flat layout), detect it on first run and inform the user: "Existing ILC output found at `{path}`. AI-ILC now uses `pdlc-ws/ideas/` as the standard location. I'll continue operating in `pdlc-ws/ideas/` — you may migrate existing artifacts at your convenience." Never force-move existing files.
+
+```
+pdlc-ws/ideas/                                    ← FIXED output root (workspace-root-relative)
+├── ilc-state.md                          ← shared marker (one active idea at a time)
+├── Idea_Register.md                      ← shared funnel view (status at a glance)
+├── management_framework/                 ← shared governance spine (flat, per contract)
+│   ├── MANAGEMENT_FRAMEWORK.md
+│   ├── Decision_Log.md
+│   └── Lessons_Learned.md
+└── {NNN}-{idea-slug}/                    ← per-idea subfolder, keyed by zero-padded Register ID
+    ├── Idea_Statement.md                 ← working doc (Shape)
+    ├── {NNN}-{idea-slug}_Approved_Idea_Brief.md   ← (or _Change_Request_Brief / _Feature_Brief)
+    └── {NNN}-{idea-slug}_GoNoGo_Decision_Record.md
+```
+
+**Naming rules:**
+- `{NNN}` = the idea's Register ID, zero-padded to 3 digits (`001`, `002`, …). This is a **stable domain key** — the one folder partition the family allows (it never encodes mutable status; cf. the `{Project ID}/` partition pattern).
+- `{idea-slug}` = the idea name lower-cased, spaces → hyphens, punctuation stripped.
+- The subfolder is created at Capture (Stage 1) and **never renamed** for the life of the idea — even when the idea is parked, rejected, or routed. Status changes update the Register and the artifacts' `Status` field, not the folder.
+
+**Successor detection is preserved:** successors still scan for `ilc-state.md` at `pdlc-ws/ideas/`. The state file's **`Brief File`** field carries the **relative path** to the brief inside the per-idea subfolder (e.g. `001-fleet-tracking/001-fleet-tracking_Approved_Idea_Brief.md`), and the Idea Register stores each idea's **Folder** path. Consumers resolve the brief from the marker — they never guess the folder.
+
+**Provenance:** per `NAMING_AND_OWNERSHIP.md` §5.2, per-idea artifacts carry front-matter (`generatedBy: AI-ILC`, `ownership: user`) and a `Status` field so classification lives in metadata, not in the path.
 
 ---
 
@@ -218,7 +278,7 @@ When asking questions at any stage, follow the structured format:
 
 ---
 
-## MANDATORY: Two-Source Evaluation Model (Lesson 25)
+## MANDATORY: Two-Source Evaluation Model
 
 The Evaluate stage uses a **two-source model**:
 
@@ -247,53 +307,56 @@ AI-ILC is the optional first entry point. It accepts raw ideas in any format:
 
 No input marker file. No predecessor package.
 
-### I Produce (Successors: AI-PILC / AI-POLC / AI-FLO / AI-DLC)
+### I Produce (Successors: AI-PILC / AI-POLC / AI-FLO / AI-DLC v1)
 
 | Aspect | Specification |
 |--------|--------------|
-| **Successors** | AI-PILC (new project OR change management) / AI-POLC (feature → product backlog) / AI-FLO (router dispatch, when available) / AI-DLC (small feature fallback) / AI-PPM (portfolio awareness, informational) |
+| **Successors** | AI-PILC (new project OR change management) / AI-POLC (feature → product backlog) / AI-FLO (router dispatch, when available) / AI-DLC v1 (small feature fallback) / AI-PPM (portfolio awareness, informational) |
 | **Marker file** | `ilc-state.md` |
-| **Output location** | `{user-chosen path}/` |
+| **Output location** | `pdlc-ws/ideas/` (fixed, workspace-root-relative; shared artifacts flat; per-idea artifacts under `{NNN}-{idea-slug}/`) |
 
 **Guaranteed output (relative to marker):**
 
 | File | Always Present? | Purpose |
 |------|:---------------:|---------|
-| `ilc-state.md` | ✅ Always | State + routing decision + completion status |
-| Idea Register entry | ✅ Always | Idea tracked in portfolio funnel |
-| Decision Log entry | ✅ Always | Go/no-go rationale recorded |
-| `*_Approved_Idea_Brief.md` | ⚠️ Conditional | When route = `new-project` (→ AI-PILC) |
-| `*_Change_Request_Brief.md` | ⚠️ Conditional | When route = `change-request` (→ AI-PILC change management) |
-| `*_Feature_Brief.md` | ⚠️ Conditional | When route = `feature` (→ AI-POLC / fallback AI-DLC) |
-| `*_GoNoGo_Decision_Record.md` | ✅ Always | Formal decision with rationale (approve/park/reject) |
+| `ilc-state.md` | ✅ Always | State + routing decision + completion status (flat at root) |
+| Idea Register entry | ✅ Always | Idea tracked in portfolio funnel (flat at root) |
+| Decision Log entry | ✅ Always | Go/no-go rationale recorded (in `management_framework/`) |
+| `{NNN}-{slug}/*_Approved_Idea_Brief.md` | ⚠️ Conditional | When route = `new-project` (→ AI-PILC) |
+| `{NNN}-{slug}/*_Change_Request_Brief.md` | ⚠️ Conditional | When route = `change-request` (→ AI-PILC change management) |
+| `{NNN}-{slug}/*_Feature_Brief.md` | ⚠️ Conditional | When route = `feature` (→ AI-POLC / fallback AI-DLC v1) |
+| `{NNN}-{slug}/*_GoNoGo_Decision_Record.md` | ✅ Always | Formal decision with rationale (approve/park/reject) |
+
+> Per-idea artifacts live in the idea's `{NNN}-{slug}/` subfolder (see "MANDATORY: Output Folder Structure"). The exact relative path to the brief is recorded in the state file's `Brief File` field, so successors resolve it from the marker rather than guessing the folder.
 
 **State file fields successors read:**
 - `Status`: Must be `Routed` for handoff (terminal success state — set when the brief is produced)
 - `Route`: `new-project` / `change-request` / `feature` / `portfolio-inform`
+- `Brief File`: relative path to the brief inside the per-idea subfolder (e.g. `001-{slug}/001-{slug}_Approved_Idea_Brief.md`)
 - `Depth Level`: Indicates richness of brief content
 - `Idea Name`: Used as starting context by successor
 - `Project ID`: If routing to an existing project, carries the target project's ID (for AI-PPM correlation)
 
-**Successor detection (forward-compatible — Lesson 6):**
+**Successor detection (forward-compatible):**
 - **`Route = new-project`:** AI-FLO dispatches to AI-PILC (if AI-FLO available) → fallback: AI-PILC directly reads `ilc-state.md` and consumes `Approved_Idea_Brief.md` via Mode E intake
 - **`Route = change-request`:** AI-PILC consumes `Change_Request_Brief.md` and routes through its change management registers
-- **`Route = feature`:** AI-POLC consumes `Feature_Brief.md` into the Product Backlog Package (if AI-POLC available) → fallback: AI-DLC backlog receives `Feature_Brief.md` directly
+- **`Route = feature`:** AI-POLC consumes `Feature_Brief.md` into the Product Backlog Package (if AI-POLC available) → fallback: AI-DLC v1 backlog receives `Feature_Brief.md` directly
 - **`Route = portfolio-inform`:** AI-PPM is notified of the new project/feature for portfolio register awareness (if AI-PPM available) → fallback: informational only (no action if AI-PPM absent)
 
-> **Forward-compatibility (Lesson 6):** AI-FLO, AI-POLC, and AI-PPM are pending build. Until they exist, routing falls through to the direct successor (AI-PILC for projects, AI-DLC for features). Once built, AI-FLO becomes the preferred dispatch layer and AI-POLC becomes the preferred feature intake. The `Route` field in `ilc-state.md` carries the *intent*; the consuming package resolves the *target* based on what's available.
+> **Forward-compatibility:** AI-FLO, AI-POLC, and AI-PPM are all built. When installed in a workspace, AI-FLO acts as the preferred dispatch layer and AI-POLC as the preferred feature intake. In workspaces where they are not yet installed, routing falls through to the direct successor (AI-PILC for projects, AI-DLC v1 for features). The `Route` field in `ilc-state.md` carries the *intent*; the consuming package resolves the *target* based on what's available.
 
 ### Contract Principles
 
 | Principle | Implementation |
 |-----------|---------------|
 | **Detection by marker** | Successors scan for `ilc-state.md`, not for a specific folder name |
-| **User owns WHERE** | User picks output folder; ILC defines WHAT files exist |
+| **Fixed output root** | Output always goes to `pdlc-ws/ideas/` (workspace-root-relative); eliminates path ambiguity for successors |
 | **Graceful standalone** | Every successor works without AI-ILC (all accept raw input directly) |
-| **Additive to AI-PILC** | AI-PILC keeps ALL existing intake modes; "AI-ILC brief" and "AI-ILC change request" are additional optional inputs (Lesson 6) |
-| **Forward-compatible routing** | Route values target packages that may not exist yet; fallback logic ensures handoff always succeeds (Lesson 6) |
+| **Additive to AI-PILC** | AI-PILC keeps ALL existing intake modes; "AI-ILC brief" and "AI-ILC change request" are additional optional inputs |
+| **Forward-compatible routing** | Route values target packages that may not exist yet; fallback logic ensures handoff always succeeds |
 | **Single-project context** | v1.0 operates within one project per workspace |
 | **AI-ADLC is never a direct target** | If architecture needs rework, that flows THROUGH AI-PILC change management → AI-ADLC (not directly from AI-ILC) |
-| **AI-POLC preferred for features** | Feature ideas go to AI-POLC (product backlog owner) when available; AI-DLC is the fallback (Lesson 6 OR-input) |
+| **AI-POLC preferred for features** | Feature ideas go to AI-POLC (product backlog owner) when available; AI-DLC v1 is the fallback (OR-input) |
 
 ### Portfolio Connector (v1.0 = informational awareness)
 
@@ -317,7 +380,7 @@ AI-ILC does not implement downstream signaling. The brief is a one-time handoff 
 1. Check for existing `ilc-state.md` — if found, load and offer to resume
 2. If fresh start:
    a. Ask user: "What's the idea?" (accept any format: verbal, one-liner, document)
-   b. Ask user for output folder preference (or accept default: current directory)
+   b. Create `pdlc-ws/ideas/` folder if it doesn't exist
    c. Create `ilc-state.md` with initial configuration
    d. Create/update Idea Register (add new entry: status = Captured)
 3. Capture the raw idea verbatim (preserve the user's language)
@@ -332,6 +395,7 @@ AI-ILC does not implement downstream signaling. The brief is a one-time handoff 
 📊 Scale signal: {small/medium/large}
 🔍 Clarity: {vague/partial/well-articulated}
 📐 Recommended depth: {Minimal/Standard/Comprehensive}
+📁 Output: pdlc-ws/ideas/{NNN}-{idea-slug}/
 
 Ready to shape this idea. Continue? [Yes / Adjust depth / Stop here]
 ```
@@ -487,7 +551,7 @@ Ready to shape this idea. Continue? [Yes / Adjust depth / Stop here]
 |----------|--------|-------|------------------|-----------------------------|
 | Does a project exist for this idea? | **No** — it's a new initiative | `new-project` | AI-FLO → AI-PILC | AI-PILC directly |
 | Does a project exist? | **Yes** — and the idea is a **BIG** change (impacts scope, success criteria, or architecture) | `change-request` | AI-PILC change management | *(always available)* |
-| Does a project exist? | **Yes** — and the idea is a **SMALL** change (no project-level impact) | `feature` | AI-POLC (Product Backlog Package) | AI-DLC backlog |
+| Does a project exist? | **Yes** — and the idea is a **SMALL** change (no project-level impact) | `feature` | AI-POLC (Product Backlog Package) | AI-DLC v1 backlog |
 
 3. For the "project exists" path, perform a **lightweight impact assessment** (not a full feasibility study — AI-PILC handles the deep analysis):
    - Does this change the project's stated objectives or success criteria?
@@ -499,17 +563,17 @@ Ready to shape this idea. Continue? [Yes / Adjust depth / Stop here]
 5. Ask user to confirm routing decision
 6. Produce the appropriate brief:
 
-> **Key design decision: forward-compatible routing.** Routes declare intent for packages that don't exist yet, with graceful fallback to existing packages (Lesson 6). No package breaks if AI-FLO/AI-POLC/AI-PPM are absent — the route value carries the *intent*; the consuming layer resolves the *target* based on what's available in the workspace.
+> **Key design decision: forward-compatible routing.** Routes declare intent for packages that don't exist yet, with graceful fallback to existing packages. No package breaks if AI-FLO/AI-POLC/AI-PPM are absent — the route value carries the *intent*; the consuming layer resolves the *target* based on what's available in the workspace.
 
-   - **`new-project` route:** Generate `Approved_Idea_Brief.md` (enriched raw requirement shaped for AI-PILC's intake Mode E)
-   - **`change-request` route:** Generate `Change_Request_Brief.md` (shaped for AI-PILC's change management registers — includes impact assessment results)
-   - **`feature` route:** Generate `Feature_Brief.md` (shaped for AI-POLC product backlog intake; fallback: AI-DLC backlog — clear, bounded, ready to elaborate)
+   - **`new-project` route:** Generate `{NNN}-{slug}/{NNN}-{slug}_Approved_Idea_Brief.md` (enriched raw requirement shaped for AI-PILC's intake Mode E)
+   - **`change-request` route:** Generate `{NNN}-{slug}/{NNN}-{slug}_Change_Request_Brief.md` (shaped for AI-PILC's change management registers — includes impact assessment results)
+   - **`feature` route:** Generate `{NNN}-{slug}/{NNN}-{slug}_Feature_Brief.md` (shaped for AI-POLC product backlog intake; fallback: AI-DLC v1 backlog — clear, bounded, ready to elaborate)
 6. The brief carries forward ALL context from shaping + evaluation + scope — no information loss at handoff
 7. Update state file:
    - Status = Routed (terminal — workflow complete)
    - Route = {new-project / change-request / feature}
    - Portfolio Inform = {true / false}
-   - Brief file = {filename}
+   - Brief file = {relative path under the idea folder}
    - Target Project ID = {project_id, if routing to an existing project; else "new"}
 8. Update Idea Register: status = Routed, route = {destination}
 9. Log routing decision in Decision Log
@@ -526,7 +590,7 @@ Ready to shape this idea. Continue? [Yes / Adjust depth / Stop here]
 {Route-specific next-step guidance:}
 - New Project → "Run AI-PILC on {brief} to initiate the project."
 - Change Request → "Submit {brief} to AI-PILC change management for the existing project."
-- Feature Backlog → "Add {brief} to the project's AI-DLC backlog for implementation."
+- Feature Backlog → "Add {brief} to the project's AI-DLC v1 backlog for implementation."
 
 Idea Register and Decision Log updated. Audit trail complete.
 ```
@@ -546,7 +610,7 @@ Idea Register and Decision Log updated. Audit trail complete.
 7. **Dynamic expertise.** The right persona leads each stage; the idea's domain pulls in the right support. No one-size-fits-all voice.
 8. **Parked is not dead.** Parked ideas have a revisit date and stay in the register. They re-enter the pipeline when conditions change.
 
-### Provenance Requirement (NAMING_AND_OWNERSHIP.md §5.2/§5.3)
+### Provenance Requirement (contracts/NAMING_AND_OWNERSHIP.md §5.2/§5.3)
 
 All output files generated by this package MUST include provenance front-matter:
 
@@ -561,37 +625,120 @@ ownership: generated | hybrid | user
 ---
 ```
 
-Templates use `{placeholder}` syntax for these fields. See `ai-packages/NAMING_AND_OWNERSHIP.md` §5.2–§5.3 for full schema and ownership values.
+Templates use `{placeholder}` syntax for these fields. See Naming & Ownership Contract §5.2–§5.3 for full schema and ownership values.
 
 ---
 
-# CONDITIONAL GENERATION MAP (Lesson 7)
+# CONDITIONAL GENERATION MAP
 
 | Output | Always / Conditional | Trigger |
 |--------|:--------------------:|---------|
 | `ilc-state.md` | ✅ Always | Created at Capture |
 | Idea Register entry | ✅ Always | Created at Capture |
 | Decision Log entry | ✅ Always | Created at Approve |
-| `*_GoNoGo_Decision_Record.md` | ✅ Always | Created at Approve (even for Park/Reject) |
-| `*_Approved_Idea_Brief.md` | ⚠️ Conditional | Only when Route = new-project |
-| `*_Change_Request_Brief.md` | ⚠️ Conditional | Only when Route = change-request (big change to existing project) |
-| `*_Feature_Brief.md` | ⚠️ Conditional | Only when Route = feature (small change, no project impact) |
+| `{NNN}-{slug}/*_GoNoGo_Decision_Record.md` | ✅ Always | Created at Approve (even for Park/Reject) |
+| `{NNN}-{slug}/*_Approved_Idea_Brief.md` | ⚠️ Conditional | Only when Route = new-project |
+| `{NNN}-{slug}/*_Change_Request_Brief.md` | ⚠️ Conditional | Only when Route = change-request (big change to existing project) |
+| `{NNN}-{slug}/*_Feature_Brief.md` | ⚠️ Conditional | Only when Route = feature (small change, no project impact) |
 
 ---
 
 # DIRECTORY STRUCTURE — What the Workflow Outputs
 
 ```
-{output_root}/
-├── ilc-state.md                        ← State + routing + completion
-├── Idea_Register.md                    ← All ideas in this pipeline (portfolio funnel)
-├── Decision_Log.md                     ← All go/no-go decisions + routing
-├── {Idea_Name}_GoNoGo_Decision_Record.md  ← Formal decision artifact (always)
-├── {Idea_Name}_Approved_Idea_Brief.md  ← IF route = new-project
-├── {Idea_Name}_Change_Request_Brief.md ← IF route = change-request (big change)
-└── {Idea_Name}_Feature_Brief.md        ← IF route = feature (small change)
+pdlc-ws/ideas/                                      ← FIXED output root (workspace-root-relative)
+├── ilc-state.md                            ← State + routing + completion (shared marker, flat)
+├── Idea_Register.md                        ← All ideas in this pipeline (portfolio funnel, flat)
+├── management_framework/                   ← Shared governance spine (flat)
+│   ├── MANAGEMENT_FRAMEWORK.md
+│   ├── Decision_Log.md                     ← All go/no-go decisions + routing
+│   └── Lessons_Learned.md
+└── {NNN}-{idea-slug}/                      ← Per-idea subfolder (keyed by stable Register ID)
+    ├── Idea_Statement.md                   ← Working doc (Shape)
+    ├── {NNN}-{idea-slug}_GoNoGo_Decision_Record.md   ← Formal decision artifact (always)
+    ├── {NNN}-{idea-slug}_Approved_Idea_Brief.md      ← IF route = new-project
+    ├── {NNN}-{idea-slug}_Change_Request_Brief.md     ← IF route = change-request (big change)
+    └── {NNN}-{idea-slug}_Feature_Brief.md            ← IF route = feature (small change)
 ```
+
+> Folder is keyed by the **stable** Register ID — never renamed for status changes. Status is tracked in the Idea Register (status-sectioned tables) and each artifact's `Status` field, not in the folder name. The shared marker, register, and spine stay flat so successors detect them at `pdlc-ws/ideas/`.
 
 ---
 
-*Last Updated: 2026-06-08 | Version 1.0.0*
+# POST-WORKFLOW: Agent Installation
+
+After the AI-ILC workflow completes its first full run in a workspace, install the governance agent so the user can validate future idea briefs independently.
+
+### Agent Artifacts to Install
+
+| Artifact | Destination | Action |
+|----------|-------------|--------|
+| `idea-quality-agent.md` | `.kiro/agents/` | Copy from `templates/agents/` |
+| Shortcut rules block | `.kiro/steering/workspace-rules.md` | Append `<!-- BEGIN AI-ILC AGENT SHORTCUTS -->` block (or replace if exists) |
+| Agent registry entries | `.governance/AGENT_REGISTRY.md` | Create file if absent; append AI-ILC entries if exists |
+| Agent guide section | `.governance/AGENT-GUIDE.md` | Create file if absent; append AI-ILC section if exists |
+
+### Installation Logic
+
+1. **Agent file:** Copy `templates/agents/idea-quality-agent.md` to `.kiro/agents/idea-quality-agent.md`. Populate `{version}` with current AI-ILC version and `{ISO-date}` with today's date.
+
+2. **Shortcut block:** Check `.kiro/steering/workspace-rules.md` for `<!-- BEGIN AI-ILC AGENT SHORTCUTS -->` marker:
+   - If found → replace the block (between BEGIN and END markers)
+   - If not found → append the block from `templates/agents/shortcut-rules-block.md`
+
+3. **Agent registry:** Check for `.governance/AGENT_REGISTRY.md`:
+   - If absent → create with header + AI-ILC row: `| ILC-AG-01 | idea-quality-agent | Audit | IQC__ | 1 | AI-ILC | Active |`
+   - If exists → append AI-ILC row (between `<!-- custom -->` markers if team rows exist)
+
+4. **Agent guide:** Check for `.governance/AGENT-GUIDE.md`:
+   - If absent → create with header + AI-ILC section from `templates/agents/agent-guide.md`
+   - If exists → append AI-ILC section (between `<!-- BEGIN AI-ILC AGENT GUIDE SECTION -->` markers)
+
+### When to Install
+
+- **First run only.** If `.kiro/agents/idea-quality-agent.md` already exists, skip installation (agent already present from a prior run).
+- **Re-derivation safe.** If the agent file exists but the version differs, update it (replace file, preserve any `<!-- custom -->` blocks if present).
+
+---
+
+*Last Updated: 2026-06-12 | Version 1.0.0*
+
+
+---
+
+## Gate Contract
+
+> Conforms to `GATE_PROTOCOL.md` protocolVersion 1.2.0 · interfaceVersion 1.0
+
+### Gate-Out — What AI-ILC GUARANTEES When Complete
+
+```yaml
+emits-type: idea-decision@1
+visibility: internal
+marker: ilc-state.md
+payloadRoot: pdlc-ws/projects/{projectId}/ilc/
+guarantees:
+  - status == complete
+  - ideaId
+  - projectId
+  - decisionOutcome           # approved | rejected | deferred | merged
+  - ideaBrief                 # Approved Idea Brief / Feature Brief / CR Brief present
+  - lifecycleDisposition      # new-project | feature | change-request
+```
+
+### Gate-In — What AI-ILC REQUIRES to Start
+
+```yaml
+consumes:
+  - type: capability-input@^1       # satisfiable externally (e.g., EAFLC capability roadmap)
+    optional:  [capabilityContext, strategicAlignment]
+on-missing-all: standalone    # accepts raw idea from user (P4)
+strictness-default: warn
+```
+
+> No type-specific mandatory payload — AI-ILC starts from a raw idea. Universal floor (status==complete + id) enforced by marker integrity (GATE_PROTOCOL §18).
+
+### Visibility Note
+
+- `idea-decision` is `internal` — consumed only by AI-PILC, AI-POLC, and AI-PPM within PDLC.
+- `capability-input` is the **external seam-in** — declared in `FAMILY_INTERFACE.md` Tier 1.

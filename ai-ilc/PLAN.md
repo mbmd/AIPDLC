@@ -4,8 +4,8 @@
 **Version (target):** 1.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
-**Source idea:** `ai-packagebuilder/idea-management/ideas/002-idea-lifecycle.md` (Approved, score 30/35)
-**Status:** 🟡 In progress — build started this session
+**Source idea:** Approved internal idea record (retained in the package-development environment; score 30/35)
+**Status:** ✅ Complete — package fully built (core-workflow, common files, stage details, templates, agents, INSTALL, README, LICENSE)
 
 > **Note on this file (Lesson 26):** This PLAN is the *design rationale + summary*. The detailed specification lives in `ai-ilc-rules/core-workflow.md` once built. Where this plan and the core file ever diverge, the core file wins.
 
@@ -16,14 +16,14 @@
 | Build Step | Artifact | Status |
 |-----------|----------|:------:|
 | 0 | PLAN.md (this file) | ✅ Done |
-| 1 | Family-table propagation plan (below) + execution | ⏳ Pending approval |
-| 2 | `ai-ilc-rules/core-workflow.md` (the heart) | ⏳ Blocked on Step 1 |
-| 3 | Common files (5) | ⏳ |
-| 4 | Stage detail files (6) | ⏳ |
-| 5 | Templates (6) | ⏳ |
-| 6 | README + LICENSE + kiro-setup/INSTALL.md | ⏳ |
-| 7 | Additive AI-PILC intake edit | ⏳ |
-| 8 | Dry Test + Fidelity + Chain Handoff | ⏳ |
+| 1 | Family-table propagation plan (below) + execution | ✅ Done |
+| 2 | `ai-ilc-rules/core-workflow.md` (the heart) | ✅ Done |
+| 3 | Common files (5) | ✅ Done |
+| 4 | Stage detail files (6) | ✅ Done |
+| 5 | Templates (6) | ✅ Done |
+| 6 | README + LICENSE + setup/INSTALL.md | ✅ Done |
+| 7 | Additive AI-PILC intake edit | ✅ Done |
+| 8 | Dry Test + Fidelity + Chain Handoff | ✅ Done |
 
 ---
 
@@ -35,7 +35,7 @@
 | **Full Title** | AI-Driven Idea Life Cycle |
 | **Type** | Interactive workflow (lifecycle) |
 | **Input** | A raw idea (verbal / one-liner / document) |
-| **Output** | Approved Idea Brief (→ AI-PILC) or Change Request Brief (→ AI-PILC change mgmt) or Feature Brief (→ AI-DLC backlog) + Go/No-Go Decision Record |
+| **Output** | Approved Idea Brief (→ AI-PILC) or Change Request Brief (→ AI-PILC change mgmt) or Feature Brief (→ AI-DLC v1 backlog) + Go/No-Go Decision Record |
 | **User Persona** | Innovation/Portfolio Manager (governs) + any employee (submits) |
 | **Family Position** | **Optional pre-stage** before AI-PILC — the funnel before the funnel |
 | **State File / Marker** | `ilc-state.md` |
@@ -74,7 +74,7 @@ The only portfolio element in v1.0 — a defined seam where future multi-project
 When an idea is approved, routing is determined by project existence + impact size:
 - No project exists → **AI-PILC** (new project initiation)
 - Project exists + BIG change (impacts scope/criteria/architecture) → **AI-PILC change management**
-- Project exists + SMALL change (no project-level impact) → **AI-DLC backlog** (new feature)
+- Project exists + SMALL change (no project-level impact) → **AI-DLC v1 backlog** (new feature)
 
 AI-ADLC is never a direct target from AI-ILC. If architecture needs rework, that flows *through* AI-PILC's change management process (which may then engage AI-ADLC).
 
@@ -96,7 +96,7 @@ Adding AI-ILC to the family changes the canonical chain. Per workspace rule 10 a
 
 ```
 (optional)
- AI-ILC  ⇢  AI-PILC  →  AI-ADLC  →  AI-DWG  →  AI-GCE  →  AI-DLC (build)
+ AI-ILC  ⇢  AI-PILC  →  AI-ADLC  →  AI-DWG  →  AI-GCE  →  AI-DLC v1 (build)
    │            │            │            │          │           │
    │            │            │            │          │           └── Build it (code)
    │            │            │            │          └── Guard it (compliance + monitor)
@@ -115,18 +115,18 @@ Adding AI-ILC to the family changes the canonical chain. Per workspace rule 10 a
 | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
 | **AI-DWG** | One-time generator | AP | Ready-to-code development workspace (DW) |
 | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
-| **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories | Working Software |
+| **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
-> ² **AI-ILC** is an **optional pre-stage**. The chain still starts at AI-PILC for users who don't use AI-ILC. AI-ILC's output optionally feeds AI-PILC (new project or change request) or routes a small feature directly to the AI-DLC backlog.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ² **AI-ILC** is an **optional pre-stage**. The chain still starts at AI-PILC for users who don't use AI-ILC. AI-ILC's output optionally feeds AI-PILC (new project or change request) or routes a small feature directly to the AI-DLC v1 backlog.
 
 > ~~⚠️ **Above is a PROPOSAL pending your approval.**~~ ✅ APPROVED and canonical as of 2026-06-08.
 
-> 📌 **SUPERSEDED (2026-06-10):** The table in §4.1 above is the AI-ILC-era *linear* canonical and is retained here as the historical record of the AI-ILC addition decision. The family was later reshaped into Portfolio + Project layers (adding AI-PPM, AI-FLO, AI-POLC, AI-TGE). For the current canonical, see `ai-packages/FAMILY_TABLE_MAP.md`. AI-ILC's live table-bearing files (README, core-workflow, process-overview) have been updated to the reshaped canonical (OI-018).
+> 📌 **SUPERSEDED (2026-06-10):** The table in §4.1 above is the AI-ILC-era *linear* canonical and is retained here as the historical record of the AI-ILC addition decision. The family was later reshaped into Portfolio + Project layers (adding AI-PPM, AI-FLO, AI-POLC, AI-TGE). For the current canonical, see `FAMILY_TABLE_MAP.md`. AI-ILC's live table-bearing files (README, core-workflow, process-overview) have been updated to the reshaped canonical (OI-018).
 
 ### 4.2 Propagation Sequence (after approval)
 1. Update the "Canonical Family Table (Copy From Here)" section in `FAMILY_TABLE_MAP.md` **first**.
-2. Propagate verbatim to all currently-registered files (READMEs, core files, kiro-setup mirrors, PLANs, FAMILY_STRUCTURE, WHITEPAPER, builder README, process-overviews).
+2. Propagate verbatim to all currently-registered files (READMEs, core files, setup mirrors, PLANs, FAMILY_STRUCTURE, WHITEPAPER, builder README, process-overviews).
 3. Add AI-ILC's own table-bearing files to the map registry as they're built (README, core-workflow, this PLAN, process-overview).
 4. Verify with a grep for the new AI-ILC row across all registered files.
 
@@ -169,7 +169,7 @@ ai-ilc/
 │       ├── change-request-brief.md
 │       ├── feature-brief.md
 │       └── ilc-state.md
-└── kiro-setup/
+└── setup/
     └── INSTALL.md
 ```
 
@@ -182,7 +182,7 @@ ai-ilc/
 | Family-table change drifts across files | Execute §4 propagation deliberately; verify by grep |
 | Overlap perception with AI-PILC | Hard boundary: ILC decides WHETHER; PILC initiates the approved one |
 | Feature-path creep into brownfield/portfolio | v1.0 hard rule: single-project + Connector stub + portable brief |
-| Productizing internal tool leaks specifics | Enforce generic `{placeholder}` syntax; no ITSM / builder names |
+| Productizing internal tool leaks specifics | Enforce generic `{placeholder}` syntax; no sample-project-specific / builder names |
 
 ---
 

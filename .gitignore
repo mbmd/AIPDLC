@@ -1,0 +1,31 @@
+# AIFLC — AI-* PDLC Family · published repo .gitignore
+# Packages are pure Markdown — nothing here needs compiling. This ignores
+# OS/editor noise and any runtime output a user may generate inside a clone.
+
+# --- OS / editor noise ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.idea/
+*.code-workspace
+
+# --- Runtime output (generated when a user RUNS the packages in a workspace) ---
+# The packages write their output into a workspace folder; if a user works
+# inside a clone of this repo, ignore that generated material.
+pdlc-ws/
+*-ws/
+.kiro/
+.cursor/
+.windsurf/
+
+# --- Dashboard extension build artifacts (the .vsix ships; build temp does not) ---
+tools/extensions/**/node_modules/
+tools/extensions/**/*.tsbuildinfo
+tools/extensions/**/dist/*.map
+
+# --- Local environment ---
+.env
+.env.*
+*.local

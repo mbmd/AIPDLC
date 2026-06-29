@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Architecture Package Assembly
 
 ## Stage: 13 of 13
@@ -308,6 +309,32 @@ Update Architecture Workbook:
 
 ---
 
+### Step 9b: Emit Feasibility / Cost-Risk Signal to AI-POLC (Architecture→Product cost loop)
+
+AI-POLC and AI-ADLC are same-layer peers, so this is a **direct downstream signal recorded in `adlc-state.md`** (no AI-FLO; AI-POLC reads it at its workspace-detection). This closes the real-world **Architecture → Product cost/risk re-prioritization loop**: architecture's feasibility verdict reshapes product prioritization ("that epic is 3× the cost — reorder the roadmap").
+
+**Produce relative bands, NEVER dollar estimates.** The signal is advisory effort/complexity bands + technical-risk flags, mapped to the product's epics/areas where identifiable:
+
+```markdown
+## Downstream Signals
+
+| Signal | Status |
+|--------|--------|
+| cost-risk-notes | available |
+
+### Feasibility / Cost-Risk (for AI-POLC re-prioritization)
+
+| Epic / Area | Effort Band | Technical Risk | Driver (why) |
+|-------------|:-----------:|:--------------:|--------------|
+| {epic or functional area} | {S / M / L / XL} | {🟢 low / 🟡 med / 🔴 high} | {e.g., "new integration + multi-tenant isolation", "depends on unproven pattern", "high coupling to legacy"} |
+
+> Bands are **relative complexity/effort**, derived from component count, integration complexity, NFR difficulty, and pattern novelty — not cost figures. Advisory input to WSJF Job Duration / value-effort scoring. AI-POLC consumes via `adlc-state.md` and applies the "AP feasibility/cost-risk update" re-prioritization trigger.
+```
+
+Map bands to the product areas/epics when the AP can be aligned to them; otherwise emit per architecture area and let AI-POLC associate. **Standalone-safe:** if no AI-POLC is present, the signal is simply recorded and unused. If the architecture changes later (reconciliation), refresh this table so POLC can re-score.
+
+---
+
 ### Step 10: Present Final Summary
 
 ```
@@ -336,9 +363,18 @@ Update Architecture Workbook:
 📌 Next Steps:
    1. Review package with Technical Lead and senior developers
    2. Resolve {n} open questions during first design sprint
-   3. Set up development workspace with architecture constraints
-   4. Begin AI-DLC construction phase using this architecture as input
+   3. Run AI-DWG to generate the development workspace from this Architecture Package
+   4. Begin AI-DLC v1 construction phase using this architecture as input
    5. ADR register continues to grow during development (new decisions arise)
+
+🔀 **Chain Navigation (what's next in the AI-* Family):**
+   • Sequential next: **AI-DWG** (`_DWG_`) — Development Workspace Generation
+   • Or ask AI-FLO: type `_FLO_` for routing guidance based on your project state
+   • Dashboard data: type `DAT__ pdlc/adlc` to update the family dashboard
+
+⚠️ **IMPORTANT: Start the next package (AI-DWG) in a NEW session.**
+   Each AI-* package loads a full workflow into context;
+   a fresh session keeps it fast and focused.
 
 The architecture is ready for development team onboarding.
 

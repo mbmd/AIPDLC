@@ -119,17 +119,17 @@ All in structured markdown. All traceable. All ready for AI-DWG to transform int
 
 ---
 
-## Part of the AI-* Family
+## Part of AIFLC — the AI-* PDLC Family
 
-AI-ADLC is the second node in the AI-* Family chain. It can consume a PIP from AI-PILC, and its output (AP) feeds AI-DWG for workspace generation. But it works perfectly standalone — if you have requirements from any source, AI-ADLC produces a complete Architecture Package independently.
+AI-ADLC is the second node in the AI-* PDLC Family chain. It can consume a PIP from AI-PILC, and its output (AP) feeds AI-DWG for workspace generation. But it works perfectly standalone — if you have requirements from any source, AI-ADLC produces a complete Architecture Package independently.
 
-Learn more: [AI-* Family Whitepaper](../WHITEPAPER.md)
+Learn more: [AI-* Family Whitepaper](../narrative/WHITEPAPER.md)
 
 ---
 
 ## Getting Started
 
-See [kiro-setup/INSTALL.md](./kiro-setup/INSTALL.md) for platform-specific installation instructions.
+See [setup/INSTALL.md](./setup/INSTALL.md) for platform-specific installation instructions.
 
 **Activation:** After installation, start a chat and say:
 ```

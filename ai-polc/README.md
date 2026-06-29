@@ -1,7 +1,9 @@
 # AI-POLC — AI-Driven Product Ownership Life Cycle
 
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
+
 **Version:** 1.0.0
-**Author:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
+**Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **License:** Apache 2.0 with Attribution
 
 ---
@@ -14,7 +16,9 @@ AI-POLC is an injectable workflow package that guides an AI assistant and a huma
 
 ---
 
-## The AI-* Family
+## The AI-* PDLC Family
+
+AI-POLC is part of **AIFLC** (AI Full Life Cycle) — the AI-* PDLC Family of injectable workflow packages.
 
 ```
 ╔════════════════ PORTFOLIO LAYER · scope = MANY projects ════════════════╗
@@ -29,20 +33,17 @@ AI-POLC is an injectable workflow package that guides an AI assistant and a huma
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐
-    Design it │
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹
-    AI-POLC ──┘     Prepare it       ▲
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 | Layer | Package | Type | Input | Output |
@@ -51,17 +52,17 @@ AI-POLC is an injectable workflow package that guides an AI assistant and a huma
 | Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 ---
 
@@ -86,7 +87,7 @@ AI-POLC is an injectable workflow package that guides an AI assistant and a huma
 ### Story Elaboration (Tier 2 — User-Activated)
 
 - **INVEST-compliant stories** with Given/When/Then acceptance criteria
-- Off by default in chain mode (AI-DLC handles story creation)
+- Off by default in chain mode (AI-DLC v1 handles story creation)
 - Activate for standalone use or PO-quality pre-elaboration
 
 ### Extensions (Opt-In)
@@ -101,9 +102,42 @@ AI-POLC is an injectable workflow package that guides an AI assistant and a huma
 
 ---
 
+## Output Directory Structure
+
+AI-POLC outputs into the standard multi-project layout. Product backlog artifacts land in `backlog/` within the project folder:
+
+```
+pdlc-ws/projects/
+├── PROJECTS.md                          ← workspace registry
+└── PRJ-{ABBREV}-{slug}/                  ← one project
+    ├── management_framework/             ← shared governance spine
+    └── backlog/                          ← AI-POLC output
+        ├── polc-state.md                 ← progress marker
+        ├── product-vision.md
+        ├── po-charter.md
+        ├── product-roadmap.md
+        ├── epics/
+        ├── release-plan.md
+        ├── definition-of-ready.md
+        ├── definition-of-done.md
+        ├── product-risk-register.md
+        ├── traceability-matrix.md
+        └── PBP_README.md
+```
+
+> The `projects/` structure is always-on — solo, single-project, and multi-project alike. See `OUTPUT_AND_STATE_CONTRACT.md` for full details.
+
+---
+
+## Activation
+
+**Explicit key:** type `_POLC_` in any prompt to activate AI-POLC unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-POLC`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
+
+---
+
 ## Installation
 
-See `kiro-setup/INSTALL.md` for platform-specific installation instructions.
+See `setup/INSTALL.md` for platform-specific installation instructions.
 
 ---
 
@@ -127,7 +161,7 @@ ai-polc/
 │   ├── tier2/                          ← Tier 2: Story elaboration
 │   ├── extensions/                     ← 7 opt-in extensions (14 files)
 │   └── templates/                      ← 12 output templates
-└── kiro-setup/
+└── setup/
     └── INSTALL.md
 ```
 
@@ -139,7 +173,7 @@ ai-polc/
 2. **Traceable** — every item links upward to a goal and downward to an acceptance bar
 3. **Governed** — decisions are logged, priorities have rationale, changes are tracked
 4. **Adaptive** — depth adapts to product complexity; context factors shape behavior
-5. **Workspace-mediated** — rules reach AI-DLC through steering files, not direct integration
+5. **Workspace-mediated** — rules reach AI-DLC v1 through steering files, not direct integration
 6. **Source-driven** — derive from user input; never fabricate scope
 
 ---
@@ -155,11 +189,33 @@ for my product.
 Context:
 - Product: {your product name}
 - Input: {PIP available / Architecture Package / standalone vision}
-- Mode: {chain with AI-DLC / standalone}
+- Mode: {chain with AI-DLC v1 / standalone}
 
 Please start the AI-POLC workflow.
 ```
 
 ---
 
-*Created: 2026-06-11 | Author: Maheri*
+*Created: 2026-06-11 | Created By: Maheri*
+
+---
+
+## License
+
+**Apache License 2.0 with Attribution Addendum**
+
+- **Free to use:** Personal, commercial, educational, and organizational use — all permitted
+- **Modify and distribute:** Create derivative works, redistribute, sublicense — all permitted
+- **Attribution required:** Any distributed product substantially based on this work must include:
+
+> *"Built on AIFLC by Mohammad Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)"*
+
+- **No warranty:** Provided "AS IS" without warranties of any kind
+
+See `LICENSE` and `NOTICE` in this directory for full terms.
+
+**Copyright:** © 2026 Mohammad Maheri
+
+---
+
+*Part of [AIFLC](../README.md) — the AI-* PDLC Family*

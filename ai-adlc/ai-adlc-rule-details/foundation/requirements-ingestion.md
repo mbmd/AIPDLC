@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Requirements Ingestion
 
 ## Stage: 2 of 13
@@ -115,6 +116,22 @@ Is this complete, or are there additional architecture-relevant inputs I should 
 3. Identify which stages need full re-execution vs. update-only
 4. Focus ingestion on the DELTA — new requirements or changed constraints
 5. Note in state: "Brownfield — extending existing architecture"
+
+#### Peer Input: AI-UXD (UXP) — if `uxd-state.md` present (any mode)
+
+AI-UXD is a same-layer peer (both Project layer). When a UXP is detected (Stage 1 peer scan), extract its **UX→Architecture feed** — the UX decisions that become real technical drivers and constraints. This is additive on top of whichever mode (A–D) is active:
+
+| UXP element | Extract as | Becomes |
+|-------------|-----------|---------|
+| User flows / interaction complexity | Interaction & latency drivers | Architecture driver (responsiveness, real-time/SSE/WebSocket needs) |
+| Client / platform / device needs (web, mobile, offline, real-time) | Frontend/client constraints | Container & BFF drivers (C4 L2), API shaping |
+| Screen inventory / data-on-screen volume | Read/aggregation patterns | Data & API architecture drivers |
+| **Accessibility target (WCAG level)** | **Quality attribute** | **NFR (Accessibility row in 2b) + UI framework selection constraint** |
+| Design system / component framework (if chosen) | Frontend tech signal | Cross-check with Technology Stack (flag conflict, don't auto-resolve) |
+
+Feed these into the **Key Architecture Drivers** (Step 5 §8) and the relevant extraction tables. **Standalone-safe:** if `uxd-state.md` is absent, skip this block entirely — architecture proceeds from PIP/document/verbal as today.
+
+**Reconciliation re-entry (UXD often completes after ADLC).** If the AP already exists and `uxd-state.md` later appears or its UX-relevant content changes, offer a **non-destructive** review: surface which drivers/NFRs the new UX content affects (especially the accessibility NFR and any client/real-time interaction needs) and propose targeted updates — never auto-rewrite the AP. Track the last-seen UXP state so a change is detectable (reuse the brownfield/reconciliation pattern,).
 
 ---
 

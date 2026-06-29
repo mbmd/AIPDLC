@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 ---
 generatedBy: AI-GCE
 generatedVersion: "{version}"
@@ -8,16 +9,16 @@ ownership: generated
 # Session & Context Management Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate session governance and context management
-> steering files in the target project's `.kiro/steering/` folder. These templates encode AI-DLC
+> steering files in the target project's `.kiro/steering/` folder. These templates encode AI-DLC v1
 > methodology rules, session discipline, context hygiene, and never-vibe-code enforcement
-> derived from `session-governance.md` and the built-in AI-DLC methodology baseline.
+> derived from `session-governance.md` and the built-in AI-DLC v1 methodology baseline.
 
 ---
 
 ## session-governance.md (Always)
 
 **Generates**: `.kiro/steering/session-governance.md`
-**Derived From**: session-governance.md + built-in AI-DLC methodology baseline
+**Derived From**: session-governance.md + built-in AI-DLC v1 methodology baseline
 
 ```markdown
 ---
@@ -27,7 +28,7 @@ inclusion: always
 # Session Governance
 
 ## Never Vibe Code
-- NEVER edit AI-generated code directly during an AI-DLC session
+- NEVER edit AI-generated code directly during an AI-DLC v1 session
 - All fixes flow: identify root cause → fix in {spec_docs_location} → regenerate
 - Exception: production hotfixes (must be back-propagated within {hotfix_backprop_window})
 
@@ -45,7 +46,7 @@ inclusion: always
 - {context_budget_awareness}
 
 ## Question Answering
-- Use {answer_format} for every AI-DLC question
+- Use {answer_format} for every AI-DLC v1 question
 - Quantify constraints (volume, limits, thresholds)
 - Reference related modules and integration points explicitly
 

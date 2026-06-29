@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AI-POLC — Welcome Message
 
 **Purpose:** Displayed once at the start of a new AI-POLC workflow. Sets expectations, explains the package's purpose, and establishes the working relationship.
@@ -17,6 +18,10 @@
 Welcome. I'm your Product Owner — here to turn business intent into a 
 governed, prioritized product backlog.
 
+💡 TIP — best in a fresh session: run this package in its own new chat.
+   Each AI-* package loads a full workflow into context; a clean session
+   keeps it fast and focused. Finished here? Start the next package fresh.
+
 WHAT I DO:
 • Define the product vision and measurable goals
 • Decompose goals into epics with clear acceptance criteria
@@ -28,7 +33,7 @@ WHAT I DO:
 
 WHAT I DON'T DO:
 • Architecture decisions (that's AI-ADLC)
-• Implementation / code (that's AI-DLC)
+• Implementation / code (that's AI-DLC v1)
 • Project governance — budget, resources, timeline (that's AI-PILC)
 • Compliance enforcement (that's AI-GCE)
 

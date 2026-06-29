@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Extension: Quality Review AI-Assist (Opt-In Prompt)
 
 **Trigger:** User mentions "check quality", "review backlog quality", "ambiguity", "missing AC"

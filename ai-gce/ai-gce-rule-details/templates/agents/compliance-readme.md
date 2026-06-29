@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 ---
 generatedBy: AI-GCE
 generatedVersion: "{version}"
@@ -47,7 +48,7 @@ Hooks fire automatically based on IDE events. You'll see warnings ONLY when some
 3. Fix the issue OR request an exception (see below)
 
 **If hooks are too noisy:**
-See `.kiro/hooks/INSTALL-GUIDE.md` for which hooks to disable first (🟡 Advisory → remove first).
+See `.kiro/hooks/ENFORCEMENT-GUIDE.md` for which hooks to disable first (🟡 Advisory → remove first).
 
 ---
 
@@ -86,7 +87,7 @@ Say: "Run a full compliance audit" or click the "Full Compliance Audit" hook but
 The audit agent will:
 - Score against all rules for your current tier + phase
 - Produce a report at `docs/compliance-reports/{date}-audit.md`
-- Update the dashboard at `docs/compliance-dashboard.md`
+- Update the dashboard at `management_framework/dashboards/compliance-dashboard.md`
 
 ---
 
@@ -98,9 +99,9 @@ The audit agent will:
 | `.governance/agents/compliance-audit-agent.md` | How the audit works |
 | `.governance/compliance-log/` | Audit trail (events, exceptions, remediations) |
 | `.kiro/hooks/*.json` | Active enforcement hooks |
-| `.kiro/hooks/INSTALL-GUIDE.md` | Which hooks to add/remove by tier |
+| `.kiro/hooks/ENFORCEMENT-GUIDE.md` | Which hooks to add/remove by tier |
 | `.compliance-state.json` | Tier tracking, readiness, score history |
-| `docs/compliance-dashboard.md` | Visual compliance overview |
+| `management_framework/dashboards/compliance-dashboard.md` | Visual compliance overview |
 
 ---
 

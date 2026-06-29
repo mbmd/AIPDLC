@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Role Isolation — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives role isolation and segregation of duties rules (GOV-ROLE-*) from `role-i
 
 ## MANDATORY: Stage Sub-Role — Security Architect
 
-During THIS activity, ALSO adopt the mindset of a **Security Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of a **Security Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in segregation of duties: the core security principle is that no single person should control all steps of a critical process

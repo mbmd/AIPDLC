@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Session Continuity
 
 ## Purpose
@@ -142,7 +143,7 @@ Before presenting resumption summary, detect changes:
    - If changed → flag reconciliation needed
 2. **New test files?** Scan test directories for files newer than `Last Updated`
    - If found → flag coverage update needed
-3. **AI-DLC progressed?** Check `aidlc-state.md` for new completed units
+3. **AI-DLC v1 progressed?** Check `aidlc-state.md` for new completed units
    - If progressed → flag observation cycle needed
 
 ### Step 5: Present Resumption Summary
@@ -167,7 +168,7 @@ Before presenting resumption summary, detect changes:
 ⚡ Changes Since Last Session:
    • {AP modified — reconciliation recommended}
    • {N new test files detected — coverage update needed}
-   • {N units completed in AI-DLC — observation needed}
+   • {N units completed in AI-DLC v1 — observation needed}
 
 Shall I:
 (a) Continue from where we left off (Stage {n}: {stage_name})
@@ -235,7 +236,7 @@ If session ended mid-stage:
 | **Reconciliation session** | AP changed; update register | Focused: trigger Stage 10, review delta, approve changes |
 | **Defect triage** | Multiple defects to log and analyze | Batch: trigger Stage 11 multiple times, then Stage 12 for re-scoring |
 | **Sprint boundary** | End of sprint, assess test debt | Run Stages 9+12: coverage report + debt reassessment |
-| **Post-build review** | AI-DLC completed all units; final governance report | Full observation cycle: Stages 7-9, comprehensive coverage report |
+| **Post-build review** | AI-DLC v1 completed all units; final governance report | Full observation cycle: Stages 7-9, comprehensive coverage report |
 
 ---
 
@@ -253,7 +254,7 @@ The Observation phase operates differently from Strategy:
 | User says "check coverage" | 7 (detect changes) → 9 (report) |
 | User says "reconcile" | 10 (AP delta) → 12 (re-score) |
 | User reports defect | 11 (log) → 12 (re-score) |
-| AI-DLC unit completes (detected) | 7 (observe) → 8 (map stories if new) → 9 (report) |
+| AI-DLC v1 unit completes (detected) | 7 (observe) → 8 (map stories if new) → 9 (report) |
 | Sprint boundary / periodic check | 7 → 8 → 9 → 12 (full cycle) |
 | AP modification detected | 10 → 9 → 12 (reconcile → report → re-score) |
 

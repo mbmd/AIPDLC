@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Change Detection — Re-Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Defines HOW AI-GCE detects which steering files changed and maps those changes t
 
 ## MANDATORY: Stage Sub-Role — Automation Engineer
 
-During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in change propagation: one steering file change can cascade to multiple rules, hooks, and supporting artifacts
@@ -123,7 +124,7 @@ NEW: multi-tenancy.md created
   → GENERATE new hook: .kiro/hooks/tenant-isolation-check.json
   → UPDATE: knowledge-map.md (new entries)
   → UPDATE: COMPLIANCE_README.md (new rule category section)
-  → UPDATE: INSTALL-GUIDE.md (new hook listed)
+  → UPDATE: ENFORCEMENT-GUIDE.md (new hook listed)
   → UPDATE: .compliance-state.json (applicable rules count increases)
 ```
 
@@ -139,7 +140,7 @@ REMOVED: multi-tenancy.md deleted
   → REMOVE: .kiro/hooks/tenant-isolation-check.json
   → UPDATE: knowledge-map.md (remove entries)
   → UPDATE: COMPLIANCE_README.md (remove section)
-  → UPDATE: INSTALL-GUIDE.md (remove hook listing)
+  → UPDATE: ENFORCEMENT-GUIDE.md (remove hook listing)
   → UPDATE: .compliance-state.json (applicable rules count decreases)
   → LOG: REDERIVATION event noting removal
 ```

@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Mapping: Architecture Vision → workspace-rules.md + architecture-principles.md
 
 ## Purpose
@@ -63,6 +64,12 @@ inclusion: always
 <!-- AI-DWG generated | source: Architecture Vision | date: {generation-date} -->
 
 # Workspace Rules
+
+## Project Identity
+
+**Project ID:** {project-id}
+<!-- The immutable project correlation key. Read from adlc-state.md (or pilc-state.md at generation time). 
+     Used by AI-GCE/AI-TGE for audit trail correlation. -->
 
 ## Architecture Identity
 
@@ -278,6 +285,8 @@ inclusion: always
 6. **workspace-rules.md is concise** — fit on ~2 screens; details go to architecture-principles.md
 7. **architecture-principles.md is comprehensive** — full rationale, implications, violation examples
 8. **Provenance markers on all AP-sourced sections** — enables reconciliation
+9. **NEVER leak planning-workspace concepts into generated content** — The generated workspace serves AI-DLC v1 (building software) + AI-GCE (compliance) + AI-TGE (testing). Content about AI-ILC, AI-PILC, AI-POLC, AI-UXD, AI-PPM, AI-FLO, or their internal mechanisms (`ilc-state.md`, `pilc-state.md`, `polc-state.md`, `uxd-state.md`, idea lifecycles, project initiation, product backlogs, UX design lifecycles, portfolio management, flow routing) must NEVER appear in generated steering files. These concepts belong to the planning workspace. If you find yourself writing about state-driven resumability of *planning packages* or referencing a `*-state.md` file from a planning package as a principle — STOP. That is builder context leaking into developer output. The only `*-state.md` relevant to the dev workspace is `adlc-state.md` (architecture source provenance) and `dwg-state.md` (generation record).
+10. **All principles MUST come from the Architecture Vision document (AP)** — never from the AI-* package's own operational design. The Architecture Vision describes how the *target system* should be built, not how the *AI workflow* operates.
 
 ---
 

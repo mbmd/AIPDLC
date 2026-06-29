@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Scoring Model
 
 ## Purpose
@@ -8,7 +9,7 @@ This document defines HOW the compliance audit agent scores a project, what the 
 
 ## MANDATORY: Stage Sub-Role — Audit & Compliance Specialist
 
-During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in measurable, defensible metrics: every scoring decision must be justifiable to an external auditor

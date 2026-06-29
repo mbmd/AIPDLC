@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Component Design (C4 Level 3)
 
 **Document Status:** {Draft / Review / Approved}

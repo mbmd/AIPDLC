@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Decision Log
 
 **Purpose:** Audit trail of every decision made during the AI-ILC pipeline for this idea set.

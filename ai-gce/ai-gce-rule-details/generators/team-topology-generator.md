@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Team Topology — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives team topology governance rules (GOV-TT-*) from `module-structure.md` and
 
 ## MANDATORY: Stage Sub-Role — Change Manager
 
-During THIS activity, ALSO adopt the mindset of a **Change Manager**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of a **Change Manager**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in organizational boundaries: team topology rules ensure that module ownership, cognitive load, and deployment independence align with team structure

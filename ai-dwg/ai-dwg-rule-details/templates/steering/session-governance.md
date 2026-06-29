@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 ---
 generatedBy: AI-DWG
 generatedVersion: "{version}"
@@ -14,7 +15,7 @@ inclusion: always
 
 <!-- AI-DWG generated | source: Methodology decisions | date: {generation-date} -->
 
-# Session Governance (AI-DLC)
+# Session Governance (AI-DLC v1)
 
 ## Rules for AI-Assisted Development Sessions
 

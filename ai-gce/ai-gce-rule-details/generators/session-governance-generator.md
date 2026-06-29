@@ -1,14 +1,15 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Session Governance — Derivation Logic
 
 ## Purpose
 
-Derives AI-DLC session methodology rules (GOV-SESSION-*) from `session-governance.md`. This is a HYBRID category: built-in baseline ensures minimum AI-DLC discipline; steering enriches with project-specific session rules.
+Derives AI-DLC v1 session methodology rules (GOV-SESSION-*) from `session-governance.md`. This is a HYBRID category: built-in baseline ensures minimum AI-DLC v1 discipline; steering enriches with project-specific session rules.
 
 ---
 
 ## MANDATORY: Stage Sub-Role — Audit & Compliance Specialist
 
-During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in methodology discipline: session rules define HOW AI operates, not just WHAT it produces
@@ -18,7 +19,7 @@ During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Speciali
 - Consider autonomy mode as a control parameter: autopilot vs. supervised changes the enforcement surface
 
 ### Anti-Patterns for This Activity
-- Do NOT weaken "never vibe code" or "spec before code" — these are the AI-DLC methodology's identity
+- Do NOT weaken "never vibe code" or "spec before code" — these are the AI-DLC v1 methodology's identity
 - Do NOT create session rules that require human memory to enforce — hooks must verify automatically
 - Do NOT allow session-discipline to be removed from the hook set (it may be noisy but it's core methodology)
 
@@ -37,14 +38,14 @@ A good output from this activity sounds like:
 
 ---
 
-## Built-in Baseline (Always Generated — These ARE the AI-DLC Methodology)
+## Built-in Baseline (Always Generated — These ARE the AI-DLC v1 Methodology)
 
 | Rule ID | Statement | Rationale |
 |---------|-----------|-----------|
-| GOV-SESSION-BASELINE-01 | Spec/design MUST exist before implementation code is written | AI-DLC core: design precedes implementation |
-| GOV-SESSION-BASELINE-02 | NEVER "vibe code" — all code follows steering rules, no freestyling | AI-DLC discipline: AI follows rules |
-| GOV-SESSION-BASELINE-03 | One task at a time — complete before starting next | AI-DLC focus: prevents context mixing |
-| GOV-SESSION-BASELINE-04 | If AI loops twice on same mistake, stop and try different approach | AI-DLC efficiency: escalation over repetition |
+| GOV-SESSION-BASELINE-01 | Spec/design MUST exist before implementation code is written | AI-DLC v1 core: design precedes implementation |
+| GOV-SESSION-BASELINE-02 | NEVER "vibe code" — all code follows steering rules, no freestyling | AI-DLC v1 discipline: AI follows rules |
+| GOV-SESSION-BASELINE-03 | One task at a time — complete before starting next | AI-DLC v1 focus: prevents context mixing |
+| GOV-SESSION-BASELINE-04 | If AI loops twice on same mistake, stop and try different approach | AI-DLC v1 efficiency: escalation over repetition |
 
 ---
 
@@ -85,7 +86,7 @@ The session structure (Start → Check → Plan → Implement → Test → Verif
 
 | Rules | Tier | Rationale |
 |-------|:----:|-----------|
-| GOV-SESSION-BASELINE-01/02/03/04 | 1 | Core AI-DLC methodology — active from Day 0 |
+| GOV-SESSION-BASELINE-01/02/03/04 | 1 | Core AI-DLC v1 methodology — active from Day 0 |
 | GOV-SESSION-001 through 012 (from steering) | 2 | Full session discipline needs team context |
 
 ---

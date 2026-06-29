@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Welcome Message
 
 ## Display Instructions
@@ -21,6 +22,10 @@ your Senior QA Engineer / Test Architect — by reading what the
 architecture promised and tracking whether those promises are
 verified through tests.
 
+💡 TIP — best in a fresh session: run this package in its own new chat.
+   Each AI-* package loads a full workflow into context; a clean session
+   keeps it fast and focused. Finished here? Start the next package fresh.
+
 🎯 WHAT WE'LL PRODUCE:
    • Test Strategy (derived from your architecture decisions)
    • Test Register (every required test linked to its source commitment)
@@ -41,7 +46,7 @@ verified through tests.
    • Architecture Package (API contracts, ADRs, component designs,
      security decisions, integration maps, data models, NFRs)
    • Development Workspace (tech stack, testing frameworks, steering)
-   • AI-DLC State (completed units, user stories, build-and-test docs)
+   • AI-DLC v1 State (completed units, user stories, build-and-test docs)
    • Existing test directories (brownfield assessment)
 
 🛡️  QA PRINCIPLES:
@@ -66,10 +71,10 @@ understanding what inputs are available.
 What do you have?
 
   (a) Full chain output — Architecture Package + Development Workspace
-      + AI-DLC running (or about to start)
+      + AI-DLC v1 running (or about to start)
   (b) Architecture Package only — from AI-ADLC (no workspace yet)
   (c) Existing project with tests — brownfield assessment needed
-  (d) AI-DLC already running — observe and register tests as we go
+  (d) AI-DLC v1 already running — observe and register tests as we go
 
 Which applies?
 ```
@@ -118,7 +123,7 @@ If the user doesn't explicitly choose a mode, the engine auto-detects:
 2. Scan for adlc-state.md:
    a. Found + .kiro/steering/ exists → Full Chain candidate
    b. Found + no .kiro/steering/ → Architecture Only
-3. Scan for aidlc-docs/aidlc-state.md → Observation possible
+3. Scan for `aidlc-docs/aidlc-state.md` → Observation possible
 4. Scan for test directories (test/, tests/, __tests__/, spec/, *_test.*):
    a. Found + no AP → Brownfield
    b. Found + AP → Full Chain with brownfield overlay

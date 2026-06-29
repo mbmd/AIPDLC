@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AI-ILC — Welcome Message
 
 **Purpose:** First-time greeting displayed once when the workflow starts. Introduces AI-ILC, sets expectations, and offers entry options.
@@ -22,6 +23,10 @@ Welcome! I'm here to help you take a raw idea through a governed
 pipeline: capture it, shape it, evaluate it, scope it, decide on it,
 and route it to the right next step.
 
+💡 TIP — best in a fresh session: run this package in its own new chat.
+   Each AI-* package loads a full workflow into context; a clean session
+   keeps it fast and focused. Finished here? Start the next package fresh.
+
 ─── What I Do ───────────────────────────────────────────────────
 
 • Capture your idea fast (before it's lost)
@@ -32,7 +37,7 @@ and route it to the right next step.
 • Route the approved idea to its destination:
   → New project? → AI-PILC (project initiation)
   → Big change to existing project? → AI-PILC change management
-  → Small feature? → AI-DLC backlog (implementation queue)
+  → Small feature? → AI-DLC v1 backlog (implementation queue)
 
 ─── How It Works ────────────────────────────────────────────────
 

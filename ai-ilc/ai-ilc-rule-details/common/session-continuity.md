@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AI-ILC — Session Continuity
 
 **Purpose:** Define how AI-ILC maintains state across sessions and resumes cleanly after interruption. This file specifies the state file schema, resume logic, and edge cases.
@@ -23,12 +24,14 @@ The workflow maintains a single state file at the root of the output directory. 
 | Field | Value |
 |-------|-------|
 | **Idea Name** | {name} |
+| **Idea ID** | {NNN — zero-padded Register ID} |
+| **Idea Folder** | {NNN}-{idea-slug}/ |
 | **Status** | {Captured / Shaped / Evaluated / Scoped / Approved / Routed / Parked / Rejected} |
 | **Current Stage** | {1-6 or Complete} |
 | **Depth Level** | {Minimal / Standard / Comprehensive} |
 | **Domain Detected** | {architecture / governance / devops / testing / licensing / pmo / general} |
 | **Route** | {pending / new-project / change-request / feature-backlog} |
-| **Brief File** | {filename or pending} |
+| **Brief File** | {relative path under Idea Folder, or pending} |
 | **Created** | {ISO date} |
 | **Last Updated** | {ISO date} |
 | **Producer Version** | AI-ILC v1.0.0 |
@@ -120,8 +123,9 @@ When a session starts and `ilc-state.md` exists:
 
 ### 3. Multiple ideas in the same workspace
 - Each idea gets its own `ilc-state.md` — but v1.0 supports ONE active idea at a time
+- Each idea's artifacts (Idea Statement, briefs, decision record) live in its own `{NNN}-{idea-slug}/` subfolder, keyed by the stable Register ID — so multiple ideas never collide in a flat folder
 - If a state file exists with Status ≠ terminal, the user must close it (complete / park / reject) before starting a new idea
-- The Idea Register tracks ALL ideas regardless of state file lifecycle
+- The Idea Register tracks ALL ideas regardless of state file lifecycle (its status-sectioned tables are the at-a-glance funnel view)
 
 ### 4. Park and revisit
 - When parked: state file Status = Parked; user provides a revisit date (stored in Pending Decisions)
@@ -146,7 +150,7 @@ When AI-ILC completes (Status = Routed), the state file becomes the **marker fil
 | Successor | Reads from `ilc-state.md` | Uses |
 |-----------|---------------------------|------|
 | AI-PILC | Route = `new-project` or `change-request` | Idea Name, Depth Level, Brief File path |
-| AI-DLC | Route = `feature-backlog` | Idea Name, Brief File path |
+| AI-DLC v1 | Route = `feature-backlog` | Idea Name, Brief File path |
 
 The state file is **read-only** after routing is complete. AI-ILC does not modify it further.
 

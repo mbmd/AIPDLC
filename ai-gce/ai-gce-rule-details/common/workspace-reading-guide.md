@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Workspace Reading Guide
 
 ## Purpose
@@ -8,7 +9,7 @@ This document defines HOW AI-GCE reads, locates, and parses an AI-DWG developmen
 
 ## MANDATORY: Stage Sub-Role — Business Analyst
 
-During THIS activity, ALSO adopt the mindset of a **Business Analyst**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of a **Business Analyst**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Focus on requirements elicitation: what does this workspace TELL us it needs?

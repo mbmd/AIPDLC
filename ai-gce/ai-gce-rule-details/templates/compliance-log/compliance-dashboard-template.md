@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 ---
 generatedBy: AI-GCE
 generatedVersion: "{version}"
@@ -7,7 +8,7 @@ ownership: generated
 ---
 # Compliance Dashboard — Template
 
-Generated into `docs/compliance-dashboard.md`. The audit agent populates variables after each scan.
+Generated into `management_framework/dashboards/compliance-dashboard.md`. The audit agent populates variables after each scan.
 
 ---
 

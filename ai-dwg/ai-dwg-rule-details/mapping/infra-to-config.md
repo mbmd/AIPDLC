@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Mapping: Infrastructure & Deployment → git-workflow.md + docker-compose.yml (enrichment)
 
 ## Purpose
@@ -321,7 +322,7 @@ services:
       - frontend
       - backend
     depends_on:
-      # application containers added during AI-DLC
+      # application containers added during AI-DLC v1
     profiles:
       - full
 

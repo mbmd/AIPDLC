@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Extension: Quality Review AI-Assist (Full Rules)
 
 **Stage:** Post-Stage 5, or during Stage 14 (Backlog Operations)

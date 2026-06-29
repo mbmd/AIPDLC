@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Stage 5: Approve
 
 **Lead persona:** `#persona-product-manager`
@@ -146,7 +147,7 @@ Why is this idea being rejected?
 
 ### Step 6: Produce Go/No-Go Decision Record
 
-Create `{Idea_Name}_GoNoGo_Decision_Record.md`:
+Create `{NNN}-{idea-slug}/{NNN}-{idea-slug}_GoNoGo_Decision_Record.md` (inside the idea's subfolder — path from `ilc-state.md` → Idea Folder). The record carries provenance front-matter (`generatedBy: AI-ILC`, `ownership: user`, `Status: {Approved/Parked/Rejected}`):
 
 ```markdown
 # Go/No-Go Decision Record: {Idea Name}
@@ -186,7 +187,7 @@ Create `{Idea_Name}_GoNoGo_Decision_Record.md`:
 
 ### Step 7: Finalize
 
-1. Save the Decision Record to output directory
+1. Save the Decision Record to the idea's subfolder (`{NNN}-{idea-slug}/`)
 2. Update `ilc-state.md`:
    - Status: Approved / Parked / Rejected
    - Current Stage: 6 (if Approved) or terminal (if Parked/Rejected)

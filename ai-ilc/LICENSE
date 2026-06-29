@@ -1,6 +1,4 @@
-Apache License 2.0 with Attribution Requirement
-
-Copyright 2026 Maheri (https://www.linkedin.com/in/mohammad-maheri-8399565b)
+Copyright © 2026 Mohammad Maheri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,20 +11,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
---- ATTRIBUTION REQUIREMENT ---
-
-If you use, modify, or distribute this package (or works derived from it),
-you MUST retain the following attribution in a visible location (README,
-documentation, or equivalent):
-
-  Created By: Maheri — https://www.linkedin.com/in/mohammad-maheri-8399565b
-  Inspired By: awslabs/aidlc-workflows (MIT-0) — https://github.com/awslabs/aidlc-workflows
-
-This attribution requirement applies to:
-- Direct use of the package as-is
-- Modified versions of the package
-- Works that incorporate substantial portions of this package's structure or content
-- Generated outputs that include the package's templates or frameworks
-
-Removal of attribution constitutes a violation of this license.

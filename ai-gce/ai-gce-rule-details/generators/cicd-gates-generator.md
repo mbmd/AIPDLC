@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # CI/CD Quality Gates — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives CI/CD quality gate rules (GOV-CICD-*) from `testing-strategy.md` and `gi
 
 ## MANDATORY: Stage Sub-Role — Automation Engineer
 
-During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in pipeline stages: every quality gate is a pass/fail checkpoint with measurable thresholds

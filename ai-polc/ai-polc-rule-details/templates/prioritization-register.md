@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 ---
 generatedBy: AI-POLC
 generatedVersion: 1.0.0
@@ -46,7 +47,7 @@ ownership: hybrid
 |---------|--------|
 | New feature from AI-ILC | Assess and insert into ranked list |
 | Approved CR from AI-PILC | Re-evaluate affected epics |
-| Blocker from AI-DLC | Move blocked item down; pull alternative |
+| Blocker from AI-DLC v1 | Move blocked item down; pull alternative |
 | Market/competitor change | Full re-prioritization |
 | Scheduled review | Every {N} sprints |
 

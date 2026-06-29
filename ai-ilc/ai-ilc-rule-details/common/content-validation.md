@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AI-ILC — Content Validation
 
 **Purpose:** Quality rules for all artifacts AI-ILC produces. Every output must pass these checks before being finalized and presented to the user.
@@ -43,27 +44,24 @@ Before presenting any artifact to the user, verify:
 
 ## File Naming Convention
 
-All output files follow this pattern:
+Shared artifacts use fixed names and stay flat at `{output_root}/`. Per-idea artifacts live inside the idea's subfolder `{NNN}-{idea-slug}/` and are prefixed with the same `{NNN}-{idea-slug}_` stem (see `core-workflow.md` → "MANDATORY: Output Folder Structure").
 
-```
-{Idea_Name}_{Artifact_Type}.md
-```
+| Artifact | Location | Filename Pattern | Example |
+|----------|----------|-----------------|---------|
+| State file | `{output_root}/` | `ilc-state.md` | `ilc-state.md` (fixed name) |
+| Idea Register | `{output_root}/` | `Idea_Register.md` | `Idea_Register.md` (fixed name) |
+| Decision Log | `{output_root}/management_framework/` | `Decision_Log.md` | `Decision_Log.md` (fixed name) |
+| Idea Statement | `{NNN}-{idea-slug}/` | `Idea_Statement.md` | `001-mobile-app/Idea_Statement.md` |
+| Go/No-Go Record | `{NNN}-{idea-slug}/` | `{NNN}-{idea-slug}_GoNoGo_Decision_Record.md` | `001-mobile-app/001-mobile-app_GoNoGo_Decision_Record.md` |
+| Approved Idea Brief | `{NNN}-{idea-slug}/` | `{NNN}-{idea-slug}_Approved_Idea_Brief.md` | `001-mobile-app/001-mobile-app_Approved_Idea_Brief.md` |
+| Change Request Brief | `{NNN}-{idea-slug}/` | `{NNN}-{idea-slug}_Change_Request_Brief.md` | `001-mobile-app/001-mobile-app_Change_Request_Brief.md` |
+| Feature Brief | `{NNN}-{idea-slug}/` | `{NNN}-{idea-slug}_Feature_Brief.md` | `001-mobile-app/001-mobile-app_Feature_Brief.md` |
 
-| Artifact | Filename Pattern | Example |
-|----------|-----------------|---------|
-| State file | `ilc-state.md` | `ilc-state.md` (fixed name) |
-| Idea Register | `Idea_Register.md` | `Idea_Register.md` (fixed name) |
-| Decision Log | `Decision_Log.md` | `Decision_Log.md` (fixed name) |
-| Go/No-Go Record | `{Idea_Name}_GoNoGo_Decision_Record.md` | `Mobile_App_GoNoGo_Decision_Record.md` |
-| Approved Idea Brief | `{Idea_Name}_Approved_Idea_Brief.md` | `Mobile_App_Approved_Idea_Brief.md` |
-| Change Request Brief | `{Idea_Name}_Change_Request_Brief.md` | `Mobile_App_Change_Request_Brief.md` |
-| Feature Brief | `{Idea_Name}_Feature_Brief.md` | `Mobile_App_Feature_Brief.md` |
-
-**Idea Name rules:**
-- Use PascalCase with underscores for spaces: `Mobile_App`, `Payment_Gateway`, `Compliance_Dashboard`
-- No special characters, no spaces in filenames
-- Keep it short but recognizable (3-4 words max)
-- Derived from the idea title confirmed at Capture
+**Idea folder/slug rules:**
+- `{NNN}` = the idea's Register ID, zero-padded to 3 digits (`001`, `002`, …) — a stable key, never reused, never changed for status
+- `{idea-slug}` = idea title lower-cased, spaces → hyphens, special characters stripped (`Mobile App` → `mobile-app`)
+- Keep the slug short but recognizable (3-4 words max), derived from the title confirmed at Capture
+- The artifact-type suffix (`_Approved_Idea_Brief`, etc.) keeps its underscore form for readability
 
 ---
 

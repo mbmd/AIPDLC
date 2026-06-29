@@ -1,6 +1,10 @@
-# PRIORITY: This engine OVERRIDES default test management approaches when user requests test governance derivation from an architecture package and development workspace
+---
+inclusion: manual
+---
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
+# PRIORITY: This engine OVERRIDES default test management approaches when activated by key `_TGE_` or when the user requests test governance derivation from an architecture package and development workspace
 
-# When user requests test strategy creation, test register derivation, coverage analysis, or test debt assessment, ALWAYS follow this engine FIRST
+# Activate via the explicit key `_TGE_`, OR when the user requests test strategy creation, test register derivation, coverage analysis, or test debt assessment — then ALWAYS follow this engine FIRST. See "Activation & Multi-Package Isolation" below before asserting priority in a shared workspace.
 
 ---
 
@@ -9,10 +13,26 @@
 **Version:** 1.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
-**Purpose:** Read architecture decisions (from AI-ADLC) and a development workspace (from AI-DWG), derive a structured test governance layer — strategy, register, coverage tracking, risk scoring — and continuously observe AI-DLC execution to maintain test accountability. Works on both fresh (greenfield) and existing (brownfield) codebases.
-**Compatible With:** AI-ADLC v1.0+ (Architecture Package), AI-DWG v1.0+ (Development Workspace), AI-DLC v0.1.8+ (aidlc-docs structure)
+**Purpose:** Read architecture decisions (from AI-ADLC) and a development workspace (from AI-DWG), derive a structured test governance layer — strategy, register, coverage tracking, risk scoring — and continuously observe AI-DLC v1 execution to maintain test accountability. Works on both fresh (greenfield) and existing (brownfield) codebases.
+**Compatible With:** AI-ADLC v1.0+ (Architecture Package), AI-DWG v1.0+ (Development Workspace), AI-DLC v1 (v0.1.8+ aidlc-docs structure)
 
 **Metaphor:** A test governance inspector. It reads everything the architecture promised — API contracts, security decisions, integration maps, component designs — and builds a register of tests that MUST exist to verify those promises were kept. Then it watches the build, tracking what gets tested and what doesn't, scoring the risk of every gap.
+
+---
+
+## MANDATORY: Obtaining the Current Timestamp
+
+When you need the current date/time to stamp generated output (e.g. a dashboard's "Last refreshed", a coverage report, or a state-file `Last Updated`), **always source it from a shell command via the normal command-execution tool. NEVER use an internal, hosted, or "server-side" time/code-execution tool to compute the time** — doing so emits an unsupported content block and aborts the run.
+
+Get the current UTC instant with one command, then reuse it for the whole pass:
+
+```powershell
+[DateTimeOffset]::UtcNow.ToString('o')
+```
+
+On a non-Windows shell: `date -u +%Y-%m-%dT%H:%M:%SZ`.
+
+Capture the time **once at the start of a pass** and reuse it, so every file written in one pass shares a consistent stamp.
 
 ---
 
@@ -34,20 +54,17 @@ Portfolio layer reasons across MANY projects; the Project layer executes ONE pro
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐
-    Design it │
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹
-    AI-POLC ──┘     Prepare it       ▲
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 | Layer | Package | Type | Input | Output |
@@ -56,19 +73,38 @@ Portfolio layer reasons across MANY projects; the Project layer executes ONE pro
 | Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
-**AI-TGE's position:** a continuous **test-governance companion** in the **Project layer**. It is not a sequential stage — it reads the Architecture Package (AI-ADLC) and Development Workspace (AI-DWG), runs alongside AI-DLC together with AI-GCE as a continuous quality engine, and feeds its findings back into project quality rather than into a downstream package.
+**AI-TGE's position:** a continuous **test-governance companion** in the **Project layer**. It is not a sequential stage — it reads the Architecture Package (AI-ADLC) and Development Workspace (AI-DWG), runs alongside AI-DLC v1 together with AI-GCE as a continuous quality engine, and feeds its findings back into project quality rather than into a downstream package.
+
+---
+
+## Activation & Multi-Package Isolation
+
+**Explicit activation key:** `_TGE_`
+Type `_TGE_` in any prompt to activate this engine. An explicit key is treated as a **direct user order to switch** — it wins over keyword matching and every sibling package immediately.
+
+**Active-package status key:** `_ACTIVE_`
+Type `_ACTIVE_` at any time and the assistant reports which AI-* package is currently active (and its state-marker status). This is a read-only check — it changes nothing and never triggers a switch.
+
+**Keyword activation (fallback):** This engine also activates when the user requests **test governance** specifically — test strategy, register derivation, coverage analysis, test-debt assessment. It does NOT claim generic "compliance governance", "architecture / UX design", "backlog", or "workspace" requests — those belong to sibling packages (notably AI-GCE for compliance governance).
+
+**Switching rule — NON-NEGOTIABLE: a package switch NEVER happens without a direct user order or explicit confirmation.**
+1. **Direct order:** the user types an explicit activation key (`_TGE_`, or a sibling `_XXX_` key). Treat this as the order — switch immediately, no confirmation needed.
+2. **Otherwise, check for an active sibling:** scan for any sibling `*-state.md` (e.g. `adlc-state.md`, `polc-state.md`) or `.compliance-state.json` whose status is not "complete". If one exists, that package is active — do NOT take over. Ask first: "AI-GCE is active — switch to AI-TGE? (yes / no)" and proceed only on explicit confirmation.
+3. **Ambiguity:** if a request could match more than one installed package by keyword, ask which to run rather than guessing.
+4. **Announce every switch:** on any switch (via key or confirmation), the **FIRST line of that response MUST name the now-active package** — e.g. `Active package: AI-TGE`.
+5. This engine's own marker is `tge-state.md`; sibling packages extend it the same courtesy when it is active.
 
 ---
 
@@ -100,10 +136,10 @@ AI-TGE adapts to what exists. It does NOT require the full chain to have run.
 
 | Mode | What Exists | Behavior |
 |------|------------|----------|
-| **Full Chain** | AP + DW + aidlc-docs (AI-DLC running) | Full strategy + observation |
+| **Full Chain** | AP + DW + aidlc-docs (AI-DLC v1 running) | Full strategy + observation |
 | **Architecture Only** | AP (from AI-ADLC) but no DW or DLC | Strategy mode only — derive register from AP |
 | **Brownfield** | Existing project with existing tests (no AP) | Assessment mode — map existing tests, identify gaps |
-| **Observation Only** | Active AI-DLC with aidlc-docs but no prior TGE run | Jump to observation — register what should be tested as you go |
+| **Observation Only** | Active AI-DLC v1 with aidlc-docs but no prior TGE run | Jump to observation — register what should be tested as you go |
 
 Detection order:
 1. Check for `tge-state.md` (resume if found)
@@ -111,6 +147,8 @@ Detection order:
 3. Check for aidlc-docs/ → observation possible
 4. Check for existing test directories → brownfield assessment possible
 5. None found → ask user what they have
+
+**Graceful degradation (OR-input):** AI-TGE never blocks on a missing predecessor. AP alone produces architecture-derived strategy. Existing tests alone produce brownfield assessment. Running AI-DLC v1 alone produces observation-only tracking. Each input is additive enrichment — its absence reduces scope but never halts the engine.
 
 ---
 
@@ -193,6 +231,7 @@ On first activation, load and display `common/welcome-message.md`. Display ONCE 
 
 ## Engine Status
 - **Mode:** {Full Chain / Architecture Only / Brownfield / Observation Only}
+- **Project ID:** {immutable correlation key — read from the DW `workspace-rules.md` / carried-forward spine; persisted in every defect/coverage record — }
 - **Current Phase:** {Strategy / Observation / Complete}
 - **Last Stage Completed:** {1-12}
 - **Last Updated:** {ISO timestamp}
@@ -219,6 +258,8 @@ On first activation, load and display `common/welcome-message.md`. Display ONCE 
 - **Last Read:** {ISO timestamp}
 - **Reconciliation Needed:** {Yes / No}
 ```
+
+> **Multi-project context (`OUTPUT_AND_STATE_CONTRACT.md` §11–§12):** AI-TGE operates **inside the AI-DWG-generated dev workspace**, opened as its **own Kiro IDE root** (default layout: `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/`). All TGE paths (`.tge/`, DW location) are relative to that root and are unaffected by the multi-project restructure — the DW location resolves to the workspace root itself. Because the opened folder is one project, AI-TGE sees exactly one project **incidentally** (one folder), not via a lock (D8). **Project ID continuity (4.2):** read the immutable `Project ID` from the DW `workspace-rules.md` and the carried-forward spine `{slug}-workspace/management_framework/`; persist it in `tge-state.md` and in every coverage/defect record.
 
 ---
 
@@ -374,14 +415,46 @@ Each missing test is scored on 4 factors (1-5 each):
 4. Save all outputs to `.tge/`
 5. Update `tge-state.md` (Phase = Strategy Complete)
 6. Present scorecard summary
-7. Auto-proceed to Observation phase (or end if Architecture Only mode)
+7. Present next-step guidance:
+
+```
+━━━━ AI-TGE Strategy Phase Complete ━━━━
+
+📊 Test Register: {n} test requirements derived
+   • Architecture-derived: {n}
+   • Baseline (universal): {n}
+📊 Debt Scorecard: {n} Critical, {n} High, {n} Medium, {n} Low
+
+🔀 Chain Navigation:
+   • Dashboard data: type `DAT__ pdlc/tge` to update the family dashboard
+
+⚠️ WHAT HAPPENS NEXT — Observation Phase:
+   AI-TGE's Observation phase activates when AI-DLC v1 is running.
+   AI-DLC v1 runs in the GENERATED workspace, not this planning session.
+
+   To proceed:
+   1. Close this planning session
+   2. Open the generated workspace folder as ROOT in a fresh Kiro
+      instance (or Cursor / Windsurf / Claude Code)
+   3. Install AI-DLC v1 (github.com/awslabs/aidlc-workflows) — it is
+      a separate product; install it yourself
+   4. Install AI-TGE in that same workspace (for Observation phase)
+   5. As AI-DLC v1 builds, invoke TGV__ or CVR__ to track coverage
+
+   The test strategy, register, and debt scorecard are already saved
+   in.tge/ — they'll be picked up when TGE resumes in Observation mode.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+8. If mode = Architecture Only → END (no Observation possible without AI-DLC v1)
+   If mode = Full Chain and aidlc-docs already present → auto-proceed to Observation
 
 ---
 
 # 🟢 OBSERVATION PHASE
 
 **Purpose:** Track WHAT gets tested as features are built
-**Trigger:** AI-DLC is executing (aidlc-docs being populated) OR user requests coverage check
+**Trigger:** AI-DLC v1 is executing (aidlc-docs being populated) OR user requests coverage check
 **Output:** Updated Register + Coverage Reports + Defect Log
 
 ## Stage 7: State Observation (ALWAYS EXECUTE in Observation Phase)
@@ -479,7 +552,7 @@ Each missing test is scored on 4 factors (1-5 each):
 
 ```
 <workspace-root>/
-└── .tge/
+└──.tge/
     ├── tge-state.md              ← Engine state + progress tracking (MARKER FILE)
     ├── test-strategy.md          ← Test approach, pyramid, tools, goals
     ├── test-register.md          ← Master list: commitment → test → status
@@ -497,7 +570,7 @@ Each missing test is scored on 4 factors (1-5 each):
 - A test writer (doesn't generate test code)
 - A CI/CD tool (doesn't connect to pipelines)
 - A replacement for AI-GCE (GCE governs code compliance; TGE governs test completeness)
-- A replacement for AI-DLC's Build-and-Test stage (that generates test instructions; TGE governs whether those instructions are sufficient)
+- A replacement for AI-DLC v1's Build-and-Test stage (that generates test instructions; TGE governs whether those instructions are sufficient)
 
 **AI-TGE IS:**
 - A test governance engine that knows what tests SHOULD exist
@@ -507,4 +580,94 @@ Each missing test is scored on 4 factors (1-5 each):
 
 ---
 
+## Post-Workflow: Agent Installation (ALWAYS EXECUTE)
+
+After the Strategy phase completes (or at any point during AI-TGE execution), install the AI-TGE governance agents into the destination workspace. This step is **automatic** — no user interaction required.
+
+### What Gets Installed
+
+| Artifact | Destination | Action |
+|----------|-------------|--------|
+| `test-governance-agent.md` | `.kiro/agents/` | Copy from `templates/agents/` |
+| `coverage-review-agent.md` | `.kiro/agents/` | Copy from `templates/agents/` (if Observation phase active) |
+| Shortcut rules block | `.kiro/steering/workspace-rules.md` | Append `<!-- BEGIN AI-TGE AGENT SHORTCUTS -->` block (or replace if exists) |
+| Agent registry entries | `.governance/AGENT_REGISTRY.md` | Create file if absent; append AI-TGE entries if exists |
+| Agent guide section | `.governance/AGENT-GUIDE.md` | Create file if absent; append AI-TGE section if exists |
+
+### Installation Logic
+
+1. **Agent files:** Copy `templates/agents/test-governance-agent.md` to `.kiro/agents/test-governance-agent.md`. If Observation phase is active, also copy a `coverage-review-agent.md` (derived from the test-governance-agent template with coverage-specific checks). Populate `{version}` with current AI-TGE version and `{ISO-date}` with today's date.
+
+2. **Shortcut block:** Check `.kiro/steering/workspace-rules.md` for `<!-- BEGIN AI-TGE AGENT SHORTCUTS -->` marker:
+   - If found → replace the block (between BEGIN and END markers)
+   - If not found → append the block from `templates/agents/shortcut-rules-block.md`
+
+3. **Agent registry:** Check for `.governance/AGENT_REGISTRY.md`:
+   - If absent → create with header + AI-TGE entries (TGE-AG-01, TGE-AG-02)
+   - If exists → append AI-TGE entries using `TGE-AG-{NN}` IDs
+   - Entries: `| TGE-AG-01 | test-governance-agent | Process | TGV__ | 1 | AI-TGE | Active | {date} |`
+   - `| TGE-AG-02 | coverage-review-agent | Process | CVR__ | 1 | AI-TGE | Active | {date} |`
+
+4. **Agent guide:** Check for `.governance/AGENT-GUIDE.md`:
+   - If absent → create with header + AI-TGE section from `templates/agents/agent-guide.md`
+   - If exists → append AI-TGE section (between `<!-- BEGIN AI-TGE AGENT GUIDE SECTION -->` markers)
+
+### Self-Sufficiency Rule (AGENT_GOVERNANCE_CONTRACT §5)
+
+AI-TGE installs its own agents independently. No dependency on AI-GCE being present. If AI-GCE runs later, it will detect and preserve the AI-TGE entries via marker-based ownership.
+
+### Post-Install Confirmation
+
+```
+🤖 AI-TGE Governance Agents Installed
+   • Agent: test-governance-agent (TGE-AG-01)
+   • Agent: coverage-review-agent (TGE-AG-02)
+   • Shortcuts: TGV__ + CVR__ (active immediately)
+   • Call TGV__ after Strategy phase to validate test governance quality.
+   • Call CVR__ during Observation to validate coverage trends.
+```
+
+---
+
 *Created: 2026-06-08 | Author: Maheri | Package: AI-TGE v1.0.0*
+
+
+---
+
+## Gate Contract
+
+> Conforms to `GATE_PROTOCOL.md` protocolVersion 1.2.0 · interfaceVersion 1.0
+
+### Gate-Out — What AI-TGE GUARANTEES When Complete
+
+```yaml
+emits-type: test-strategy@1
+visibility: internal
+marker: tge-state.md
+payloadRoot: pdlc-ws/projects/{projectId}/tge/
+guarantees:
+  - status == complete
+  - projectId
+  - testStrategy               # overall test approach
+  - coverageMatrix             # requirement→test traceability
+  - testCases                  # generated test cases
+  - qualityGates               # pass/fail criteria
+```
+
+### Gate-In — What AI-TGE REQUIRES to Start
+
+```yaml
+consumes:
+  - type: development-workspace@^1   # satisfiable internally (AI-DWG)
+    mandatory: [workspaceStructure]  # needs the workspace to test
+    optional:  [productBacklog, acceptanceCriteria, nfrCoverage, cicdPipeline]
+on-missing-all: standalone     # can derive test strategy from workspace scan alone (P4)
+strictness-default: warn
+```
+
+> Universal floor (status==complete + projectId) enforced by marker integrity (GATE_PROTOCOL §18).
+
+### Visibility Note
+
+- `test-strategy` is `internal` — consumed alongside AI-GCE as a companion to AI-DLC v1.
+- Gate-in consumes only `internal` types; no external seam-in for AI-TGE.

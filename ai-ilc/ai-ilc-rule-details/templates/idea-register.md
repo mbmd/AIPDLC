@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Idea Register
 
 **Purpose:** Portfolio funnel view — every idea submitted to this pipeline, regardless of outcome.
@@ -8,33 +9,33 @@
 
 ## Active Ideas
 
-| ID | Name | Status | Score | Decision | Route | Created | Last Updated |
-|----|------|--------|:-----:|----------|-------|---------|--------------|
-| — | *No active ideas* | — | — | — | — | — | — |
+| ID | Name | Folder | Status | Score | Decision | Route | Created | Last Updated |
+|----|------|--------|--------|:-----:|----------|-------|---------|--------------|
+| — | *No active ideas* | — | — | — | — | — | — | — |
 
 ---
 
 ## Parked Ideas
 
-| ID | Name | Parked Reason | Score | Revisit Date |
-|----|------|---------------|:-----:|--------------|
-| — | *None* | — | — | — |
+| ID | Name | Folder | Parked Reason | Score | Revisit Date |
+|----|------|--------|---------------|:-----:|--------------|
+| — | *None* | — | — | — | — |
 
 ---
 
 ## Rejected Ideas
 
-| ID | Name | Rejection Reason | Score | Date |
-|----|------|-----------------|:-----:|------|
-| — | *None* | — | — | — |
+| ID | Name | Folder | Rejection Reason | Score | Date |
+|----|------|--------|-----------------|:-----:|------|
+| — | *None* | — | — | — | — |
 
 ---
 
 ## Routed Ideas (Completed)
 
-| ID | Name | Route | Score | Brief Produced | Destination | Date |
-|----|------|-------|:-----:|---------------|-------------|------|
-| — | *None* | — | — | — | — | — |
+| ID | Name | Folder | Route | Score | Brief Produced | Destination | Date |
+|----|------|--------|-------|:-----:|---------------|-------------|------|
+| — | *None* | — | — | — | — | — | — |
 
 ---
 
@@ -57,6 +58,8 @@
 
 Ideas are numbered sequentially: `1`, `2`, `3`...
 Numbers are never reused, even for rejected ideas.
+
+Each idea's per-idea subfolder is keyed by the **zero-padded** form of this ID: `001-{idea-slug}/`, `002-{idea-slug}/`, … The folder name is **stable** — it never changes when the idea is parked, rejected, or routed (status is tracked here in the Register and in each artifact's `Status` field, not in the folder name).
 
 ---
 

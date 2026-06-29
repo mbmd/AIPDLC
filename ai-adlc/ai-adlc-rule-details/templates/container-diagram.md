@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Container Diagram (C4 Level 2)
 
 **Document Status:** {Draft / Review / Approved}

@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Validation Rules
 
 ## Purpose
@@ -8,7 +9,7 @@ This document defines the cross-check rules applied AFTER AI-GCE generates its c
 
 ## MANDATORY: Stage Sub-Role — Audit & Compliance Specialist
 
-During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Apply systematic verification: every validation category (V1–V9) is a control objective — skip none
@@ -68,14 +69,14 @@ Every AI-GCE run (Mode 1) MUST produce these. Missing = validation failure.
 | Category | Artifacts | Check |
 |----------|-----------|-------|
 | Hooks (core set) | session-discipline, pre-code-spec-check, post-task-governance, security-gate-check, naming-check, module-boundary-check, migration-safety, api-contract-check, coverage-check, pre-pr-checklist, periodic-audit, sensitive-data-check, domain-layer-purity | Each .json file exists in `.kiro/hooks/` |
-| Hook install guide | INSTALL-GUIDE.md | File exists in `.kiro/hooks/` |
+| Hook enforcement guide | ENFORCEMENT-GUIDE.md | File exists in `.kiro/hooks/` |
 | Rules (always) | architecture-compliance, api-first-compliance, security-compliance, data-governance, module-boundaries, naming-conventions, error-handling-compliance, logging-compliance, sensitive-data-protection, domain-context-enforcement, phase-gates, session-governance | Each .md file exists in `.governance/rules/` |
 | Rules (tier-gated) | governance-checklist, role-isolation, team-topology, sprint-governance, pr-governance, cicd-gates, devops-deployment, steering-governance, compliance-log-governance | Generated but activation controlled by tier |
 | Agents | compliance-audit-agent.md, project-init-agent.md | Both exist in `.governance/agents/` |
 | Compliance log | compliance-log-schema.md, exception-workflow.md, remediation-workflow.md | All exist in `.governance/compliance-log/` |
 | COMPLIANCE_README | COMPLIANCE_README.md | Exists in `.governance/` |
 | State file | .compliance-state.json | Exists at workspace root |
-| Dashboard template | docs/compliance-dashboard.md | Exists (skeleton — audit agent populates) |
+| Dashboard template | management_framework/dashboards/compliance-dashboard.md | Exists (skeleton — audit agent populates) |
 
 ### Completeness Check Format
 
@@ -90,7 +91,7 @@ V1: COMPLETENESS CHECK
   Compliance log:    {n}/3 ✅|❌
   State file:        ✅|❌
   Dashboard:         ✅|❌
-  INSTALL-GUIDE:     ✅|❌
+  ENFORCEMENT-GUIDE:     ✅|❌
   COMPLIANCE_README: ✅|❌
 ```
 
@@ -109,7 +110,7 @@ V1: COMPLETENESS CHECK
 
 2. No "orphan rules" — if a rule cannot trace to a source, it must be removed.
 
-3. Built-in baseline rules are self-justifying — they exist because of AI-DLC methodology. Their source is "AI-DLC methodology: {principle}."
+3. Built-in baseline rules are self-justifying — they exist because of AI-DLC v1 methodology. Their source is "AI-DLC v1 methodology: {principle}."
 
 ### Traceability Check
 
@@ -147,7 +148,7 @@ This shows BOTH sources: baseline provides the universal principle; steering pro
 | Tier assignments | Rules vs. tier model | GOV-ROLE rules all say Tier 2 (not mixed 1 and 2) |
 | Phase gate rules vs. DoD | phase-gates.md criteria vs. DEFINITION_OF_DONE.md | No contradiction between what gates require and what DoD defines |
 | COMPLIANCE_README vs. actual output | Description sections vs. generated artifacts | README describes what actually exists |
-| INSTALL-GUIDE vs. actual hooks | Listed hooks vs. `.kiro/hooks/` contents | All listed hooks exist; no unlisted hooks |
+| ENFORCEMENT-GUIDE vs. actual hooks | Listed hooks vs. `.kiro/hooks/` contents | All listed hooks exist; no unlisted hooks |
 | State file schema | .compliance-state.json structure vs. audit agent expectations | State file has all fields the audit agent reads |
 
 ### Consistency Check Format
@@ -160,7 +161,7 @@ V3: CONSISTENCY CHECK
   Tier assignments:       ✅|❌
   Phase gates vs. DoD:    ✅|❌
   README vs. actual:      ✅|❌
-  INSTALL-GUIDE vs. hooks:✅|❌
+  ENFORCEMENT-GUIDE vs. hooks:✅|❌
   State file schema:      ✅|❌
 ```
 
@@ -382,6 +383,7 @@ V6: ENFORCEABLE         {PASS|FAIL}  — No weak language, all rules binary
 V7: CONTEXT BUDGET      {PASS|FAIL}  — Always-inclusion ≤ 300 lines; GCE uses fileMatch only
 V8: PHASE-AWARENESS     {PASS|FAIL}  — All rules phase-tagged; hooks check currentPhase
 V9: LOGGING             {PASS|FAIL}  — All hook prompts have compliance logging block
+V10: TERRITORY SEGREGATION {PASS|FAIL} — Hook patterns exclude infra; preamble present
 
 ───────────────────────────────────────────────────────────────
 OVERALL:                {PASS|FAIL}
@@ -392,15 +394,46 @@ OVERALL:                {PASS|FAIL}
 
 ---
 
+## V10: Package Territory Segregation Validation
+
+**Question:** "Do hook patterns and prompts correctly exclude package infrastructure?"
+
+### Checks
+
+| Check | Pass Criteria |
+|-------|---------------|
+| No bare `**/*.ext` in Tier A hooks | Pattern is scoped to at least one directory level (e.g., `src/**/*.ts`) — except secrets hook which uses Layer 2 |
+| Preamble present in file-context hooks | First section of prompt is "Package Territory Check" for fileEdited, fileCreated, and agentStop hooks |
+| Preamble absent in non-file hooks | promptSubmit, preToolUse, postTaskExecution, and userTriggered hooks do NOT have the preamble |
+| Registry file generated | `.governance/PACKAGE_TERRITORIES.md` exists after full generation |
+| Registry covers all package outputs | All AI-* family output paths have an entry |
+| Custom section has markers | `<!-- custom -->` tags present for re-derivation safety |
+| Patterns do not match excluded zones | No hook pattern structurally matches `.kiro/`, `.governance/`, `compliance-log/`, `project-initiation/`, `architecture/`, `management_framework/`, or `templates/` |
+
+### V10 Check Format
+
+```
+V10: TERRITORY SEGREGATION CHECK
+  Bare wildcards in Tier A:   {n} found (expected: 0, except secrets with justification)
+  Preamble in file hooks:     {n}/{m} ✅|❌
+  Preamble absent non-file:   {n}/{m} ✅|❌
+  Registry generated:         ✅|❌
+  Registry covers all paths:  ✅|❌
+  Custom markers present:     ✅|❌
+  Pattern-zone conflicts:     {n} found ✅|❌
+```
+
+---
+
 ## When to Run Validation
 
 | Scenario | Validation Scope |
 |----------|-----------------|
-| After Full Generation (Mode 1) | ALL checks (V1–V9) |
-| After Re-Derivation (Mode 2) | V2, V3, V4, V5, V6, V9 on affected artifacts only |
-| After Brownfield Adoption (Mode 3) | ALL checks (V1–V9) + brownfield-specific: baseline exists, adoption plan exists |
-| After Tier Activation (Mode 4) | V1 (new artifacts complete), V3 (consistency with new tier), V5 (new hooks valid) |
-| User requests "validate compliance" | ALL checks (V1–V9) |
+| After Full Generation (Mode 1) | ALL checks (V1–V10) |
+| After Re-Derivation (Mode 2) | V2, V3, V4, V5, V6, V9, V10 on affected artifacts only |
+| After Brownfield Adoption (Mode 3) | ALL checks (V1–V10) + brownfield-specific: baseline exists, adoption plan exists |
+| After Tier Activation (Mode 4) | V1 (new artifacts complete), V3 (consistency with new tier), V5 (new hooks valid), V10 (new hooks segregated) |
+| User requests "validate compliance" | ALL checks (V1–V10) |
 
 ---
 
@@ -418,6 +451,9 @@ OVERALL:                {PASS|FAIL}
 | Context budget exceeded (V7) | BLOCKING | Convert AI-GCE steering to fileMatch |
 | Missing phase tag (V8) | WARNING | Add phase applicability to rule |
 | Missing logging block (V9) | BLOCKING | Add compliance logging to hook prompt |
+| Bare wildcard in Tier A hook (V10) | BLOCKING | Scope pattern to application paths or justify Layer 2 reliance |
+| Missing preamble in file-context hook (V10) | BLOCKING | Prepend Package Territory Check preamble |
+| Registry missing or incomplete (V10) | WARNING | Generate or update PACKAGE_TERRITORIES.md |
 
 **BLOCKING** = must fix before output is complete.
 **WARNING** = flag to user but can proceed.

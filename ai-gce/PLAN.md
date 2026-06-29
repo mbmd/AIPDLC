@@ -2,7 +2,7 @@
 
 ## Plan Document (Revised)
 
-**Status:** In Progress — core-generator.md built, gap analysis complete
+**Status:** ✅ Complete — package fully built (core-generator, common files, 24 generators, re-derivation, templates, agents, hooks, INSTALL, README, WHITEPAPER)
 **Date:** 2026-06-04 (Revised: 2026-06-06)
 **Author:** Maheri
 **Revision:** 3 — Gap analysis against reference implementation; expanded from architecture-only to full project governance engine; added 3-tier model, hook debounce, .compliance-state.json, non-architectural rule categories (GOV-ROLE, GOV-TT, GOV-SESSION, GOV-SPRINT, GOV-PR, GOV-CICD, GOV-DEVOPS, GOV-STEER, GOV-LOG, CM-*)
@@ -24,20 +24,17 @@
                                    │     flow on the edge between layers
 ╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
 
-    AI-ADLC ──┐                                                
-    Design it │                                                
-    AI-UXD ───┤
-    Design UX │
-              ├──►  AI-DWG  ──►  AI-DLC (build) ¹              
-    AI-POLC ──┘     Prepare it       ▲                          
-    Own it      └───────────────────┘  AI-POLC ⇄ AI-DLC (back-and-forth)
-                AI-UXD ⇢ AI-POLC (personas/journeys)  ·  AI-DLC ⇢ AI-UXD+AI-POLC (feedback)
+    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
+    Own it      Design UX   Design it   Prepare it       ▲
+                                                         │
+                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
+                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
 
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC (continuous quality) ────►
+    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
     Guard it   Test it
 
 ╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 | Layer | Package | Type | Input | Output |
@@ -46,17 +43,17 @@
 | Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
 | Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | (Requirements + Charter) / PIP | Architecture Package (AP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP / AP; strategy-stage exchange with AI-POLC | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP and/or AP | Product Backlog Package (PBP) |
+| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
+> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ **AI-PPM**, **AI-FLO**, **AI-POLC**, and **AI-UXD** are **new and pending build**. AI-PPM (portfolio engine) and AI-FLO (router) are registered as ideas; AI-POLC (product ownership lifecycle) is idea 006; AI-UXD (UX design lifecycle) is idea 010 (approved). Within the Project layer, **AI-ADLC, AI-UXD, and AI-POLC run in parallel and all feed AI-DWG**; **AI-UXD produces personas/journeys that AI-POLC consumes** (and AI-POLC's value goals focus UX research); **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 ---
 
@@ -86,7 +83,7 @@ SOURCE 1: STEERING FILES (project-specific, from AI-DWG workspace)
   • What session methodology? → reads .kiro/steering/session-governance.md
   • What CI/CD? → reads .kiro/steering/git-workflow.md
 
-SOURCE 2: BUILT-IN GOVERNANCE KNOWLEDGE (AI-DLC methodology baseline)
+SOURCE 2: BUILT-IN GOVERNANCE KNOWLEDGE (AI-DLC v1 methodology baseline)
   • "Spec before code" → always enforced regardless of steering
   • "Never vibe code" → always enforced
   • "Author ≠ approver" → always enforced
@@ -146,7 +143,7 @@ AI-DWG Workspace
          │
          │  NON-ARCHITECTURAL (team + methodology + governance):
          │  • role-isolation.md → roles, segregation of duties, approval chains
-         │  • session-governance.md → AI-DLC session rules, never-vibe-code
+         │  • session-governance.md → AI-DLC v1 session rules, never-vibe-code
          │  • project-governance.md → sprint cadence, phase gates, quality gates
          │  • git-workflow.md → branching, CI/CD, deployment strategy
          │  • testing-strategy.md → coverage targets, CI/CD thresholds
@@ -213,7 +210,7 @@ The full generation flow has 12 steps. See `core-generator.md` STEP 1–12 for t
 6. Initialize `.compliance-state.json` (Tier 1)
 7. Generate compliance logging infrastructure (JSONL schema)
 8. Generate compliance dashboard template
-9. Generate hook INSTALL-GUIDE (tier-based roadmap)
+9. Generate hook ENFORCEMENT-GUIDE (tier-based roadmap)
 10. Generate COMPLIANCE_README
 11. Validate (cross-check all output, context budget, phase-awareness)
 12. Present summary with tier status
@@ -234,7 +231,7 @@ Generated INTO the development workspace:
 │   │   └── [compliance-api-conventions.md]  ← IF team ≥ 3 (Step 4b, fileMatch)
 │   │
 │   └── hooks/                            ← GENERATED by AI-GCE
-│       ├── INSTALL-GUIDE.md              ← Tier-based installation roadmap
+│       ├── ENFORCEMENT-GUIDE.md              ← Tier-based enforcement roadmap
 │       │── — TIER A (fileEdited — security-critical) —
 │       ├── security-gate-check.json      ← 🔴 Essential
 │       ├── migration-safety.json         ← 🔴 Essential
@@ -364,12 +361,12 @@ ai-gce/
 │   ├── generators/ (23 files)              ← Derivation logic per rule category (11 architectural + 12 non-architectural)
 │   ├── re-derivation/ (3 files)            ← Delta re-derivation logic
 │   └── templates/
-│       ├── hooks/ (15 files)               ← 14 parameterized JSON templates + INSTALL-GUIDE.md
+│       ├── hooks/ (15 files)               ← 14 parameterized JSON templates + ENFORCEMENT-GUIDE.md
 │       ├── agents/ (3 files)               ← Audit agent + init agent + compliance readme
 │       ├── compliance-log/ (6 files)       ← Schema + workflows + dashboard + brownfield templates
 │       └── steering-templates/ (13 files)  ← Category templates for project-init-agent
 │
-└── kiro-setup/
+└── setup/
     └── INSTALL.md
 ```
 
@@ -378,7 +375,7 @@ ai-gce/
 > Conditional hooks (tenant-isolation-check, documentation-reminder, steering-quality-check, etc.)
 > are derived at runtime from generator logic — they do not have pre-built templates.
 
-**Total actual files: ~73** (4 top-level + 1 core-generator + 5 common + 23 generators + 3 re-derivation + 15 hook templates + 3 agent templates + 6 compliance-log templates + 13 steering templates)
+**Total actual files: ~79** (4 top-level + 1 core-generator + 5 common + 23 generators + 3 re-derivation + 9 hook templates (+ ENFORCEMENT-GUIDE) + 8 agent templates + agent-guide + agent-registry + shortcut-rules-block + 6 compliance-log templates + 13 steering templates)
 
 ---
 
@@ -555,12 +552,12 @@ Enrichment sources (optional — enrich governance rules if present):
 | Generators (architecture — 11 files) | 11 | High (derivation logic per architecture category) |
 | Generators (governance — 12 files) | 12 | High (derivation logic per non-arch category) |
 | Re-derivation logic (3 files) | 3 | High (change detection + incremental update) |
-| Hook templates (15 files) | 15 | Medium (parameterized JSON + INSTALL-GUIDE) |
-| Agent templates (3 files) | 3 | Medium-High (audit-agent + init-agent + readme) |
+| Hook templates (9 files + ENFORCEMENT-GUIDE) | 10 | Medium (parameterized JSON + enforcement guide) |
+| Agent templates (8 files + agent-guide + agent-registry + shortcut-rules-block) | 11 | Medium-High (process agents + governance docs) |
 | Compliance log templates (6 files) | 6 | Medium (schema, exception, remediation, baseline, adoption-plan, dashboard) |
 | Steering templates (13 files) | 13 | Medium (category template files for init-agent) |
 | Documentation (README, LICENSE, PLAN, INSTALL) | 4 | Medium |
-| **Total** | **~73** | |
+| **Total** | **~79** | |
 
 ---
 
@@ -596,7 +593,7 @@ Enrichment sources (optional — enrich governance rules if present):
 | 7 | **Knowledge map missing** — reference has full traceability matrix: rule → source → enforcement mechanism | 🟠 High | Added `common/knowledge-map-guide.md` to file structure; generated `docs/knowledge-map.md` in target workspace |
 | 8 | **Compliance log JSONL format under-specified** — reference uses append-only JSONL with explicit event types (CHECK/EXCEPTION/REMEDIATION/AUDIT), dedup keys, SLAs | 🟡 Medium | Enriched compliance-log schema in core-generator and templates |
 | 9 | **Rule taxonomy and tier tagging missing** — reference has 310+ rules in 8 categories, each tagged with tier and phase applicability | 🟡 Medium | Added tier-tagging requirement to rule generation step in core-generator |
-| 10 | **Hook installation guide not generated in target workspace** — reference generates `.kiro/hooks/INSTALL-GUIDE.md` listing all hooks by tier | 🟡 Medium | Added to generated output list |
+| 10 | **Hook enforcement guide not generated in target workspace** — reference generates `.kiro/hooks/ENFORCEMENT-GUIDE.md` listing all hooks by tier | 🟡 Medium | Added to generated output list |
 | 11 | **MCP governance dimension missing** — reference has `mcp-governance.md` rules and `mcp-audit-log.json` hook for MCP tool usage governance | 🟢 Low | Added as conditional rule category (IF project uses MCP servers) |
 
 ### Revised File Structure
@@ -607,7 +604,7 @@ The revised file structure is now the **main** file structure in the Package Fil
 - `templates/agents/` expanded: added `project-init-agent.md`
 - `templates/compliance-log/` expanded: added `brownfield-baseline.md`, `incremental-adoption-plan.md`, `compliance-dashboard-template.md`
 - `templates/steering-templates/` added: 13 category template files for project-init-agent
-- `templates/hooks/` expanded: 15+ hooks + `INSTALL-GUIDE.md`
+- `templates/hooks/` expanded: 15+ hooks + `ENFORCEMENT-GUIDE.md`
 - `common/` expanded: added `scoring-model.md`, `knowledge-map-guide.md`
 
 **Revised Total Estimated Files: ~67** (up from ~41 in original plan)

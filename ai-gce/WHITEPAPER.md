@@ -125,17 +125,17 @@ A complete **Compliance Enforcement Layer** containing:
 
 ---
 
-## Part of the AI-* Family
+## Part of AIFLC — the AI-* PDLC Family
 
-AI-GCE is a Project-layer governance engine in the AI-* Family. It derives its compliance layer from a Development Workspace (from AI-DWG), then runs as a **continuous companion alongside AI-DLC** (Amazon's open-source AIDLC) — enforcing governance throughout delivery rather than as a one-time sequential stage. It works standalone too — if you have any workspace with `.kiro/steering/` files, AI-GCE can derive a compliance layer from it regardless of how those files were created.
+AI-GCE is a Project-layer governance engine in the AI-* PDLC Family. It derives its compliance layer from a Development Workspace (from AI-DWG), then runs as a **continuous companion alongside AI-DLC v1** (Amazon's open-source AIDLC) — enforcing governance throughout delivery rather than as a one-time sequential stage. It works standalone too — if you have any workspace with `.kiro/steering/` files, AI-GCE can derive a compliance layer from it regardless of how those files were created.
 
-Learn more: [AI-* Family Whitepaper](../WHITEPAPER.md)
+Learn more: [AI-* Family Whitepaper](../narrative/WHITEPAPER.md)
 
 ---
 
 ## Getting Started
 
-See [kiro-setup/INSTALL.md](./kiro-setup/INSTALL.md) for platform-specific installation instructions.
+See [setup/INSTALL.md](./setup/INSTALL.md) for platform-specific installation instructions.
 
 **Activation:** After installation, start a chat and say:
 ```

@@ -4,7 +4,7 @@
 **Version:** 1.0.0
 **Date:** 2026-06-11
 **Author:** Maheri
-**Status:** APPROVED — proceeding to build
+**Status:** ✅ Complete — package fully built (core-workflow, common files, stage details across 8 phase folders, extensions, templates, agents, INSTALL, README, USER_GUIDE)
 
 ---
 
@@ -18,7 +18,7 @@
 | **Primary Input** | PIP (from AI-PILC) and/or AP (from AI-ADLC) — standalone: product brief / vision statement |
 | **Primary Output** | Product Backlog Package (PBP) |
 | **User Persona** | Product Owner (primary); Product Manager, Business Analyst, Delivery Lead, solo founder |
-| **Family Position** | Project layer — parallel to AI-ADLC and AI-UXD; feeds AI-DWG; bidirectional exchange with AI-DLC |
+| **Family Position** | Project layer — parallel to AI-ADLC and AI-UXD; feeds AI-DWG; bidirectional exchange with AI-DLC v1 |
 | **Marker File** | `polc-state.md` |
 | **Governance Spine Prefix** | `POLC-` |
 
@@ -70,8 +70,8 @@
 
 | Mode | Stages 14-16 behavior |
 |------|----------------------|
-| **Standalone (no AI-DLC)** | Repeating cycle — POLC drives the full product cadence |
-| **Chain with AI-DLC** | Re-entry points — user opens POLC sessions as needed |
+| **Standalone (no AI-DLC v1)** | Repeating cycle — POLC drives the full product cadence |
+| **Chain with AI-DLC v1** | Re-entry points — user opens POLC sessions as needed |
 
 ---
 
@@ -90,7 +90,7 @@ See `FAMILY_STRUCTURE.md` for the full tree once built. Summary:
 - `ai-polc-rule-details/tier2/` — 1 file (story elaboration)
 - `ai-polc-rule-details/extensions/` — 14 files (7 pairs)
 - `ai-polc-rule-details/templates/` — 17 templates
-- `README.md`, `LICENSE`, `kiro-setup/INSTALL.md`
+- `README.md`, `LICENSE`, `setup/INSTALL.md`
 
 **Total:** ~56 files
 
@@ -123,17 +123,17 @@ See `FAMILY_STRUCTURE.md` for the full tree once built. Summary:
 | AI-ADLC | AP | `adlc-state.md` marker |
 | AI-UXD | UXP (personas, journeys) | `uxd-state.md` marker |
 | AI-ILC | Feature Brief (routed features) | `ilc-state.md` Route=feature |
-| AI-DLC | Execution feedback | `aidlc-docs/` changes |
+| AI-DLC v1 | Execution feedback | `aidlc-docs/` changes |
 | Governance spine | Existing entries | `management_framework/MANAGEMENT_FRAMEWORK.md` |
 
 ### I Produce
 
 | Artifact | Always/Conditional | Consumer |
 |----------|:-:|-----------|
-| `polc-state.md` (marker) | Always | AI-DWG, AI-DLC, user |
+| `polc-state.md` (marker) | Always | AI-DWG, AI-DLC v1, user |
 | Product Vision & Goals | Always | AI-DWG, user |
 | PO Charter & Authority | Always | User, AI-GCE |
-| Prioritized Epic Backlog | Always | AI-DLC, AI-DWG |
+| Prioritized Epic Backlog | Always | AI-DLC v1, AI-DWG |
 | DoR / DoD | Always | AI-DWG, AI-GCE |
 | Release Plan | Always | AI-DWG |
 | Traceability Matrix | Always (minimal) / Ext (full) | AI-GCE, audit |
@@ -146,9 +146,9 @@ See `FAMILY_STRUCTURE.md` for the full tree once built. Summary:
 
 ## 7. Design References
 
-- **Feature Analysis:** `ai-packagebuilder/sessions-open-items/AI-POLC_FEATURE_ANALYSIS.md`
-- **Idea Record:** `ai-packagebuilder/idea-management/ideas/006-product-owner-governance.md`
-- **Critical Design Constraint:** AI-DLC is NOT our product — workspace-mediated integration only
+- **Feature Analysis:** Approved internal feature analysis (retained in the package-development environment)
+- **Idea Record:** Approved idea record (retained in the package-development environment)
+- **Critical Design Constraint:** AI-DLC v1 is NOT our product — workspace-mediated integration only
 - **Concurrent Operation Design:** Session separation (Option A) for v1.0
 
 ---

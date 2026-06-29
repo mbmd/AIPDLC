@@ -109,17 +109,17 @@ All in structured markdown. All traceable. All ready for governance review.
 
 ---
 
-## Part of the AI-* Family
+## Part of AIFLC — the AI-* PDLC Family
 
-AI-PILC is the first node in the AI-* Family chain. Its output (PIP) feeds directly into AI-ADLC for architecture design. But it works perfectly standalone — if you just need structured initiation without the downstream chain, AI-PILC delivers that independently.
+AI-PILC is the first node in the AI-* PDLC Family chain. Its output (PIP) feeds directly into AI-ADLC for architecture design. But it works perfectly standalone — if you just need structured initiation without the downstream chain, AI-PILC delivers that independently.
 
-Learn more: [AI-* Family Whitepaper](../WHITEPAPER.md)
+Learn more: [AI-* Family Whitepaper](../narrative/WHITEPAPER.md)
 
 ---
 
 ## Getting Started
 
-See [kiro-setup/INSTALL.md](./kiro-setup/INSTALL.md) for platform-specific installation instructions.
+See [setup/INSTALL.md](./setup/INSTALL.md) for platform-specific installation instructions.
 
 **Activation:** After installation, start a chat and say:
 ```

@@ -1,7 +1,8 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Tier 2: Story Elaboration
 
-**Activation:** User-enabled. Off by default in chain mode (AI-DLC Inception handles story creation). Active by user choice in standalone mode.
-**Purpose:** Decompose epics into INVEST-compliant user stories with Given/When/Then acceptance criteria — the full PO authoring function for teams without AI-DLC.
+**Activation:** User-enabled. Off by default in chain mode (AI-DLC v1 Inception handles story creation). Active by user choice in standalone mode.
+**Purpose:** Decompose epics into INVEST-compliant user stories with Given/When/Then acceptance criteria — the full PO authoring function for teams without AI-DLC v1.
 
 ---
 
@@ -9,7 +10,7 @@
 
 | Context | Tier 2 Status | Rationale |
 |---------|:---:|---|
-| Chain with AI-DLC (default) | ⬜ OFF | DLC Inception creates stories from epics |
+| Chain with AI-DLC v1 (default) | ⬜ OFF | DLC Inception creates stories from epics |
 | Chain + user explicitly enables | ✅ ON | User wants PO-quality pre-elaboration before DLC |
 | Standalone (user enables) | ✅ ON | No DLC — POLC must produce implementation-ready stories |
 | Standalone (user declines) | ⬜ OFF | User produces stories themselves or uses another tool |
@@ -20,9 +21,9 @@
 
 ## De-Duplication Rule (Chain + Tier 2 Active)
 
-When BOTH AI-POLC Tier 2 AND AI-DLC are in play:
+When BOTH AI-POLC Tier 2 AND AI-DLC v1 are in play:
 - AI-POLC produces stories first (PO-quality, value-framed)
-- AI-DLC Inception may further refine or re-elaborate
+- AI-DLC v1 Inception may further refine or re-elaborate
 - **POLC's stories take precedence** on acceptance criteria and value framing
 - **DLC's refinement takes precedence** on implementation decomposition (units of work)
 - If DLC produces a story that contradicts POLC's AC → flag for PO review

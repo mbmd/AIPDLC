@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Stage 1: Capture
 
 **Lead persona:** `#persona-product-manager`
@@ -27,7 +28,7 @@ Ideas are perishable. The longer between "someone thought of it" and "it's writt
 
 ### Step 1: Check for Existing State
 
-1. Look for `ilc-state.md` in the workspace/output directory
+1. Look for `ilc-state.md` at `pdlc-ws/ideas/` (workspace-root-relative — this is the only location)
 2. If found:
    - Load state file
    - Check status:
@@ -69,24 +70,12 @@ Based on signals:
 
 ### Step 5: Configuration Questions
 
-```markdown
-### Q-01: Output Location
+The output location is **fixed** — `pdlc-ws/ideas/` relative to the workspace root. There is no user choice for path. This aligns with `OUTPUT_AND_STATE_CONTRACT.md` §4.
 
-**Context:** Where should AI-ILC store its output files for this idea?
-
-**Options:**
-- (a) Current directory (default)
-- (b) A specific folder path: ___
-- (c) Let me decide later
-
-**Recommended:** (a) Current directory
-**Rationale:** Keeps things simple; you can always move files later.
-
-**Your Decision:** _[awaiting input]_
-```
+The only configuration question at this stage is the depth level:
 
 ```markdown
-### Q-02: Depth Level
+### Q-01: Depth Level
 
 **Context:** Based on what you've shared, this idea appears to be {scale} in scale and {clarity} in clarity.
 
@@ -103,8 +92,10 @@ Based on signals:
 
 ### Step 6: Create State File
 
-Create `ilc-state.md` with:
+Create `ilc-state.md` at `pdlc-ws/ideas/` (workspace-root-relative) with:
 - Idea Name: derived from user's input (short title — confirm with user if ambiguous)
+- Idea ID: next sequential Register ID, zero-padded to 3 digits (`001`, `002`, …)
+- Idea Folder: `{NNN}-{idea-slug}/` (the per-idea subfolder path, relative to `pdlc-ws/ideas/`)
 - Status: Captured
 - Current Stage: 1
 - Depth Level: as confirmed
@@ -113,18 +104,22 @@ Create `ilc-state.md` with:
 - Created: current date
 - All other fields: pending
 
-### Step 7: Register the Idea
+`ilc-state.md` itself stays **flat** at `pdlc-ws/ideas/` (it is the shared marker). Create `pdlc-ws/ideas/` if it does not already exist.
 
-Add entry to `Idea_Register.md`:
-- ID: next sequential number
-- Name: idea title
-- Status: Captured
-- Score: —
-- Decision: —
-- Route: —
-- Created: current date
+### Step 7: Register the Idea and Create Its Subfolder
 
-If `Idea_Register.md` doesn't exist, create it from template `templates/idea-register.md`.
+1. Add entry to `Idea_Register.md` (Active Ideas table):
+   - ID: next sequential number
+   - Name: idea title
+   - Folder: `{NNN}-{idea-slug}/`
+   - Status: Captured
+   - Score: —
+   - Decision: —
+   - Route: —
+   - Created: current date
+   - If `Idea_Register.md` doesn't exist, create it from template `templates/idea-register.md`.
+2. Derive the slug: idea name → lower-case, spaces → hyphens, punctuation stripped (e.g. "Fleet Tracking Portal" → `fleet-tracking-portal`).
+3. **Create the per-idea subfolder** `pdlc-ws/ideas/{NNN}-{idea-slug}/`. All this idea's artifacts (Idea Statement, briefs, decision record) will be written here. The folder is keyed by the stable Register ID and is **never renamed** — not even when the idea is parked/rejected/routed (status lives in the Register + artifact metadata, not the folder name). See `core-workflow.md` → "MANDATORY: Output Folder Structure".
 
 ### Step 8: Present Capture Summary
 
@@ -134,7 +129,7 @@ If `Idea_Register.md` doesn't exist, create it from template `templates/idea-reg
 🔍 Clarity: {vague/partial/well-articulated}
 🧭 Domain detected: {domain}
 📐 Depth: {Minimal/Standard/Comprehensive}
-📁 Output: {location}
+📁 Output: pdlc-ws/ideas/{NNN}-{idea-slug}/
 
 Idea registered as #{id} in the pipeline.
 

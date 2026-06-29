@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Hooks From Steering — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ This file defines HOW to derive hook JSON files from steering content. It covers
 
 ## MANDATORY: Stage Sub-Role — Automation Engineer
 
-During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in event-driven automation: each hook is a trigger → condition → action pipeline that must fire at exactly the right moment
@@ -25,7 +26,7 @@ During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This
 ### Quality Check
 A good output from this activity sounds like:
 - "security-gate-check.json: event=fileEdited, debounce=Tier A, noise=🔴 Essential. Pattern: `src/modules/*/presentation/**/*.controller.ts`. Prompt cites SEC-001/003/010, includes phase-check, DX silence rule, and compliance logging suffix."
-- "INSTALL-GUIDE.md organizes 13 core hooks + 5 tier-gated + 6 conditional by activation tier. Removal guidance: session-discipline first (highest noise, lowest impact), NEVER remove security-gate-check."
+- "ENFORCEMENT-GUIDE.md organizes 13 core hooks + 5 tier-gated + 6 conditional by activation tier. Removal guidance: session-discipline first (highest noise, lowest impact), NEVER remove security-gate-check."
 
 ---
 
@@ -37,10 +38,23 @@ For EACH hook to generate:
 2. DETERMINE event type → when should this hook fire?
 3. DERIVE file patterns → from tech-stack.md + module-structure.md + folder scan
 4. ASSIGN debounce tier → Tier A (fileEdited) or Tier B (agentStop) or Other
-5. ASSIGN noise classification → 🔴 Essential / 🟠 High-value / 🟡 Advisory
-6. WRITE prompt → cite rule IDs, include phase-check, include DX principle
-7. APPEND compliance logging block → non-negotiable suffix
-8. VALIDATE → patterns exist on filesystem, rule IDs exist in generated rules
+5. APPLY PATTERN SCOPING (Layer 1 — Package Territory Segregation):
+   • Read .governance/PACKAGE_TERRITORIES.md for excluded zones
+   • Ensure derived file patterns do NOT structurally match any excluded zone
+   • If hook needs broad coverage (e.g., secrets) → keep broad pattern BUT rely on Layer 2
+   • Prefer: {module-root}/**/*.{ext} over **/*.{ext}
+   • NEVER use a bare **/*.{ext} that would match .kiro/, .governance/, compliance-log/,
+     project-initiation/, architecture/, docs/, management_framework/, or templates/
+6. PREPEND PACKAGE TERRITORY PREAMBLE (Layer 2 — Runtime Filter):
+   • Load common/hook-preamble.md
+   • For hooks with file context (fileEdited, fileCreated, agentStop): prepend preamble
+   • For non-file hooks (promptSubmit, preToolUse, postTaskExecution, userTriggered): skip
+   • Preamble goes BEFORE the phase check — absolute first evaluation
+7. ASSIGN noise classification → 🔴 Essential / 🟠 High-value / 🟡 Advisory
+8. WRITE prompt → cite rule IDs, include phase-check, include DX principle
+9. APPEND compliance logging block → non-negotiable suffix
+10. VALIDATE → patterns exist on filesystem, rule IDs exist in generated rules,
+    patterns do NOT structurally match excluded zones (unless justified by Layer 2)
 ```
 
 ---
@@ -137,6 +151,53 @@ For an ASP.NET project with module-structure.md showing `src/Modules/{Module}/`:
 | migration-safety | `**/Migrations/**/*.cs` |
 | security-gate-check | `src/Modules/*/Presentation/**/*Controller.cs` |
 | tenant-isolation-check | `src/Modules/*/Domain/Entities/**/*.cs` |
+
+---
+
+## Pattern Scoping — Package Territory Segregation (Layer 1)
+
+### The Mandatory Rule
+
+Hook `patterns` MUST be scoped to application code paths. They MUST NOT structurally match package infrastructure directories. This is Layer 1 of the three-layer segregation strategy.
+
+### Pattern Scoping Decision Tree
+
+```
+Is this hook's pattern a bare wildcard (e.g., **/*.ts, **/*.json)?
+├── YES → Can it be scoped to a module/src root?
+│         ├── YES → Scope it (e.g., src/**/*.ts, src/modules/**/*.ts)
+│         └── NO  → Does this hook GENUINELY need workspace-wide coverage?
+│                   ├── YES (e.g., secrets in any file) → Keep broad, rely on Layer 2 preamble
+│                   └── NO  → Scope it to at least one directory level
+└── NO  → Already scoped (e.g., src/modules/*/presentation/**/*.controller.ts)
+          → Verify it doesn't accidentally include excluded zones → PASS
+```
+
+### Scoping Examples by Hook
+
+| Hook | ❌ NEVER Use | ✅ Use Instead | Why |
+|------|-------------|---------------|-----|
+| sensitive-data-check | `**/*.cs, **/*.ts, **/*.json` | `src/**/*.{ext}, *.env, appsettings*.json` | Excludes .kiro/, .governance/, compliance-log/ structurally |
+| security-gate-check | `**/*Controller.cs` | `src/modules/*/presentation/**/*Controller.cs` | Already scoped — OK |
+| naming-check | (agentStop — no pattern) | N/A | Preamble filters infra files from scan |
+| domain-layer-purity | (agentStop — no pattern) | N/A | Preamble filters infra files from scan |
+
+### Exception: Secrets Detection
+
+The `sensitive-data-check` hook legitimately needs to scan root config files (`.env`, `appsettings.json`, etc.) because secrets can appear there. For this hook:
+- Keep application-scoped patterns PLUS specific root config patterns
+- Use Layer 2 preamble to filter `.kiro/**` and `.governance/**` at runtime
+- Pattern template: `src/**/*.{ext}, *.env, appsettings*.json, {config-roots}`
+
+### Technology-Specific Safe Patterns
+
+| Stack | Application Code Pattern | What's Excluded Structurally |
+|-------|-------------------------|------------------------------|
+| NestJS | `src/**/*.ts`, `src/**/*.json` | `.kiro/`, `.governance/`, `compliance-log/`, root `*.json` |
+| Django | `{app}/**/*.py`, `{app}/**/migrations/*.py` | `.kiro/`, `.governance/`, `compliance-log/`, `docs/` |
+| .NET | `src/**/*.cs`, `src/**/*.json` | `.kiro/`, `.governance/`, `compliance-log/` |
+| Spring Boot | `src/**/*.java`, `src/main/resources/**` | `.kiro/`, `.governance/`, `compliance-log/` |
+| Generic | `src/**/*` | Everything outside `src/` |
 
 ---
 
@@ -256,12 +317,12 @@ OVERWRITE it (keep only the latest result). Add "sessionDedup": true to the even
 
 ---
 
-## INSTALL-GUIDE Generation
+## ENFORCEMENT-GUIDE Generation
 
-When generating `.kiro/hooks/INSTALL-GUIDE.md`, organize hooks by tier:
+When generating `.kiro/hooks/ENFORCEMENT-GUIDE.md`, organize hooks by tier:
 
 ```markdown
-# Hook Installation Guide
+# Hook Enforcement Guide
 
 ## Tier 1 — Active from Day 0
 

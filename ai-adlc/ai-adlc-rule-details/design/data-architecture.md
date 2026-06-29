@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Data Architecture & Schema
 
 ## Stage: 9 of 13
@@ -280,7 +281,7 @@ erDiagram
 - Show relationship cardinality (1:1, 1:N, M:N)
 - Group by domain if large
 - Don't show every column — this is conceptual, not physical schema
-- Physical schema details go in implementation documentation (AI-DLC territory)
+- Physical schema details go in implementation documentation (AI-DLC v1 territory)
 
 ---
 

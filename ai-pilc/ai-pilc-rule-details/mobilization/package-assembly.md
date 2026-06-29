@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Project Initiation Package Assembly
 
 ## Stage: 16 of 16
@@ -312,7 +313,16 @@ This Project Initiation Package was produced using **AI-PILC (AI-Driven Project 
    2. Budget formally approved by Finance
    3. Resolve {n} blocking items on pre-kickoff checklist
    4. Schedule and conduct kickoff meeting
-   5. Transition to execution methodology
+   5. Transition to execution methodology — run AI-POLC with this PIP as input
+
+🔀 **Chain Navigation (what's next in the AI-* Family):**
+   • Sequential next: **AI-POLC** (`_POLC_`) — Product Ownership Life Cycle
+   • Or ask AI-FLO: type `_FLO_` for routing guidance based on your project state
+   • Dashboard data: type `DAT__ pdlc/pilc` to update the family dashboard
+
+⚠️ **IMPORTANT: Start the next package (AI-POLC) in a NEW session.**
+   Each AI-* package loads a full workflow into context;
+   a fresh session keeps it fast and focused.
 
 Thank you for working through this process. The package is ready for
 sponsor review, signature, and kickoff scheduling.

@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Domain Context — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives domain context enforcement rules (DOM-*) from `domain-context.md`. Ensur
 
 ## MANDATORY: Stage Sub-Role — Workspace Architect
 
-During THIS activity, ALSO adopt the mindset of a **Workspace Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of a **Workspace Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in ubiquitous language: the domain glossary is the single source of truth for ALL entity, method, and variable names

@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 ---
 generatedBy: AI-GCE
 generatedVersion: "{version}"
@@ -14,6 +15,8 @@ Defines the JSONL event schema for the compliance logging infrastructure. This f
 ---
 
 ## Log Structure
+
+> **Project ID resolution:** Every log event includes `projectId` — the immutable family-wide correlation key. AI-GCE reads it from `.kiro/steering/workspace-rules.md` → `## Project Identity` section (placed there by AI-DWG). This enables portfolio-level queries across multiple projects when AI-PPM aggregates compliance data via AI-FLO.
 
 ```
 {project-root}/compliance-log/
@@ -38,6 +41,7 @@ Defines the JSONL event schema for the compliance logging infrastructure. This f
   "timestamp": "{ISO-8601-UTC}",
   "type": "check",
   "id": "chk-{YYYYMMDD}-{HHmmss}-{seq}",
+  "projectId": "{project-id from.kiro/steering/workspace-rules.md → Project Identity section}",
   "hook": "{hook-filename-without-extension}",
   "trigger": "{event-type: fileEdited|fileCreated|preToolUse|postTaskExecution|promptSubmit|agentStop|userTriggered}",
   "ruleId": "{RULE-ID checked}",
@@ -58,6 +62,7 @@ When `sessionDedup: true`, only the LAST event per `hook` + `file path` within a
   "timestamp": "{ISO-8601-UTC}",
   "type": "exception",
   "id": "exc-{YYYYMMDD}-{HHmmss}-{seq}",
+  "projectId": "{project-id}",
   "ruleId": "{RULE-ID being bypassed}",
   "ruleSeverity": "{critical|high|medium}",
   "status": "active",
@@ -78,6 +83,7 @@ When `sessionDedup: true`, only the LAST event per `hook` + `file path` within a
   "timestamp": "{ISO-8601-UTC}",
   "type": "remediation",
   "id": "rem-{YYYYMMDD}-{HHmmss}-{seq}",
+  "projectId": "{project-id}",
   "ruleId": "{RULE-ID violated}",
   "ruleSeverity": "{critical|high|medium}",
   "status": "{open|in-progress|resolved}",
@@ -96,6 +102,7 @@ When `sessionDedup: true`, only the LAST event per `hook` + `file path` within a
   "timestamp": "{ISO-8601-UTC}",
   "type": "audit",
   "id": "aud-{YYYYMMDD}-{HHmmss}-{seq}",
+  "projectId": "{project-id}",
   "phase": "{current_phase}",
   "tier": {current_tier},
   "score": {0-100},
@@ -118,6 +125,7 @@ When `sessionDedup: true`, only the LAST event per `hook` + `file path` within a
   "timestamp": "{ISO-8601-UTC}",
   "type": "rederivation",
   "id": "rdr-{YYYYMMDD}-{HHmmss}-{seq}",
+  "projectId": "{project-id}",
   "trigger": "{list of changed steering files}",
   "rulesUpdated": {count},
   "hooksUpdated": {count},
@@ -132,7 +140,7 @@ When `sessionDedup: true`, only the LAST event per `hook` + `file path` within a
 ## Key Rules
 
 1. **Append-only:** Log files MUST NEVER be edited or deleted (GOV-LOG-002)
-2. **Git-committed:** compliance-log/ MUST NOT be in .gitignore (GOV-LOG-009)
+2. **Git-committed:** compliance-log/ MUST NOT be in.gitignore (GOV-LOG-009)
 3. **IDs are unique:** Format ensures no collisions (date + time + sequence)
 4. **Severity SLAs:** Critical = 24h remediation, High = 14d, Medium = 28d
 5. **Exception expiry:** Critical = max 30 days, High = max 90 days, Medium = max 180 days

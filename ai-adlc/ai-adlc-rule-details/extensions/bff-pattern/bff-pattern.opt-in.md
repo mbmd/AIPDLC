@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Extension Opt-In: Backend-for-Frontend (BFF)
 
 ## When This Extension Applies

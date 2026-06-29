@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Downstream Signaling — Triggering AI-GCE Re-Derivation
 
 ## Purpose
@@ -94,7 +95,7 @@ Action required:
   • Generate .kiro/hooks/*.json files (debounce-tiered)
   • Generate .governance/ folder (rules, agents, compliance-log)
   • Initialize .compliance-state.json (Tier 1)
-  • Generate docs/compliance-dashboard.md template
+  • Generate management_framework/dashboards/compliance-dashboard.md template
   • Configure enforcement layer
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -187,13 +188,14 @@ When AI-GCE processes the signal and derives/re-derives, it writes to:
 | Output | Location | Purpose |
 |--------|----------|---------|
 | Compliance hooks | `.kiro/hooks/*.json` | Real-time enforcement via IDE events |
-| Hook install guide | `.kiro/hooks/INSTALL-GUIDE.md` | Tier-based installation roadmap |
+| Hook enforcement guide | `.kiro/hooks/ENFORCEMENT-GUIDE.md` | Tier-based enforcement roadmap |
 | Compliance state | `.compliance-state.json` | Tier tracking, readiness criteria, score history |
 | Governance rules | `.governance/rules/*.md` | Detailed compliance rules (tiered + conditional) |
 | Audit agent | `.governance/agents/compliance-audit-agent.md` | 9-step audit with scoring |
 | Init agent | `.governance/agents/project-init-agent.md` | 5-question scaffolding |
 | Compliance log | `.governance/compliance-log/` | JSONL schema, exception/remediation workflows |
-| Dashboard | `docs/compliance-dashboard.md` | Visual compliance status |
+| Dashboard | `management_framework/dashboards/compliance-dashboard.md` | Visual compliance status |
+| Package Territory Registry | `.governance/PACKAGE_TERRITORIES.md` | Excluded-zone declarations for hook segregation |
 | Brownfield artifacts | `.governance/brownfield-baseline.md` + `incremental-adoption-plan.md` | IF brownfield |
 | Phase/role steering | `.kiro/steering/compliance-*.md` | Optional fileMatch enrichment (Step 4b) |
 

@@ -1,28 +1,31 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # ILC State — {Idea_Name}
 
 ## Workflow State
 | Field | Value |
 |-------|-------|
 | **Idea Name** | {name} |
+| **Idea ID** | {NNN — zero-padded Register ID} |
+| **Idea Folder** | {NNN}-{idea-slug}/ |
 | **Status** | {Captured / Shaped / Evaluated / Scoped / Approved / Routed / Parked / Rejected} |
 | **Current Stage** | {1-6 or Complete} |
 | **Depth Level** | {Minimal / Standard / Comprehensive} |
 | **Domain Detected** | {architecture / governance / devops / testing / licensing / pmo / general} |
 | **Route** | {pending / new-project / change-request / feature-backlog} |
-| **Brief File** | {filename or pending} |
+| **Brief File** | {relative path under Idea Folder, or pending} |
 | **Created** | {ISO date} |
 | **Last Updated** | {ISO date} |
 | **Producer Version** | AI-ILC v1.0.0 |
 
 ## Completed Stages
-| # | Stage | Completed | Key Output |
-|---|-------|-----------|-----------|
-| 1 | Capture | {date or pending} | {Idea registered / pending} |
-| 2 | Shape | {date or pending} | {Idea Statement / pending} |
-| 3 | Evaluate | {date or pending} | {Score: n/35 / pending} |
-| 4 | Scope | {date or pending} | {Scope defined / pending / skipped} |
-| 5 | Approve | {date or pending} | {Decision: approve/park/reject / pending} |
-| 6 | Route & Handoff | {date or pending} | {Route: destination / pending} |
+| # | Stage | Status | Completed | Key Output |
+|---|-------|:------:|:---------:|-----------|
+| 1 | Capture | 🔄 Active | — | |
+| 2 | Shape | ⏳ Pending | — | |
+| 3 | Evaluate | ⏳ Pending | — | |
+| 4 | Scope | ⏳ Pending | — | |
+| 5 | Approve | ⏳ Pending | — | |
+| 6 | Route & Handoff | ⏳ Pending | — | |
 
 ## Pending Decisions
 - {Any unresolved question or deferred choice, or "None"}
@@ -30,7 +33,7 @@
 ## Configuration
 | Field | Value |
 |-------|-------|
-| **Output Root** | {path} |
+| **Output Root** | pdlc-ws/ideas/ |
 | **Project Exists?** | {Yes / No / Unknown} |
 | **Project Name** | {name if known, or N/A} |
 

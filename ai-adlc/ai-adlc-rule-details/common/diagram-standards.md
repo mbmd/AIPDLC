@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Diagram Standards
 
 ## Purpose
@@ -14,7 +15,7 @@ AI-ADLC uses the [C4 Model](https://c4model.com/) for progressive architectural 
 Level 1: System Context    — The system in its environment (who uses it, what it connects to)
 Level 2: Container         — Major deployable/runtime units inside the system
 Level 3: Component         — Internal modules/components within a container
-Level 4: Code              — (NOT produced by AI-ADLC — this is AI-DLC's territory)
+Level 4: Code              — (NOT produced by AI-ADLC — this is AI-DLC v1's territory)
 ```
 
 Each level zooms in from the previous. A reader should be able to understand the system by reading L1 → L2 → L3 in sequence.

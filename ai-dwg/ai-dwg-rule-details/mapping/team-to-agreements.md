@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Mapping: Team Context → TEAM_AGREEMENTS.md + role-isolation.md + coding-standards.md + naming-conventions.md + testing-strategy.md + session-governance.md + project-governance.md + scope-and-risks.md
 
 ## Purpose
@@ -6,11 +7,11 @@ Derives team operational rules, role definitions, coding conventions, and govern
 
 **Outputs:**
 1. `TEAM_AGREEMENTS.md` — Operating rules (root document)
-2. `.kiro/steering/role-isolation.md` — Who does what in AI-DLC workflow
+2. `.kiro/steering/role-isolation.md` — Who does what in AI-DLC v1 workflow
 3. `.kiro/steering/coding-standards.md` — Code patterns and conventions
 4. `.kiro/steering/naming-conventions.md` — File/folder/class/method naming
 5. `.kiro/steering/testing-strategy.md` — Test types, coverage, patterns
-6. `.kiro/steering/session-governance.md` — AI-DLC session rules
+6. `.kiro/steering/session-governance.md` — AI-DLC v1 session rules
 7. `.kiro/steering/project-governance.md` — Sprint cadence, DoD, gates
 8. `.kiro/steering/scope-and-risks.md` — Scope boundaries, risk awareness
 
@@ -24,7 +25,7 @@ During THIS activity, ALSO adopt the mindset of a **Workspace Architect**. This 
 - Design for team self-sufficiency — governance docs should eliminate the need to ask "how do we work here?"
 - Make role boundaries explicit and enforceable — unclear boundaries lead to architects coding and developers making architecture decisions
 - Ensure coding-standards and naming-conventions are technology-specific, not generic — a TypeScript project gets different patterns than Java
-- Write session-governance for AI-DLC as guardrails — prevent the AI from going rogue during code generation sessions
+- Write session-governance for AI-DLC v1 as guardrails — prevent the AI from going rogue during code generation sessions
 - Cross-reference domain-context.md in naming conventions — domain terms override general technology conventions
 
 ### Anti-Patterns for This Activity
@@ -114,7 +115,7 @@ inclusion: always
 | Security | Review auth/authz changes, validate security rules | Block non-security PRs, override architect decisions |
 | PM / Product | Define requirements, prioritize backlog, accept deliverables | Dictate technical approach, skip acceptance testing |
 
-## AI-DLC Role (When AI Implements Code)
+## AI-DLC v1 Role (When AI Implements Code)
 
 | AI MUST | AI MUST NOT |
 |---------|------------|
@@ -255,7 +256,7 @@ inclusion: always
 
 <!-- AI-DWG generated | source: Methodology decisions | date: {generation-date} -->
 
-# Session Governance (AI-DLC)
+# Session Governance (AI-DLC v1)
 
 ## Rules for AI-Assisted Development Sessions
 
@@ -358,6 +359,6 @@ Cross-reference: workspace-rules.md Constraints section
 1. **coding-standards is technology-specific** — Node project gets different standards than Java project
 2. **naming-conventions cross-references domain-context** — domain terms override general conventions
 3. **testing-strategy has specific targets** — "write tests" is not a strategy; "80% unit coverage on business logic" is
-4. **session-governance is for AI-DLC** — rules that prevent the AI from going rogue during code generation
+4. **session-governance is for AI-DLC v1** — rules that prevent the AI from going rogue during code generation
 5. **role-isolation prevents chaos** — clear boundaries stop architects from coding and developers from making architecture decisions
 6. **scope-and-risks preserves awareness** — developers should know what's out of scope and what risks exist

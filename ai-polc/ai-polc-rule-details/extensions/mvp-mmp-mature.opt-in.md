@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Extension: MVP/MMP for Mature Products (Opt-In Prompt)
 
 **Trigger:** User mentions "define next version scope", "next major release", "v2 scope"

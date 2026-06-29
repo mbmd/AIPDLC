@@ -1,8 +1,11 @@
-# Architecture Package Reading Guide
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
+# Peer Input Reading Guide
 
 ## Purpose
 
-This document defines HOW AI-DWG reads, locates, and parses an Architecture Package (AP) produced by AI-ADLC. It covers detection strategy, file identification, content extraction patterns, and error handling when the AP is incomplete or uses a non-standard structure.
+This document defines HOW AI-DWG reads, locates, and parses its **peer inputs**: Architecture Package (AP from AI-ADLC), Product Backlog Package (PBP from AI-POLC), and UX Design Package (UXP from AI-UXD). It covers detection strategy, file identification, content extraction patterns, and error handling when inputs are incomplete or use non-standard structures.
+
+AI-DWG accepts **any non-empty subset** of {ADLC, POLC, UXD} as a *capability* — each input unlocks its own output cluster, and absence of an input means that cluster is not generated. However, the **default start gate waits for all three** peers (AP + PBP + UXP). Starting with fewer than three is a **user-approved exception with acknowledged reduced coverage**, never the silent default (mirrors the AI-FLO fan-in gate; resolves OI-067).
 
 ---
 
@@ -29,33 +32,90 @@ A good output from this activity sounds like:
 
 ---
 
-## Step 1: Locate the Architecture Package
+## Step 1: Locate Peer Inputs
 
-### Detection Strategy (Ordered)
+AI-DWG scans for **three marker files** simultaneously. At least one MUST be found. If none are found, ask the user to point to their input package(s).
+
+### Detection Strategy (All Three Peers — Parallel Scan)
 
 ```
-1. User provides path explicitly
-   → Use that path directly
-   
-2. Scan for marker file (adlc-state.md) in common locations:
-   → ./architecture/
-   → ./docs/architecture/
-   → ../
-   → ./ (current directory)
-   → Any sibling folder of the workspace root
-   
-3. Marker not found
-   → Ask user: "Where is your Architecture Package located?"
-   → User points to folder
-   
-4. No adlc-state.md exists anywhere (standalone/manual mode)
-   → Ask user to identify which documents map to which AP artifact
-   → Proceed without extension detection (no state file to read)
+FOR EACH peer marker:
+   adlc-state.md  (AP — tech cluster)
+   polc-state.md  (PBP — product cluster)
+   uxd-state.md   (UXP — UX cluster)
+
+   1. User provides path explicitly → use it
+   2. Scan common locations for the marker file:
+      → ./architecture/, ./docs/architecture/ (ADLC)
+      → ./backlog/, ./product/ (POLC)
+      → ./design/, ./ux/ (UXD)
+      → ../ (sibling folder for any)
+      → ./ (current directory)
+   3. Not found → peer is ABSENT for this run (cluster skipped)
+
+AFTER scan:
+   IF zero markers found → BLOCK; ask user: "Where are your design packages?"
+   IF 1-2 markers found → DEFAULT GATE NOT MET → show peer-status table +
+                          reduced-coverage warning → require explicit user
+                          approval to proceed (exception), else wait/hold
+   IF all 3 found → default gate met → proceed with full generation (all clusters)
 ```
 
-### Marker File: `adlc-state.md`
+### Default Start Gate (All Three Peers)
 
-This is the anchor. Once found, ALL other AP files are located relative to its directory.
+AI-DWG's **default gate waits for all three** peers — AP (AI-ADLC), PBP (AI-POLC), and UXP (AI-UXD). Before generating, DWG displays each peer's status:
+
+```
+🔎 PEER READINESS — AI-DWG start gate (default = all three)
+
+| Peer | Marker | Status |
+|------|--------|--------|
+| AI-POLC (PBP) | polc-state.md | {✅ Complete / ⏳ In Progress / ❌ Absent} |
+| AI-UXD (UXP)  | uxd-state.md  | {✅ Complete / ⏳ In Progress / ❌ Absent} |
+| AI-ADLC (AP)  | adlc-state.md | {✅ Complete / ⏳ In Progress / ❌ Absent} |
+
+Gate: {✅ ALL READY — proceed | ⚠️ {n}/3 — exception requires approval}
+```
+
+When all three are present → proceed. When fewer than three → DWG does **not** start silently; it surfaces the status table, the Quality-Impact Disclosure below, and requires explicit user approval (acknowledged reduced coverage). If AI-FLO is present, this gate is also enforced upstream at the FLO fan-in; if AI-FLO is absent, **AI-DWG enforces the gate itself** at intake.
+
+### Marker Files Summary
+
+| Marker | Producer | Cluster it enables | If absent |
+|--------|----------|-------------------|-----------|
+| `adlc-state.md` | AI-ADLC | Tech steering + src structure + technical-environment.md | Tech cluster skipped; no src scaffolding |
+| `polc-state.md` | AI-POLC | vision.md + DoD + planning + scope-and-risks | Product cluster skipped; no vision document |
+| `uxd-state.md` | AI-UXD | design-system.md + frontend-standards + ui-implementation-spec | UX cluster skipped; no design system |
+
+### Quality-Impact Disclosure (Mandatory When <3 Inputs Found)
+
+When fewer than all three peer inputs are detected, the **default gate is not met**. DWG MUST present the following BEFORE proceeding, and proceeding is a user-approved exception (not the default):
+
+```
+⚠️ QUALITY-IMPACT DISCLOSURE — default gate (all three) NOT met
+
+Present inputs: {list of found markers + paths}
+Absent inputs: {list of missing markers}
+
+Impact of absent inputs:
+• {ADLC absent}: Cannot produce tech steering (13+ files), src folder structure,
+  or technical-environment.md. AI-DLC v1 will lack technical constraints and module layout.
+• {POLC absent}: Cannot produce vision.md, DEFINITION_OF_DONE.md with product acceptance bar,
+  or scope-and-risks.md. AI-DLC v1 will lack product context and success metrics.
+• {UXD absent}: Cannot produce design-system.md, ui-implementation-spec.md,
+  or frontend accessibility baseline. AI-DLC v1 will lack UX governance and design tokens.
+
+Recommended: WAIT for the missing peer(s) — the default gate is all three.
+Proceed with {n}/3 inputs anyway? (Acknowledged reduced coverage — user must explicitly approve)
+```
+
+**The user MUST explicitly approve** before DWG continues with a partial trio. This is acknowledged degradation (a deliberate exception to the all-three default gate), not silent degradation.
+
+---
+
+## Step 1b: ADLC-Specific State Reading (If ADLC Present)
+
+When `adlc-state.md` is found, ALL other AP files are located relative to its directory. This marker is the anchor for the tech cluster.
 
 **Critical fields to extract from `adlc-state.md`:**
 
@@ -66,47 +126,59 @@ This is the anchor. Once found, ALL other AP files are located relative to its d
 | `Completed Stages` | Confirms AP completeness — flags if stages are missing |
 | `ADR Register` | Inventory of all architecture decisions for cross-referencing |
 | `System Name` | Used as default project display name if user doesn't override |
+| `Project ID` | Immutable family-wide correlation key; embedded in workspace metadata |
+
+### Standalone/Manual Mode (No `adlc-state.md`)
+
+If ADLC marker is absent but the user explicitly points to architecture documentation:
+- Ask user to identify which documents map to which AP artifact
+- Proceed without extension detection (no state file to read)
+- Tech cluster still generates from the manually-mapped documents
 
 ---
 
-## Step 1b: Locate Parallel Inputs (PBP / UXP)
+## Step 1c: Cross-Input Conflict Surfacing (When 2+ Inputs Present)
 
-In the reshaped Project layer, **AI-ADLC, AI-POLC, and AI-UXD run in parallel and all feed AI-DWG**. After locating the AP, also look for two optional sibling inputs. Neither blocks generation — they enrich it.
+When two or more peer inputs are detected, DWG MUST scan for contradictions before proceeding. This is a **hard gate** — generation does not begin until all conflicts are resolved.
 
-### Detection Strategy (per input)
+**Context:** ADLC, POLC, and UXD are designed to own distinct domains (tech / product / UX). Overlap between them is an **anomaly** — something went wrong upstream. DWG surfaces it with root-cause analysis; the user resolves it.
 
-```
-For PBP (AI-POLC output):
-1. User provides path explicitly → use it
-2. Scan for marker polc-state.md in: ./backlog/, ./product/, ../, ./ , sibling folders
-3. Not found → proceed AP-only (PBP enrichment skipped — do NOT block)
+### What to Check
 
-For UXP (AI-UXD output):
-1. User provides path explicitly → use it
-2. Scan for marker uxd-state.md in: ./design/, ./ux/, ../, ./ , sibling folders
-3. Not found → proceed without design-system / accessibility enrichment (do NOT block)
-```
+| Overlap Zone | Sources to Compare | Conflict = |
+|---|---|---|
+| Frontend framework | ADLC Tech Stack vs. UXD design-system component library | Different frameworks for same UI layer |
+| Quality thresholds | ADLC quality attributes vs. POLC DoD metrics | Contradictory performance/coverage targets |
+| Accessibility level | UXD a11y baseline vs. ADLC compliance constraints | Different WCAG levels specified |
+| User model | UXD personas vs. POLC user segments | Describing different user populations |
+| Domain terminology | ADLC bounded contexts vs. POLC product vocabulary | Same concept, different names |
 
-### Marker Files
+### Protocol
 
-| Input | Marker | Producer | What it anchors |
-|-------|--------|----------|-----------------|
-| **PBP** — Product Backlog Package | `polc-state.md` | AI-POLC | DoR/DoD, release/increment slices, acceptance-criteria standard, prioritization model |
-| **UXP** — UX Design Package | `uxd-state.md` | AI-UXD | Design system + tokens, component/pattern inventory, accessibility baseline (WCAG) |
+1. **Detect:** Compare overlapping fields across present inputs
+2. **Classify:** Is it a true contradiction (different answers to same question) or complementary content (different inputs filling different aspects)?
+3. **If contradiction:** Surface with root-cause analysis + suggested correction. Present options: fix upstream / override via ADR / cancel.
+4. **Hard gate:** DWG does NOT proceed until each contradiction is resolved.
+5. **If no contradictions:** Proceed silently — don't report "no conflicts" (noise).
 
-### Graceful Degradation (Lesson 6 — OR-input)
+### Anti-Pattern: Over-Detection
 
-The AP is the generation core. PBP and UXP are *additive enrichment*: when present they sharpen specific outputs (`DEFINITION_OF_DONE.md`, planning templates, `frontend-standards.md`, and a future `design-system.md`); when absent the generator proceeds AP-only with no loss of core function. **Never invent backlog or design content the PBP/UXP doesn't provide** — same rule as the AP (Key Rule 1).
+Not every shared topic is a conflict. Examples of **complementary** (NOT conflicting) content:
+- ADLC specifies "React 18" AND UXD provides React component inventory → complementary
+- POLC defines acceptance format AND ADLC defines quality attributes → different granularity, not contradiction
+- UXD provides design tokens AND ADLC specifies CSS methodology → different layers
 
-> **Forward-declaration note:** AI-POLC (idea 006) and AI-UXD (idea 010) are pending build. This step defines the *detection contract* AI-DWG honors once these producers exist. The detailed PBP→DW and UXP→DW extraction guides are authored at their integration builds (Phase 4), not here.
+Only flag when two inputs provide **contradictory answers to the same question.**
+
+For full conflict-surfacing protocol including presentation format, see `core-generator.md` → "Input Selection & Conflict Surfacing" section.
 
 ---
 
-## Step 2: Identify AP Files
+## Step 2: Identify AP Files (When ADLC Present)
 
 ### Two Naming Patterns
 
-AI-ADLC lets users choose between numbered documents and phase folders. AI-DWG must handle both.
+AI-ADLC lets users choose between numbered documents and phase folders. AI-DWG must handle both. **This step only executes when `adlc-state.md` was found in Step 1.**
 
 **Pattern A: Numbered Documents (Default)**
 
@@ -145,9 +217,9 @@ AI-ADLC lets users choose between numbered documents and phase folders. AI-DWG m
 
 ---
 
-## Step 3: Validate AP Completeness
+## Step 3: Validate AP Completeness (When ADLC Present)
 
-Before generating, verify all required artifacts exist:
+Before generating the tech cluster, verify all required ADLC artifacts exist:
 
 ### Required Artifacts (Generation fails without these)
 
@@ -207,11 +279,11 @@ Status: {READY TO GENERATE | MISSING REQUIRED: {list}}
 
 ---
 
-## Step 4: Extract Content from AP Artifacts
+## Step 4: Extract Content from AP Artifacts (When ADLC Present)
 
 ### What to Extract Per Artifact
 
-For each AP document, extract these specific elements that drive workspace generation:
+For each AP document, extract these specific elements that drive workspace generation. **This step only executes for the tech cluster (ADLC present).**
 
 #### From Architecture Vision
 
@@ -327,7 +399,7 @@ For each AP document, extract these specific elements that drive workspace gener
 
 ---
 
-## Step 5: Detect Active Extensions (AI-ADLC v1.1+)
+## Step 5: Detect Active Extensions (When ADLC Present — AI-ADLC v1.1+)
 
 ### Reading Extension State
 
@@ -364,16 +436,22 @@ When an extension is active, the AP contains ADDITIONAL content that normal (non
 
 ## Step 6: Build the Generation Context
 
-After reading all artifacts, compile a **generation context** — a mental model of the system:
+After reading all **present** peer inputs, compile a **generation context** — a mental model of what's available and what can be produced:
 
 ```
 GENERATION CONTEXT:
-├── System Identity
-│   ├── Name: {from adlc-state or user config}
-│   ├── Vision: {1-2 sentence architecture vision}
-│   └── Type: {monolith | modular-monolith | microservices | hybrid}
+├── Peer Input Inventory
+│   ├── ADLC: {present/absent} → {path if present}
+│   ├── POLC: {present/absent} → {path if present}
+│   ├── UXD:  {present/absent} → {path if present}
+│   └── Quality-impact: {disclosed and approved / full coverage}
 │
-├── Technology Profile
+├── System Identity (assembled from whatever is present)
+│   ├── Name: {from adlc-state, or polc project name, or user config}
+│   ├── Vision: {Architecture Vision if ADLC | Product Vision if POLC | deferred if UXD-only}
+│   └── Type: {monolith | modular-monolith | microservices | hybrid — if ADLC present}
+│
+├── Technology Profile (IF ADLC present)
 │   ├── Primary language: {e.g., TypeScript}
 │   ├── Framework: {e.g., NestJS}
 │   ├── Database: {e.g., PostgreSQL}
@@ -381,40 +459,56 @@ GENERATION CONTEXT:
 │   ├── Queue: {e.g., BullMQ}
 │   └── Frontend: {e.g., React / none}
 │
-├── Complexity Indicators
+├── Product Profile (IF POLC present)
+│   ├── Product vision statement: {1-2 sentences}
+│   ├── Success metrics: {key KPIs}
+│   ├── MVP scope: {IN / OUT boundaries}
+│   └── Prioritization model: {WSJF / MoSCoW / etc.}
+│
+├── UX Profile (IF UXD present)
+│   ├── Design system: {token set + component inventory}
+│   ├── Accessibility target: {WCAG level}
+│   ├── Personas: {list — also feeds Vision if POLC present}
+│   └── User journeys: {key flows}
+│
+├── Complexity Indicators (IF ADLC present)
 │   ├── Module count: {n}
 │   ├── Integration count: {n}
 │   ├── Multi-tenant: {yes/no}
 │   ├── Extensions active: {list}
 │   └── Depth level: {minimal / standard / comprehensive}
 │
-├── Principles (Rules to Encode)
+├── Principles (Rules to Encode — IF ADLC present)
 │   ├── P1: {name} — {statement}
 │   ├── P2: {name} — {statement}
 │   └── ...
 │
-├── Constraints (DON'T Rules)
+├── Constraints (DON'T Rules — IF ADLC present)
 │   ├── C1: {constraint} — source: {where it came from}
 │   └── ...
 │
-├── Modules (Folder Structure)
+├── Modules (Folder Structure — IF ADLC present)
 │   ├── {module-1}: {responsibility}
 │   ├── {module-2}: {responsibility}
 │   └── ...
 │
-└── Conditional Triggers
-    ├── multi-tenancy.md: {yes/no — reason}
-    ├── resilience-standards.md: {yes/no — reason}
-    ├── observability-tracing.md: {yes/no — reason}
-    ├── performance-standards.md: {yes/no — reason}
-    ├── workflow-engine.md: {yes/no — reason}
-    ├── frontend-standards.md: {yes/no — reason}
-    ├── api-versioning.md: {yes/no — reason}
-    ├── event-sourcing.md: {yes/no — reason}
-    └── feature-flags.md: {yes/no — reason}
+└── Cluster Generation Plan
+    ├── Tech cluster: {yes/no — ADLC present?}
+    ├── Product cluster: {yes/no — POLC present?}
+    ├── UX cluster: {yes/no — UXD present?}
+    └── Conditional Triggers (IF ADLC):
+        ├── multi-tenancy.md: {yes/no — reason}
+        ├── resilience-standards.md: {yes/no — reason}
+        ├── observability-tracing.md: {yes/no — reason}
+        ├── performance-standards.md: {yes/no — reason}
+        ├── workflow-engine.md: {yes/no — reason}
+        ├── frontend-standards.md: {yes/no — reason}
+        ├── api-versioning.md: {yes/no — reason}
+        ├── event-sourcing.md: {yes/no — reason}
+        └── feature-flags.md: {yes/no — reason}
 ```
 
-This context drives ALL subsequent mapping and generation. It's the "compiled understanding" of the architecture.
+This context drives ALL subsequent mapping and generation. It's the "compiled understanding" of the project from whichever inputs are present.
 
 ---
 
@@ -432,10 +526,67 @@ This context drives ALL subsequent mapping and generation. It's the "compiled un
 
 ---
 
+---
+
+## Step 7: Accessibility Baseline Extraction & Relay (When UXD Present)
+
+When `uxd-state.md` is found, extract the accessibility baseline and prepare it for two consumers:
+
+### What to Extract
+
+From UXP Accessibility Baseline document:
+- WCAG target level (e.g., 2.1 AA, 2.2 AAA)
+- Specific contrast ratio requirements
+- Touch target minimums
+- Keyboard navigation requirements
+- Screen reader testing expectations
+- Motion/animation policy (prefers-reduced-motion)
+- Focus indicator requirements
+- ARIA usage guidelines
+
+### Where It Goes (Two Destinations)
+
+| Destination | What Gets Relayed | How |
+|---|---|---|
+| **`design-system.md`** (DS-A11Y rules) | Full accessibility governance rules — every specific requirement becomes a DS-A11Y-NN rule | Via `mapping/uxd-to-design-system.md` — Accessibility Governance section |
+| **`frontend-standards.md`** (FE-A11Y rules) | Enriched/overridden accessibility rules — specific WCAG requirements replace generic AP-derived rules | Via `mapping/containers-to-frontend.md` — UXD enrichment of FE-A11Y section |
+| **AI-GCE downstream signal** | Accessibility baseline availability — AI-GCE derives `accessibility-compliance` enforcement hooks from DS-A11Y rules | Via downstream signal: `accessibility-baseline-available` event |
+
+### Signal to AI-GCE
+
+After generation (if UXD present), include accessibility baseline in the downstream signal:
+
+```
+⚡ DOWNSTREAM SIGNAL (ACCESSIBILITY BASELINE)
+   From: AI-DWG
+   To: AI-GCE
+   Event: accessibility-baseline-available
+   Source: AI-UXD Accessibility Baseline (relayed via DWG)
+   WCAG Target: {level}
+   Steering file: .kiro/steering/design-system.md (DS-A11Y-* rules)
+   Action required: Derive accessibility-compliance hooks from DS-A11Y rules
+```
+
+### Relay Logic
+
+DWG does NOT enforce accessibility — it **relays** the baseline into enforceable steering rules. Enforcement is AI-GCE's responsibility. DWG's job:
+1. Extract the baseline from UXP (verbatim requirements)
+2. Transform into prescriptive steering rules (MUST/MUST NOT)
+3. Place in `design-system.md` (primary) and `frontend-standards.md` (cross-reference)
+4. Signal AI-GCE that the baseline is available for hook derivation
+
+### If UXD Absent But ADLC Has Quality Attributes
+
+When UXD is not present but ADLC has accessibility mentioned in Quality Attributes, DWG produces a **basic** accessibility section in `frontend-standards.md` (FE-A11Y-01 through FE-A11Y-08) from the generic Quality Attributes. This is less specific than a UXP baseline but ensures the workspace isn't accessibility-blind.
+
+---
+
 ## Key Rules
 
-1. **NEVER invent architecture decisions.** If the AP doesn't state something, don't assume it. Ask or skip.
-2. **Extract VERBATIM where possible.** Principle statements, constraint definitions, and technology names should be copied exactly — not paraphrased.
-3. **Trace every extraction.** Know which AP document + section provided which piece of generated content (for provenance tracking).
-4. **Respect conditional triggers.** Don't generate files the AP doesn't justify. Don't skip files the AP demands.
-5. **Extension content is authoritative.** If an extension was active, its additional AP content takes precedence over normal conditional logic.
+1. **NEVER invent content absent inputs don't provide.** If a peer input is absent, its cluster is simply not generated. Don't assume or synthesize what's missing.
+2. **Extract VERBATIM where possible.** Principle statements, constraint definitions, technology names, vision statements, and design tokens should be copied exactly — not paraphrased.
+3. **Trace every extraction.** Know which peer input + artifact + section provided which piece of generated content (for provenance tracking).
+4. **Respect conditional triggers.** Don't generate files the present inputs don't justify. Don't skip files the inputs demand.
+5. **Extension content is authoritative.** If an extension was active (ADLC present), its additional AP content takes precedence over normal conditional logic.
+6. **Peer inputs are non-overlapping by design.** Each owns a distinct domain (tech / product / UX). Conflict between them is an anomaly — flag, analyze root cause, present correction suggestion. Do NOT resolve conflicts — user decides.
+7. **Quality-impact disclosure is mandatory.** When fewer than 3 inputs are present, disclose what's missing and get explicit user approval before proceeding.

@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Data Governance — Derivation Logic
 
 ## Purpose
@@ -8,7 +9,7 @@ Derives data governance rules (DATA-*) from `database-rules.md`. 100% steering-d
 
 ## MANDATORY: Stage Sub-Role — Data Architect
 
-During THIS activity, ALSO adopt the mindset of a **Data Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of a **Data Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in data safety: schema migrations are irreversible operations that can destroy production data

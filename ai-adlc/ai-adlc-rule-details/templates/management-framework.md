@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Management Framework — Consolidated Spine Template (AI-ADLC)
 
 | Field | Value |
@@ -6,7 +7,7 @@
 | **Phase Code** | `ADLC` |
 | **Role** | Required producer — second chain package to append (after AI-PILC typically creates the spine) |
 | **Registers Produced** | 4 (Decision, Change, Issue, Lessons) |
-| **Contract Reference** | `ai-packages/MANAGEMENT_FRAMEWORK_CONTRACT.md` v1.1.0 |
+| **Contract Reference** | Management Framework Contract v1.2.0 + Multi-Project Output & State Contract v1.0.0 |
 
 ---
 
@@ -47,23 +48,43 @@ The two records are complementary, not competing. ADRs are formal architecture a
 ## Behavior: Append-if-Exists / Create-if-Absent
 
 ```
-1. DETECT the spine by marker (Lesson 14):
+1. DETECT the spine by marker:
    → Scan for management_framework/MANAGEMENT_FRAMEWORK.md
-   → Detection path: user-provided path → ./management_framework/ → project root
-     → predecessor output folder → ask user.
+   → Multi-project default location: {project_root}/management_framework/ (sibling of architecture/),
+     where {project_root} = pdlc-ws/projects/PRJ-{ABBREV}-{slug}/.
+   → Detection path: user-provided path → {project_root}/management_framework/ →
+     pdlc-ws/projects/*/management_framework/ → predecessor (pip/) project root → ask user.
 
 2. IF marker found (spine exists — typical in chain mode):
    → APPEND ADLC-phase entries to the 4 registers.
-   → Use ID prefix ADLC-{TYPE}-{NNN}.
+   → Use project-qualified ID prefix ADLC-{ABBREV}-{TYPE}-{N} (e.g. ADLC-XYZ-D-1).
    → Add/update the ADLC row in the index's "Contributing Phases" table.
    → DO NOT touch other phases' rows (additive, non-destructive).
 
 3. IF marker NOT found (standalone — no predecessor has run):
-   → CREATE management_framework/ at the configured location.
+   → CREATE management_framework/ at the project root ({project_root}/management_framework/).
    → Generate the index file (MANAGEMENT_FRAMEWORK.md) using the standard template.
    → Generate the 4 registers from the schemas below.
-   → This package operates exactly as standalone (Lesson 19 / Lesson 45).
+   → This package operates exactly as standalone (/).
 ```
+
+---
+
+## ID Assignment Protocol (Numbering — OI-031)
+
+Every entry ID uses the format `ADLC-{ABBREV}-{TYPE}-{N}` where `{N}` is a sequential integer. To assign `{N}`:
+
+```
+1. READ the target register file (e.g. Decision_Log.md).
+2. SCAN all existing rows for this phase+project prefix (ADLC-{ABBREV}-{TYPE}-*).
+3. FIND the highest {N} value currently present.
+4. ASSIGN {N} = highest + 1 (or 1 if no existing entries for this prefix).
+5. WRITE the new entry with the assigned ID.
+```
+
+**Concurrency model:** The AI-* Family operates in a single-user, single-agent model. The scan-and-increment protocol is safe because only one writer operates on a given register at a time. If future parallelism is introduced (multiple agents writing the same register concurrently), a reservation or locking mechanism would be required — that is explicitly deferred.
+
+**Carry-forward continuity:** When a spine is carried forward into a dev workspace (DWG hinge), numbering continues from the last assigned `{N}` — never resets to 1.
 
 ---
 
@@ -79,14 +100,14 @@ All schemas carry the **Phase** column per the contract. AI-ADLC uses prefix `AD
 
 | ID | Phase | Date | Decision | Context / Options Considered | Rationale | Decision Maker | Impact | Status |
 |----|-------|------|----------|------------------------------|-----------|----------------|--------|:------:|
-| ADLC-D-001 | ADLC | {date} | {decision} | {context} | {rationale} | {maker} | {impact} | ✅ Final |
+| ADLC-{ABBREV}-D-1 | ADLC | {date} | {decision} | {context} | {rationale} | {maker} | {impact} | ✅ Final |
 ```
 
 **Status values:** ✅ Final · ☐ Pending · 🔄 Under Review · ⏸️ Deferred · ❌ Reversed
 
 **Governance rules:**
 1. Only sub-threshold decisions here (see ADR boundary above).
-2. Numbered sequentially within the ADLC phase (`ADLC-D-001`, `ADLC-D-002`, ...).
+2. Numbered sequentially per the ID Assignment Protocol above, project-qualified (`ADLC-{ABBREV}-D-1`, `ADLC-{ABBREV}-D-2`,...).
 3. Entries never deleted — only status-updated.
 4. If a Decision_Log entry escalates to architectural significance → migrate to ADR (log a Change entry referencing the move).
 
@@ -100,7 +121,7 @@ All schemas carry the **Phase** column per the contract. AI-ADLC uses prefix `AD
 
 | ID | Phase | Date Raised | Description | Raised By | Impact Assessment | Approval Status | Approved By | Date Approved | Implemented |
 |----|-------|:-----------:|-------------|-----------|-------------------|:---------------:|-------------|:-------------:|:-----------:|
-| ADLC-C-001 | ADLC | {date} | {description} | {role} | {scope/design/timeline impact} | ☐ Pending | _[TBD]_ | — | ☐ No |
+| ADLC-{ABBREV}-C-1 | ADLC | {date} | {description} | {role} | {scope/design/timeline impact} | ☐ Pending | _[TBD]_ | — | ☐ No |
 ```
 
 **Status values:** ☐ Pending · 🔄 Under Assessment · ✅ Approved · ✅ Implemented · ❌ Rejected · ⏸️ Deferred
@@ -117,7 +138,7 @@ All schemas carry the **Phase** column per the contract. AI-ADLC uses prefix `AD
 
 | ID | Phase | Date Raised | Issue | Severity | Area | Owner | Status | Resolution | Resolved |
 |----|-------|:-----------:|-------|:--------:|------|:-----:|:------:|-----------|:--------:|
-| ADLC-I-001 | ADLC | {date} | {issue} | {H/M/L} | {area} | {owner} | ☐ Open | — | — |
+| ADLC-{ABBREV}-I-1 | ADLC | {date} | {issue} | {H/M/L} | {area} | {owner} | ☐ Open | — | — |
 ```
 
 **Status values:** ☐ Open · 🔄 Investigating · ✅ Resolved · ⏸️ On Hold · ❌ Escalated
@@ -134,7 +155,7 @@ All schemas carry the **Phase** column per the contract. AI-ADLC uses prefix `AD
 
 | ID | Phase | Date | Lesson | Context | Action Taken | Category |
 |----|-------|------|--------|---------|--------------|----------|
-| ADLC-L-001 | ADLC | {date} | {lesson} | {what happened} | {corrective action} | {Process/Architecture/Technology/Governance} |
+| ADLC-{ABBREV}-L-1 | ADLC | {date} | {lesson} | {what happened} | {corrective action} | {Process/Architecture/Technology/Governance} |
 ```
 
 **Category note:** AI-ADLC adds "Architecture" as a category (in addition to Process/People/Technology/Governance) — this captures lessons about the design process itself (e.g., "C4 L3 was too granular for this system's size").
@@ -142,6 +163,8 @@ All schemas carry the **Phase** column per the contract. AI-ADLC uses prefix `AD
 ---
 
 ## When AI-ADLC Records (Mapping to Stages)
+
+> Example IDs below omit the project handle for brevity; actual IDs are project-qualified `ADLC-{ABBREV}-{TYPE}-{N}` (e.g. `ADLC-XYZ-D-1`).
 
 | ADLC Stage | Registers Typically Touched | Example Entry |
 |:----------:|---------------------------|---------------|
@@ -188,4 +211,4 @@ When AI-ADLC appends to an existing spine, it adds this row to `MANAGEMENT_FRAME
 
 ---
 
-*Template Version: 1.0.0 | Contract: MANAGEMENT_FRAMEWORK_CONTRACT.md v1.1.0 | Package: AI-ADLC | Phase code: ADLC*
+*Template Version: 1.2.0 | Contract: MANAGEMENT_FRAMEWORK_CONTRACT.md v1.3.0 + OUTPUT_AND_STATE_CONTRACT.md v1.0.0 | Package: AI-ADLC | Phase code: ADLC | IDs: project-qualified ADLC-{ABBREV}-{TYPE}-{N}*

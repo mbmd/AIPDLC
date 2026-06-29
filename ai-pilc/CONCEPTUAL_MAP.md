@@ -127,6 +127,22 @@ All 16 templates live in `templates/` — one per PIP deliverable. They define t
 
 → `common/session-continuity.md` defines the `pilc-state.md` file structure, resume flow, and edge cases for interrupted sessions.
 
+### "How does Project ID work?"
+
+→ Project ID is minted at Stage 1 (Workspace Detection) as `PRJ-{YYYYMMDD}-{NNN}` and written to `pilc-state.md` immediately. It's immutable — Stage 9 (Charter) references the existing ID rather than creating a new one. The correlation key threads through the entire chain: ADLC reads it, DWG embeds it, GCE logs it. (correlation-key threading — one immutable ID carried across every package)
+
+### "What is the Route field in pilc-state.md?"
+
+→ `pilc-state.md` carries a `Route: project` intent field (forward-compatible routing). This tells downstream packages what kind of output PILC produced and what follow-up action is appropriate. Today only one value exists, but the field is forward-declared so future routing logic (e.g., AI-FLO) can read it without requiring PILC changes.
+
+### "Does AI-PILC install a governance agent?"
+
+→ Yes. After PIP completion, AI-PILC **automatically** installs the `initiation-quality-agent` into `.kiro/agents/`. This agent validates PIP output quality (completeness, gate compliance, stakeholder coverage, register integrity, cross-references). Triggered by shortcut `IQA__`. The installation is self-sufficient — no dependency on AI-GCE being present (per AGENT_GOVERNANCE_CONTRACT §5). See `templates/agents/initiation-quality-agent.md` for the full check set, `templates/agents/shortcut-rules-block.md` for the workspace-rules injection, and `templates/agents/agent-guide.md` for the user-facing documentation section.
+
+### "How does traceability work when AI-PILC receives an ILC brief (Mode E)?"
+
+→ Per `TRACEABILITY_CONTRACT.md` §4-C, when AI-PILC ingests an Approved Idea Brief from AI-ILC (Mode E intake), the PIP output **MUST** carry `derivedFrom: {idea-brief-id}` in its front-matter. This is enforced in `inception/source-ingestion.md` (Mode E extraction step). The stamp creates a provenance edge from the idea that spawned the project — ensuring the PIP can always trace back to its ILC origin. This is REQUIRED (not optional) when ILC intake is detected.
+
 ---
 
 ## File Relationships
@@ -141,3 +157,17 @@ core-workflow.md   ← How it executes (runtime orchestration)
 ---
 
 *Created: June 2026 | Package: AI-PILC v1.1*
+
+---
+
+## AI-DFE Data Interface (`ai-pilc-rule-details/data-schema/`)
+
+This package ships a machine-readable data interface consumed by **AI-DFE** (the family data fabric). AI-DFE reads these files to gather this package's output into `{family}-ws/data/pilc-data.json`.
+
+| File | Purpose |
+|------|---------|
+| `pilc-data.schema.json` | JSON Schema — the shape AI-DFE produces for this package |
+| `SOURCE_MAP.md` | Declares where this package's raw output lives + field extraction rules |
+| `SCHEMA_README.md` | Human documentation of the schema, fields, and consumers |
+
+> These files do not change this package's runtime behavior — they are a read-only contract for the data fabric. See AI-DFE for how the data surface is gathered, shaped, and distributed.

@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 ---
 generatedBy: AI-DWG
 generatedVersion: "{version}"
@@ -30,7 +31,7 @@ inclusion: always
 
 <!-- end: AP-sourced -->
 
-## AI Role (During AI-DLC Sessions)
+## AI Role (During AI-DLC v1 Sessions)
 
 <!-- begin: AP-sourced -->
 

@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Session Continuity
 
 ## Purpose
@@ -10,7 +11,9 @@ AI-ADLC architecture design typically spans multiple sessions (days or weeks). T
 
 ### Location
 
-The state file is always located at: `{output_root}/adlc-state.md`
+The state file is always located at: `{output_root}/adlc-state.md`.
+
+In the standard multi-project layout, `{output_root}` = `{project_root}/architecture/` where `{project_root}` = `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/`. So the marker resolves to `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/architecture/adlc-state.md`. The shared spine is a sibling at `{project_root}/management_framework/`. (See `OUTPUT_AND_STATE_CONTRACT.md` §4.)
 
 ### Structure
 
@@ -22,12 +25,15 @@ The state file is always located at: `{output_root}/adlc-state.md`
 | Key | Value |
 |-----|-------|
 | System Name | {system_name} |
+| Project ID | {project_id}  (adopted from PIP; minted only if ADLC originates) |
+| Project Handle | PRJ-{ABBREV} |
+| Project Root | {project_root}  (= pdlc-ws/projects/PRJ-{ABBREV}-{slug}/) |
 | Started | {ISO 8601 timestamp} |
 | Last Updated | {ISO 8601 timestamp} |
 | Producer Version | AI-ADLC v1.1.0 |
 | Workflow Depth | {Minimal / Standard / Comprehensive} |
 | Output Structure | {numbered / phase-folders / custom} |
-| Output Root | {path} |
+| Output Root | {path}  (= {project_root}/architecture/) |
 | Input Source | {PIP path / PRD path / "verbal" / "brownfield"} |
 | Input Mode | {Full PIP / Requirements Doc / Verbal / Brownfield} |
 | Current Phase | {phase_name} |
@@ -91,11 +97,13 @@ The state file is always located at: `{output_root}/adlc-state.md`
 
 ### Step 1: Detect State
 
-1. Scan for `adlc-state.md` in expected locations:
+1. Scan for `adlc-state.md`, in order:
+   - `pdlc-ws/projects/*/architecture/adlc-state.md` (**default multi-project layout**)
    - `./adlc-state.md`
    - `./{system_name}/adlc-state.md`
    - `./architecture/adlc-state.md`
-2. If NOT found → treat as fresh start (go to core-workflow Stage 1)
+2. **If multiple projects are found:** read `pdlc-ws/projects/PROJECTS.md` for the ★ active project and run the active-project selection prompt (resume the chosen project, or start architecture for one that has a PIP but no architecture).
+3. If still NOT found → treat as fresh start (go to core-workflow Stage 1).
 
 ### Step 2: Load State
 

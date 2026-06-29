@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Extension: Full Traceability (Opt-In Prompt)
 
 **Trigger:** User mentions "full traceability", "audit trail", "compliance evidence", "regulatory traceability"
