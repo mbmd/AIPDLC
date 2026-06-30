@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
     AI-* Family Package Installer - Interactive installer for AI-* workflow packages.
@@ -82,9 +82,9 @@ $Bundles = @{
 
 $ManifestFileName = ".ai-family-manifest.json"
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # UI Helpers
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 
 function Write-Banner {
     Write-Host ""
@@ -158,9 +158,9 @@ function Get-PlatformFromChoice {
     }
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Path Mapping (per Design §5.2 — verified path table; family-scoped)
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
+# Path Mapping (per Design S5.2 - verified path table; family-scoped)
+# -----------------------------------------------------------------------------
 
 function Get-PlatformPaths {
     param([string]$PlatformName, [hashtable]$Pkg)
@@ -209,9 +209,9 @@ function Get-PlatformPaths {
     return $result
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # Family Workspace Validation & Skeleton
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 
 function Test-FamilyWsPlacement {
     param([string]$Target)
@@ -307,9 +307,9 @@ data-fabric:
     Write-Step "Created family workspace skeleton: $FamilyWs\ (ideas, projects, portfolio, data) + core\"
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # Install a single package
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 
 function Install-Package {
     param([hashtable]$Package, [string]$PlatformName, [string]$Target, [bool]$IsDryRun, [bool]$IsForce)
@@ -363,14 +363,14 @@ function Install-Package {
     return @{ Name = $Package.Name; CoreDest = $paths.CoreDest; DetailsDest = $paths.DetailsDest }
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # Install family tools (visual tools / extensions under tools/)
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 
 # Dev-only artifacts that must never be copied into a user workspace.
 $ToolsExcludeDirs = @("node_modules", "dist", "demo")
 
-# Fabric trio — family-root routing artifacts read at runtime by AI-FLO and AI-DFE.
+# Fabric trio - family-root routing artifacts read at runtime by AI-FLO and AI-DFE.
 # These live in the FAMILY workspace (planning/orchestration), NOT the DWG-generated
 # dev workspace. Without them FLO returns NOT READY ("no bindings = no routing"). [OI-123]
 $FabricFiles = @("FAMILY_BINDINGS.md", "GATE_PROTOCOL.md", "FAMILY_INTERFACE.md")
@@ -426,12 +426,12 @@ function Install-Tools {
     return $extDirs | ForEach-Object { "$FamilyWs\tools\extensions\$_" }
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # Deploy the fabric trio (FLO/DFE routing graph) to the family rule-details root
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 
 function Get-FamilyRootDest {
-    # The family rule-details root per platform — parent of every package's details dir.
+    # The family rule-details root per platform - parent of every package details dir.
     # For Kiro this is .kiro\{family}\ (D1). Fabric files land here so FLO/DFE resolve them.
     param([string]$PlatformName)
     switch ($PlatformName) {
@@ -473,19 +473,19 @@ function Install-Fabric {
     return $deployed
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Deploy the session orchestrator — the family's SINGLE always-loaded steering
+# -----------------------------------------------------------------------------
+# Deploy the session orchestrator - the family SINGLE always-loaded steering
 # file. All package cores ship `inclusion: manual`; this orchestrator
 # (`inclusion: auto`) is the sole entry point and routes to one package on
 # demand. Keeps the context window free (correction-package Issue 11 / OI-127 /
-# INV-L3-027). Static source — its "State Awareness" stays a placeholder.
-# ─────────────────────────────────────────────────────────────────────────────
+# INV-L3-027). Static source - its "State Awareness" stays a placeholder.
+# -----------------------------------------------------------------------------
 
 function Get-OrchestratorDest {
     # Where the always-loaded orchestrator lands per platform (mirrors CoreDest patterns).
     param([string]$PlatformName)
     switch ($PlatformName) {
-        # Kiro auto-includes (`inclusion: auto`) only files directly in .kiro/steering/ —
+        # Kiro auto-includes (inclusion: auto) only files directly in .kiro/steering/ -
         # a nested family subfolder would NOT auto-load, defeating the orchestrator (OI-127).
         "kiro"        { return ".kiro\steering\session-orchestrator.md" }
         "amazonq"     { return ".amazonq\rules\$Family\session-orchestrator.md" }
@@ -501,7 +501,7 @@ function Install-Orchestrator {
 
     $src = Join-Path $PackagesRoot "session-orchestrator.md"
     if (-not (Test-Path $src)) {
-        Write-Warn "session-orchestrator.md missing from family source — sessions would load no orchestrator (context-budget risk, INV-L3-027)."
+        Write-Warn "session-orchestrator.md missing from family source - sessions would load no orchestrator (context-budget risk, INV-L3-027)."
         return ""
     }
 
@@ -516,15 +516,15 @@ function Install-Orchestrator {
     $destDir = Split-Path -Parent $dest
     if ($destDir -and -not (Test-Path $destDir)) { New-Item -ItemType Directory -Force -Path $destDir | Out-Null }
     Copy-Item $src -Destination $dest -Force
-    Write-Step "Deployed session orchestrator -> $rel  (the family's only always-loaded steering file)"
+    Write-Step "Deployed session orchestrator -> $rel  (the family only always-loaded steering file)"
     return $rel
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Install package agents (Kiro only) — copies runnable agents from each installed
-# package's templates/agents/ into .kiro/agents/ (e.g. FLO's FHC__ / FIA__). [D4]
+# -----------------------------------------------------------------------------
+# Install package agents (Kiro only) - copies runnable agents from each installed
+# package templates/agents/ into .kiro/agents/ (e.g. FLO FHC__ / FIA__). [D4]
 # Other platforms invoke agents via shortcut-rules blocks (per package INSTALL.md).
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 
 function Install-Agents {
     param([array]$InstalledNames, [string]$PlatformName, [string]$Target, [bool]$IsDryRun)
@@ -565,11 +565,11 @@ function Install-Agents {
     return $installed
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # Consumer registration (Obligation 1): scan installed tools for data-demand/
 # declarations and register each in {family}-ws/data/CONSUMER_REGISTRY.md.
-# Generic — any tool shipping data-demand/*.demand.md is auto-registered.
-# ─────────────────────────────────────────────────────────────────────────────
+# Generic - any tool shipping data-demand/*.demand.md is auto-registered.
+# -----------------------------------------------------------------------------
 
 function Register-Consumers {
     param([string]$Target, [bool]$IsDryRun)
@@ -599,9 +599,9 @@ function Register-Consumers {
     if ($added -gt 0) { Write-Step "Registered $added consumer(s) in data\CONSUMER_REGISTRY.md" }
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # Manifest (lives inside {family}-ws/)
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 
 function Save-Manifest {
     param([string]$Target, [string]$PlatformName, [array]$Installed, [array]$Tools, [array]$Fabric, [array]$Agents, [string]$Orchestrator)
@@ -623,7 +623,7 @@ function Save-Manifest {
 
 function Remove-EmptyAncestors {
     # Walk up from a removed file/dir, deleting empty parent dirs, but never
-    # touching shared platform roots (.kiro, steering, .amazonq, rules, …) or the target.
+    # touching shared platform roots (.kiro, steering, .amazonq, rules, etc.) or the target.
     param([string]$LeafPath, [string]$StopAt)
     $protected = @('.kiro', 'steering', '.amazonq', 'rules', '.cursor', '.clinerules', '.github')
     $dir = Split-Path -Parent $LeafPath
@@ -690,7 +690,7 @@ function Invoke-Uninstall {
         }
     }
 
-    # Remove deployed session orchestrator (the family's always-loaded entry point)
+    # Remove deployed session orchestrator (the family always-loaded entry point)
     if ($manifest.PSObject.Properties.Name -contains 'orchestrator' -and $manifest.orchestrator) {
         $p = Join-Path $Target $manifest.orchestrator
         if (Test-Path $p) { Remove-Item -Force $p; Write-Step "Removed orchestrator: $($manifest.orchestrator)" }
@@ -706,7 +706,7 @@ function Invoke-Uninstall {
         }
     }
 
-    # Offer to remove the family workspace (DESTRUCTIVE — contains project data)
+    # Offer to remove the family workspace (DESTRUCTIVE - contains project data)
     $wsRoot = Join-Path $Target $FamilyWs
     if (Test-Path $wsRoot) {
         Write-Host ""
@@ -722,9 +722,9 @@ function Invoke-Uninstall {
     Write-Step "Uninstall complete."
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # Main Flow
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 
 Write-Banner
 
