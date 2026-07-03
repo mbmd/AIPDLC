@@ -6,14 +6,15 @@ inclusion: manual
 
 # Activate via the explicit key `_DFE_`, OR when the user requests data-fabric operations (gather/shape/distribute), freshness/staleness checks, or consumer data. See "Activation & Multi-Package Isolation" before asserting priority in a shared workspace.
 
-# AI-DFE — Core Engine (Data Fabric)
+## AI-DFE: AI-Driven Data Fabric
 
-**Package:** AI-DFE — AI-Driven Data Fabric
 **Version:** 1.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Purpose:** The data layer of the AI-* family — gathers scattered package outputs, shapes them per consumer demands, and distributes structured JSON to one governed read-point (`{family}-ws/data/`). Sole owner and sole writer of that folder.
 
 > **Tagline:** *Fabric it.*
+
+> **This file is the always-loaded dispatcher.** It governs activation, persona, command routing, contracts, and the timestamp guard. Per-stage step detail lives in on-demand detail files under `ai-dfe-rule-details/` (`configure/`, `operate/`, `govern/`) — loaded only when a command runs.
 
 ---
 
@@ -184,51 +185,7 @@ Capture the time **once at the start of a pass** and reuse it, so every file wri
 
 ## The AI-* Family
 
-```
-╔════════════════ PORTFOLIO LAYER · scope = MANY projects ════════════════╗
-
-   (optional)
-    AI-ILC  ⇢  AI-PILC  ⇢  AI-PPM
-    Decide it   Initiate it   Govern it (portfolio of N projects)
-
-╚═════════════════════════════════╤═══════════════════════════════════════╝
-                                   │
-                                AI-FLO   Route it — package-to-package
-                                   │     flow on the edge between layers
-╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
-
-    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
-    Own it      Design UX   Design it   Prepare it       ▲
-                                                         │
-                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
-                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
-
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
-    Guard it   Test it
-
-╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
-```
-
-| Layer | Package | Type | Input | Output |
-|-------|---------|------|-------|--------|
-| Portfolio | **AI-ILC** ² | Interactive workflow (lifecycle) | Raw idea | Approved Idea Brief / Feature Brief |
-| Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
-| Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
-| Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
-| Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
-| Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
-| Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
-
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
-> ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
-
-> **AI-DFE's role relative to the table:** AI-DFE is a continuous data-fabric engine that operates *alongside* the whole family (like AI-FLO, it is not a chain link — it reads every package's marker as a gather trigger). The diagram and table above are reproduced verbatim from the family canonical (`FAMILY_TABLE_MAP.md`) and are never improvised. AI-DFE's own canonical row is maintained in `FAMILY_TABLE_MAP.md`.
+The family chain diagram and the full Package/Type/Input/Output table live in this package's **README** - omitted from this always-loaded dispatcher to keep it lean. This package's operational predecessors, successor, and routing are defined in the Chain Contract / Gate Contract section below. AI-DFE is the family's data-layer engine - it gathers every package's output into one governed read-point.
 
 ---
 

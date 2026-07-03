@@ -457,3 +457,20 @@ V10: TERRITORY SEGREGATION CHECK
 
 **BLOCKING** = must fix before output is complete.
 **WARNING** = flag to user but can proceed.
+
+---
+
+## Checkpoint Enforcement
+
+Beyond the V1–V10 validation pipeline above, AI-GCE enforces these completion checkpoints before declaring any generation pass complete. A checkpoint failure halts or degrades the pass per its failure action.
+
+| Checkpoint | Requirement | Failure Action |
+|------------|-------------|---------------|
+| Workspace marker found | `.kiro/steering/workspace-rules.md` exists | Stop; ask user for workspace path |
+| Technology identified | `tech-stack.md` readable and has technology entry | Warn; use generic file patterns as fallback |
+| Module paths confirmed | `module-structure.md` readable and has module paths | Warn; scan actual folder structure as fallback |
+| Hooks use real paths | All hook file patterns match actual workspace structure | Fix before completing |
+| Rules have sources | Every rule references a specific steering file | Flag untraced rules; request confirmation |
+| No contradictions | Rules in one category don't contradict rules in another | Resolve or flag to user |
+| COMPLIANCE_README generated | `.governance/COMPLIANCE_README.md` exists and is populated | Do not complete without this |
+| Brownfield baseline present | If `brownfield-patterns.md` exists, `.governance/brownfield-baseline.md` must also exist | Trigger Mode 3 if missing |

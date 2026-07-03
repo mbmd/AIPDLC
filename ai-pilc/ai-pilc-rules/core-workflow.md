@@ -23,35 +23,7 @@ inclusion: manual
 
 ## The AI-* Family
 
-```
-╔════════════════ PORTFOLIO LAYER · scope = MANY projects ════════════════╗
-
-   (optional)
-    AI-ILC  ⇢  AI-PILC  ⇢  AI-PPM
-    Decide it   Initiate it   Govern it (portfolio of N projects)
-
-╚═════════════════════════════════╤═══════════════════════════════════════╝
-                                   │
-                                AI-FLO   Route it — package-to-package
-                                   │     flow on the edge between layers
-╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
-
-    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
-    Own it      Design UX   Design it   Prepare it       ▲
-                                                         │
-                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
-                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
-
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
-    Guard it   Test it
-
-╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
-```
-
-The diagram above is the orientation map. **For the full Package/Type/Input/Output table (all packages, with footnotes), see the package README** — it is not duplicated here to keep this always-loaded file lean. What AI-PILC needs operationally — its predecessor, successor, and routing — is defined in the **Chain Contract** section below.
-
-AI-PILC is the first step in the family. Its output (the PIP) is registered/authorized by AI-PPM (when present) and dispatched into the Project layer — where **AI-POLC leads** and AI-UXD + AI-ADLC run concurrently.
+The family chain diagram and the full Package/Type/Input/Output table live in this package's **README** - omitted from this always-loaded dispatcher to keep it lean. This package's operational predecessors, successor, and routing are defined in the Chain Contract / Gate Contract section below.
 
 ---
 
@@ -285,3 +257,7 @@ strictness-default: warn
 
 - `project-initiation` is `internal` — consumed by AI-ADLC, AI-UXD, AI-POLC, AI-PPM within PDLC.
 - `validated-business-case` is the **external seam-in** — declared in `FAMILY_INTERFACE.md` Tier 1.
+
+---
+
+*AI-PILC v1.0.0 | Created: 2026 | Author: Maheri | From raw requirement to a professional, execution-ready Project Initiation Package.*

@@ -53,7 +53,7 @@ Scan the workspace for upstream markers — the **default multi-project layout**
 If upstream markers detected, read and extract:
 
 **From `pilc-state.md` / PIP:**
-- Project ID (correlation key), Project Handle, Project Root — **adopt unchanged, never re-mint**
+- Project ID (correlation key —), Project Handle, Project Root — **adopt unchanged, never re-mint**
 - Project name
 - Business objectives / scope statement
 - Stakeholder register (names, interests, influence)

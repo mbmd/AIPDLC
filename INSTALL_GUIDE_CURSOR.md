@@ -182,6 +182,7 @@ cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details/"* "$TARGET/.pdlc/ai-pilc-rule-detai
 | AI-TGE | `.cursor/rules/pdlc-ai-tge-workflow.mdc` | `.pdlc/ai-tge-rule-details/` |
 | AI-PPM | `.cursor/rules/pdlc-ai-ppm-workflow.mdc` | `.pdlc/ai-ppm-rule-details/` |
 | AI-FLO | `.cursor/rules/pdlc-ai-flo-workflow.mdc` | `.pdlc/ai-flo-rule-details/` |
+| AI-DFE | `.cursor/rules/pdlc-ai-dfe-workflow.mdc` | `.pdlc/ai-dfe-rule-details/` |
 
 > **Important:** The `.mdc` extension and `alwaysApply: true` frontmatter are required for Cursor to load the rules automatically. The installer handles this for you.
 
@@ -189,7 +190,7 @@ cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details/"* "$TARGET/.pdlc/ai-pilc-rule-detai
 
 ## Multi-Package Installation
 
-### Installing All 10 Packages
+### Installing All 11 Packages
 
 ```powershell
 .\installer\install.ps1 -TargetWorkspace "<your-project-path>" -Platform cursor -Bundle full
@@ -214,6 +215,7 @@ $packages = @(
     @{ Name = "ai-dwg";  Core = "core-generator.md"; Rules = "ai-dwg-rules";  Details = "ai-dwg-rule-details";  Desc = "AI-DWG (Workspace Generator)" }
     @{ Name = "ai-gce";  Core = "core-generator.md"; Rules = "ai-gce-rules";  Details = "ai-gce-rule-details";  Desc = "AI-GCE (Governance & Compliance Engine)" }
     @{ Name = "ai-tge";  Core = "core-engine.md";    Rules = "ai-tge-rules";  Details = "ai-tge-rule-details";  Desc = "AI-TGE (Test Governance Engine)" }
+    @{ Name = "ai-dfe";  Core = "core-engine.md";    Rules = "ai-dfe-rules";  Details = "ai-dfe-rule-details";  Desc = "AI-DFE (Data Fabric Engine)" }
 )
 
 foreach ($pkg in $packages) {
@@ -254,6 +256,7 @@ foreach ($pkg in $packages) {
 | 8 | **AI-DWG** | Architecture → Ready-to-code workspace | "Using AI-DWG, generate the workspace" |
 | 9 | **AI-GCE** | Workspace → Compliance enforcement layer | "Using AI-GCE, set up governance" |
 | 10 | **AI-TGE** | Workspace → Test strategy & coverage tracking | "Using AI-TGE, establish test governance" |
+| 11 | **AI-DFE** | Gather, shape, and distribute structured data | "Using AI-DFE, gather data" |
 
 ### Common Starting Points
 
@@ -284,7 +287,8 @@ your-project/
 │       ├── pdlc-ai-polc-workflow.mdc    ← Always loaded
 │       ├── pdlc-ai-dwg-workflow.mdc     ← Always loaded
 │       ├── pdlc-ai-gce-workflow.mdc     ← Always loaded
-│       └── pdlc-ai-tge-workflow.mdc     ← Always loaded
+│       ├── pdlc-ai-tge-workflow.mdc     ← Always loaded
+│       └── pdlc-ai-dfe-workflow.mdc     ← Always loaded
 ├── .pdlc/                               ← AI-* PDLC Family rule-details (on-demand)
 │   ├── ai-ilc-rule-details/
 │   ├── ai-pilc-rule-details/
@@ -295,7 +299,8 @@ your-project/
 │   ├── ai-flo-rule-details/
 │   ├── ai-dwg-rule-details/
 │   ├── ai-gce-rule-details/
-│   └── ai-tge-rule-details/
+│   ├── ai-tge-rule-details/
+│   └── ai-dfe-rule-details/
 ├── pdlc-ws/                             ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 │   └── .ai-family-manifest.json         ← Installer tracking
 └── (your project files)
@@ -434,7 +439,7 @@ Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction 
 | Deliverable file output | ✅ |
 | State persistence | ✅ |
 | Chain marker detection | ✅ |
-| Multi-package install | ✅ All 10 |
+| Multi-package install | ✅ All 11 |
 | AI-DWG workspace gen | ✅ |
 | AI-GCE rule generation | ✅ |
 | AI-GCE hook enforcement | ❌ (Kiro only) |

@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
+# PARALLEL IMPLEMENTATION: install.sh (bash) and install.ps1 (PowerShell) are
+# feature-equivalent siblings. ANY behavioral change here MUST be mirrored in
+# install.ps1, and vice versa. This script MUST stay bash-3.2 safe (macOS ships
+# /bin/bash 3.2.57): NO `declare -A`, `${var,,}`, or `${var^^}`. Enforced by
+# INV-L3-029. [ClaudeCode-Alignment / macos-bash-fix]
+# ─────────────────────────────────────────────────────────────────────────────
 # AI-* Family — Package Installer (macOS / Linux)
 # Installs into the locked family-workspace structure:
 #   Package files  -> .kiro/{family}/ (rule-details) + .kiro/steering/{family}/ (core, Kiro)
@@ -37,12 +43,19 @@ declare -a PKG_COREFILES=("core-workflow.md" "core-workflow.md" "core-engine.md"
 declare -a PKG_RULESDIRS=("ai-ilc-rules" "ai-pilc-rules" "ai-ppm-rules" "ai-flo-rules" "ai-adlc-rules" "ai-uxd-rules" "ai-polc-rules" "ai-dwg-rules" "ai-gce-rules" "ai-tge-rules" "ai-dfe-rules")
 declare -a PKG_DETAILSDIRS=("ai-ilc-rule-details" "ai-pilc-rule-details" "ai-ppm-rule-details" "ai-flo-rule-details" "ai-adlc-rule-details" "ai-uxd-rule-details" "ai-polc-rule-details" "ai-dwg-rule-details" "ai-gce-rule-details" "ai-tge-rule-details" "ai-dfe-rule-details")
 
-declare -A BUNDLES
-BUNDLES[full]="ai-ilc,ai-pilc,ai-ppm,ai-flo,ai-adlc,ai-uxd,ai-polc,ai-dwg,ai-gce,ai-tge,ai-dfe"
-BUNDLES[minimal]="ai-pilc,ai-adlc,ai-dwg"
-BUNDLES[arch]="ai-adlc,ai-dwg,ai-gce"
-BUNDLES[governance]="ai-gce,ai-tge"
-BUNDLES[portfolio]="ai-ilc,ai-pilc,ai-ppm,ai-flo"
+# NOTE: bash 3.2 compatibility (macOS ships /bin/bash 3.2.57). Do NOT use
+# `declare -A` (associative arrays), `${var,,}`, or `${var^^}` — all are bash 4+
+# only and fail on stock macOS. Use case-lookup functions + `tr` instead. [macos-bash-fix]
+bundle_lookup() {
+    case "$1" in
+        full)       echo "ai-ilc,ai-pilc,ai-ppm,ai-flo,ai-adlc,ai-uxd,ai-polc,ai-dwg,ai-gce,ai-tge,ai-dfe" ;;
+        minimal)    echo "ai-pilc,ai-adlc,ai-dwg" ;;
+        arch)       echo "ai-adlc,ai-dwg,ai-gce" ;;
+        governance) echo "ai-gce,ai-tge" ;;
+        portfolio)  echo "ai-ilc,ai-pilc,ai-ppm,ai-flo" ;;
+        *)          echo "" ;;
+    esac
+}
 
 MANIFEST_FILE=".ai-family-manifest.json"
 
@@ -288,7 +301,7 @@ TOOLS_EXCLUDE=(node_modules dist demo)
 # Fabric trio — family-root routing artifacts read at runtime by AI-FLO and AI-DFE.
 # Live in the FAMILY workspace (planning/orchestration), NOT the DWG-generated dev
 # workspace. Without them FLO returns NOT READY ("no bindings = no routing"). [OI-123]
-FABRIC_FILES=("FAMILY_BINDINGS.md" "GATE_PROTOCOL.md" "FAMILY_INTERFACE.md")
+FABRIC_FILES=("FAMILY_BINDINGS.md" "GATE_PROTOCOL.md" "FAMILY_INTERFACE.md" "TRIGGER_KEYS_REFERENCE.md")
 
 # Files inside a package's templates/agents/ that are NOT runnable agents (skip on agent install).
 AGENT_EXCLUDE=("shortcut-rules-block" "-guide" "-section")
@@ -387,9 +400,20 @@ orchestrator_dest() {
 # Deploy the session orchestrator — the family's SINGLE always-loaded steering file.
 # All package cores ship `inclusion: manual`; this orchestrator (`inclusion: auto`)
 # is the sole entry point and routes to one package on demand (OI-127 / INV-L3-027).
+# Which orchestrator source to deploy. Claude Code cannot use Kiro `#hashtag`
+# steering syntax, so it gets a parallel, Read-based template. Keep both in
+# sync (INV-L3-030). [ClaudeCode-Alignment C2]
+orchestrator_source() {
+    if [[ "$1" == "claude-code" && -f "$PACKAGES_ROOT/session-orchestrator.claude.md" ]]; then
+        echo "$PACKAGES_ROOT/session-orchestrator.claude.md"
+    else
+        echo "$PACKAGES_ROOT/session-orchestrator.md"
+    fi
+}
+
 install_orchestrator() {
     local platform="$1" target="$2"
-    local src="$PACKAGES_ROOT/session-orchestrator.md"
+    local src; src="$(orchestrator_source "$platform")"
     if [[ ! -f "$src" ]]; then
         warn "session-orchestrator.md missing from family source — sessions would load no orchestrator (context-budget risk, INV-L3-027)." >&2
         return 0
@@ -404,6 +428,37 @@ install_orchestrator() {
     cp "$src" "$dest"
     step "Deployed session orchestrator -> $rel  (the family's only always-loaded steering file)" >&2
     echo "$rel"
+    return 0
+}
+
+# Claude Code entry point (C1, ClaudeCode-Alignment). Claude Code auto-loads ONLY
+# a real CLAUDE.md (no CLAUDE*.md glob), so the deployed orchestrator never loads
+# on its own. Wire it in via a CLAUDE.md `@import`. Idempotent, marker-guarded,
+# append-safe. Echoes status to stdout: created|appended|exists|dryrun|"".
+install_claude_entrypoint() {   # args: platform target orchestrator_rel
+    [[ "$1" == "claude-code" ]] || { echo ""; return 0; }
+    [[ -n "$3" ]] || { echo ""; return 0; }
+    local claude_md="$2/CLAUDE.md" import="@$3"
+    local start_tag="<!-- AIFLC:${FAMILY}:orchestrator-import:start -->"
+    local end_tag="<!-- AIFLC:${FAMILY}:orchestrator-import:end -->"
+    if [[ "$DRY_RUN" == true ]]; then
+        echo -e "    ${YELLOW}[DRY RUN] Would ensure root CLAUDE.md imports $import${NC}" >&2
+        echo "dryrun"; return 0
+    fi
+    if [[ -f "$claude_md" ]]; then
+        if grep -qF "$import" "$claude_md"; then
+            info "CLAUDE.md already imports the orchestrator - left unchanged" >&2
+            echo "exists"
+        else
+            printf '\n%s\n%s\n%s\n' "$start_tag" "$import" "$end_tag" >> "$claude_md"
+            step "Appended AIFLC orchestrator import to existing CLAUDE.md" >&2
+            echo "appended"
+        fi
+    else
+        printf '# Project Memory\n\n%s\n%s\n%s\n' "$start_tag" "$import" "$end_tag" > "$claude_md"
+        step "Created root CLAUDE.md importing the orchestrator" >&2
+        echo "created"
+    fi
     return 0
 }
 
@@ -427,7 +482,7 @@ install_agents() {
         [[ -d "$src" ]] || continue
         for af in "$src"/*.md; do
             [[ -f "$af" ]] || continue
-            bn="$(basename "$af")"; lc="${bn,,}"; skip=false
+            bn="$(basename "$af")"; lc="$(echo "$bn" | tr '[:upper:]' '[:lower:]')"; skip=false
             for pat in "${AGENT_EXCLUDE[@]}"; do [[ "$lc" == *"$pat"* ]] && skip=true && break; done
             [[ "$skip" == true ]] && continue
             if [[ "$DRY_RUN" == true ]]; then
@@ -526,6 +581,19 @@ do_uninstall() {
         done
         orch="$(jq -r '.orchestrator // empty' "$manifest" 2>/dev/null)"
         [[ -n "$orch" && -f "$target/$orch" ]] && rm -f "$target/$orch" && step "Removed orchestrator: $orch"
+        # Remove the Claude Code entry point. If the installer created CLAUDE.md,
+        # delete it; if it only appended an import block to a pre-existing user
+        # CLAUDE.md, strip just the marker-guarded block and keep their content.
+        ep_path="$(jq -r '.claudeEntrypoint.path // empty' "$manifest" 2>/dev/null)"
+        ep_created="$(jq -r '.claudeEntrypoint.created // empty' "$manifest" 2>/dev/null)"
+        if [[ -n "$ep_path" && -f "$target/$ep_path" ]]; then
+            if [[ "$ep_created" == "true" ]]; then
+                rm -f "$target/$ep_path" && step "Removed Claude entry point: $ep_path"
+            else
+                sed -i.bak '/orchestrator-import:start/,/orchestrator-import:end/d' "$target/$ep_path" && rm -f "$target/$ep_path.bak"
+                step "Removed orchestrator import block from existing CLAUDE.md (content preserved)"
+            fi
+        fi
         # Prune now-empty .kiro/agents
         agents_dir="$target/.kiro/agents"
         [[ -d "$agents_dir" ]] && [[ -z "$(ls -A "$agents_dir" 2>/dev/null)" ]] && rmdir "$agents_dir" 2>/dev/null || true
@@ -595,19 +663,19 @@ step "Platform: $PLATFORM"; echo ""
 
 declare -a SELECTED=()
 if [[ -n "$BUNDLE" ]]; then
-    IFS=',' read -ra SELECTED <<< "${BUNDLES[$BUNDLE]}"
+    IFS=',' read -ra SELECTED <<< "$(bundle_lookup "$BUNDLE")"
     step "Bundle: $BUNDLE (${SELECTED[*]})"
 elif [[ -n "$PACKAGES" ]]; then
     IFS=',' read -ra SELECTED <<< "$PACKAGES"
 else
     show_bundles
     read -rp "  Select bundle [F/M/A/G/P/C]: " bundle_choice
-    case "${bundle_choice^^}" in
-        F) IFS=',' read -ra SELECTED <<< "${BUNDLES[full]}" ;;
-        M) IFS=',' read -ra SELECTED <<< "${BUNDLES[minimal]}" ;;
-        A) IFS=',' read -ra SELECTED <<< "${BUNDLES[arch]}" ;;
-        G) IFS=',' read -ra SELECTED <<< "${BUNDLES[governance]}" ;;
-        P) IFS=',' read -ra SELECTED <<< "${BUNDLES[portfolio]}" ;;
+    case "$(echo "$bundle_choice" | tr '[:lower:]' '[:upper:]')" in
+        F) IFS=',' read -ra SELECTED <<< "$(bundle_lookup full)" ;;
+        M) IFS=',' read -ra SELECTED <<< "$(bundle_lookup minimal)" ;;
+        A) IFS=',' read -ra SELECTED <<< "$(bundle_lookup arch)" ;;
+        G) IFS=',' read -ra SELECTED <<< "$(bundle_lookup governance)" ;;
+        P) IFS=',' read -ra SELECTED <<< "$(bundle_lookup portfolio)" ;;
         C)
             show_catalogue
             read -rp "  Enter package numbers (comma-separated): " picks
@@ -666,6 +734,7 @@ declare -a FABRIC_DEPLOYED=() AGENTS_INSTALLED=()
 fabric_out="$(install_fabric "$PLATFORM" "$TARGET")"
 while IFS= read -r l; do [[ -n "$l" ]] && FABRIC_DEPLOYED+=("$l"); done <<< "$fabric_out"
 ORCHESTRATOR_DEPLOYED="$(install_orchestrator "$PLATFORM" "$TARGET")"
+CLAUDE_ENTRY_STATUS="$(install_claude_entrypoint "$PLATFORM" "$TARGET" "$ORCHESTRATOR_DEPLOYED")"
 if [[ ${#INSTALLED_NAMES[@]} -gt 0 ]]; then
     agents_out="$(install_agents "$PLATFORM" "$TARGET" "${INSTALLED_NAMES[@]}")"
     while IFS= read -r l; do [[ -n "$l" ]] && AGENTS_INSTALLED+=("$l"); done <<< "$agents_out"
@@ -686,6 +755,13 @@ if [[ "$DRY_RUN" != true && ${#INSTALLED_JSON[@]} -gt 0 ]]; then
     declare -a FABRIC_JSON=() AGENTS_JSON=()
     for p in "${FABRIC_DEPLOYED[@]}"; do FABRIC_JSON+=("\"$p\""); done
     for p in "${AGENTS_INSTALLED[@]}"; do AGENTS_JSON+=("\"$p\""); done
+    # Claude Code entry-point record (for clean uninstall). null on other platforms.
+    claude_ep_json="null"
+    if [[ "$CLAUDE_ENTRY_STATUS" == "created" ]]; then
+        claude_ep_json='{"path":"CLAUDE.md","created":true}'
+    elif [[ "$CLAUDE_ENTRY_STATUS" == "appended" || "$CLAUDE_ENTRY_STATUS" == "exists" ]]; then
+        claude_ep_json='{"path":"CLAUDE.md","created":false}'
+    fi
     {
         echo "{"
         echo "  \"installedAt\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\","
@@ -698,7 +774,8 @@ if [[ "$DRY_RUN" != true && ${#INSTALLED_JSON[@]} -gt 0 ]]; then
         echo "  \"tools\": [$(IFS=','; echo "${TOOLS_JSON[*]}")],"
         echo "  \"fabric\": [$(IFS=','; echo "${FABRIC_JSON[*]}")],"
         echo "  \"agents\": [$(IFS=','; echo "${AGENTS_JSON[*]}")],"
-        echo "  \"orchestrator\": \"$ORCHESTRATOR_DEPLOYED\""
+        echo "  \"orchestrator\": \"$ORCHESTRATOR_DEPLOYED\","
+        echo "  \"claudeEntrypoint\": $claude_ep_json"
         echo "}"
     } > "$manifest_path"
     info "Manifest saved: $FAMILY_WS/$MANIFEST_FILE"

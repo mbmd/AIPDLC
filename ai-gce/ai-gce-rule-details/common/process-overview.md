@@ -279,3 +279,37 @@ Generated rules are **concrete verification criteria**, not guidelines:
 | "Security matters" | "Every endpoint MUST have `[Authorize]` or explicit `[AllowAnonymous]`. Checked by security-gate-check on fileEdited." |
 
 This makes rules **checkable by hooks**, **scorable by the audit agent**, and **unambiguous for developers**.
+
+---
+
+## Key Principles (Full List)
+
+These 14 numbered principles govern all AI-GCE derivation. They consolidate and extend the "Hook Design Principles" and "Rules Are Enforceable" guidance above into the canonical operating doctrine.
+
+1. **Read before generating.** Never assume file patterns, module paths, or technology. Read `tech-stack.md` and `module-structure.md` first.
+
+2. **Specificity beats generality.** A hook that watches `src/modules/incident/presentation/**/*.controller.ts` is infinitely more useful than one watching `**/*.ts`.
+
+3. **Every architectural rule traces to a steering file.** Rules without a source can't be justified to the team. Governance rules may trace to built-in baseline OR steering file (both are valid sources).
+
+4. **Warn before blocking.** All hooks start in `askAgent` mode. Teams adopt compliance gradually. Build trust before building blockers.
+
+5. **Brownfield is not an edge case.** Most real projects have existing code. Mode 3 is a first-class path, not an afterthought.
+
+6. **Preserve customizations.** Manual rule additions tagged `<!-- custom -->` survive re-derivation. Teams own their compliance engine after it's generated.
+
+7. **The compliance engine must explain itself.** COMPLIANCE_README.md is mandatory — developers must understand why hooks exist and how to respond to them.
+
+8. **Conditional means conditional.** Never generate enforcement for patterns the architecture doesn't use. A team that doesn't use multi-tenancy should never see a tenant-isolation hook.
+
+9. **Re-derivation is not full regeneration.** When one steering file changes, only the affected rules and hooks update. The rest stay as-is, preserving any team customizations.
+
+10. **Score what you measure.** The compliance audit agent tracks a score. That score must be meaningful — based on applicable rules only, not a fixed total.
+
+11. **Silence is compliance.** If all rules pass, produce no output. Hooks that report "everything is fine" on every fire train developers to ignore them. Only speak when something is wrong.
+
+12. **Phase-aware enforcement.** Rules have phases where they become applicable. Don't fire a change-management gate during Setup phase — that's noise, not governance. Check `.compliance-state.json` before enforcing.
+
+13. **Every hook writes to the log.** No exceptions. The compliance log is the audit trail. A hook that fires but doesn't log is invisible to the audit agent, the dashboard, and external auditors.
+
+14. **Respect the context budget.** AI-GCE generates steering files (Step 4b). The total always-inclusion budget is ≤300 lines. If AI-GCE's generated files push over that limit, convert them to fileMatch. The compliance engine must not degrade Kiro's performance.

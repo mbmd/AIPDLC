@@ -1,4 +1,10 @@
 ﻿#Requires -Version 5.1
+# =============================================================================
+# PARALLEL IMPLEMENTATION: install.ps1 (PowerShell) and install.sh (bash) are
+# feature-equivalent siblings. ANY behavioral change here MUST be mirrored in
+# install.sh, and vice versa. The bash sibling must stay bash-3.2 safe (macOS
+# ships /bin/bash 3.2.57). Enforced by INV-L3-029. [ClaudeCode-Alignment]
+# =============================================================================
 <#
 .SYNOPSIS
     AI-* Family Package Installer - Interactive installer for AI-* workflow packages.
@@ -373,7 +379,7 @@ $ToolsExcludeDirs = @("node_modules", "dist", "demo")
 # Fabric trio - family-root routing artifacts read at runtime by AI-FLO and AI-DFE.
 # These live in the FAMILY workspace (planning/orchestration), NOT the DWG-generated
 # dev workspace. Without them FLO returns NOT READY ("no bindings = no routing"). [OI-123]
-$FabricFiles = @("FAMILY_BINDINGS.md", "GATE_PROTOCOL.md", "FAMILY_INTERFACE.md")
+$FabricFiles = @("FAMILY_BINDINGS.md", "GATE_PROTOCOL.md", "FAMILY_INTERFACE.md", "TRIGGER_KEYS_REFERENCE.md")
 
 # Files inside a package's templates/agents/ that are NOT runnable agents (skip on agent install).
 $AgentExcludePatterns = @("shortcut-rules-block", "-guide", "-section")
@@ -496,10 +502,22 @@ function Get-OrchestratorDest {
     }
 }
 
+function Get-OrchestratorSource {
+    # Claude Code cannot use Kiro `#hashtag` steering syntax, so it gets a
+    # parallel, Read-based orchestrator template. All other platforms use the
+    # generic one. Keep both in sync (INV-L3-030). [ClaudeCode-Alignment C2]
+    param([string]$PlatformName)
+    if ($PlatformName -eq "claude-code") {
+        $claude = Join-Path $PackagesRoot "session-orchestrator.claude.md"
+        if (Test-Path $claude) { return $claude }
+    }
+    return (Join-Path $PackagesRoot "session-orchestrator.md")
+}
+
 function Install-Orchestrator {
     param([string]$PlatformName, [string]$Target, [bool]$IsDryRun)
 
-    $src = Join-Path $PackagesRoot "session-orchestrator.md"
+    $src = Get-OrchestratorSource -PlatformName $PlatformName
     if (-not (Test-Path $src)) {
         Write-Warn "session-orchestrator.md missing from family source - sessions would load no orchestrator (context-budget risk, INV-L3-027)."
         return ""
@@ -518,6 +536,45 @@ function Install-Orchestrator {
     Copy-Item $src -Destination $dest -Force
     Write-Step "Deployed session orchestrator -> $rel  (the family only always-loaded steering file)"
     return $rel
+}
+
+# -----------------------------------------------------------------------------
+# Claude Code entry point (C1, ClaudeCode-Alignment). Claude Code auto-loads ONLY
+# a real `CLAUDE.md` (no `CLAUDE*.md` glob), so the deployed orchestrator never
+# loads on its own. We wire it in via a `CLAUDE.md` `@import`. Idempotent, marker-
+# guarded, append-safe for users who already have a CLAUDE.md. Returns a small
+# object recorded in the manifest so uninstall can cleanly reverse it.
+# -----------------------------------------------------------------------------
+
+function Install-ClaudeEntrypoint {
+    param([string]$PlatformName, [string]$Target, [string]$OrchestratorRel, [bool]$IsDryRun)
+    if ($PlatformName -ne "claude-code" -or [string]::IsNullOrEmpty($OrchestratorRel)) { return $null }
+
+    $claudeMd  = Join-Path $Target "CLAUDE.md"
+    $import    = "@$OrchestratorRel"                       # e.g. @CLAUDE_PDLC_ORCHESTRATOR.md
+    $startTag  = "<!-- AIFLC:$Family`:orchestrator-import:start -->"
+    $endTag    = "<!-- AIFLC:$Family`:orchestrator-import:end -->"
+    $block     = "$startTag`n$import`n$endTag"
+
+    if ($IsDryRun) {
+        Write-Host "    [DRY RUN] Would ensure root CLAUDE.md imports $import" -ForegroundColor Yellow
+        return @{ path = "CLAUDE.md"; created = $false }
+    }
+
+    if (Test-Path $claudeMd) {
+        $existing = Get-Content $claudeMd -Raw
+        if ($existing -match [regex]::Escape($import)) {
+            Write-Info "CLAUDE.md already imports the orchestrator - left unchanged"
+        } else {
+            Add-Content -Path $claudeMd -Value "`n$block`n"
+            Write-Step "Appended AIFLC orchestrator import to existing CLAUDE.md"
+        }
+        return @{ path = "CLAUDE.md"; created = $false }
+    } else {
+        Set-Content -Path $claudeMd -Encoding utf8 -Value "# Project Memory`n`n$block`n"
+        Write-Step "Created root CLAUDE.md importing the orchestrator"
+        return @{ path = "CLAUDE.md"; created = $true }
+    }
 }
 
 # -----------------------------------------------------------------------------
@@ -604,7 +661,7 @@ function Register-Consumers {
 # -----------------------------------------------------------------------------
 
 function Save-Manifest {
-    param([string]$Target, [string]$PlatformName, [array]$Installed, [array]$Tools, [array]$Fabric, [array]$Agents, [string]$Orchestrator)
+    param([string]$Target, [string]$PlatformName, [array]$Installed, [array]$Tools, [array]$Fabric, [array]$Agents, [string]$Orchestrator, $ClaudeEntrypoint)
     $manifest = @{
         installedAt      = (Get-Date -Format "o")
         family           = $Family
@@ -615,6 +672,7 @@ function Save-Manifest {
         fabric           = $Fabric
         agents           = $Agents
         orchestrator     = $Orchestrator
+        claudeEntrypoint = $ClaudeEntrypoint
     }
     $manifestPath = Join-Path $Target "$FamilyWs\$ManifestFileName"
     $manifest | ConvertTo-Json -Depth 4 | Out-File -FilePath $manifestPath -Encoding utf8
@@ -703,6 +761,28 @@ function Invoke-Uninstall {
             $p = Join-Path $Target $rel
             if (Test-Path $p) { Remove-Item -Force $p; Write-Step "Removed agent: $rel" }
             Remove-EmptyAncestors -LeafPath $p -StopAt $Target
+        }
+    }
+
+    # Remove the Claude Code entry point (CLAUDE.md). If the installer created the
+    # file, remove it entirely; if it only appended an import block to a pre-existing
+    # user CLAUDE.md, strip just the marker-guarded block and keep their content.
+    if ($manifest.PSObject.Properties.Name -contains 'claudeEntrypoint' -and $manifest.claudeEntrypoint) {
+        $ep = $manifest.claudeEntrypoint
+        $epPath = Join-Path $Target $ep.path
+        if (Test-Path $epPath) {
+            if ($ep.created) {
+                Remove-Item -Force $epPath
+                Write-Step "Removed Claude entry point: $($ep.path)"
+            } else {
+                $startTag = "<!-- AIFLC:$($manifest.family)`:orchestrator-import:start -->"
+                $endTag   = "<!-- AIFLC:$($manifest.family)`:orchestrator-import:end -->"
+                $pattern  = "(?s)\r?\n?" + [regex]::Escape($startTag) + ".*?" + [regex]::Escape($endTag) + "\r?\n?"
+                $content  = Get-Content $epPath -Raw
+                $stripped = [regex]::Replace($content, $pattern, "")
+                Set-Content -Path $epPath -Encoding utf8 -Value $stripped
+                Write-Step "Removed orchestrator import block from existing CLAUDE.md (content preserved)"
+            }
         }
     }
 
@@ -854,12 +934,13 @@ Write-Host "  Deploying fabric + agents..." -ForegroundColor White
 Write-Host "  ----------------------------" -ForegroundColor DarkGray
 $installedFabric = Install-Fabric -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
 $installedOrchestrator = Install-Orchestrator -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
+$installedClaudeEntrypoint = Install-ClaudeEntrypoint -PlatformName $Platform -Target $TargetWorkspace -OrchestratorRel $installedOrchestrator -IsDryRun $DryRun
 $installedAgents = Install-Agents -InstalledNames ($installedPackages | ForEach-Object { $_.Name }) -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
 
 # Step 7: Manifest
 if (-not $DryRun -and $installedPackages.Count -gt 0) {
     Write-Host ""
-    Save-Manifest -Target $TargetWorkspace -PlatformName $Platform -Installed $installedPackages -Tools $installedTools -Fabric $installedFabric -Agents $installedAgents -Orchestrator $installedOrchestrator
+    Save-Manifest -Target $TargetWorkspace -PlatformName $Platform -Installed $installedPackages -Tools $installedTools -Fabric $installedFabric -Agents $installedAgents -Orchestrator $installedOrchestrator -ClaudeEntrypoint $installedClaudeEntrypoint
 }
 
 # Step 7: Summary

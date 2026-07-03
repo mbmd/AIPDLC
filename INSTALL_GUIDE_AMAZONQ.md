@@ -165,12 +165,13 @@ cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details" "$TARGET/.amazonq/pdlc/"
 | AI-TGE | `.amazonq/rules/pdlc/ai-tge-rules/core-engine.md` | `.amazonq/pdlc/ai-tge-rule-details/` |
 | AI-PPM | `.amazonq/rules/pdlc/ai-ppm-rules/core-engine.md` | `.amazonq/pdlc/ai-ppm-rule-details/` |
 | AI-FLO | `.amazonq/rules/pdlc/ai-flo-rules/core-engine.md` | `.amazonq/pdlc/ai-flo-rule-details/` |
+| AI-DFE | `.amazonq/rules/pdlc/ai-dfe-rules/core-engine.md` | `.amazonq/pdlc/ai-dfe-rule-details/` |
 
 ---
 
 ## Multi-Package Installation
 
-### Installing All 10 Packages
+### Installing All 11 Packages
 
 ```powershell
 .\installer\install.ps1 -TargetWorkspace "<your-project-path>" -Platform amazonq -Bundle full
@@ -187,7 +188,7 @@ New-Item -ItemType Directory -Force -Path "$Target\.amazonq\pdlc" | Out-Null
 
 $packages = @(
     "ai-ilc", "ai-pilc", "ai-ppm", "ai-flo", "ai-adlc",
-    "ai-uxd", "ai-polc", "ai-dwg", "ai-gce", "ai-tge"
+    "ai-uxd", "ai-polc", "ai-dwg", "ai-gce", "ai-tge", "ai-dfe"
 )
 
 foreach ($pkg in $packages) {
@@ -221,6 +222,7 @@ foreach ($pkg in $packages) {
 | 8 | **AI-DWG** | Architecture → Ready-to-code workspace | "Using AI-DWG, generate the workspace" |
 | 9 | **AI-GCE** | Workspace → Compliance enforcement layer | "Using AI-GCE, set up governance" |
 | 10 | **AI-TGE** | Workspace → Test strategy & coverage tracking | "Using AI-TGE, establish test governance" |
+| 11 | **AI-DFE** | Gather, shape, and distribute structured data | "Using AI-DFE, gather data" |
 
 ### Common Starting Points
 
@@ -261,7 +263,9 @@ your-project/
 │   │       │   └── core-generator.md        ← Always loaded
 │   │       ├── ai-gce-rules/
 │   │       │   └── core-generator.md        ← Always loaded
-│   │       └── ai-tge-rules/
+│   │       ├── ai-tge-rules/
+│   │       │   └── core-engine.md           ← Always loaded
+│   │       └── ai-dfe-rules/
 │   │           └── core-engine.md           ← Always loaded
 │   └── pdlc/                             ← AI-* PDLC Family rule-details (on-demand)
 │       ├── ai-ilc-rule-details/
@@ -273,7 +277,8 @@ your-project/
 │       ├── ai-flo-rule-details/
 │       ├── ai-dwg-rule-details/
 │       ├── ai-gce-rule-details/
-│       └── ai-tge-rule-details/
+│       ├── ai-tge-rule-details/
+│       └── ai-dfe-rule-details/
 ├── pdlc-ws/                             ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 │   └── .ai-family-manifest.json         ← Installer tracking
 └── (your project files)
@@ -386,7 +391,7 @@ Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction 
 | Deliverable file output | ✅ |
 | State persistence | ✅ |
 | Chain marker detection | ✅ |
-| Multi-package install | ✅ All 10 |
+| Multi-package install | ✅ All 11 |
 | AI-DWG workspace gen | ✅ |
 | AI-GCE rule generation | ✅ |
 | AI-GCE hook enforcement | ❌ (Kiro only) |

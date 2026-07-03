@@ -15,22 +15,25 @@ inclusion: manual
 **Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
 **Purpose:** Read architecture decisions (from AI-ADLC) and a development workspace (from AI-DWG), derive a structured test governance layer — strategy, register, coverage tracking, risk scoring — and continuously observe AI-DLC v1 execution to maintain test accountability. Works on both fresh (greenfield) and existing (brownfield) codebases.
 **Compatible With:** AI-ADLC v1.0+ (Architecture Package), AI-DWG v1.0+ (Development Workspace), AI-DLC v1 (v0.1.8+ aidlc-docs structure)
+**Metaphor:** A test governance inspector — it reads everything the architecture promised (API contracts, security decisions, integration maps, component designs), builds a register of tests that MUST exist to verify those promises, then watches the build and scores the risk of every gap.
 
-**Metaphor:** A test governance inspector. It reads everything the architecture promised — API contracts, security decisions, integration maps, component designs — and builds a register of tests that MUST exist to verify those promises were kept. Then it watches the build, tracking what gets tested and what doesn't, scoring the risk of every gap.
+> **This file is the always-loaded dispatcher.** It carries identity, activation, persona, the interaction + command-dispatch surface, and the chain + gate contracts. Step-by-step stage detail lives in on-demand detail files under the resolved rule-details directory (`common/`, `strategy/`, `observation/`, `templates/`) — load them when a stage runs.
 
 ---
 
 ## MANDATORY: Obtaining the Current Timestamp
 
-When you need the current date/time to stamp generated output (e.g. a dashboard's "Last refreshed", a coverage report, or a state-file `Last Updated`), **always source it from a shell command via the normal command-execution tool. NEVER use an internal, hosted, or "server-side" time/code-execution tool to compute the time** — doing so emits an unsupported content block and aborts the run.
+AI-TGE stamps time in several places: a quality dashboard's "Last refreshed", coverage/debt report timestamps, defect-log dates, and the `tge-state.md` `Last Updated`. **Always source the current time from a shell command via the normal command-execution tool. NEVER use an internal, hosted, or "server-side" time/code-execution tool to compute the time** — doing so emits an unsupported content block and aborts the run.
 
-Get the current UTC instant with one command, then reuse it for the whole pass:
+Run this one command to get both the ISO-8601 instant and the Unix epoch in milliseconds, then reuse both values for the whole pass:
 
 ```powershell
-[DateTimeOffset]::UtcNow.ToString('o')
+$n = [DateTimeOffset]::UtcNow; $n.ToString('o'); $n.ToUnixTimeMilliseconds
 ```
 
-On a non-Windows shell: `date -u +%Y-%m-%dT%H:%M:%SZ`.
+- First line → ISO-8601 UTC instant for dashboard "Last refreshed", report `generatedOn`, `tge-state.md` `Last Updated`, defect/coverage dates.
+- Second line → the `{epoch-ms}` value where a millisecond epoch is needed (e.g. an ordered dashboard/coverage snapshot prefix).
+- On a non-Windows shell, the equivalent is `date -u +%Y-%m-%dT%H:%M:%S.%3NZ` and `date +%s%3N`.
 
 Capture the time **once at the start of a pass** and reuse it, so every file written in one pass shares a consistent stamp.
 
@@ -38,54 +41,7 @@ Capture the time **once at the start of a pass** and reuse it, so every file wri
 
 ## The AI-* Family
 
-The family is organized into two **layers** joined by a **router on the edge**: the
-Portfolio layer reasons across MANY projects; the Project layer executes ONE project.
-
-```
-╔════════════════ PORTFOLIO LAYER · scope = MANY projects ════════════════╗
-
-   (optional)
-    AI-ILC  ⇢  AI-PILC  ⇢  AI-PPM
-    Decide it   Initiate it   Govern it (portfolio of N projects)
-
-╚═════════════════════════════════╤═══════════════════════════════════════╝
-                                   │
-                                AI-FLO   Route it — package-to-package
-                                   │     flow on the edge between layers
-╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
-
-    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
-    Own it      Design UX   Design it   Prepare it       ▲
-                                                         │
-                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
-                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
-
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
-    Guard it   Test it
-
-╚═════════════════════════════════════════════════════════════════════════╝
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
-```
-
-| Layer | Package | Type | Input | Output |
-|-------|---------|------|-------|--------|
-| Portfolio | **AI-ILC** ² | Interactive workflow (lifecycle) | Raw idea | Approved Idea Brief / Feature Brief |
-| Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
-| Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
-| Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
-| Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
-| Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
-| Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
-
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
-> ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
-
-**AI-TGE's position:** a continuous **test-governance companion** in the **Project layer**. It is not a sequential stage — it reads the Architecture Package (AI-ADLC) and Development Workspace (AI-DWG), runs alongside AI-DLC v1 together with AI-GCE as a continuous quality engine, and feeds its findings back into project quality rather than into a downstream package.
+The family chain diagram and the full Package/Type/Input/Output table live in this package's **README** - omitted from this always-loaded dispatcher to keep it lean. This package's operational predecessors, successor, and routing are defined in the Chain Contract / Gate Contract section below. AI-TGE is a continuous test-governance companion in the Project layer (reads the AP from AI-ADLC and DW from AI-DWG; observes AI-DLC v1 alongside AI-GCE) - not a sequential chain stage.
 
 ---
 
@@ -122,515 +78,169 @@ When executing this engine, adopt the role defined in:
 - Think in terms of: repeatability, systematic derivation, structured governance
 - Prioritize: consistency, auditability, non-intrusive tracking
 
-**Sub-roles per stage:** See `.kiro/steering/ai-tge-rules.md` for the complete stage → sub-role mapping.
+**Sub-roles per stage:** See `.kiro/steering/ai-tge-rules.md` for the complete stage → sub-role mapping (additive — a sub-role layers on top of the primary, never replaces it; max two personas active per activity).
 
 **Communication style:** Precise, evidence-based, risk-aware. Never vague about what's missing — always specific about which commitment lacks which test type and why it matters.
 
----
-
-## Adaptive Engine Principle
-
-AI-TGE adapts to what exists. It does NOT require the full chain to have run.
-
-**Input modes (detect automatically):**
-
-| Mode | What Exists | Behavior |
-|------|------------|----------|
-| **Full Chain** | AP + DW + aidlc-docs (AI-DLC v1 running) | Full strategy + observation |
-| **Architecture Only** | AP (from AI-ADLC) but no DW or DLC | Strategy mode only — derive register from AP |
-| **Brownfield** | Existing project with existing tests (no AP) | Assessment mode — map existing tests, identify gaps |
-| **Observation Only** | Active AI-DLC v1 with aidlc-docs but no prior TGE run | Jump to observation — register what should be tested as you go |
-
-Detection order:
-1. Check for `tge-state.md` (resume if found)
-2. Check for AP marker (`adlc-state.md`) → full chain or architecture-only
-3. Check for aidlc-docs/ → observation possible
-4. Check for existing test directories → brownfield assessment possible
-5. None found → ask user what they have
-
-**Graceful degradation (OR-input):** AI-TGE never blocks on a missing predecessor. AP alone produces architecture-derived strategy. Existing tests alone produce brownfield assessment. Running AI-DLC v1 alone produces observation-only tracking. Each input is additive enrichment — its absence reduces scope but never halts the engine.
-
----
-
-## Two-Source Derivation Model
-
-AI-TGE derives test requirements from TWO sources:
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│  SOURCE 1: ARCHITECTURE PACKAGE (project-specific, from AI-ADLC)         │
-│  ────────────────────────────────────────────────────────────────────────│
-│  What: API contracts, component designs, ADRs, security decisions,       │
-│        integration maps, data models, NFR commitments                    │
-│  Result: Tailored test requirements linked to specific commitments       │
-│  If absent: No architecture-specific tests (only baseline)               │
-│                                                                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│  SOURCE 2: BUILT-IN TEST GOVERNANCE BASELINE (universal minimums)        │
-│  ────────────────────────────────────────────────────────────────────────│
-│  What: Universal test expectations that apply to ANY project              │
-│  Result: Tests that should exist regardless of what the AP says          │
-│  If AP silent on topic: Baseline provides minimum coverage               │
-│  If AP provides more: Baseline is enriched (both apply)                  │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-### Built-In Baseline Test Requirements (Always Applied)
-
-| Component Type | Required Test | Rationale |
-|---------------|--------------|-----------|
-| Any API endpoint | Contract test (request/response schema) | API promises must be verifiable |
-| Any auth flow | Security test (authn + authz verification) | Security is never optional |
-| Any data mutation | Data integrity test (write → read → verify) | Data corruption is catastrophic |
-| Any external integration | Integration test (connectivity + error handling) | External dependencies fail |
-| Any business rule | Unit test (rule logic isolation) | Business logic is core value |
-| Any user-facing workflow | Acceptance test (end-to-end happy path) | User experience must work |
-| Any error handler | Negative test (error path verification) | Failure modes must be handled |
-| Any configuration | Config validation test (valid + invalid inputs) | Bad config causes outages |
-
-### Resolution Rule
-
-```
-IF AP explicitly defines a commitment for this component:
-   → Derive specific test requirements (type, scope, assertions)
-   → Baseline ALSO applies (additive, not replaced)
-
-IF AP is silent on this component:
-   → Baseline provides minimum test expectation
-   → Flag as "baseline-only coverage" in register
-
-IF component doesn't fit any baseline category:
-   → No auto-derived requirement (but can be manually registered)
-```
+This role applies to ALL work done while this engine is active. Do not revert to generic assistant behavior.
 
 ---
 
 ## MANDATORY: Rule Details Loading
 
-When performing any stage, read relevant detail files from:
-- `ai-tge-rule-details/common/` — cross-cutting docs
-- `ai-tge-rule-details/strategy/` — Phase 1 stage details
-- `ai-tge-rule-details/observation/` — Phase 2 stage details
+CRITICAL: When performing any stage, you MUST read and use relevant content from rule detail files. Check these paths in order and use the first one that exists:
 
-Load `common/process-overview.md` and `common/test-taxonomy.md` at engine start.
+- `.ai-tge/ai-tge-rule-details/` (AI-assisted setup)
+- `.kiro/ai-tge-rule-details/` (Kiro IDE setup)
+- `ai-tge-rule-details/` (standalone setup)
+
+All subsequent rule detail file references are relative to whichever rule details directory was resolved above. Detail roots: `common/` (cross-cutting), `strategy/` (Phase 1 stage details), `observation/` (Phase 2 stage details), `templates/` (output + agent templates).
+
+**Common rules — ALWAYS load at engine start:** `common/process-overview.md` (engine map, two phases, four input modes, depth calibration, family table, user commands, boundary) and `common/test-taxonomy.md` (ISTQB classification). Load `common/two-source-model.md` before requirement derivation (Stage 3) and `common/session-continuity.md` on resume.
 
 ---
 
 ## MANDATORY: Welcome Message
 
-On first activation, load and display `common/welcome-message.md`. Display ONCE only.
+On first activation (when no `tge-state.md` exists), load and display `common/welcome-message.md`. Display ONCE only — on resume (state file found), show the resume prompt instead (`common/session-continuity.md`).
+
+---
+
+## MANDATORY: Interaction Model
+
+AI-TGE is an adaptive engine with three interaction modes:
+
+- **Operation mode** — does governance work: detect, derive, score, observe, reconcile, report. Mutates only its own territory `.tge/` (strategy, register, coverage, debt, defect log, state). **Never writes test code or any source file** (Govern, don't write — Key Principle 1).
+- **Report mode** (`TGV__`, `CVR__`, `_ACTIVE_`) — reads and reports; never writes.
+- **Continuous mode** — during the Observation phase, a completed AI-DLC v1 unit, an AP change, or a coverage-check request re-enters the engine at the relevant stage and refreshes only what changed (non-blocking — inform, don't gate).
+
+**Gate behavior:** the Strategy phase has explicit user approval at each stage; the Observation phase runs autonomously (inform, don't block).
+
+---
+
+## MANDATORY: Command Dispatch (`TGV__` / `CVR__`)
+
+This is the authoritative dispatch surface. AI-TGE is driven by **session intents** (request- or event-triggered); the two `__` triggers it ships are its read-only governance agents. When an intent arrives, run **exactly** the stage sequence in its row. `Mode` is binding: **mutate** intents may write `.tge/` (never source/test code); **report** intents MUST NOT write (Checkpoint Enforcement). Capture the timestamp once per mutate pass and reuse it.
+
+| Intent (trigger) | Mode | Enters at → runs (in order) | Detail files |
+|------------------|------|------------------------------|--------------|
+| **Strategy** (first invoke / "derive test strategy" / "build register") | mutate | Stage 1 Detection → 2 Architecture Reading → 3 Requirement Derivation → 4 Brownfield (if existing tests) → 5 Strategy Generation → 6 Risk Scoring | `strategy/{workspace-detection,architecture-reading,test-requirement-derivation,brownfield-assessment,test-strategy-generation,risk-scoring}.md` |
+| **Observation** (AI-DLC v1 running / "check coverage now") | mutate | Stage 7 State Observation → 8 Story Mapping (if stories) → 9 Coverage Reporting → 12 Debt Reassessment | `observation/{state-observation,story-acceptance-mapping,coverage-reporting,debt-reassessment}.md` |
+| **Reconcile** ("reconcile" / AP changed since last read) | mutate | Stage 10 Architecture Reconciliation → 12 Debt Reassessment | `observation/{architecture-reconciliation,debt-reassessment}.md` |
+| **Coverage** ("show coverage" / "show register" / "show debt") | mutate (report-style render) | Stage 9 Coverage Reporting (+ 12 if re-score needed) | `observation/{coverage-reporting,debt-reassessment}.md` |
+| **Log defect** ("log defect" / test failure reported) | mutate | Stage 11 Defect Logging | `observation/defect-logging.md` |
+| `TGV__` (test-governance-agent, TGE-AG-01) | report | Test-governance quality assessment over `.tge/` (strategy/register/scoring completeness + traceability). No write. | `templates/agents/test-governance-agent.md` |
+| `CVR__` (coverage-review-agent, TGE-AG-02) | report | Coverage-trend review during Observation (gaps, risk-priority adherence). No write. | `templates/agents/coverage-review-agent.md` |
+| `_ACTIVE_` | report | Report which AI-* package is active + `tge-state.md` status. No write. | — |
+
+**Dispatch rules:**
+1. **Gate in Strategy, continuous in Observation** — every Strategy-phase stage (1–6) ends in a user-approval gate before the next runs; Observation-phase stages (7–12) run autonomously (inform, don't block).
+2. **Report never writes** — `TGV__`, `CVR__`, and `_ACTIVE_` produce reports only; no `.tge/` file is created or modified.
+3. **Resume-aware** — if `tge-state.md` exists, every intent first loads state and follows the resume protocol (`common/session-continuity.md`) before entering its stage.
+4. **Conditional stages auto-skip** — Stage 4 (brownfield), 8 (story mapping), 10 (reconciliation), 11 (defect logging) execute only when their trigger condition holds; otherwise they are skipped silently.
+5. **Govern, don't write** — no mutate intent ever writes test code or a source file; the only writable territory is `.tge/`.
+
+---
+
+## Adaptive Engine Principle
+
+AI-TGE adapts to what exists. It does NOT require the full chain to have run. Four input modes (auto-detected):
+
+| Mode | What Exists | Behavior |
+|------|------------|----------|
+| **Full Chain** | AP + DW + aidlc-docs (AI-DLC v1 running) | Full strategy + observation |
+| **Architecture Only** | AP (from AI-ADLC), no DW/DLC | Strategy mode only — derive register from AP |
+| **Brownfield** | Existing project with existing tests (no AP) | Assessment mode — map existing tests, identify gaps |
+| **Observation Only** | Active AI-DLC v1 with aidlc-docs, no prior TGE run | Jump to observation — register what should be tested as you go |
+
+**Graceful degradation (— OR-input):** AI-TGE never blocks on a missing predecessor. Each input is additive enrichment — its absence reduces scope but never halts the engine. Detection order, depth calibration (5-factor scoring → Minimal/Standard/Comprehensive), the two-source derivation model (architecture-derived + universal baseline), and the ISTQB taxonomy are specified in `common/process-overview.md`, `common/two-source-model.md`, and `common/test-taxonomy.md` — load them at engine start.
 
 ---
 
 ## State Management
 
-### State File: `.tge/tge-state.md`
+AI-TGE persists state in `tge-state.md` at `.tge/` (inside the AI-DWG-generated workspace root). On session start: scan for `tge-state.md`; if found → load + follow the resume protocol; if not → fresh start (Stage 1). The marker tracks Engine Status (mode, phase, last stage, last updated), Input Sources (AP/DW/aidlc-docs/existing-tests paths), Register Stats (commitments, required/existing/missing/deprecated, coverage %), Depth Level, and AP Version (for reconciliation).
 
-```markdown
-# AI-TGE State
+**Update rule:** update `tge-state.md` immediately after **every** stage and every register change; coverage calculations exclude Deprecated and Overridden entries. Full schema, resume protocol, and cold-start behavior: `common/session-continuity.md` (template: `templates/tge-state.md`).
 
-## Engine Status
-- **Mode:** {Full Chain / Architecture Only / Brownfield / Observation Only}
-- **Project ID:** {immutable correlation key — read from the DW `workspace-rules.md` / carried-forward spine; persisted in every defect/coverage record — }
-- **Current Phase:** {Strategy / Observation / Complete}
-- **Last Stage Completed:** {1-12}
-- **Last Updated:** {ISO timestamp}
-
-## Input Sources
-- **AP Location:** {path or "not available"}
-- **DW Location:** {path or "not available"}
-- **aidlc-docs Location:** {path or "not available"}
-- **Existing Tests Location:** {path or "not detected"}
-
-## Register Stats
-- **Total Commitments Tracked:** {N}
-- **Tests Required:** {N}
-- **Tests Existing:** {N}
-- **Tests Missing:** {N}
-- **Tests Deprecated:** {N}
-- **Coverage:** {N}%
-
-## Depth Level
-- **Level:** {Minimal / Standard / Comprehensive}
-- **Factors:** {scoring rationale}
-
-## AP Version
-- **Last Read:** {ISO timestamp}
-- **Reconciliation Needed:** {Yes / No}
-```
-
-> **Multi-project context (`OUTPUT_AND_STATE_CONTRACT.md` §11–§12):** AI-TGE operates **inside the AI-DWG-generated dev workspace**, opened as its **own Kiro IDE root** (default layout: `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/`). All TGE paths (`.tge/`, DW location) are relative to that root and are unaffected by the multi-project restructure — the DW location resolves to the workspace root itself. Because the opened folder is one project, AI-TGE sees exactly one project **incidentally** (one folder), not via a lock (D8). **Project ID continuity (4.2):** read the immutable `Project ID` from the DW `workspace-rules.md` and the carried-forward spine `{slug}-workspace/management_framework/`; persist it in `tge-state.md` and in every coverage/defect record.
+> **Multi-project context (`OUTPUT_AND_STATE_CONTRACT.md` §11–§12):** AI-TGE operates **inside the AI-DWG-generated dev workspace**, opened as its own IDE root — so it sees exactly one project incidentally (one folder), not via a lock; all paths resolve relative to that root. **Project ID continuity (4.2):** read the immutable `Project ID` from the DW `workspace-rules.md` + spine and persist it in `tge-state.md` and every coverage/defect record.
 
 ---
 
-## Depth Calibration
+## Chain Contract
 
-| Factor | Score 1 (Low) | Score 3 (Medium) | Score 5 (High) |
-|--------|--------------|-----------------|----------------|
-| Component count | ≤5 components | 6-15 components | >15 components |
-| Integration count | ≤2 external | 3-7 external | >7 external |
-| Security surface | Basic auth only | Multi-role, API keys | OAuth, multi-tenant, PII |
-| Data complexity | Simple CRUD | Multiple schemas, migrations | Event sourcing, CQRS, distributed |
-| Team size | Solo / pair | 3-8 developers | >8, multiple teams |
-
-**Thresholds:**
-- Score 5-10: **Minimal** — strategy + register only
-- Score 11-18: **Standard** — + coverage reports + debt scoring
-- Score 19-25: **Comprehensive** — + brownfield + full traceability + reconciliation
+| Contract Element | AI-TGE |
+|------------------|--------|
+| **I Read** | Architecture Package (AI-ADLC): API contracts, component designs, ADRs, security decisions, integration maps, data models, NFR commitments — detected via `adlc-state.md`. Development Workspace (AI-DWG): tech stack, testing frameworks, steering rules — detected via `.kiro/steering/`. AI-DLC v1 state: `aidlc-docs/aidlc-state.md` + user stories. Existing test directories (brownfield). |
+| **I Produce** | `.tge/`: `tge-state.md` (marker), `test-strategy.md`, `test-register.md`, `coverage-report.md`, `debt-scorecard.md`, `defect-log.md` (+ quality dashboard). |
+| **My Marker** | `tge-state.md` (in `.tge/`) |
+| **Detection Strategy** | Two-source model — read AP commitments (project-specific) AND apply the universal baseline (minimum coverage even when AP is thin/absent). Auto-detect mode from which inputs are present; degrade gracefully. Never re-do per-project analysis another package already produced — read its output. |
+| **Downstream Signal** | Emits no chain handoff — AI-TGE is a continuous companion, not a chain link. It maintains `.tge/` test-governance artifacts consumed alongside AI-GCE as a quality companion to AI-DLC v1; runtime findings feed back into project quality. |
 
 ---
 
-## Test Taxonomy (ISTQB-Based)
+## Phase & Stage Index
 
-### By Level
+AI-TGE is a continuous engine of **2 phases / 12 stages** (6 Strategy + 6 Observation). The step body for each stage lives in its detail file — load it when the stage runs. Full engine map, two-phase diagram, four input modes, depth calibration, two-source model, user commands, and boundary statement: `common/process-overview.md`.
 
-| Level | What It Verifies | Scope |
-|-------|-----------------|-------|
-| **Unit** | Individual function/method logic | Single component |
-| **Integration** | Interaction between components/services | 2+ components |
-| **System** | End-to-end behavior of complete system | Full stack |
-| **Acceptance** | Business requirements met from user perspective | User workflow |
+| # | Phase | Stage | Exec | Mode | Primary output / gate | Detail file |
+|---|-------|-------|------|------|-----------------------|-------------|
+| 1 | 🔵 Strategy | Workspace Detection | ALWAYS | mutate | `tge-state.md` initialized; mode + depth selected · **confirm mode** | `strategy/workspace-detection.md` |
+| 2 | 🔵 Strategy | Architecture Reading | ALWAYS | mutate | Architecture Commitment Inventory · **gate: "Is this what was designed?"** | `strategy/architecture-reading.md` |
+| 3 | 🔵 Strategy | Test Requirement Derivation | ALWAYS | mutate | Test Register (baseline) · **gate: "Are these the right tests?"** | `strategy/test-requirement-derivation.md` |
+| 4 | 🔵 Strategy | Brownfield Assessment | COND (existing tests) | mutate | Brownfield Gap Map · **gate: "Does this match reality?"** | `strategy/brownfield-assessment.md` |
+| 5 | 🔵 Strategy | Test Strategy Generation | ALWAYS | mutate | Test Strategy document · **gate: "Approve strategy?"** | `strategy/test-strategy-generation.md` |
+| 6 | 🔵 Strategy | Risk Scoring | ALWAYS | mutate | Debt Scorecard · Strategy-phase-complete handoff | `strategy/risk-scoring.md` |
+| 7 | 🟢 Observation | State Observation | ALWAYS | mutate | Register updated (test existence tracking) · no gate | `observation/state-observation.md` |
+| 8 | 🟢 Observation | Story Acceptance Mapping | COND (stories exist) | mutate | Acceptance-test register entries · no gate | `observation/story-acceptance-mapping.md` |
+| 9 | 🟢 Observation | Coverage Reporting | ALWAYS | mutate | Multi-view Coverage Report · **review: "Coverage acceptable?"** | `observation/coverage-reporting.md` |
+| 10 | 🟢 Observation | Architecture Reconciliation | COND (AP changed) | mutate | Register delta (additions/deprecations) · **gate: "Accept changes?"** | `observation/architecture-reconciliation.md` |
+| 11 | 🟢 Observation | Defect Logging | COND (defect reported) | mutate | Structured defect entries · no gate | `observation/defect-logging.md` |
+| 12 | 🟢 Observation | Debt Reassessment | ALWAYS | mutate | Updated Debt Scorecard · no gate | `observation/debt-reassessment.md` |
 
-### By Type
-
-| Type | Focus | Examples |
-|------|-------|---------|
-| **Functional** | Correct behavior | Business logic, workflows, calculations |
-| **Non-Functional** | Quality attributes | Performance, security, accessibility, reliability |
-| **Structural** | Internal code quality | Coverage, complexity, architecture conformance |
-
-### Derived Test Mapping
-
-| AP Artifact | Test Level | Test Type | Register Entry |
-|-------------|-----------|-----------|---------------|
-| API contract | Integration | Functional | Contract test per endpoint |
-| Security decision (ADR) | System | Non-Functional | Security test per auth flow |
-| Component design | Unit | Functional | Unit tests per business rule |
-| Integration map | Integration | Functional | Integration test per external |
-| NFR commitment (performance) | System | Non-Functional | Performance test per SLA |
-| Data model | Unit + Integration | Functional | Data integrity test per entity |
-| User story | Acceptance | Functional | Acceptance test per criterion |
-
----
-
-## Risk-Based Test Prioritization
-
-### Scoring Formula
-
-Each missing test is scored on 4 factors (1-5 each):
-
-| Factor | What It Measures | Score 1 | Score 5 |
-|--------|-----------------|---------|---------|
-| **Architectural Risk** | Impact if this goes untested | Low impact, easily caught manually | Critical path, catastrophic if broken |
-| **Blast Radius** | How many things break if this fails | Isolated, single component | Cross-system, affects all users |
-| **Logic Complexity** | How likely a bug exists here | Simple CRUD, trivial logic | Complex algorithms, state machines |
-| **Change Frequency** | How often this code changes | Stable, rarely touched | Active development, frequent changes |
-
-**Composite Score:** Risk × Blast × Complexity × Frequency = 1-625
-
-**Buckets:**
-- **Critical (400-625):** Test immediately — high risk of production failure
-- **High (150-399):** Test within current sprint — significant exposure
-- **Medium (50-149):** Test within next 2 sprints — manageable risk
-- **Low (1-49):** Test when convenient — minimal exposure
-
----
-
-# 🔵 STRATEGY PHASE
-
-**Purpose:** Determine WHAT must be tested and WHY
-**Trigger:** User invokes AI-TGE (first time or strategy refresh)
-**Output:** Test Strategy + Test Register (baseline) + Debt Scorecard
-
-## Stage 1: Workspace Detection (ALWAYS EXECUTE)
-
-1. Load `strategy/workspace-detection.md`
-2. Detect input mode (Full Chain / Architecture Only / Brownfield / Observation Only)
-3. Locate AP, DW, aidlc-docs, existing tests
-4. Initialize `.tge/tge-state.md`
-5. Determine depth level (score 5 factors)
-6. Present findings and mode selection to user
-7. Auto-proceed to Stage 2
-
-## Stage 2: Architecture Reading (ALWAYS EXECUTE)
-
-1. Load `strategy/architecture-reading.md`
-2. Read AP (if available): API contracts, component designs, ADRs, security decisions, integration maps, data models, NFR commitments
-3. Read DW (if available): tech stack, testing frameworks, steering rules
-4. Read aidlc-docs (if available): user stories, requirements, functional designs
-5. Produce: **Architecture Commitment Inventory** — every testable promise the architecture makes
-6. Present inventory for review
-7. Wait for approval: "Is this what was designed?"
-
-## Stage 3: Test Requirement Derivation (ALWAYS EXECUTE)
-
-1. Load `strategy/test-requirement-derivation.md`
-2. Load `common/two-source-model.md`
-3. Apply two-source derivation:
-   - For each AP commitment → derive specific test requirement(s) using Derived Test Mapping
-   - For each component type → apply Built-In Baseline
-4. Produce: **Test Register (baseline)** — every required test linked to its source commitment
-5. Each register entry includes: Commitment ID, Test Level, Test Type, Test Name, Source (AP/Baseline), Risk Score (preliminary), Status (Required)
-6. Present register for review
-7. Wait for approval: "Are these the right tests?"
-
-## Stage 4: Brownfield Assessment (CONDITIONAL — if existing tests detected)
-
-**Execute IF:** Existing test directories found in workspace
-**Skip IF:** Greenfield project with no existing tests
-
-1. Load `strategy/brownfield-assessment.md`
-2. Scan test directories for existing test files
-3. Map found tests to register entries (pattern matching: test names, file paths, imports)
-4. Classify each register entry:
-   - **Covered:** Matching test exists
-   - **Uncovered:** No matching test found
-   - **Orphaned:** Test exists but no matching commitment in register
-5. Produce: **Brownfield Gap Map**
-6. Present findings for review
-7. Wait for approval: "Does this match reality?"
-
-## Stage 5: Test Strategy Generation (ALWAYS EXECUTE)
-
-1. Load `strategy/test-strategy-generation.md`
-2. Using register + tech stack + depth level, produce **Test Strategy** document:
-   - Test pyramid ratios (recommended unit:integration:system:acceptance split)
-   - Test types needed for this project (which apply, which don't)
-   - Testing tools/frameworks (from DW tech stack)
-   - Coverage goals per level and type
-   - Test data strategy
-   - Automation approach
-   - Entry/exit criteria per test level
-3. Present strategy for review
-4. Wait for approval: "Approve strategy?"
-
-## Stage 6: Risk Scoring (ALWAYS EXECUTE)
-
-1. Load `strategy/risk-scoring.md`
-2. For each MISSING test in the register (Status = Required, not Covered):
-   - Score 4 risk factors (1-5 each)
-   - Calculate composite score
-   - Assign bucket (Critical/High/Medium/Low)
-3. Produce: **Debt Scorecard** — prioritized list of missing tests by risk
-4. Save all outputs to `.tge/`
-5. Update `tge-state.md` (Phase = Strategy Complete)
-6. Present scorecard summary
-7. Present next-step guidance:
-
-```
-━━━━ AI-TGE Strategy Phase Complete ━━━━
-
-📊 Test Register: {n} test requirements derived
-   • Architecture-derived: {n}
-   • Baseline (universal): {n}
-📊 Debt Scorecard: {n} Critical, {n} High, {n} Medium, {n} Low
-
-🔀 Chain Navigation:
-   • Dashboard data: type `DAT__ pdlc/tge` to update the family dashboard
-
-⚠️ WHAT HAPPENS NEXT — Observation Phase:
-   AI-TGE's Observation phase activates when AI-DLC v1 is running.
-   AI-DLC v1 runs in the GENERATED workspace, not this planning session.
-
-   To proceed:
-   1. Close this planning session
-   2. Open the generated workspace folder as ROOT in a fresh Kiro
-      instance (or Cursor / Windsurf / Claude Code)
-   3. Install AI-DLC v1 (github.com/awslabs/aidlc-workflows) — it is
-      a separate product; install it yourself
-   4. Install AI-TGE in that same workspace (for Observation phase)
-   5. As AI-DLC v1 builds, invoke TGV__ or CVR__ to track coverage
-
-   The test strategy, register, and debt scorecard are already saved
-   in.tge/ — they'll be picked up when TGE resumes in Observation mode.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
-
-8. If mode = Architecture Only → END (no Observation possible without AI-DLC v1)
-   If mode = Full Chain and aidlc-docs already present → auto-proceed to Observation
-
----
-
-# 🟢 OBSERVATION PHASE
-
-**Purpose:** Track WHAT gets tested as features are built
-**Trigger:** AI-DLC v1 is executing (aidlc-docs being populated) OR user requests coverage check
-**Output:** Updated Register + Coverage Reports + Defect Log
-
-## Stage 7: State Observation (ALWAYS EXECUTE in Observation Phase)
-
-1. Load `observation/state-observation.md`
-2. Read `aidlc-docs/aidlc-state.md` — identify completed units and stages
-3. For each newly completed unit:
-   - Check if unit's required tests now exist in source code
-   - Update register entry status: Required → Exists / Still Missing
-4. Update `.tge/tge-state.md` with observation results
-5. No gate — continuous operation
-
-## Stage 8: Story Acceptance Mapping (CONDITIONAL — if user stories exist)
-
-**Execute IF:** `aidlc-docs/inception/user-stories/` contains story files
-**Skip IF:** No user stories in aidlc-docs
-
-1. Load `observation/story-acceptance-mapping.md`
-2. Read user stories and extract acceptance criteria
-3. For each acceptance criterion → register as Acceptance Test requirement
-4. Link to existing register entries where overlap exists (don't duplicate)
-5. Update register with new story-derived entries
-6. No gate — continuous operation
-
-## Stage 9: Coverage Reporting (ALWAYS EXECUTE in Observation Phase)
-
-1. Load `observation/coverage-reporting.md`
-2. Generate coverage report with multiple views:
-   - **By Commitment:** Which AP commitments have all required tests?
-   - **By Component:** Which components are fully tested?
-   - **By Test Type:** What's the unit/integration/system/acceptance distribution?
-   - **By Risk Level:** Are Critical-risk gaps being addressed first?
-3. Calculate overall coverage percentage (tests existing / tests required)
-4. Produce: **Coverage Report** (saved to `.tge/coverage-report.md`)
-5. Present summary to user
-6. Wait for review: "Coverage acceptable?"
-
-## Stage 10: Architecture Reconciliation (CONDITIONAL — if AP changed)
-
-**Execute IF:** AP has been modified since last `tge-state.md` read (timestamp comparison)
-**Skip IF:** AP unchanged since last strategy run
-
-1. Load `observation/architecture-reconciliation.md`
-2. Detect AP delta (new components, removed components, changed contracts)
-3. For each change:
-   - New commitment → register NEW required tests
-   - Removed commitment → mark tests as DEPRECATED (don't delete)
-   - Changed contract → flag existing tests for REVIEW
-4. Produce delta summary: additions, deprecations, reviews needed
-5. Present for approval (non-destructive — proposes, doesn't auto-apply)
-6. Wait for approval: "Accept register changes?"
-
-## Stage 11: Defect Logging (CONDITIONAL — when defects are reported)
-
-**Execute IF:** User reports a defect or test failure is detected
-**Skip IF:** No defects reported
-
-1. Load `observation/defect-logging.md`
-2. Capture defect details:
-   - Defect ID (auto-generated: DEF-NNN)
-   - Severity (Critical / High / Medium / Low)
-   - Category (Functional / Performance / Security / Data / Integration)
-   - Linked Test (which test caught it, or "manual discovery")
-   - Linked Component (which architectural component)
-   - Linked Story (which user story, if applicable)
-   - Root Cause (once determined)
-   - Status (Open / Investigating / Fixed / Verified / Closed)
-3. Update defect log (`.tge/defect-log.md`)
-4. No gate — continuous operation
-
-## Stage 12: Debt Reassessment (ALWAYS EXECUTE after coverage report or reconciliation)
-
-1. Load `observation/debt-reassessment.md`
-2. Re-score all missing tests (factors may have changed since initial scoring)
-3. Update debt scorecard with current priorities
-4. Highlight changes: "Test X moved from Medium → Critical because component is now in active development"
-5. Update `.tge/debt-scorecard.md`
-6. No gate — auto-update
+> **Conditional triggers:** Stage 4 — existing test directories detected · Stage 8 — `aidlc-docs/inception/user-stories/` present · Stage 10 — AP modified since last `tge-state.md` read · Stage 11 — defect reported or test failure detected. Conditions and skip rules: `common/process-overview.md`.
 
 ---
 
 ## Key Principles
 
-- **Govern, don't write.** AI-TGE identifies what tests must exist and tracks coverage. It does NOT write test code.
-- **Architecture-driven.** Test requirements are derived from architectural commitments, not invented ad-hoc.
-- **Risk-aware.** Not all missing tests are equal — prioritize by architectural risk and blast radius.
-- **Non-destructive.** Reconciliation proposes changes; brownfield assessment maps without modifying. Never delete.
-- **Two-source coverage.** Even if the AP is thin, universal baselines ensure minimum test governance.
-- **Observable state.** Everything is tracked in `.tge/` — progress, coverage, debt, defects. Fully auditable.
+- **Govern, don't write.** AI-TGE identifies what tests MUST exist and tracks coverage. It does NOT write test code. Hard boundary — no exceptions.
+- **Architecture-driven.** Test requirements derive from architectural commitments, not invented ad-hoc.
+- **Two-source coverage.** Even if the AP is thin, universal baselines ensure minimum test governance (additive, never replacing AP-derived requirements).
+- **Risk-aware.** Not all missing tests are equal — prioritize by architectural risk × blast radius × complexity × change frequency.
+- **Non-destructive.** Reconciliation proposes (never auto-applies); brownfield assessment maps without modifying; override marks "Overridden", never deletes.
+- **Commitment-based coverage.** Measure "did we test what we designed?" — every register entry traces to a specific architectural promise or baseline rule. Coverage excludes Deprecated/Overridden entries.
 - **Silent when complete.** If all required tests exist and pass, AI-TGE has nothing to report. Only speak when gaps exist.
 
 ---
 
-## Output Directory Structure
+## Post-Workflow: Agent Installation
 
-```
-<workspace-root>/
-└──.tge/
-    ├── tge-state.md              ← Engine state + progress tracking (MARKER FILE)
-    ├── test-strategy.md          ← Test approach, pyramid, tools, goals
-    ├── test-register.md          ← Master list: commitment → test → status
-    ├── coverage-report.md        ← Multi-view coverage analysis
-    ├── debt-scorecard.md         ← Prioritized missing tests by risk
-    └── defect-log.md             ← Structured defect tracking
-```
+AI-TGE ships **two report-only governance agents**: the **test-governance-agent** (`TGV__`, AG-ID TGE-AG-01) and the **coverage-review-agent** (`CVR__`, AG-ID TGE-AG-02). After the Strategy phase completes (or at any point), install them into the destination workspace (automatic — no user interaction):
+
+1. **Install agents** → copy `templates/agents/test-governance-agent.md` (and, if Observation is active, `coverage-review-agent.md`) to `.kiro/agents/`. Populate `{version}` + `{ISO-date}`.
+2. **Register shortcuts** → append `templates/agents/shortcut-rules-block.md` (between `<!-- BEGIN/END AI-TGE AGENT SHORTCUTS -->` markers) into `.kiro/steering/workspace-rules.md` — registers `TGV__` + `CVR__` (replace block if present).
+3. **Update `.governance/AGENT_REGISTRY.md`** → create if absent; append TGE-AG-01 / TGE-AG-02 using the reserved AG-ID range.
+4. **Update `.governance/AGENT-GUIDE.md`** → create if absent; append AI-TGE's section (between its markers).
+
+**Self-sufficiency (AGENT_GOVERNANCE_CONTRACT §5):** AI-TGE installs its own agents independently — no dependency on AI-GCE. If AI-GCE runs later, it detects and preserves the AI-TGE entries via marker-based ownership. Full install logic + post-install confirmation: `templates/agents/`.
 
 ---
 
-## Boundary Statement
-
-**AI-TGE is NOT:**
-- A test runner (doesn't execute tests)
-- A test writer (doesn't generate test code)
-- A CI/CD tool (doesn't connect to pipelines)
-- A replacement for AI-GCE (GCE governs code compliance; TGE governs test completeness)
-- A replacement for AI-DLC v1's Build-and-Test stage (that generates test instructions; TGE governs whether those instructions are sufficient)
-
-**AI-TGE IS:**
-- A test governance engine that knows what tests SHOULD exist
-- A coverage tracker that measures architectural commitment verification
-- A risk scorer that prioritizes which missing tests matter most
-- An observer that watches the build and maintains test accountability
-
----
-
-## Post-Workflow: Agent Installation (ALWAYS EXECUTE)
-
-After the Strategy phase completes (or at any point during AI-TGE execution), install the AI-TGE governance agents into the destination workspace. This step is **automatic** — no user interaction required.
-
-### What Gets Installed
-
-| Artifact | Destination | Action |
-|----------|-------------|--------|
-| `test-governance-agent.md` | `.kiro/agents/` | Copy from `templates/agents/` |
-| `coverage-review-agent.md` | `.kiro/agents/` | Copy from `templates/agents/` (if Observation phase active) |
-| Shortcut rules block | `.kiro/steering/workspace-rules.md` | Append `<!-- BEGIN AI-TGE AGENT SHORTCUTS -->` block (or replace if exists) |
-| Agent registry entries | `.governance/AGENT_REGISTRY.md` | Create file if absent; append AI-TGE entries if exists |
-| Agent guide section | `.governance/AGENT-GUIDE.md` | Create file if absent; append AI-TGE section if exists |
-
-### Installation Logic
-
-1. **Agent files:** Copy `templates/agents/test-governance-agent.md` to `.kiro/agents/test-governance-agent.md`. If Observation phase is active, also copy a `coverage-review-agent.md` (derived from the test-governance-agent template with coverage-specific checks). Populate `{version}` with current AI-TGE version and `{ISO-date}` with today's date.
-
-2. **Shortcut block:** Check `.kiro/steering/workspace-rules.md` for `<!-- BEGIN AI-TGE AGENT SHORTCUTS -->` marker:
-   - If found → replace the block (between BEGIN and END markers)
-   - If not found → append the block from `templates/agents/shortcut-rules-block.md`
-
-3. **Agent registry:** Check for `.governance/AGENT_REGISTRY.md`:
-   - If absent → create with header + AI-TGE entries (TGE-AG-01, TGE-AG-02)
-   - If exists → append AI-TGE entries using `TGE-AG-{NN}` IDs
-   - Entries: `| TGE-AG-01 | test-governance-agent | Process | TGV__ | 1 | AI-TGE | Active | {date} |`
-   - `| TGE-AG-02 | coverage-review-agent | Process | CVR__ | 1 | AI-TGE | Active | {date} |`
-
-4. **Agent guide:** Check for `.governance/AGENT-GUIDE.md`:
-   - If absent → create with header + AI-TGE section from `templates/agents/agent-guide.md`
-   - If exists → append AI-TGE section (between `<!-- BEGIN AI-TGE AGENT GUIDE SECTION -->` markers)
-
-### Self-Sufficiency Rule (AGENT_GOVERNANCE_CONTRACT §5)
-
-AI-TGE installs its own agents independently. No dependency on AI-GCE being present. If AI-GCE runs later, it will detect and preserve the AI-TGE entries via marker-based ownership.
-
-### Post-Install Confirmation
+## Output Directory Structure (Runtime)
 
 ```
-🤖 AI-TGE Governance Agents Installed
-   • Agent: test-governance-agent (TGE-AG-01)
-   • Agent: coverage-review-agent (TGE-AG-02)
-   • Shortcuts: TGV__ + CVR__ (active immediately)
-   • Call TGV__ after Strategy phase to validate test governance quality.
-   • Call CVR__ during Observation to validate coverage trends.
+<workspace-root>/                          ← the AI-DWG-generated dev workspace, opened as IDE root
+└──.tge/                                  ← AI-TGE's territory (sole owner/writer)
+    ├── tge-state.md              [marker] engine state + progress tracking
+    ├── test-strategy.md          [gen]    test approach, pyramid, tools, goals
+    ├── test-register.md          [hyb]    master list: commitment → test → status
+    ├── coverage-report.md        [gen]    multi-view coverage analysis
+    ├── debt-scorecard.md         [gen]    prioritized missing tests by risk
+    └── defect-log.md             [hyb]    structured defect tracking
 ```
 
----
-
-*Created: 2026-06-08 | Author: Maheri | Package: AI-TGE v1.0.0*
-
+**Provenance (`NAMING_AND_OWNERSHIP.md` §5.2–§5.3):** all output `.md` files include front-matter — `generatedBy: AI-TGE`, `generatedVersion: 1.0.0`, `source: {upstream-doc-path}`, `generatedOn: {ISO-date}`, `ownership: generated | hybrid | user`.
 
 ---
 
@@ -671,3 +281,7 @@ strictness-default: warn
 
 - `test-strategy` is `internal` — consumed alongside AI-GCE as a companion to AI-DLC v1.
 - Gate-in consumes only `internal` types; no external seam-in for AI-TGE.
+
+---
+
+*AI-TGE v1.0.0 | Created: 2026-06-08 | Author: Maheri | A continuous test-governance engine for the AI-* family — derive, register, score, observe.*

@@ -191,4 +191,34 @@ Session N+2: Resume → user says "review metrics" → Stage 16 → save
 
 ---
 
+## MANDATORY: Incremental File Output
+
+Every stage produces one or more output files. You MUST write these files to the workspace filesystem **immediately upon gate approval** — do NOT defer artifact creation to a later stage or to the Assembly phase (Stage 13).
+
+**The rule:** When a user approves a gate, the stage's "Persist" / "Write" step has already happened or happens NOW. The file(s) listed in that stage's detail file are created/updated on disk before you transition to the next stage. The user should be able to see their project's artifacts building up incrementally as they progress through the workflow.
+
+**Why:** Users lose confidence when they approve 4 phases of work and see nothing on disk. The Assembly stage (13) is for verification and packaging — not for first-time file creation.
+
+**Minimum per-stage writes:**
+
+| Stage | File(s) Written on Gate Approval |
+|-------|----------------------------------|
+| 1 | `polc-state.md` + `management_framework/` skeleton |
+| 2 | `product-vision.md` |
+| 3 | `po-charter.md` |
+| 4 | `roadmap.md` |
+| 5 | `epics/EPIC-NNN_*.md` (one per epic) |
+| 6 | `prioritization-register.md` |
+| 7 | `release-plan.md` |
+| 8 | `definition-of-ready.md` + `definition-of-done.md` |
+| 9 | `product-risk-register.md` |
+| 10 | `traceability-matrix.md` |
+| 11 | `stakeholder-map.md` |
+| 12 | `release-notes-governance.md` |
+| 13 | `PBP_README.md` (assembly summary) |
+
+If a gate is approved but you haven't yet written the file, write it NOW before presenting the next stage's opening.
+
+---
+
 *Load this file at workflow start and on every resume.*

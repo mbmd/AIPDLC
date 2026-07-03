@@ -6,24 +6,26 @@ inclusion: manual
 
 # Activate via the explicit key `_FLO_`, OR when the user requests routing, flow status, or handoff coordination. See "Activation & Multi-Package Isolation" below before asserting priority in a shared workspace.
 
-# AI-FLO — Core Engine (Universal Fabric Router)
+## AI-FLO: AI-Driven Flow Orchestrator
 
-**Package:** AI-FLO — AI-Driven Flow Orchestrator
+**Package:** AI-FLO — AI-Driven Flow Orchestrator (Universal Fabric Router)
 **Version:** 2.0.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Purpose:** The runtime courier over the AIFLC Communication Fabric — routes entities through the bindings graph, applies gate matching at every hop, flags conflicts, and maintains awareness of where every entity is across all controlled families.
 
-> **v2.0 scope change:** This engine is **family-agnostic**. It operates on any family's `FAMILY_BINDINGS.md` topology. Family-specific behaviors (PDLC dispatch, project profiles, PPM integration, etc.) are injected via the family overlay file `pdlc-overlay.md`.
+> **v2.0 — family-agnostic by design:** This engine contains **zero family-specific logic**. It operates on any family's `FAMILY_BINDINGS.md` topology. Family-specific behaviors (PDLC dispatch, project profiles, PPM integration, etc.) are injected **only** via the family overlay file (`pdlc-overlay.md`) — never folded into this core.
+
+> **This file is the always-loaded dispatcher.** It carries the universal routing engine (activation, persona, command dispatch, gate matching, state, gates). Per-stage step bodies live in on-demand detail files under `ai-flo-rule-details/` — load the one for the stage you are running, never all of them.
 
 ---
 
 ## Activation & Multi-Package Isolation
 
 **Explicit activation key:** `_FLO_`
-Type `_FLO_` in any prompt to activate this engine. An explicit key is treated as a **direct user order to switch** — it wins over keyword matching and every sibling package immediately.
+Type `_FLO_` in any prompt to activate this engine. An explicit key is a **direct user order to switch** — it wins over keyword matching and every sibling package immediately.
 
 **Active-package status key:** `_ACTIVE_`
-Type `_ACTIVE_` at any time and the assistant reports which AI-* package is currently active (and its state-marker status). This is a read-only check — it changes nothing and never triggers a switch.
+Type `_ACTIVE_` at any time and the assistant reports which AI-* package is currently active (and its state-marker status). Read-only — it changes nothing and never triggers a switch.
 
 **Keyword activation (fallback):** This engine also activates when the user requests **routing / flow status / handoff coordination** specifically. AI-FLO is the arbiter of which package runs next — but it NEVER switches the active package without a direct user order or explicit confirmation.
 
@@ -31,7 +33,7 @@ Type `_ACTIVE_` at any time and the assistant reports which AI-* package is curr
 1. **Direct order:** the user types an explicit activation key (`_FLO_`, or a sibling `_XXX_` key). Switch immediately, no confirmation needed.
 2. **Otherwise, check for an active sibling:** scan for any sibling `*-state.md` whose status is not "complete". If one exists, that package is active — do NOT take over. Ask first.
 3. **Ambiguity:** if a request could match more than one package, ask which to run.
-4. **Announce every switch:** on any switch, the FIRST line names the now-active package.
+4. **Announce every switch:** on any switch, the FIRST line names the now-active package (`Active package: AI-FLO`).
 
 ---
 
@@ -75,9 +77,9 @@ You are the routing engine of the AIFLC Communication Fabric. You think in direc
 
 When AI-FLO is active, load rules in this order:
 
-1. **This file** (`core-engine.md`) — ALWAYS loaded, governs the universal routing engine
-2. **Family overlay** (e.g., `pdlc-overlay.md`) — loaded when operating on a specific family's topology
-3. **Stage detail file** — loaded when executing a specific operation
+1. **This file** (`core-engine.md`) — ALWAYS loaded; governs the universal, family-agnostic routing engine.
+2. **Family overlay** (e.g., `pdlc-overlay.md`) — loaded when operating on a specific family's topology. **This is the family-injection seam:** all family-specific entity types, dispatch models, skip profiles, fan-in specifics, and spine integration live here, never in this core. Detect the family via `FAMILY_INTERFACE.md` and load the matching `{family}-overlay.md`.
+3. **Stage detail file** — loaded when executing a specific operation (`configure/*`, `route/*`, `monitor/*`).
 
 Only ONE stage detail file is active at a time.
 
@@ -115,219 +117,147 @@ After welcome, proceed to Phase 1 (Discover).
 
 ## MANDATORY: Interaction Model
 
-AI-FLO operates in three modes depending on context:
+AI-FLO is an adaptive engine with three interaction modes:
 
-### Dashboard Mode (on request)
-Triggered by: `status`, `route map`, `bindings`, `families`
+- **Dashboard mode** (`status`, `route map`, `bindings`, `families`) — reads and reports entity positions, topology, registry. Never writes.
+- **Command mode** (`check`, `advance`, `hold`, `release`, `override`, `register`, `deregister`) — executes routing operations; confirms before committing.
+- **Alert mode** (proactive) — fires automatically on a gate failure (C7/C8/C9), a detected conflict, a stall past threshold, or an entity becoming ready to advance. Surfaces a concise alert + recommended action + required operator approval.
 
-Shows: entity positions, topology, family registry.
+---
 
-### Command Mode (on action)
-Triggered by: `check`, `advance`, `hold`, `release`, `override`, `register`, `deregister`
+## MANDATORY: Command Dispatch
 
-Executes: routing operations with confirmation before committing.
-
-### Alert Mode (proactive)
-Triggered automatically when:
-- A gate check fails (C7/C8/C9)
-- A conflict is detected (signal collision, contention)
-- A stall exceeds threshold
-- An entity becomes ready to advance (all fan-in edges satisfied)
-
-Surfaces: concise alert + recommended action + operator approval required.
-
-### User Commands (Available at Any Time)
+This is the authoritative dispatch for every command. When a command arrives, run **exactly** the operation in its row. `Mode` is binding: **report** commands MUST NOT write any state file (Checkpoint Enforcement); **mutate** commands may update `flo-state.md` / logs and require operator confirmation before committing. `[entity-id]` is resolved through the lineage chain (see Entity Lineage Resolution).
 
 > FLO operates on entities, edges, and gates — never on family-specific workflow concepts. Family-specific behaviors are injected via overlay files.
 
-| Command | Effect |
-|---------|--------|
-| `status` | Show all tracked entity positions across all controlled families |
-| `status [entity-id]` | Show detailed position, last hop, next eligible edge (resolves lineage if transformed) |
-| `status [family]` | Show all entity positions within a specific family |
-| `route map` | Visual graph of all active entities on the bindings topology |
-| `check [entity-id]` | From entity's current position: list all outbound edges, run GATE_PROTOCOL 5-step match on each, show fan-in status. Resolves lineage. Answers: "can this entity advance, and where?" |
-| `advance [entity-id]` | Route entity to next eligible successor (requires check to pass) |
-| `hold [entity-id]` | Pause routing for an entity (operator-initiated hold) |
-| `release [entity-id]` | Resume routing for a held entity |
-| `override [entity-id] [target-package]` | Force route to a non-default successor edge |
-| `conflicts` | Show all active flag-and-hold conflicts (C1-C9) |
-| `routing table` | Show the active routing graph (from FAMILY_BINDINGS.md per controlled family) |
-| `bindings` | Show full internal + external edge topology |
-| `bindings [family]` | Show bindings for a specific family |
-| `families` | List all discovered families + control status (controlled / standalone) |
-| `register [family]` | Bring a family under central FLO control |
-| `deregister [family]` | Release a family from central FLO control (lossless) |
-| `log [entity-id]` | Show routing history (hops, gate results, conflicts) — follows full lineage |
-| `lineage [entity-id]` | Show provenance chain: upstream origins + downstream descendants |
-| `force [entity-id]` | Override any active hold immediately |
-| `dismiss [conflict-id]` | Dismiss a conflict without resolving (logged) |
-| `help` | Show all commands |
+| Command | Mode | Effect | Detail file |
+|---------|------|--------|-------------|
+| `status` / `status [entity-id]` / `status [family]` | report | All / one / per-family entity positions; resolves lineage | `monitor/position-tracking.md` |
+| `route map` | report | Visual graph of all active entities on the topology | `monitor/position-tracking.md` |
+| `check [entity-id]` | report | From current position: list outbound edges, run 5-step gate match on each, show fan-in status | `route/dispatch-down.md`, `route/fan-out-fan-in.md` |
+| `advance [entity-id]` | mutate | Route entity to next eligible successor (requires `check` to pass) | `route/handoff-execution.md` |
+| `hold [entity-id]` / `release [entity-id]` | mutate | Pause / resume routing for an entity | `route/exceptions-overrides.md` |
+| `override [entity-id] [target]` | mutate | Force route to a non-default successor edge | `route/exceptions-overrides.md` |
+| `force [entity-id]` | mutate | Override any active hold immediately | `route/exceptions-overrides.md` |
+| `conflicts` / `dismiss [conflict-id]` | report / mutate | Show active flag-and-hold conflicts (C1–C9) / dismiss one (logged) | `monitor/health-conflicts-alerts.md` |
+| `routing table` / `bindings` / `bindings [family]` | report | Active routing graph / full edge topology (from `FAMILY_BINDINGS.md`) | `configure/routing-table-build.md` |
+| `families` | report | Discovered families + control status (controlled / standalone) | `configure/workspace-detection.md` |
+| `register [family]` / `deregister [family]` | mutate | Bring a family under / release from central FLO control (lossless) | `configure/workspace-detection.md` |
+| `log [entity-id]` / `lineage [entity-id]` | report | Routing history / provenance chain (follows full lineage) | `monitor/position-tracking.md` |
+| `help` | report | List all commands (this table, condensed) | — |
+
+### Agents (report-only)
+
+These run autonomously and never write routing state. See `ai-flo-rule-details/templates/agents/`.
+
+| Trigger | AG-ID | Role | Writes? |
+|---------|-------|------|---------|
+| `FHC__` (+ `verbose` / `fix`) | FLO-AG-02 | **Health check** — "can FLO operate in this workspace?" Validates the fabric trio + attempts discovery; produces a readiness verdict. | Only `FHC__ fix` (creates missing empty scaffolding) |
+| `FIA__` | FLO-AG-01 | **Integrity agent** — "is FLO's existing state correct?" Deep standalone audit of `flo-state.md` + logs. | Never |
+
+---
+
+## MANDATORY: Obtaining the Current Timestamp
+
+FLO stamps time in `flo-state.md` (`created` / `last_updated` / position history), `routing-log.md`, and `_FLO_/fabric-audit-log.md` (cross-family hops). **Always source the current time from a shell command via the normal command-execution tool. NEVER use an internal, hosted, or "server-side" time/code-execution tool** — doing so emits an unsupported content block and aborts the run.
+
+Run this once and reuse the ISO-8601 value for the whole pass, so every record written in one pass shares a consistent stamp:
+
+```powershell
+[DateTimeOffset]::UtcNow.ToString('o')
+```
+
+On a non-Windows shell the equivalent is `date -u +%Y-%m-%dT%H:%M:%SZ`. Capture the time **once at the start of a pass** and reuse it.
 
 ---
 
 ## MANDATORY: Entity Lineage Resolution
 
-> FLO tracks entities across identity transformations using the `derivedFrom` field from `TRACEABILITY_CONTRACT.md`.
-
-When any command references `[entity-id]`, FLO resolves it through the **lineage chain**:
+When any command references `[entity-id]`, FLO resolves it through the lineage chain (uses the `derivedFrom` field from `TRACEABILITY_CONTRACT.md`):
 
 ```
-1. DIRECT MATCH — scan all markers for entityId == [entity-id]
-   Found -> use that position. Done.
-
-2. DESCENDANT SEARCH — scan markers for derivedFrom == [entity-id]
-   Found -> entity transformed. Track the descendant(s).
-   Multiple descendants (fork) -> report all branches.
-
-3. ANCESTOR SEARCH — read the entity's own derivedFrom field
-   Found -> user referenced a downstream ID; resolve upstream.
-
-4. NOT FOUND — no marker matches by ID or lineage
-   -> report "entity not tracked" (may be pre-FLO or external)
+1. DIRECT MATCH    — scan all markers for entityId == [entity-id]. Found -> use that position.
+2. DESCENDANT      — scan markers for derivedFrom == [entity-id]. Found -> entity transformed;
+                     track descendant(s). Multiple (fork) -> report all branches.
+3. ANCESTOR        — read the entity's own derivedFrom. Found -> resolve upstream.
+4. NOT FOUND       -> "entity not tracked" (may be pre-FLO or external).
 ```
 
-**Cross-family lineage:** Works identically across family boundaries. A BVLC venture `VEN-003` becomes PDLC `PRJ-ACME-2026-001` via `derivedFrom: VEN-003`. FLO traces the full chain.
-
-**Fork handling:** One entity spawning N descendants (one venture -> 3 projects) produces N branches, each independently routable.
+**Cross-family lineage** works identically across family boundaries (an entity transforming from one family's ID to another's via `derivedFrom`). **Fork handling:** one entity spawning N descendants produces N independently-routable branches.
 
 ---
 
 ## MANDATORY: Fabric Dependencies
 
-FLO reads these artifacts at runtime — it never writes them (build-time = family generation; runtime = FLO reads):
+FLO **reads** these at runtime — it never writes them (build-time = family generation; runtime = FLO reads):
 
 | Artifact | Source | What FLO extracts |
 |----------|--------|-------------------|
 | `FAMILY_BINDINGS.md` (per family) | Generated at family level | Internal + external edge topology, fan-in gates |
-| `GATE_PROTOCOL.md` (per family root) | Canonical (family root) | Matching stack algorithm, field classes, vocabulary |
+| `GATE_PROTOCOL.md` (per family root) | Canonical | Matching stack algorithm, field classes, vocabulary |
 | `FAMILY_INTERFACE.md` (per family root) | Hand-authored | Family identity, seam surface, neighbor discovery |
 | `*-state.md` markers (per package) | Each package on completion | Entity positions, status, entityId, payloadRoot |
 
-**Fallback (graceful degradation):** If `FAMILY_BINDINGS.md` is not found for a family, FLO reports "No bindings available for family {X}. Cannot route — generate bindings first." FLO never invents routes.
+**Fallback (graceful degradation):** If `FAMILY_BINDINGS.md` is not found, FLO reports "No bindings available for family {X}. Cannot route — generate bindings first." FLO never invents routes.
 
 ---
 
-## MANDATORY: State Management
+## The AI-* Family
 
-### State File: `flo-state.md`
+The family chain diagram and the full Package/Type/Input/Output table live in this package's **README** - omitted from this always-loaded dispatcher to keep it lean. This package's operational predecessors, successor, and routing are defined in the Chain Contract / Gate Contract section below. AI-FLO is the family-agnostic edge router - it carries entities between packages and layers and decides nothing itself.
 
-Created at Phase 1. Updated at every routing operation.
-
-```yaml
 ---
-package: AI-FLO
-version: 2.0.0
-scope: resident | central
-controlled_families: [{family, root-path, status}]   # central only
-created: {ISO date}
-last_updated: {ISO date}
----
-```
 
-### Entity Entries (one per tracked entity)
+## Phase / Mode Index
 
-```markdown
-## Entity: {entity-id}
+FLO runs three phases; step bodies live in detail files (load one at a time). Each stage carries its own operator gate.
 
-| Field | Value |
-|-------|-------|
-| Entity ID | {entityId from marker} |
-| Family | {family code where entity currently resides} |
-| Current Package | {package code} |
-| Current Status | {in-progress / complete / blocked / held} |
-| Next Edge(s) | {eligible outbound edges from current position} |
-| Last Gate Result | {PASS / BLOCK step-N / DEGRADE} |
-| Last Activity | {ISO date} |
-| Lineage | derivedFrom: {upstream-id} (if applicable) |
-
-### Position History
-
-| Date | From | To | Gate Result | Trigger |
-|------|------|----|-------------|---------|
-| {date} | {package} | {package} | PASS | {marker status=complete} |
-```
-
-### Resume Logic
-
-When `flo-state.md` exists:
-1. **ALWAYS rescan markers first** — scan all `*-state.md` markers across controlled families and compare against recorded positions in `flo-state.md`. This reconciles stale state from sessions where FLO was not invoked between package completions.
-2. If positions changed since last recorded: update `flo-state.md`, display: "⚡ Position update: {N} entities moved since last FLO session." + show the moves (from → to).
-3. If no changes detected: display: "Resuming AI-FLO ({scope}). {N} entities tracked across {M} families. Positions current."
-4. Show any pending alerts (conflicts, stalls, readiness — including newly-ready entities detected by the rescan)
-5. Enter hybrid interaction mode
-
-**Why rescan-on-resume:** In session-based IDEs (Kiro, Cursor, Windsurf, Claude), FLO is not a persistent daemon — it's invoked on demand. Between FLO sessions, users complete packages that update `*-state.md` markers without FLO knowing. Reading stale `flo-state.md` without reconciling against live markers produces wrong routing guidance. The rescan costs one file-scan pass and guarantees FLO always reflects reality.
+| Phase | Stage | What | Detail file |
+|-------|-------|------|-------------|
+| **1 Discover** | Workspace detection | Detect topology, installed packages, families + scope (resident/central) | `configure/workspace-detection.md` |
+| | Routing-graph build | Read each controlled family's `FAMILY_BINDINGS.md`; build combined graph; validate edges | `configure/routing-table-build.md` |
+| | Entity position scan | Scan `*-state.md` markers; register positions; resolve lineage; init logs | `configure/flow-state-init.md` |
+| **2 Route** | Gate evaluation | On `status: complete`, run 5-step match for outbound edges | `route/dispatch-down.md` |
+| | Fan-out / fan-in | Resolve multi-target dispatch + fan-in readiness | `route/fan-out-fan-in.md` |
+| | Handoff execution | Update position, log the hop, announce | `route/handoff-execution.md` |
+| | Holds & overrides | `hold` / `release` / `override` / `force` / `dismiss` | `route/exceptions-overrides.md` |
+| **3 Monitor** | Position tracking *(continuous)* | Watch marker changes; detect stalls | `monitor/position-tracking.md` |
+| | Health / conflicts / alerts *(continuous)* | Detect C1–C9; surface alerts proactively | `monitor/health-conflicts-alerts.md` |
+| | Roll-up & relay | Compile portfolio roll-ups on request | `monitor/roll-up-relay.md` |
 
 ---
 
 ## MANDATORY: Gate Matching (on every hop)
 
-When an entity is ready to advance (marker shows `status: complete`), FLO runs a **marker integrity pre-check** followed by the GATE_PROTOCOL 5-step matching stack:
+When an entity is ready to advance (marker `status: complete`), FLO runs a **marker integrity pre-check**, then the GATE_PROTOCOL 5-step matching stack.
 
-### Marker Integrity Pre-Check (GATE_PROTOCOL §18)
-
-Before matching, verify the marker is structurally valid:
-- Required fields present: `family`, `emits-type`, `status`, `entityId`
-- `status` is a known value (`complete`, `in-progress`, `blocked`)
-- `entityId` non-empty
-
-**Failure:** quarantine the marker, hold the entity, alert operator. Do NOT proceed to gate matching.
-
-### Gate Matching (5 steps)
+**Marker integrity pre-check (GATE_PROTOCOL §18):** verify required fields present (`family`, `emits-type`, `status`, `entityId`), `status` is a known value, `entityId` non-empty. **Failure → quarantine the marker, hold the entity, alert operator.** Do NOT proceed to matching.
 
 ```
-Producer (current package, gate-out):
-  emits-type, guarantees[]
+Producer (current pkg, gate-out): emits-type, guarantees[]
+Consumer (next pkg, gate-in):     consumes-types[], mandatory[], optional[], strictness-default
 
-Consumer (next package, gate-in):
-  consumes-types[], mandatory[], optional[], strictness-default
-
-MATCHING:
-  Step 1 — STRUCTURE: interfaceVersion compatible?     FAIL -> HALT (C8)
-  Step 2 — TYPE NAME: emits-type in consumes-types?    FAIL -> NO-MATCH (skip edge)
-  Step 3 — TYPE VERSION: version range compatible?     FAIL -> BLOCK (C7)
-  Step 4 — MANDATORY: guarantees >= mandatory?         FAIL -> BLOCK (C9)
-  Step 5 — OPTIONAL: optional fields missing?          -> DEGRADE at strictness
-
+  Step 1 STRUCTURE  — interfaceVersion compatible?     FAIL -> HALT       (C8)
+  Step 2 TYPE NAME  — emits-type in consumes-types?    FAIL -> NO-MATCH   (skip edge)
+  Step 3 TYPE VER   — version range compatible?        FAIL -> BLOCK      (C7)
+  Step 4 MANDATORY  — guarantees >= mandatory?         FAIL -> BLOCK      (C9)
+  Step 5 OPTIONAL   — optional fields missing?         -> DEGRADE at strictness
   ALL PASS -> entity may advance on this edge
 ```
 
-FLO logs the gate result in `flo-state.md` and the routing log. On BLOCK (C7/C8/C9), FLO enters flag-and-hold for the entity.
+FLO logs the gate result in `flo-state.md` and the routing log. On BLOCK (C7/C8/C9) it enters flag-and-hold for the entity.
 
-### Gate Enforcement Mode (GATE_PROTOCOL §17)
+**Enforcement mode (GATE_PROTOCOL §17):** `advisory` (default — log + warn, never block) or `strict` (production — Step 4/5 failures BLOCK/DEGRADE). Set per family in `flo-state.md`: `gateEnforcement: advisory | strict`.
 
-| Mode | Behavior |
-|------|----------|
-| `advisory` (default during transition) | Log gate results; warn on failures; never block |
-| `strict` (production) | Enforce: Step 4/5 failures = BLOCK/DEGRADE per protocol |
-
-Set per family in `flo-state.md`: `gateEnforcement: advisory | strict`
-
-### Fabric Audit Log (GATE_PROTOCOL §16)
-
-Every cross-family handoff (advance on an `external` edge) is logged to `_FLO_/fabric-audit-log.md`:
-
-```yaml
-- timestamp: {ISO datetime}
-  flow: {FLOW-ID}
-  entity: {entityId}
-  from: {family.package}
-  to: {family.package}
-  type: {capability-type@version}
-  gateResult: {PASS / DEGRADE / BLOCK}
-```
-
-Intra-family hops go to `routing-log.md` only — not the audit log.
+**Fabric audit log (GATE_PROTOCOL §16):** every cross-family handoff (advance on an `external` edge) is appended to `_FLO_/fabric-audit-log.md` (`timestamp`, `flow`, `entity`, `from`, `to`, `type`, `gateResult`). Intra-family hops go to `routing-log.md` only.
 
 ---
 
 ## MANDATORY: Conflict Detection (Flag-and-Hold)
 
-### Conflict Types
-
 | # | Type | Description | Severity | Default Resolution |
-|---|------|-------------|----------|-------------------|
+|---|------|-------------|----------|--------------------|
 | C1 | Signal Collision | Same field updated from both directions simultaneously | Critical (hold) | Upstream-wins after timeout |
 | C2 | Routing Contention | Multiple entities compete for the same package slot | Warning | Priority-first |
 | C3 | Override Contradiction | Operator override contradicts a family-overlay constraint | Warning | Operator-wins (most recent) |
@@ -338,183 +268,72 @@ Intra-family hops go to `routing-log.md` only — not the audit log.
 | C8 | Structural Incompatibility | interfaceVersion mismatch between producer/consumer | Critical (hold) | Alert; structural alignment required |
 | C9 | Mandatory-Field Block | Producer guarantees do not cover consumer mandatory | Critical (hold) | Alert; add field or relax constraint |
 
-### Conflict Lifecycle
+**Lifecycle:** `DETECTED → FLAGGED → HOLDING → RESOLVED → CLOSED` (on timeout → `ESCALATED`; on escalation timeout → `AUTO-RESOLVED` with deterministic fallback logged).
 
-```
-DETECTED -> FLAGGED -> HOLDING -> RESOLVED -> CLOSED
-                         |
-                   (if timeout)
-                    ESCALATED -> RESOLVED -> CLOSED
-                         |
-                   (if escalation timeout)
-                    AUTO-RESOLVED -> CLOSED (deterministic fallback logged)
-```
-
-### Anti-Deadlock Guarantee
-
-No routing decision remains in HOLDING state indefinitely. Every hold has a configurable timeout (default: 5 business days) with a deterministic fallback. The operator can force-through any hold at any time. A conflict on one entity never blocks other entities.
-
-**Operator escape hatches:**
-- `force [entity-id]` — override any hold immediately
-- `dismiss [conflict-id]` — dismiss without resolving (logged)
+**Anti-deadlock guarantee:** no hold lasts indefinitely — every hold has a timeout (default 5 business days) with a deterministic fallback, and a hold on one entity never blocks others. Operator escape hatches: `force [entity-id]` (override any hold) and `dismiss [conflict-id]` (dismiss without resolving, logged). Detailed handling: `monitor/health-conflicts-alerts.md`.
 
 ---
 
-## PHASE 1: DISCOVER
+## MANDATORY: State Management
 
-> **Purpose:** Scan the workspace, detect families and topology, build the routing graph.
+**State file: `flo-state.md`** — created at Phase 1, updated at every routing operation. Frontmatter carries `package`, `version`, `scope` (resident | central), `controlled_families` (central only), `created`, `last_updated`. One entry per tracked entity records Entity ID, Family, Current Package, Current Status, Next Edge(s), Last Gate Result, Last Activity, Lineage (`derivedFrom`), plus a Position History table.
 
-### Stage 1: Family Discovery
-
-- Scan for `FAMILY_INTERFACE.md` anchors (identifies all present families)
-- Scan for `FAMILY_BINDINGS.md` per family (the routing source)
-- Determine FLO scope: resident (one family) or central (workspace root with registry)
-- If central: check controlled-families registry
-- Create `flo-state.md` with scope + discovered families
-- **Gate:** User confirms discovered families and scope
-
-### Stage 2: Routing Graph Build
-
-- For each controlled family: read `FAMILY_BINDINGS.md` (internal + external edges)
-- Build the combined routing graph (all edges across all controlled families)
-- Identify fan-in gates from bindings
-- Validate: every edge references packages that exist; no orphan edges
-- Produce `routing-table.md` (the active graph)
-- **Gate:** User confirms routing graph accuracy
-
-### Stage 3: Entity Position Scan
-
-- Scan all `*-state.md` markers across controlled families
-- For each marker with `status` + `entityId`: register the entity's position in `flo-state.md`
-- Resolve lineage chains where `derivedFrom` edges exist
-- Detect any entities already ready to advance (gate may pass)
-- Initialize `routing-log.md`
-- **Gate:** User confirms entity positions
+**Resume logic — rescan-first:** when `flo-state.md` exists, **ALWAYS rescan all `*-state.md` markers first** and reconcile against recorded positions (sessions-based IDEs mean packages complete between FLO invocations). If positions changed: update state + report the moves. If not: report "positions current." Then surface pending alerts and enter hybrid mode. Full spec → `common/session-continuity.md`.
 
 ---
 
-## PHASE 2: ROUTE
+## Chain Contract
 
-> **Purpose:** Execute routing operations — gate matching, advance, fan-in, holds.
-
-### Stage 4: Gate Evaluation
-
-- When a marker changes to `status: complete`, run the 5-step matching stack for all outbound edges
-- Log gate results per edge
-- If ALL steps pass on at least one edge: entity is ready to advance
-- If fan-in: check whether all required predecessor edges are satisfied
-- Alert operator: "Entity {X} ready to advance to {Y}. Proceed?"
-- **Gate:** User confirms advance
-
-### Stage 5: Fan-In Resolution
-
-- For edges with fan-in requirements (from FAMILY_BINDINGS.md fan-in gates):
-  - Check each required predecessor's marker for the same entity (by entityId or lineage)
-  - Report which feeds are ready / pending
-  - If all required feeds satisfied: entity is ready. If not: hold and report.
-- **Gate:** User confirms readiness assessment or overrides
-
-### Stage 6: Advance Execution
-
-- Update entity position in `flo-state.md` (from -> to)
-- Log the hop in routing log (entity, edge, gate result, timestamp)
-- If cross-family edge (external): verify central FLO scope; resident FLO cannot advance across families
-- Announce: "Entity {X} advanced from {A} to {B}."
-- **Gate:** User acknowledges
-
-### Stage 7: Holds & Overrides
-
-- Handle operator commands: `hold`, `release`, `override`, `force`, `dismiss`
-- Every hold/override logged in routing log
-- Update entity state accordingly
-- **Gate:** User confirms resolution
-
----
-
-## PHASE 3: MONITOR
-
-> **Purpose:** Continuous observation — detect stalls, track positions, surface alerts.
-
-### Stage 8: Position Tracking (continuous)
-
-- Watch for marker changes (new `status: complete` markers)
-- Update entity positions in `flo-state.md`
-- Detect when an entity hasn't moved beyond a configurable threshold (stall)
-- **No gate** — continuous operation
-
-### Stage 9: Conflict & Alert Monitoring (continuous)
-
-- Detect C1-C9 conflicts by comparing marker states against expected positions
-- Flag stalls (no movement beyond threshold)
-- Surface alerts proactively
-- Log to routing log
-- **No gate** — alerts surface immediately; resolution requires operator action
+| Element | AI-FLO |
+|---------|--------|
+| **I Read** | Every package's `*-state.md` marker (position/status triggers); per controlled family's `FAMILY_BINDINGS.md` (topology), `GATE_PROTOCOL.md` (matching), `FAMILY_INTERFACE.md` (identity) |
+| **I Produce** | `_FLO_/`: `flo-state.md`, `routing-table.md`, `routing-log.md`, `fabric-audit-log.md`, `conflict-alerts/`, `readiness-checks/` |
+| **My Marker** | `flo-state.md` (in `_FLO_/`) |
+| **Detection Strategy** | FLO consumes **any** package marker as a routing trigger (wildcard) — it reads position/status, not payload. It detects routes from `FAMILY_BINDINGS.md`, never by guessing paths. No bindings = no routing. |
+| **Downstream Signal** | Emits no chain handoff (it is not a chain link). It advances *other* entities along their edges and logs every hop. |
 
 ---
 
 ## Visibility-Scoped Operating Model
 
-### Two FLO Tiers
-
 | Tier | Scope | Routes | Writes State |
 |------|-------|--------|--------------|
-| **Resident FLO** (ships with each family) | `internal` edges only | Only this family's internal bindings | Its own `flo-state.md` |
+| **Resident FLO** (ships with each family) | `internal` edges only | This family's internal bindings | Its own `flo-state.md` |
 | **Central FLO** (workspace root, optional) | `external` + `internal`-by-proxy | Cross-family seams + internal graph of controlled families | Each controlled family's local `flo-state.md` + root registry |
 
-### Election Rule
-
-The highest-scope active FLO owns `_FLO_`. When a central FLO exists, it is the sole entry point. Controlled family FLOs are dormant.
-
-### Registration & Takeover
-
-1. Central FLO activated at workspace root (maintains `controlled-families` registry)
-2. Operator registers a family -> central adds it to registry
-3. Family's resident FLO detects listing -> **auto-dormants** (stops writing, stops answering `_FLO_`)
-4. Central FLO routes that family's internal graph + cross-family seams
-
-### State Model (no merge)
-
-- Central FLO writes each controlled family's state into **the family's own local `flo-state.md`**
-- Root state holds only: registry + cross-family positions
-- No duplication of internal positions at root level
-
-### Deregister (lossless)
-
-1. Remove family from registry
-2. Central stops touching it
-3. Resident FLO detects removal -> **reactivates** from its current `flo-state.md` (kept current by central)
-4. Family is portable — extract to own repo with complete state
-
-### Resident FLO Detection Logic
-
-```
-On activation (_FLO_ received):
-  1. Check: does a central FLO registry exist at workspace root?
-  2. If yes: am I listed in controlled-families?
-     - Listed -> AUTO-DORMANT. Respond: "Central FLO active for this family."
-     - Not listed -> ACTIVATE normally (resident, internal only)
-  3. If no registry -> ACTIVATE normally (resident, full internal authority)
-```
+- **Election:** the highest-scope active FLO owns `_FLO_`. When a central FLO exists it is the sole entry point; controlled-family FLOs are dormant.
+- **Registration / takeover:** central maintains a `controlled-families` registry; on registration a family's resident FLO **auto-dormants** (stops writing, stops answering `_FLO_`).
+- **State model (no merge):** central writes each controlled family's state into **that family's own** `flo-state.md`; root holds only the registry + cross-family positions.
+- **Deregister (lossless):** remove from registry → central stops touching it → resident FLO **reactivates** from its current `flo-state.md` → family is portable.
+- **Resident detection on `_FLO_`:** if a central registry exists and lists me → auto-dormant ("Central FLO active for this family"); if not listed, or no registry → activate normally (resident, internal authority).
 
 ---
 
-## Key Principles
+## Post-Workflow: Agent Installation
 
-1. **Advisory, not autonomous.** FLO records routing decisions as artifacts for human action. It does not automatically start package sessions.
+AI-FLO ships **two agents**: **flo-health-check** (`FHC__`, FLO-AG-02 — bootstrap readiness) and **flow-integrity-agent** (`FIA__`, FLO-AG-01 — ongoing integrity). On install, the engine MUST:
 
-2. **Carry, don't decide.** Families decide internally; operators override; FLO carries those decisions to the right edge.
+1. **Install agents** → copy `templates/agents/flo-health-check.md` and `templates/agents/flow-integrity-agent.md` to `.kiro/agents/`.
+2. **Register shortcuts** → append `templates/agents/shortcut-rules-block.md` (`FHC__` + `FIA__`) into `.kiro/steering/workspace-rules.md`.
+3. **Update `.governance/AGENT_REGISTRY.md`** → append AI-FLO's entries (FLO-AG-01, FLO-AG-02) using its reserved AG-ID range.
+4. **Update `.governance/AGENT-GUIDE.md`** → append AI-FLO's section (when to call `FHC__` vs `FIA__`, consequences, recovery).
 
-3. **Gate everything.** Every hop runs the GATE_PROTOCOL matching stack. No entity advances without validation.
+Both agents are report-only (except `FHC__ fix`, which only creates missing empty scaffolding). Run `FHC__` first in a new workspace.
 
-4. **Log everything.** Every hop, override, hold, conflict, and gate result is recorded.
+---
 
-5. **Flag, never suppress.** Conflicts are ALWAYS surfaced. FLO never silently resolves ambiguity.
+## Key Principles & Checkpoint Enforcement
 
-6. **Graph-driven.** FLO reads `FAMILY_BINDINGS.md` — it never invents routes. No bindings = no routing.
+1. **Advisory, not autonomous** — FLO records routing decisions as artifacts for human action; it does not auto-start package sessions.
+2. **Carry, don't decide** — families decide internally; operators override; FLO carries decisions to the right edge.
+3. **Gate everything** — every hop runs the GATE_PROTOCOL matching stack; no entity advances without validation.
+4. **Log everything** — every hop, override, hold, conflict, and gate result is recorded.
+5. **Flag, never suppress** — conflicts are ALWAYS surfaced; FLO never silently resolves ambiguity.
+6. **Graph-driven** — FLO reads `FAMILY_BINDINGS.md`; it never invents routes. No bindings = no routing.
+7. **Additive, not blocking** — when FLO is absent, families still work via direct marker detection; FLO adds coordination, never a single point of failure.
+8. **Family-agnostic** — this core contains zero family-specific logic; all family behaviors are injected via overlay files loaded at runtime.
 
-7. **Additive, not blocking.** When FLO is absent, families still work via direct marker detection. FLO adds coordination; it never becomes a single point of failure.
-
-8. **Family-agnostic.** FLO's core engine contains zero family-specific logic. All family behaviors are injected via overlay files loaded at runtime.
+**Checkpoint Enforcement:** report-mode commands (`status`, `check`, `conflicts`, `log`, `lineage`, `routing table`, `bindings`, `families`, `route map`, `help`) NEVER write state. A package switch never happens without a direct user order or explicit confirmation. The routing log is append-only; corrections are new entries.
 
 ---
 
@@ -522,21 +341,22 @@ On activation (_FLO_ received):
 
 ```
 {workspace}/
-+-- _FLO_/                              <- FLO's working folder
-|   +-- flo-state.md                    [marker]
-|   +-- routing-table.md
-|   +-- routing-log.md                  (append-only audit trail)
-|   +-- conflict-alerts/
-|   |   +-- CA-{entity-id}-{NNN}.md     (one per conflict)
-|   +-- readiness-checks/
-|       +-- RC-{entity-id}.md           (one per fan-in evaluation)
+└── _FLO_/                              <- FLO's working folder
+    ├── flo-state.md                    [marker]
+    ├── routing-table.md
+    ├── routing-log.md                  (append-only audit trail)
+    ├── fabric-audit-log.md             (append-only; cross-family hops)
+    ├── conflict-alerts/
+    │   └── CA-{entity-id}-{NNN}.md     (one per conflict)
+    └── readiness-checks/
+        └── RC-{entity-id}.md           (one per fan-in evaluation)
 ```
 
 ---
 
 ## Gate Contract
 
-> Conforms to `GATE_PROTOCOL.md` protocolVersion 1.2.0 - interfaceVersion 1.0
+> Conforms to `GATE_PROTOCOL.md` protocolVersion 1.2.0 — interfaceVersion 1.0
 
 ### Gate-Out — What AI-FLO GUARANTEES When Active
 
@@ -571,4 +391,4 @@ strictness-default: advisory
 
 ---
 
-*AI-FLO v2.0.0 | Created: 2026-06-12 | Rewritten: 2026-06-18 (Communication Fabric alignment) | Author: Maheri | Inspired by: Pipeline orchestrators, content-based routing, DAG schedulers*
+*AI-FLO v2.0.0 | Created: 2026-06-12 | Rewritten: 2026-06-18 (Communication Fabric alignment) | Author: Maheri | Universal fabric router — family-agnostic; family behavior via overlay.*

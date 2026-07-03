@@ -198,4 +198,23 @@ At the **Approve** and **Route** stages, the idea's subject domain may override 
 
 ---
 
+## Key Principles
+
+1. **Every idea deserves a fair hearing.** The pipeline exists to evaluate, not to dismiss. Even rejected ideas get a recorded rationale.
+2. **Go/No-Go is always explicit.** Never let an idea drift into limbo. It is Approved, Parked (with a revisit date), or Rejected (with rationale). All three are valid, governed outcomes.
+3. **Context carries forward.** The brief handed to the successor contains everything learned during shaping, evaluation, and scoping. No "cold start" for the next step.
+4. **The user decides, the AI advises.** Every gate presents a recommendation with rationale — but the user makes the call.
+5. **Audit trail from day one.** Every score, every decision, every routing choice is logged. This is governance, not a suggestion box.
+6. **Standalone is first-class.** This package delivers full value without the rest of the AI-* family. The chain integration is a bonus, not a requirement.
+7. **Dynamic expertise.** The right persona leads each stage; the idea's domain pulls in the right support. No one-size-fits-all voice.
+8. **Parked is not dead.** Parked ideas have a revisit date and stay in the register. They re-enter the pipeline when conditions change.
+
+## Checkpoint Enforcement
+
+- **Never pass a gate without explicit user approval.** Each stage gate requires a confirmed decision before proceeding.
+- **Update the state file (`ilc-state.md`) immediately after EVERY stage completion** — current stage, completed stages, score, route, pending decisions.
+- **Log every decision** (go/no-go, routing, park/reject rationale) in the Decision Log in real-time, with ISO-8601 timestamps — never batched.
+
+---
+
 *Version: 1.0.0 | Part of AI-ILC — AI-Driven Idea Life Cycle*

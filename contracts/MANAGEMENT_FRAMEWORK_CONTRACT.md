@@ -179,7 +179,7 @@ When appending a new entry to any register, the contributing package MUST determ
 
 **Rules:**
 - Never hardcode a starting number. Always scan for the current max.
-- Never reuse or recycle deleted/removed IDs (non-destructive).
+- Never reuse or recycle deleted/removed IDs (— non-destructive).
 - The scan is scoped to `{PHASE}-{ABBREV}-{TYPE}-*` — different phases and different projects have independent counters.
 - In brownfield (existing legacy entries with the pre-v1.2.0 format `{PHASE}-{TYPE}-{NNN}`), scan both formats and take the highest `N` across either format for that phase+type combination.
 

@@ -118,4 +118,36 @@ Continue to Value & Metrics (Stage 16), or end session?
 
 ---
 
+## The Exchange — What AI-POLC Sends to / Receives from AI-DLC v1
+
+> **Critical constraint:** AI-DLC v1 is NOT our product. We do not integrate directly. We prepare the workspace so that any AI operating within it encounters our governance decisions as rules.
+
+### Direct (via files AI-DLC v1's user points to)
+
+| What | How | What DLC Does |
+|------|-----|---------------|
+| Prioritized Epics | Epic files ranked in `prioritization-register.md` | DLC Inception takes top epic, elaborates into stories |
+| Priority Order | Ordering in register | DLC picks the top item when ready for new work |
+| Reprioritization Signals | Updated register + `POLC-C-NNN` in spine | DLC stops deferred epic at bolt boundary, picks new top |
+
+### Indirect (via AI-DWG workspace steering)
+
+| Rule POLC Defines | How It Reaches DLC | DLC Behavior |
+|---|---|---|
+| DoR checklist | AI-DWG encodes into `DEFINITION_OF_DONE.md` | DLC self-checks stories against readiness bar |
+| DoD checklist | AI-DWG encodes into `DEFINITION_OF_DONE.md` | DLC verifies bolt against product acceptance bar |
+| AC format (Given/When/Then) | AI-DWG encodes into `testing-strategy.md` | DLC uses this format when writing AC |
+| Refinement cadence | AI-DWG encodes into `session-governance.md` | DLC knows operational rhythm |
+
+### What DLC Returns to POLC (user brings to POLC session)
+
+| What | What POLC Does |
+|------|----------------|
+| Bolt completed (story done) | Updates traceability, checks increment completeness |
+| Blocker encountered | Reprioritizes around it, escalates if needed |
+| Velocity/throughput data | Adjusts release slicing |
+| Runtime feedback (if instrumented) | Feeds into Value & Metrics extension |
+
+---
+
 *Detail file for AI-POLC Stage 15 | Phase: Operations*

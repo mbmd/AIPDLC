@@ -30,3 +30,10 @@ tools/extensions/**/dist/*.map
 .env
 .env.*
 *.local
+
+# --- Internal design records (not part of the published surface) ---
+# PLAN / CONCEPTUAL_MAP are design-rationale homes; FAMILY_TABLE_MAP is an
+# internal build-coordination file. None are consumer-facing.
+**/PLAN.md
+**/CONCEPTUAL_MAP.md
+FAMILY_TABLE_MAP.md

@@ -84,7 +84,7 @@ Force-activate a family package's workflow, unambiguously, regardless of other i
 | Key | Agent | Type | Owner | What It Does |
 |-----|-------|------|-------|--------------|
 | `BLH__` | backlog-health-agent | Process | AI-POLC | Backlog quality, user story health |
-| `PFH__` | portfolio-health-agent | Audit | AI-PPM | Cross-project health, portfolio status |
+| `PGA__` | portfolio-governance-agent | Audit | AI-PPM | Cross-project health, portfolio status |
 | `UXC__` | ux-consistency-agent | Audit | AI-UXD | Design system adherence, accessibility |
 
 ---

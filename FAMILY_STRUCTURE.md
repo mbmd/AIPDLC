@@ -94,6 +94,8 @@ ai-{pkg}/
 └── setup/                 INSTALL.md               ← multi-platform install (Kiro, Cursor, Claude, …)
 ```
 
+> **ROADMAP.md policy (eligibility-based):** `ROADMAP.md` is a package-root file that is **present only for a package that has opt-in extensions or deferred/planned features** (today: AI-ADLC, which ships a real extension roadmap). Every other package adds a `ROADMAP.md` **only if/when it acquires real forward plans** — never as boilerplate. The **absence** of a ROADMAP means "feature-complete for v1, nothing deferred" — an intentional, documented state, not a gap.
+
 ### Family Root Files
 
 The family root (``) carries family-wide files alongside the package folders:

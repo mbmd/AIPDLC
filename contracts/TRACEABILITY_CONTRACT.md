@@ -108,7 +108,7 @@ The correlation key (`PRJ-{ABBREV}-{YYYY}-{NNN}`) is minted once and MUST surviv
 
 ### 5.1 Standalone Minting
 
-When a package runs standalone (no predecessor marker detected), it may **self-mint** a `Project ID` using the same format (`PRJ-{ABBREV}-{YYYY}-{NNN}`), confirmed with the user. This ensures the correlation key exists regardless of entry point (OR-input).
+When a package runs standalone (no predecessor marker detected), it may **self-mint** a `Project ID` using the same format (`PRJ-{ABBREV}-{YYYY}-{NNN}`), confirmed with the user. This ensures the correlation key exists regardless of entry point (— OR-input).
 
 ---
 

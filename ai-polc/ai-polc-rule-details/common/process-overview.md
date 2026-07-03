@@ -141,4 +141,47 @@ All state is persisted in files. No session memory dependency.
 
 ---
 
+## Sub-Roles (Stage-Layered)
+
+The Product Owner persona is the primary lead for the entire workflow (+ 33 — additive, never replacing the primary). Specific stages activate a sub-role that layers a specialist lens on top:
+
+| Stage / Activity | Sub-Role | Why |
+|---|---|---|
+| Stage 1 (Workspace Detection) | — | Primary persona sufficient |
+| Stage 2 (Vision & Goals) | `#persona-subrole-product-strategist` | Strategic framing, OKR authoring |
+| Stage 3 (PO Charter) | `#persona-subrole-change-manager` | Organizational authority, RACI design |
+| Stage 4 (Discovery & Roadmap) | `#persona-subrole-product-strategist` | Roadmap planning, value proposition |
+| Stage 5 (Epic Decomposition) | `#persona-subrole-business-analyst` | Requirement structuring, goal→epic mapping |
+| Stage 6 (Prioritization) | `#persona-subrole-financial-analyst` | Value quantification, WSJF scoring |
+| Stage 7 (Release Slicing) | `#persona-subrole-resource-planner` | Capacity-aware grouping, increment sizing |
+| Stage 8 (DoR/DoD) | — | Primary persona sufficient (PO's core accountability) |
+| Stage 9 (Risk & Assumptions) | `#persona-subrole-risk-analyst` | Risk scoring, assumption validation |
+| Stage 10 (Traceability) | — | Primary persona sufficient |
+| Stage 11 (Stakeholders) | `#persona-subrole-change-manager` | Stakeholder politics, communication design |
+| Stage 12 (Product Docs) | — | Primary persona sufficient |
+| Stage 13 (Assembly) | — | Primary persona sufficient |
+| Stage 14 (Backlog Ops) | `#persona-subrole-business-analyst` | Refinement facilitation, splitting |
+| Stage 15 (Acceptance) | — | Primary persona sufficient (PO's acceptance authority) |
+| Stage 16 (Value & Metrics) | `#persona-subrole-financial-analyst` | Benefits realization, cost-of-delay |
+
+Max two personas active per stage (primary + one sub-role).
+
+---
+
+## What AI-POLC Does NOT Do (Explicit Boundaries)
+
+| Concern | Owner | AI-POLC's relationship |
+|---------|-------|----------------------|
+| Project initiation (charter, business case, budget) | AI-PILC | Consumes PIP; does not reproduce |
+| Architecture & technical design | AI-ADLC | Consumes AP feasibility/cost-risk to (re)prioritize the backlog; does not decide the architecture |
+| UX research, personas, journeys | AI-UXD | Consumes UXP; does not produce |
+| Implementation (code, tests, deployment) | AI-DLC v1 | Sends epics + rules; does not build |
+| Compliance enforcement (hooks, rules) | AI-GCE | Defines product governance rules; GCE enforces them |
+| Sprint execution, velocity tracking | AI-DLC v1 / team | Receives feedback; does not run sprints |
+| Workspace generation | AI-DWG | Produces PBP that DWG reads; does not generate workspace files |
+
+**Inclusion rule:** If an artifact answers *what / why / in what order* → AI-POLC scope. If it answers *how / when-built / is-it-compliant* → out of scope (AI-DLC v1, AI-DWG, AI-GCE respectively).
+
+---
+
 *Reference this file at any point during the workflow for orientation.*

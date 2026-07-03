@@ -104,7 +104,7 @@ The `projects/` structure is **mandatory in all conditions** — solo, single-pr
 | Dev workspace folder | `{slug}-workspace/` (distinct name for clean IDE logging) | `web-portal-workspace/` |
 | Spine entry ID | **project-qualified, phase-prefixed:** `{PHASE}-{ABBREV}-{TYPE}-{N}` | `PILC-XYZ-D-1` · `ADLC-XYZ-C-2` |
 
-- The **folder prefix** uses the short `PRJ-{ABBREV}` handle (a stable domain key exception); the **full** `PRJ-{ABBREV}-{YYYY}-{NNN}` remains the canonical correlation key in metadata.
+- The **folder prefix** uses the short `PRJ-{ABBREV}` handle (a stable domain key —  exception); the **full** `PRJ-{ABBREV}-{YYYY}-{NNN}` remains the canonical correlation key in metadata.
 - The project handle inside the spine ID (in addition to the per-project folder) makes any later cross-project reconciliation unambiguous even if rows are copied out of their folder.
 - **Abbreviation-collision edge case:** if two projects in one workspace would share an abbreviation, disambiguate at that point (e.g. append the year/sequence to the folder). Not pre-solved.
 

@@ -102,7 +102,7 @@ Phase B: CROSS-INPUT CONFLICT SURFACING (if 2+ inputs present)
 • If no conflicts → proceed silently
 ```
 
-This gate applies to **all three modes**. Full protocol details in `core-generator.md` → "Input Selection & Conflict Surfacing."
+This gate applies to **all three modes**. Full protocol details (quality-impact disclosure, installed-package completion offer, cross-input conflict surfacing) live in `flows/input-selection-and-conflict.md`.
 
 ---
 

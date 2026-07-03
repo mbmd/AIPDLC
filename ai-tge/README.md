@@ -143,7 +143,7 @@ AI-TGE adapts to what exists. It never requires the full chain to have run.
 | **Brownfield** | Existing project with existing tests (no AP) | Assessment mode — map tests, identify gaps |
 | **Observation Only** | Active AI-DLC v1 with aidlc-docs but no prior TGE run | Jump to observation — register as you go |
 
-**Standalone Usage (OR-input):** AI-TGE never blocks on a missing predecessor. AP alone produces architecture-derived strategy. Existing tests alone produce brownfield assessment. Running AI-DLC v1 alone produces observation-only tracking. Each input is additive enrichment — its absence reduces scope but never halts the engine. You do NOT need to run AI-PILC, AI-ADLC, or AI-DWG first if you have existing code with tests to assess.
+**Standalone Usage (— OR-input):** AI-TGE never blocks on a missing predecessor. AP alone produces architecture-derived strategy. Existing tests alone produce brownfield assessment. Running AI-DLC v1 alone produces observation-only tracking. Each input is additive enrichment — its absence reduces scope but never halts the engine. You do NOT need to run AI-PILC, AI-ADLC, or AI-DWG first if you have existing code with tests to assess.
 
 ---
 

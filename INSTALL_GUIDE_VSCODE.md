@@ -230,6 +230,7 @@ $packages = @(
     @{ Name = "ai-dwg";  Core = "core-generator.md"; Rules = "ai-dwg-rules";  Details = "ai-dwg-rule-details";  Desc = "AI-DWG: Workspace generator" }
     @{ Name = "ai-gce";  Core = "core-generator.md"; Rules = "ai-gce-rules";  Details = "ai-gce-rule-details";  Desc = "AI-GCE: Governance and compliance engine" }
     @{ Name = "ai-tge";  Core = "core-engine.md";    Rules = "ai-tge-rules";  Details = "ai-tge-rule-details";  Desc = "AI-TGE: Test governance engine" }
+    @{ Name = "ai-dfe";  Core = "core-engine.md";    Rules = "ai-dfe-rules";  Details = "ai-dfe-rule-details";  Desc = "AI-DFE: Data fabric engine" }
 )
 
 foreach ($pkg in $packages) {
@@ -302,7 +303,7 @@ done
 
 ### Context Window Considerations
 
-VS Code loads ALL always-on instruction files at session start. With 10 packages:
+VS Code loads ALL always-on instruction files at session start. With 11 packages:
 
 - **Option A (AGENTS.md):** Single large file — may hit context limits with some models. Best for 3–5 packages.
 - **Option B (.instructions.md):** Individual files all loaded — same total context but VS Code can manage them independently. Works better for large installs because VS Code shows which instructions were applied.
@@ -313,7 +314,7 @@ VS Code loads ALL always-on instruction files at session start. With 10 packages
 |----------|----------|----------|
 | 1–3 packages | Any subset | Either option works well |
 | 4–6 packages | Selective | Option B preferred (modular) |
-| 7–10 packages | Full chain | Option B required (AGENTS.md gets too large) |
+| 7–11 packages | Full chain | Option B required (AGENTS.md gets too large) |
 
 ---
 
@@ -331,6 +332,7 @@ VS Code loads ALL always-on instruction files at session start. With 10 packages
 | 8 | **AI-DWG** | Architecture → Ready-to-code workspace | "Using AI-DWG, generate the workspace" |
 | 9 | **AI-GCE** | Workspace → Compliance enforcement layer | "Using AI-GCE, set up governance" |
 | 10 | **AI-TGE** | Workspace → Test strategy & coverage tracking | "Using AI-TGE, establish test governance" |
+| 11 | **AI-DFE** | Gather, shape, and distribute structured data | "Using AI-DFE, gather data" |
 
 ---
 
@@ -364,7 +366,9 @@ your-project/
 │       ├── pdlc-ai-polc.instructions.md     ← Always loaded
 │       ├── pdlc-ai-dwg.instructions.md      ← Always loaded
 │       ├── pdlc-ai-gce.instructions.md      ← Always loaded
-│       └── pdlc-ai-tge.instructions.md      ← Always loaded
+│       ├── pdlc-ai-gce.instructions.md      ← Always loaded
+│       ├── pdlc-ai-tge.instructions.md      ← Always loaded
+│       └── pdlc-ai-dfe.instructions.md      ← Always loaded
 ├── .pdlc/                                   ← AI-* PDLC Family rule-details (on-demand)
 │   ├── ai-ilc-rule-details/
 │   ├── ai-pilc-rule-details/
@@ -375,7 +379,8 @@ your-project/
 │   ├── ai-flo-rule-details/
 │   ├── ai-dwg-rule-details/
 │   ├── ai-gce-rule-details/
-│   └── ai-tge-rule-details/
+│   ├── ai-tge-rule-details/
+│   └── ai-dfe-rule-details/
 ├── pdlc-ws/                                 ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 └── (your project files)
 ```
@@ -601,7 +606,7 @@ Right-click in Chat view → **Diagnostics** to see:
 | Deliverable file output | ✅ |
 | State persistence | ✅ |
 | Chain marker detection | ✅ |
-| Multi-package install | ✅ All 10 (via .instructions.md) |
+| Multi-package install | ✅ All 11 (via .instructions.md) |
 | AI-DWG workspace gen | ✅ |
 | AI-GCE rule generation | ✅ |
 | AI-GCE hook enforcement | ⚠️ Partial (VS Code hooks exist, different format) |

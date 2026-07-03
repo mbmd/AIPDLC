@@ -43,14 +43,17 @@
 
 ## How It Works
 
-Each AI-* package installs **two things** into your workspace, both **family-scoped** to the AI-* PDLC Family (core files carry a `CLAUDE_PDLC_` filename prefix; rule-details live under a `.pdlc/` folder — so multiple AIFLC families can coexist in one workspace):
+Each AI-* package installs into your workspace, all **family-scoped** to the AI-* PDLC Family (core files carry a `CLAUDE_PDLC_` filename prefix; rule-details live under a `.pdlc/` folder — so multiple AIFLC families can coexist in one workspace):
 
-1. **Core workflow/engine file** — a Markdown file that Claude Code reads automatically at session start (placed at workspace root as `CLAUDE_PDLC_{PKG}.md` or in `.claude/rules/pdlc/`)
-2. **Rule-details folder** — phase-specific instructions and templates that the core workflow loads on demand during execution (placed under `.pdlc/`)
+1. **Session orchestrator** — deployed as `CLAUDE_PDLC_ORCHESTRATOR.md` and wired into a real root `CLAUDE.md` via an `@import`. This is the single always-loaded entry point.
+2. **Core workflow/engine file** — one per package (`CLAUDE_PDLC_{PKG}.md` at workspace root). **Not** auto-loaded; the orchestrator `Read`s the relevant one on demand when you activate a package.
+3. **Rule-details folder** — phase-specific instructions and templates that the core workflow loads on demand during execution (placed under `.pdlc/`)
 
 ```
 your-workspace/
-├── CLAUDE_PDLC_AI_PILC.md         ← Claude reads this automatically (always-loaded steering)
+├── CLAUDE.md                      ← Auto-loaded; imports @CLAUDE_PDLC_ORCHESTRATOR.md
+├── CLAUDE_PDLC_ORCHESTRATOR.md    ← Always-on router (loaded via the import above)
+├── CLAUDE_PDLC_AI_PILC.md         ← Read on demand when you activate AI-PILC
 ├── .pdlc/
 │   └── ai-pilc-rule-details/      ← Loaded on-demand by the core workflow
 │       ├── common/
@@ -62,9 +65,9 @@ your-workspace/
 └── (your project files)
 ```
 
-Claude Code reads all `CLAUDE*.md` files at workspace root on every session start. This is how the packages inject their expertise into Claude's context without you needing to paste anything.
+Claude Code auto-loads **only** `CLAUDE.md` (plus `CLAUDE.local.md`, `.claude/CLAUDE.md`, and `.claude/rules/*.md`) — there is no `CLAUDE*.md` filename wildcard. The installer creates a root `CLAUDE.md` that imports the orchestrator (`@CLAUDE_PDLC_ORCHESTRATOR.md`); the orchestrator then `Read`s each package core on demand. That is how the packages inject their expertise into Claude's context without you needing to paste anything.
 
-> **The Kiro-style split:** core files load as always-on steering (`CLAUDE_PDLC_*.md`); rule-details are read on demand (`.pdlc/`); and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root.
+> **The load model:** `CLAUDE.md` (auto) → imports the orchestrator (always-on router) → `Read`s one package core + its `.pdlc/` rule-details on demand. Everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root. This is the Claude Code analog of Kiro's "one always-on steering file + manual-inclusion workflows" design.
 
 ---
 
@@ -174,12 +177,13 @@ The installer uses this naming pattern per package:
 | AI-TGE | `CLAUDE_PDLC_AI_TGE.md` | `.pdlc/ai-tge-rule-details/` |
 | AI-PPM | `CLAUDE_PDLC_AI_PPM.md` | `.pdlc/ai-ppm-rule-details/` |
 | AI-FLO | `CLAUDE_PDLC_AI_FLO.md` | `.pdlc/ai-flo-rule-details/` |
+| AI-DFE | `CLAUDE_PDLC_AI_DFE.md` | `.pdlc/ai-dfe-rule-details/` |
 
-> **Why `CLAUDE_PDLC_AI_PILC.md` instead of `CLAUDE.md`?** Claude Code reads ALL files matching `CLAUDE*.md` at workspace root. The `CLAUDE_PDLC_` prefix family-scopes each file to the AI-* PDLC Family, so multiple packages (and multiple AIFLC families) coexist — each gets its own always-loaded file without conflicts.
+> **Why `CLAUDE_PDLC_AI_PILC.md` instead of `CLAUDE.md`?** Claude Code auto-loads only `CLAUDE.md` — it does **not** read files by a `CLAUDE*.md` wildcard. Package cores use the `CLAUDE_PDLC_` prefix so they stay out of the auto-load path and are `Read` on demand by the orchestrator (the Claude analog of Kiro's `inclusion: manual`). The prefix also family-scopes each file to the AI-* PDLC Family, so multiple packages (and multiple AIFLC families) coexist without conflicts. Loading is driven by the orchestrator import in `CLAUDE.md`, not by these filenames.
 
 ### Alternative: Using `.claude/rules/` Directory
 
-Claude Code also supports a `.claude/rules/` directory where each rule file is automatically loaded. Family-scope it under a `pdlc/` subfolder for a cleaner multi-package install:
+Claude Code also supports a `.claude/rules/` directory where each rule file is loaded on every session (unless `paths:`-scoped). Family-scope it under a `pdlc/` subfolder for a cleaner multi-package install:
 
 ```powershell
 $Source = "<path-to-AIPDLC>"
@@ -199,13 +203,13 @@ Copy-Item -Recurse "$Source\ai-adlc\ai-adlc-rule-details" "$Target\.pdlc\ai-adlc
 Copy-Item -Recurse "$Source\ai-dwg\ai-dwg-rule-details" "$Target\.pdlc\ai-dwg-rule-details"
 ```
 
-Both approaches work. The `CLAUDE_PDLC_*.md` approach (what the installer uses) is simpler; the `.claude/rules/pdlc/` approach is more conventional for Claude Code users.
+Both approaches work, with one important caveat: files in `.claude/rules/` load on **every** session unless you `paths:`-scope them, so putting all 11 cores there would load every workflow into every session and defeat the lightweight on-demand design. The installer's `CLAUDE.md` + orchestrator approach (cores `Read` on demand) is the recommended path; use `.claude/rules/pdlc/` only if you deliberately want a small, always-on subset.
 
 ---
 
 ## Multi-Package Installation
 
-### Installing All 10 Packages (Full Chain)
+### Installing All 11 Packages (Full Chain)
 
 ```powershell
 .\installer\install.ps1 -TargetWorkspace "<your-project-path>" -Platform claude-code -Bundle full
@@ -228,6 +232,7 @@ $packages = @(
     @{ Name = "ai-dwg";  Core = "core-generator.md"; Rules = "ai-dwg-rules";  Details = "ai-dwg-rule-details" }
     @{ Name = "ai-gce";  Core = "core-generator.md"; Rules = "ai-gce-rules";  Details = "ai-gce-rule-details" }
     @{ Name = "ai-tge";  Core = "core-engine.md";    Rules = "ai-tge-rules";  Details = "ai-tge-rule-details" }
+    @{ Name = "ai-dfe";  Core = "core-engine.md";    Rules = "ai-dfe-rules";  Details = "ai-dfe-rule-details" }
 )
 
 foreach ($pkg in $packages) {
@@ -251,10 +256,10 @@ foreach ($pkg in $packages) {
 
 ### Context Window Consideration
 
-All `CLAUDE_*.md` files load at session start. With 10 packages installed, that's ~10 core workflow files in context. Each is designed to be concise (the heavy detail is in the rule-details folders, loaded on demand), but be aware:
+All `CLAUDE_*.md` files load at session start. With 11 packages installed, that's ~11 core workflow files in context. Each is designed to be concise (the heavy detail is in the rule-details folders, loaded on demand), but be aware:
 
-- **Recommended:** Install only the packages you'll use in a given project. Most projects need 3–5 packages, not all 10.
-- **If installing all 10:** Context usage is still manageable because core files are orchestration logic (1–3 KB each), not full instruction sets.
+- **Recommended:** Install only the packages you'll use in a given project. Most projects need 3–5 packages, not all 11.
+- **If installing all 11:** Context usage is still manageable because core files are orchestration logic (1–3 KB each), not full instruction sets.
 - **The AI activates only one package at a time** — the others are dormant until you invoke them.
 
 ---
@@ -273,6 +278,7 @@ All `CLAUDE_*.md` files load at session start. With 10 packages installed, that'
 | 8 | **AI-DWG** | Architecture → Ready-to-code workspace | "Using AI-DWG, generate the workspace" |
 | 9 | **AI-GCE** | Workspace → Compliance enforcement layer | "Using AI-GCE, set up governance" |
 | 10 | **AI-TGE** | Workspace → Test strategy & coverage tracking | "Using AI-TGE, establish test governance" |
+| 11 | **AI-DFE** | Gather, shape, and distribute structured data | "Using AI-DFE, gather data" |
 
 ### Common Starting Points
 
@@ -304,6 +310,7 @@ your-project/
 ├── CLAUDE_PDLC_AI_DWG.md            ← Always loaded: Workspace generator
 ├── CLAUDE_PDLC_AI_GCE.md            ← Always loaded: Governance engine
 ├── CLAUDE_PDLC_AI_TGE.md            ← Always loaded: Test governance engine
+├── CLAUDE_PDLC_AI_DFE.md            ← Always loaded: Data fabric engine
 ├── .pdlc/                           ← AI-* PDLC Family rule-details (on-demand)
 │   ├── ai-ilc-rule-details/            ← idea lifecycle details
 │   ├── ai-pilc-rule-details/           ← project initiation details
@@ -322,7 +329,8 @@ your-project/
 │   ├── ai-flo-rule-details/            ← flow routing details
 │   ├── ai-dwg-rule-details/            ← workspace generation details
 │   ├── ai-gce-rule-details/            ← governance engine details
-│   └── ai-tge-rule-details/            ← test governance details
+│   ├── ai-tge-rule-details/            ← test governance details
+│   └── ai-dfe-rule-details/            ← data fabric details
 ├── pdlc-ws/                         ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 │   ├── .ai-family-manifest.json     ← Installer tracking (for uninstall)
 │   └── tools/                       ← Family tools (visual tools / extensions)
@@ -559,10 +567,10 @@ If you only have access to claude.ai (the web chat), here's what works and what 
 
 AI-* package files coexist peacefully with your existing Claude configuration:
 
-- **Existing `CLAUDE.md`**: Untouched. The installer creates `CLAUDE_PDLC_AI_*.md` files (different filenames).
-- **Existing `.claude/rules/`**: Untouched. Installer uses root-level `CLAUDE_PDLC_*.md` by default.
-- **Other project files**: Never modified. Only AI-* steering files are added.
-- **Package isolation**: Each package activates ONLY when you invoke it by name. Dormant packages consume context but don't interfere with other work.
+- **Existing `CLAUDE.md`**: Preserved. If you already have one, the installer only **appends** a marker-guarded import block (`@CLAUDE_PDLC_ORCHESTRATOR.md`); your content is untouched and uninstall strips just that block. If you have none, the installer creates a minimal `CLAUDE.md` and uninstall removes it.
+- **Existing `.claude/rules/`**: Untouched. The installer uses a root `CLAUDE.md` import + on-demand `Read` by default.
+- **Other project files**: Never modified. Only AI-* steering files (and the `CLAUDE.md` import block) are added.
+- **Package isolation**: Each package is `Read` ONLY when you invoke it by name. Dormant packages are not loaded and consume no context.
 
 ### If You Want a Single CLAUDE.md Instead
 
@@ -628,7 +636,7 @@ Remove-Item "<your-project-path>\pdlc-ws\tools\extensions" -Recurse -Force -Erro
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| Claude doesn't recognize the package | Core file not being read | Verify `CLAUDE_PDLC_AI_*.md` exists at workspace root. Claude Code reads all `CLAUDE*.md` files at root. |
+| Claude doesn't recognize the package | Orchestrator not loaded | Verify root `CLAUDE.md` exists and contains `@CLAUDE_PDLC_ORCHESTRATOR.md` (outside any code fence). Run `/memory` to confirm both `CLAUDE.md` and the orchestrator are loaded. Then activate a package (e.g. `_PILC_`) so the orchestrator `Read`s `CLAUDE_PDLC_AI_PILC.md`. |
 | "Can't find rule-details" | Path mismatch | The core workflow checks `.pdlc/{pkg}-rule-details/`, `pdlc/{pkg}-rule-details/`, and `.kiro/pdlc/{pkg}-rule-details/`. Ensure one of these exists. |
 | No welcome message | Wrong activation phrase | Use the exact format: "Using AI-PILC, ..." (uppercase package name) |
 | State file not created | First interaction only | State is created after the first stage completes, not immediately |
@@ -655,7 +663,7 @@ If something doesn't work:
 | Deliverable file output | ✅ Writes to disk | ⚠️ Chat output only |
 | State persistence | ✅ Across sessions | ❌ Single session |
 | Chain marker detection | ✅ Automatic | ❌ Not possible |
-| Multi-package install | ✅ All 10 | ⚠️ One per project |
+| Multi-package install | ✅ All 11 | ⚠️ One per project |
 | AI-DWG workspace gen | ✅ Full (30+ files) | ❌ Not possible |
 | AI-GCE rule generation | ✅ Full | ❌ Not possible |
 | AI-GCE hook enforcement | ❌ (Kiro only) | ❌ |

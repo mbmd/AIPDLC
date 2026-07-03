@@ -283,12 +283,13 @@ foreach ($pkg in $packages) {
 | AI-TGE | `.ai-rules/pdlc/ai-tge/AGENTS.md` | `.pdlc/ai-tge-rule-details/` |
 | AI-PPM | `.ai-rules/pdlc/ai-ppm/AGENTS.md` | `.pdlc/ai-ppm-rule-details/` |
 | AI-FLO | `.ai-rules/pdlc/ai-flo/AGENTS.md` | `.pdlc/ai-flo-rule-details/` |
+| AI-DFE | `.ai-rules/pdlc/ai-dfe/AGENTS.md` | `.pdlc/ai-dfe-rule-details/` |
 
 ---
 
 ## Multi-Package Installation
 
-### Installing All 10 Packages (Full Chain)
+### Installing All 11 Packages (Full Chain)
 
 ```powershell
 .\installer\install.ps1 -TargetWorkspace "<your-project-path>" -Platform codex -Bundle full
@@ -313,6 +314,7 @@ $packages = @(
     @{ Name = "ai-dwg";  Core = "core-generator.md"; Rules = "ai-dwg-rules";  Details = "ai-dwg-rule-details" }
     @{ Name = "ai-gce";  Core = "core-generator.md"; Rules = "ai-gce-rules";  Details = "ai-gce-rule-details" }
     @{ Name = "ai-tge";  Core = "core-engine.md";    Rules = "ai-tge-rules";  Details = "ai-tge-rule-details" }
+    @{ Name = "ai-dfe";  Core = "core-engine.md";    Rules = "ai-dfe-rules";  Details = "ai-dfe-rule-details" }
 )
 
 foreach ($pkg in $packages) {
@@ -356,6 +358,7 @@ Activate any package by saying: "Using AI-{PKG}, ..."
 | AI-DWG | "Using AI-DWG, generate the workspace" | Architecture → Ready-to-code workspace |
 | AI-GCE | "Using AI-GCE, set up governance" | Workspace → Compliance enforcement |
 | AI-TGE | "Using AI-TGE, establish test governance" | Workspace → Test strategy |
+| AI-DFE | "Using AI-DFE, gather data" | Gather, shape, and distribute structured data |
 
 ## How It Works
 
@@ -368,10 +371,10 @@ $rootAgents | Out-File -FilePath "$Target\AGENTS.md" -Encoding utf8
 
 ### Context Window Consideration
 
-Codex loads `AGENTS.md` files from the workspace hierarchy. With 10 packages installed in subdirectories:
+Codex loads `AGENTS.md` files from the workspace hierarchy. With 11 packages installed in subdirectories:
 
-- **Recommended:** Install only the packages you'll use in a given project. Most projects need 3–5 packages, not all 10.
-- **If installing all 10:** Core files are orchestration logic (1–3 KB each). The root `AGENTS.md` serves as a lightweight index; subdirectory files are loaded based on relevance.
+- **Recommended:** Install only the packages you'll use in a given project. Most projects need 3–5 packages, not all 11.
+- **If installing all 11:** Core files are orchestration logic (1–3 KB each). The root `AGENTS.md` serves as a lightweight index; subdirectory files are loaded based on relevance.
 - **The AI activates only one package at a time** — the others are dormant until you invoke them.
 
 ---
@@ -390,6 +393,7 @@ Codex loads `AGENTS.md` files from the workspace hierarchy. With 10 packages ins
 | 8 | **AI-DWG** | Architecture → Ready-to-code workspace | "Using AI-DWG, generate the workspace" |
 | 9 | **AI-GCE** | Workspace → Compliance enforcement layer | "Using AI-GCE, set up governance" |
 | 10 | **AI-TGE** | Workspace → Test strategy & coverage tracking | "Using AI-TGE, establish test governance" |
+| 11 | **AI-DFE** | Gather, shape, and distribute structured data | "Using AI-DFE, gather data" |
 
 ### Common Starting Points
 
@@ -432,8 +436,10 @@ your-project/
 │       │   └── AGENTS.md               ← AI-DWG core generator
 │       ├── ai-gce/
 │       │   └── AGENTS.md               ← AI-GCE core generator
-│       └── ai-tge/
-│           └── AGENTS.md               ← AI-TGE core engine
+│       ├── ai-tge/
+│       │   └── AGENTS.md               ← AI-TGE core engine
+│       └── ai-dfe/
+│           └── AGENTS.md               ← AI-DFE core engine
 ├── .pdlc/                               ← AI-* PDLC Family rule-details (on-demand)
 │   ├── ai-ilc-rule-details/                ← idea lifecycle details
 │   ├── ai-pilc-rule-details/               ← project initiation details
@@ -452,7 +458,8 @@ your-project/
 │   ├── ai-flo-rule-details/                ← flow routing details
 │   ├── ai-dwg-rule-details/                ← workspace generation details
 │   ├── ai-gce-rule-details/                ← governance engine details
-│   └── ai-tge-rule-details/                ← test governance details
+│   ├── ai-tge-rule-details/                ← test governance details
+│   └── ai-dfe-rule-details/                ← data fabric details
 ├── pdlc-ws/                             ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 │   ├── .ai-family-manifest.json         ← Installer tracking (for uninstall)
 │   └── tools/                           ← Family tools (visual tools / extensions)
@@ -715,7 +722,7 @@ Remove-Item "<your-project-path>\AGENTS.md" -ErrorAction SilentlyContinue
 | Deliverable file output | ✅ |
 | State persistence | ✅ |
 | Chain marker detection | ✅ |
-| Multi-package install | ✅ All 10 |
+| Multi-package install | ✅ All 11 |
 | AI-DWG workspace gen | ✅ |
 | AI-GCE rule generation | ✅ |
 | AI-GCE hook enforcement | ❌ (Kiro only) |

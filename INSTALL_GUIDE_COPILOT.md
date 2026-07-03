@@ -202,7 +202,7 @@ foreach ($pkg in $packages) {
 
 ### Context Window Warning
 
-Merging all 10 packages into one `copilot-instructions.md` creates a large file. Copilot may truncate instructions that exceed its context limit.
+Merging all 11 packages into one `copilot-instructions.md` creates a large file. Copilot may truncate instructions that exceed its context limit.
 
 **Recommendation:** Install 2–3 packages maximum on Copilot. For larger installs, use a different platform (Kiro, Claude Code, Cursor, or Cline).
 
@@ -222,6 +222,7 @@ Merging all 10 packages into one `copilot-instructions.md` creates a large file.
 | 8 | **AI-DWG** | Architecture → Ready-to-code workspace | "Using AI-DWG, generate the workspace" |
 | 9 | **AI-GCE** | Workspace → Compliance enforcement layer | "Using AI-GCE, set up governance" |
 | 10 | **AI-TGE** | Workspace → Test strategy & coverage tracking | "Using AI-TGE, establish test governance" |
+| 11 | **AI-DFE** | Gather, shape, and distribute structured data | "Using AI-DFE, gather data" |
 
 ### Recommended Packages for Copilot
 
@@ -331,7 +332,7 @@ If you need:
 - More than 3 packages → Use Cursor, Claude Code, or Kiro
 - AI-GCE enforcement → Use Kiro
 - Reliable on-demand file loading → Use any other supported platform
-- Full chain (all 10 packages) → Use Kiro, Claude Code, or Cursor
+- Full chain (all 11 packages) → Use Kiro, Claude Code, or Cursor
 
 ---
 
