@@ -159,4 +159,4 @@ This document provides AI-DLC v1 with the detailed UI specification for code gen
 3. **Responsive behavior is mandatory.** Every page MUST define behavior at minimum 2 breakpoints. If UXP doesn't specify, derive from layout pattern.
 4. **Data bindings connect UI to backend.** If ADLC is present, reference API endpoints from the API Architecture. If ADLC absent, use `{API-TBD}` placeholders.
 5. **Shared Flows capture multi-page interactions.** Authentication, checkout, onboarding — any flow spanning >1 page gets a Shared Flow section.
-6. **Priority = MVP scope alignment.** Cross-reference with `vision.md` MVP IN/OUT (if POLC present) to mark pages as MVP or Post-MVP.
+6. **Priority = MVP scope alignment.** Cross-reference with `info/vision.md` MVP IN/OUT (if POLC present) to mark pages as MVP or Post-MVP.

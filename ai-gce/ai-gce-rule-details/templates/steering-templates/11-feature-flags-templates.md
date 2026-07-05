@@ -9,7 +9,7 @@ ownership: generated
 # Feature Flags Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate feature flag steering files
-> in the target project's `.kiro/steering/` folder. These templates encode flag lifecycle management,
+> in the target project's `rules/` folder. These templates encode flag lifecycle management,
 > implementation patterns, testing strategy, and cleanup rules derived from `feature-flags.md`
 > (conditional — only if Feature Flags extension is active).
 
@@ -17,7 +17,7 @@ ownership: generated
 
 ## feature-flags-core.md (Always — within feature flags scope)
 
-**Generates**: `.kiro/steering/feature-flags-core.md`
+**Generates**: `rules/feature-flags-core.md`
 **Condition**: Generated only IF `feature-flags.md` exists in workspace steering
 **Derived From**: feature-flags.md + tech-stack.md + project-governance.md
 
@@ -61,7 +61,7 @@ inclusion: always
 
 ## feature-flags-implementation.md (FileMatch `{source_code_pattern}`)
 
-**Generates**: `.kiro/steering/feature-flags-implementation.md`
+**Generates**: `rules/feature-flags-implementation.md`
 **Derived From**: feature-flags.md + tech-stack.md
 
 ```markdown
@@ -103,7 +103,7 @@ fileMatchPattern: "{source_code_pattern}"
 
 ## feature-flags-governance.md (Always — within feature flags scope)
 
-**Generates**: `.kiro/steering/feature-flags-governance.md`
+**Generates**: `rules/feature-flags-governance.md`
 **Derived From**: feature-flags.md + project-governance.md
 
 ```markdown

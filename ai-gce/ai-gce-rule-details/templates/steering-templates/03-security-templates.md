@@ -9,14 +9,14 @@ ownership: generated
 # Security & Compliance Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate security-related steering files
-> in the target project's `.kiro/steering/` folder. These templates encode authentication,
+> in the target project's `rules/` folder. These templates encode authentication,
 > authorization, data protection, and audit trail standards derived from `security-rules.md`.
 
 ---
 
 ## security-standards.md (Always)
 
-**Generates**: `.kiro/steering/security-standards.md`
+**Generates**: `rules/security-standards.md`
 **Derived From**: security-rules.md + role-isolation.md
 
 ```markdown
@@ -84,7 +84,7 @@ inclusion: always
 
 ## compliance-standards.md (Always)
 
-**Generates**: `.kiro/steering/compliance-standards.md`
+**Generates**: `rules/compliance-standards.md`
 **Derived From**: security-rules.md + project-governance.md + scope-and-risks.md
 
 ```markdown

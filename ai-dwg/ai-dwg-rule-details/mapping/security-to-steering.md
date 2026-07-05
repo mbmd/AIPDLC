@@ -5,7 +5,7 @@
 
 This mapping rule transforms the **Security & Identity Architecture** document (AP artifact) into a steering file that enforces authentication, authorization, data protection, and security best practices across all development activity.
 
-**Output:** `.kiro/steering/security-rules.md`
+**Output:** `rules/security-rules.md`
 
 ---
 
@@ -240,7 +240,7 @@ inclusion: always
 | TENANT-04 | Cross-tenant data access: {policy from AP — e.g., strictly forbidden / platform admin only}. |
 | TENANT-05 | Tenant data deletion: {policy from AP — e.g., soft-delete with 30-day grace period, then hard-delete}. |
 
-NOTE: Full tenant isolation rules are in `.kiro/steering/multi-tenancy.md`. These rules cover the SECURITY aspect only.
+NOTE: Full tenant isolation rules are in `rules/multi-tenancy.md`. These rules cover the SECURITY aspect only.
 
 <!-- end: AP-sourced -->
 

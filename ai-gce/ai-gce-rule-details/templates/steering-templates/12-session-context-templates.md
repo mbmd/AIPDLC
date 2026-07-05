@@ -9,7 +9,7 @@ ownership: generated
 # Session & Context Management Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate session governance and context management
-> steering files in the target project's `.kiro/steering/` folder. These templates encode AI-DLC v1
+> steering files in the target project's `rules/` folder. These templates encode AI-DLC v1
 > methodology rules, session discipline, context hygiene, and never-vibe-code enforcement
 > derived from `session-governance.md` and the built-in AI-DLC v1 methodology baseline.
 
@@ -17,7 +17,7 @@ ownership: generated
 
 ## session-governance.md (Always)
 
-**Generates**: `.kiro/steering/session-governance.md`
+**Generates**: `rules/session-governance.md`
 **Derived From**: session-governance.md + built-in AI-DLC v1 methodology baseline
 
 ```markdown
@@ -63,7 +63,7 @@ inclusion: always
 
 ## context-loading.md (FileMatch `{spec_docs_pattern}`)
 
-**Generates**: `.kiro/steering/context-loading.md`
+**Generates**: `rules/context-loading.md`
 **Condition**: Generated IF project has spec documentation structure
 **Derived From**: session-governance.md + project structure
 
@@ -97,7 +97,7 @@ fileMatchPattern: "{spec_docs_pattern}"
 
 ## role-isolation.md (Always)
 
-**Generates**: `.kiro/steering/role-isolation.md`
+**Generates**: `rules/role-isolation.md`
 **Derived From**: role-isolation.md + CODEOWNERS + TEAM_AGREEMENTS.md
 
 ```markdown

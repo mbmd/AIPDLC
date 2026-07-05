@@ -6,14 +6,14 @@
 Derives team operational rules, role definitions, coding conventions, and governance steering from team context, methodology decisions, quality attributes, and scope information across the AP.
 
 **Outputs:**
-1. `TEAM_AGREEMENTS.md` — Operating rules (root document)
-2. `.kiro/steering/role-isolation.md` — Who does what in AI-DLC v1 workflow
-3. `.kiro/steering/coding-standards.md` — Code patterns and conventions
-4. `.kiro/steering/naming-conventions.md` — File/folder/class/method naming
-5. `.kiro/steering/testing-strategy.md` — Test types, coverage, patterns
-6. `.kiro/steering/session-governance.md` — AI-DLC v1 session rules
-7. `.kiro/steering/project-governance.md` — Sprint cadence, DoD, gates
-8. `.kiro/steering/scope-and-risks.md` — Scope boundaries, risk awareness
+1. `info/TEAM_AGREEMENTS.md` — Operating rules (root document)
+2. `rules/role-isolation.md` — Who does what in AI-DLC v1 workflow
+3. `rules/coding-standards.md` — Code patterns and conventions
+4. `rules/naming-conventions.md` — File/folder/class/method naming
+5. `rules/testing-strategy.md` — Test types, coverage, patterns
+6. `rules/session-governance.md` — AI-DLC v1 session rules
+7. `rules/project-governance.md` — Sprint cadence, DoD, gates
+8. `rules/scope-and-risks.md` — Scope boundaries, risk awareness
 
 ---
 

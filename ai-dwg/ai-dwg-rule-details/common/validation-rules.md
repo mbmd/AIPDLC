@@ -38,7 +38,7 @@ Every workspace MUST contain these. Missing = validation failure.
 
 | Category | Files | Check |
 |----------|-------|-------|
-| Steering (core) | 19 always-generated steering files | Each file exists in `.kiro/steering/` |
+| Steering (core) | 19 always-generated steering files | Each file exists in `rules/` |
 | Operational docs | PROJECT_INSTRUCTIONS.md, DEFINITION_OF_DONE.md, CONTRIBUTING.md, TEAM_AGREEMENTS.md, ONBOARDING.md | Each file exists at workspace root |
 | Config files | .gitignore, .editorconfig, docker-compose.yml, CODEOWNERS, README.md | Each file exists at workspace root |
 | PR template | .github/pull_request_template.md | File exists |
@@ -115,7 +115,7 @@ Some rules are DERIVED (not directly stated in AP but logically implied). These 
 | Security model | `security-rules.md` vs. `api-standards.md` | Auth approach consistent between security and API |
 | Tenant isolation | `multi-tenancy.md` vs. `database-rules.md` vs. `security-rules.md` | Isolation approach consistent across all three |
 | Naming conventions | `naming-conventions.md` vs. `module-structure.md` vs. `api-standards.md` | No conflicting naming rules |
-| Git workflow | `git-workflow.md` vs. `CONTRIBUTING.md` | Branching strategy matches in both |
+| Git workflow | `git-workflow.md` vs. `info/CONTRIBUTING.md` | Branching strategy matches in both |
 | DoD criteria | `DEFINITION_OF_DONE.md` vs. `testing-strategy.md` | Test requirements in DoD align with testing strategy |
 | Observability | `observability-logging.md` vs. `observability-sensitive.md` | Sensitive data rules don't contradict logging requirements |
 

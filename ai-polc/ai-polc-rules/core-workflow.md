@@ -72,7 +72,7 @@ The workflow adapts to the product context, not the other way around. The AI ass
 
 **Depth Levels:** **Minimal** (clear intent, small product, low stakeholder density → streamlined PBP with essential governance) · **Standard** (normal complexity, some gaps → full PBP with all core features) · **Comprehensive** (enterprise product, heavy compliance, multi-team, high uncertainty → detailed governance with full traceability and extensions). Depth is set at Stage 1 and can change mid-workflow. Full model + 13 context factors + input modes (incl. brownfield): `foundation/workspace-detection.md` + `common/process-overview.md`.
 
-**Tier model (a load decision):** **Tier 1** (full PO governance) is always active. **Tier 2** (INVEST stories + Given/When/Then AC) is **off by default in chain mode** (AI-DLC v1 elaborates stories) and user-activated standalone or on explicit request — load `tier2/story-elaboration.md` and add story-level outputs to each epic at Stage 5. **Opt-in extensions** (Advanced Discovery, Full Traceability, Full Risk, Value & Metrics, Full Product Docs, Quality Review, MVP/MMP) load their `extensions/*.opt-in.md` on trigger keywords — full table + activation/composition rules: `extensions/README.md`.
+**Tier model (a load decision):** **Tier 1** (full PO governance) is always active. **Tier 2** (INVEST stories + Given/When/Then AC) is **off by default in chain mode** (AI-DLC v1 elaborates stories) and user-activated standalone or on explicit request. POLC does not leave this to a hidden default — at the **Stage 5 gate** it explicitly asks the user whether to keep Tier 2 off or turn it on (Q-5T), and the choice is toggleable on the fly at any stage. When active, load `tier2/story-elaboration.md`, ask the story-format question, and add story-level outputs to each epic at Stage 5. **Opt-in extensions** (Advanced Discovery, Full Traceability, Full Risk, Value & Metrics, Full Product Docs, Quality Review, MVP/MMP) load their `extensions/*.opt-in.md` on trigger keywords — full table + activation/composition rules: `extensions/README.md`.
 
 ---
 
@@ -80,9 +80,8 @@ The workflow adapts to the product context, not the other way around. The AI ass
 
 CRITICAL: When performing any phase, you MUST read and use relevant content from rule detail files. Resolve the rule-details directory once — check these paths in order, use the first that exists:
 
-- `.ai-polc/ai-polc-rule-details/` (AI-assisted setup)
-- `.kiro/ai-polc-rule-details/` (Kiro IDE setup)
-- `ai-polc-rule-details/` (standalone setup)
+- `.aiflc/pdlc/ai-polc-rule-details/` (canonical AIFLC home — all platforms)
+- `ai-polc-rule-details/` (standalone / flattened fallback)
 
 All detail-file references below are relative to the resolved directory. **Before executing any stage, load that stage's detail file (see the Stage INDEX).**
 
@@ -204,6 +203,9 @@ AI-POLC is contract-aware — first package in the Project-layer sequential chai
 | DoR/DoD change | `POLC-C-NNN` in spine + version bump in state | AI-DWG re-derives |
 
 > Full forward/return exchange with AI-DLC v1 (direct via files, indirect via AI-DWG steering, what DLC returns): `operations/acceptance-feedback.md` ("The Exchange").
+
+### Drift Intake (governance back-flow)
+AI-POLC implements the `drift-intake@1.0` interface (`contracts/DRIFT_INTAKE_CONTRACT.md`) for the **product** domain (acceptance criteria, story/epic scope, features, value metrics). It **pulls** drift (asks AI-FLO → reads the drift body from AI-GCE's register read-only → digests → Conform/Amend/Waive), writes the disposition to its OWN artifacts (epics / `traceability-matrix.md` / `polc-state.md`) + emits a `digest-ready` signal; AI-DWG later bakes it into the next baseline and AI-GCE closes it. POLC never writes the drift register or the baseline (INV-L4-006). Full decision logic: `drift-intake/intake-digest.md`.
 
 ---
 

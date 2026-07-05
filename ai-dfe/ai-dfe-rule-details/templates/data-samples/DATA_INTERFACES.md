@@ -11,17 +11,17 @@
 
 | File | Package | Schema | Scope |
 |------|---------|--------|-------|
-| `pilc-data.json` | ai-pilc | `.kiro/pdlc/ai-pilc-rule-details/data-schema/pilc-data.schema.json` | per-project |
-| `adlc-data.json` | ai-adlc | `.kiro/pdlc/ai-adlc-rule-details/data-schema/adlc-data.schema.json` | per-project |
-| `polc-data.json` | ai-polc | `.kiro/pdlc/ai-polc-rule-details/data-schema/polc-data.schema.json` | per-project |
-| `uxd-data.json` | ai-uxd | `.kiro/pdlc/ai-uxd-rule-details/data-schema/uxd-data.schema.json` | per-project |
-| `dwg-data.json` | ai-dwg | `.kiro/pdlc/ai-dwg-rule-details/data-schema/dwg-data.schema.json` | per-project |
-| `gce-data.json` | ai-gce | `.kiro/pdlc/ai-gce-rule-details/data-schema/gce-data.schema.json` | per-project |
-| `tge-data.json` | ai-tge | `.kiro/pdlc/ai-tge-rule-details/data-schema/tge-data.schema.json` | per-project |
-| `ppm-data.json` | ai-ppm | `.kiro/pdlc/ai-ppm-rule-details/data-schema/ppm-data.schema.json` | portfolio |
-| `flo-data.json` | ai-flo | `.kiro/pdlc/ai-flo-rule-details/data-schema/flo-data.schema.json` | family |
-| `ilc-data.json` | ai-ilc | `.kiro/pdlc/ai-ilc-rule-details/data-schema/ilc-data.schema.json` | family (ideas) |
-| `dfe-data.json` | AI-DFE | `.kiro/pdlc/ai-dfe-rule-details/data-schema/dfe-data.schema.json` | family (self) |
+| `pilc-data.json` | ai-pilc | `.aiflc/pdlc/ai-pilc-rule-details/data-schema/pilc-data.schema.json` | per-project |
+| `adlc-data.json` | ai-adlc | `.aiflc/pdlc/ai-adlc-rule-details/data-schema/adlc-data.schema.json` | per-project |
+| `polc-data.json` | ai-polc | `.aiflc/pdlc/ai-polc-rule-details/data-schema/polc-data.schema.json` | per-project |
+| `uxd-data.json` | ai-uxd | `.aiflc/pdlc/ai-uxd-rule-details/data-schema/uxd-data.schema.json` | per-project |
+| `dwg-data.json` | ai-dwg | `.aiflc/pdlc/ai-dwg-rule-details/data-schema/dwg-data.schema.json` | per-project |
+| `gce-data.json` | ai-gce | `.aiflc/pdlc/ai-gce-rule-details/data-schema/gce-data.schema.json` | per-project |
+| `tge-data.json` | ai-tge | `.aiflc/pdlc/ai-tge-rule-details/data-schema/tge-data.schema.json` | per-project |
+| `ppm-data.json` | ai-ppm | `.aiflc/pdlc/ai-ppm-rule-details/data-schema/ppm-data.schema.json` | portfolio |
+| `flo-data.json` | ai-flo | `.aiflc/pdlc/ai-flo-rule-details/data-schema/flo-data.schema.json` | family |
+| `ilc-data.json` | ai-ilc | `.aiflc/pdlc/ai-ilc-rule-details/data-schema/ilc-data.schema.json` | family (ideas) |
+| `dfe-data.json` | AI-DFE | `.aiflc/pdlc/ai-dfe-rule-details/data-schema/dfe-data.schema.json` | family (self) |
 
 ## Demand-Driven Outputs (Layer 2)
 

@@ -9,7 +9,7 @@ ownership: generated
 # API Versioning Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate API versioning steering files
-> in the target project's `.kiro/steering/` folder. These templates encode versioning strategy,
+> in the target project's `rules/` folder. These templates encode versioning strategy,
 > backward compatibility rules, and deprecation management derived from `api-versioning.md`
 > (conditional steering file — only generated when API versioning is in scope).
 
@@ -17,7 +17,7 @@ ownership: generated
 
 ## api-versioning.md (FileMatch `{presentation_layer_pattern}`)
 
-**Generates**: `.kiro/steering/api-versioning.md`
+**Generates**: `rules/api-versioning.md`
 **Condition**: Generated only IF `api-versioning.md` exists in workspace steering
 **Derived From**: api-versioning.md + api-standards.md
 

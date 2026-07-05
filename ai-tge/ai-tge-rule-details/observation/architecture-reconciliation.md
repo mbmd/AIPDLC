@@ -236,9 +236,9 @@ After user approval:
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| Updated Test Register | `.tge/test-register.md` | New entries added; deprecations applied; review flags set |
+| Updated Test Register | `.governance/test/test-register.md` | New entries added; deprecations applied; review flags set |
 | Reconciliation log | (appended to register as section) | Audit trail of what changed and when |
-| Updated state file | `.tge/tge-state.md` | AP version timestamp updated; stats recalculated |
+| Updated state file | `.governance/test/tge-state.md` | AP version timestamp updated; stats recalculated |
 
 ---
 

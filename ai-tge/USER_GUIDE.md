@@ -35,7 +35,7 @@ It is the first **companion package** in the AI-* Family. Unlike sequential pack
 2. **Start a session** — Say: *"Using AI-TGE, derive a test governance strategy for this project"*
 3. **Let it detect context** — AI-TGE finds your architecture, workspace, and build state, then picks a mode
 4. **Approve at strategy gates** — Each Strategy stage produces deliverables requiring your sign-off
-5. **Get your governance layer** — Test strategy, register, coverage tracking, and risk-scored debt in `.tge/`
+5. **Get your governance layer** — Test strategy, register, coverage tracking, and risk-scored debt in `.governance/test/`
 
 ---
 
@@ -50,7 +50,7 @@ AI-TGE detects what you already have and adapts — it never requires the full c
 | Existing project with existing tests (no AP) | Brownfield | Assessment mode — map existing tests, identify gaps, prioritize |
 | Active AI-DLC v1 with `aidlc-docs/` but no prior TGE run | Observation Only | Jump straight to observation — register what should be tested as you go |
 
-**Detection order:** check for `.tge/tge-state.md` (resume) → check for the AP marker `adlc-state.md` (full chain or architecture-only) → check for `aidlc-docs/` (observation possible) → check for existing test directories (brownfield) → if none found, ask what you have.
+**Detection order:** check for `.governance/test/tge-state.md` (resume) → check for the AP marker `adlc-state.md` (full chain or architecture-only) → check for `aidlc-docs/` (observation possible) → check for existing test directories (brownfield) → if none found, ask what you have.
 
 You do NOT need to run AI-PILC, AI-ADLC, or AI-DWG first. AI-TGE reads the AP directly for test derivation (in parallel to AI-DWG), so an architecture package alone is enough to start. Each input is additive enrichment — its absence reduces scope but never halts the engine.
 
@@ -172,13 +172,13 @@ After the Strategy phase, AI-TGE installs two governance agents into your worksp
 | `test-governance-agent` | TGE-AG-01 | `TGV__` | On-demand test governance review — derivation, register integrity, coverage status |
 | `coverage-review-agent` | TGE-AG-02 | `CVR__` | Coverage-focused review — surfaces gaps and risk-scored debt |
 
-Both agents read `projectId` from `.kiro/steering/workspace-rules.md` to correlate every finding to your project for an auditable trail. Type the shortcut (e.g., `TGV__`) in any prompt to invoke the agent.
+Both agents read `projectId` from `rules/workspace-rules.md` to correlate every finding to your project for an auditable trail. Type the shortcut (e.g., `TGV__`) in any prompt to invoke the agent.
 
 ---
 
 ## Session Continuity
 
-AI-TGE saves progress in `.tge/tge-state.md`. You can:
+AI-TGE saves progress in `.governance/test/tge-state.md`. You can:
 - Close your session at any time
 - Resume later — AI-TGE reads state and picks up where you left off
 - Switch depth mid-workflow
@@ -188,7 +188,7 @@ AI-TGE saves progress in `.tge/tge-state.md`. You can:
 
 ## What You Get (Output Artifacts)
 
-All artifacts are generated under `.tge/` in your workspace root:
+All artifacts are generated under `.governance/test/` in your workspace root:
 
 | Artifact | Purpose |
 |----------|---------|

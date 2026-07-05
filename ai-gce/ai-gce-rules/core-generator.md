@@ -81,9 +81,8 @@ On first activation in a session (before asking config questions), display this 
 
 CRITICAL: When performing any derivation or re-derivation operation, you MUST read and use relevant content from rule detail files. Check these paths in order and use the first one that resolves:
 
-- `.ai-gce/ai-gce-rule-details/` (AI-assisted setup)
-- `.kiro/ai-gce-rule-details/` (Kiro IDE setup)
-- `ai-gce-rule-details/` (standalone setup)
+- `.aiflc/pdlc/ai-gce-rule-details/` (canonical AIFLC home — all platforms)
+- `ai-gce-rule-details/` (standalone / flattened fallback)
 
 All subsequent rule detail file references are relative to whichever rule details directory was resolved above.
 
@@ -92,7 +91,24 @@ All subsequent rule detail file references are relative to whichever rule detail
 - `common/workspace-reading-guide.md` — how to parse AI-DWG workspace output
 - `common/validation-rules.md` — output cross-check requirements (V1–V10) + checkpoint enforcement
 
-Load the per-mode and per-category detail files (`flows/*`, `generators/*`, `re-derivation/*`, `templates/*`) on demand as each mode and rule category is reached.
+Load the per-mode and per-category detail files (`flows/*`, `generators/*`, `re-derivation/*`, `drift/*`, `templates/*`) on demand as each mode and rule category is reached.
+
+**Drift governance — load when detecting/installing drift detection:**
+- `drift/drift-detection-engine.md` — detect/classify/tag/verify algorithm (manifest-driven discovery)
+- `drift/element-comparators.md` — per-element-type detection strategies
+- `drift/drift-register.md` — register schema, waiver management, thrash guard
+- `drift/gate-integration.md` — gate Step 0 drift pre-check + platform enforcement
+- `templates/agents/drift-detect-agent.md` — the `DFT__` agent installed into the destination workspace
+
+**Governance rendering + index — load when writing GCE's output:**
+- `rendering/governance-rendering.md` — renders GCE's OWN governance (rules/hooks/agents/drift) per `manifest.platformTargets`: canonical `.governance/` + per-platform adapters (Kiro hooks/agents · Claude subagents+settings.json · Cursor/Codex advisory+CI · Generic CI). GCE output is AI-agnostic (principle P2).
+- `templates/governance-index.md` — generates `.governance/GOVERNANCE_INDEX.md`, the AI's discovery entry point to ALL governance + test machinery (P3).
+
+> **`.governance/` is the single home (P3):** ALL GCE + TGE content lives under `.governance/` — engine (`.governance/engine/ai-gce/`, `.governance/engine/ai-tge/`), rules, agents, hooks, drift, test artifacts, logs. Platform adapters (`.kiro/hooks/`, `.claude/agents/`, …) are thin pointers into `.governance/`. GCE installs its own engine under `.governance/engine/ai-gce/` (not the package home `.aiflc/pdlc/`). See layout design Part 3E principle P3.
+
+> **Discovery is manifest-driven (P2):** GCE reads `.governance/workspace-manifest.yaml` (produced by AI-DWG) to locate the baseline, register, rules, and reference material by semantic role — it does NOT hardcode paths. Legacy fallback (no manifest) warns + uses the legacy scan in `common/workspace-reading-guide.md`.
+>
+> **READ-ONLY on DWG output (P1):** GCE reads DWG's canonical files to derive governance; it NEVER modifies them. GCE writes only its own `.governance/` + platform adapters.
 
 ---
 
@@ -138,9 +154,9 @@ This role applies to ALL work done while this generator is active. Do not revert
 
 ## Adaptive Derivation Principle (Summary)
 
-AI-GCE has **zero manual configuration** — it reads the workspace and derives everything. It generates rules from **two sources that combine**: (1) **steering files** (project-specific, read from `.kiro/steering/` + operational docs) and (2) **built-in baseline** (10 universal AI-DLC v1 methodology rules, always applied). Resolution: steering enriches baseline → steering can override baseline → silent steering means baseline-only → no steering at all still yields the 10-rule floor.
+AI-GCE has **zero manual configuration** — it reads the workspace and derives everything. It generates rules from **two sources that combine**: (1) **steering files** (project-specific, read from `rules/` + operational docs) and (2) **built-in baseline** (10 universal AI-DLC v1 methodology rules, always applied). Resolution: steering enriches baseline → steering can override baseline → silent steering means baseline-only → no steering at all still yields the 10-rule floor.
 
-**Graceful degradation (— OR-input):** AI-GCE works on any workspace with `.kiro/steering/` — not only AI-DWG-generated ones. If steering is absent or sparse, the built-in baseline provides universal governance; AI-GCE never blocks on missing steering.
+**Graceful degradation (— OR-input):** AI-GCE works on any workspace with `rules/` — not only AI-DWG-generated ones. If steering is absent or sparse, the built-in baseline provides universal governance; AI-GCE never blocks on missing steering.
 
 **Derivation depth** (Minimal / Standard / Comprehensive) is detected automatically from steering-file count, module count, and conditional signals.
 
@@ -157,9 +173,12 @@ AI-GCE is contract-aware — it knows its predecessor's output format precisely.
 | Aspect | Specification |
 |--------|--------------|
 | **Predecessor** | AI-DWG (AI-Driven Workspace Generator) |
-| **Marker file** | `.kiro/steering/workspace-rules.md` |
-| **Detection strategy** | 1. User provides workspace path explicitly → use it · 2. Assume current directory → check for `.kiro/steering/workspace-rules.md` · 3. Scan sibling folders for the marker · 4. Not found → ask "Where is the AI-DWG workspace?" |
-| **Brownfield detection** | If `.kiro/steering/brownfield-patterns.md` exists → Mode 3 (Incremental Adoption) is available |
+| **Marker file** | `.governance/workspace-manifest.yaml` (primary discovery contract) · legacy fallback: `rules/workspace-rules.md` |
+| **Detection strategy** | 1. User provides workspace path explicitly → use it · 2. Assume current directory → check for `.governance/workspace-manifest.yaml` · 3. Scan sibling folders · 4. No manifest → legacy fallback (`rules/workspace-rules.md`) + warn "legacy workspace" · 5. Nothing → ask "Where is the AI-DWG workspace?" |
+| **Discovery** | Manifest-driven — read all paths/files by semantic role from `workspace-manifest.yaml` (`paths.rules`, `files.definitionOfDone`, `platformTargets`, `storyStyle`, `clusters`). NEVER hardcode paths. |
+| **READ-ONLY on DWG output (P1)** | GCE reads DWG's files to derive governance; it NEVER modifies/moves/deletes them. GCE writes only its own `.governance/` + platform-appropriate hooks/agents. |
+| **Reads canonical, not adapter** | GCE reads `manifest.paths.rules` (canonical `rules/`), NOT `.kiro/steering/` (the Kiro adapter). |
+| **Brownfield detection** | If `rules/brownfield-patterns.md` exists → Mode 3 (Incremental Adoption) is available |
 
 > **Multi-project context (`OUTPUT_AND_STATE_CONTRACT.md` §11–§12):** AI-GCE runs inside the AI-DWG-generated dev workspace, opened as its own Kiro IDE root, so it sees exactly one project incidentally (one folder), not via a lock. Read the immutable **Project ID** from the carried-forward `workspace-rules.md` and spine, and persist it in every `.governance/` compliance-log event. Drift-vs-baseline is DEFERRED.
 
@@ -172,24 +191,24 @@ AI-GCE runs as a **continuous compliance companion alongside AI-DLC v1** (the ex
 | Aspect | Specification |
 |--------|--------------|
 | **Successor** | AI-DLC v1 (external — Amazon's aidlc-workflows) |
-| **Marker file** | `.kiro/hooks/` folder exists with at least one `.json` hook file |
+| **Marker file** | `.governance/hooks/` folder exists with at least one `.json` hook file |
 | **Output location** | Installed into the user's development workspace (the AI-DWG output workspace) |
 
 **Guaranteed output (AI-DLC v1 can depend on these after AI-GCE runs):**
 
 | Path | Content | Always Present? |
 |------|---------|:--------------:|
-| `.kiro/hooks/session-discipline.json` | Spec-before-code enforcement | ✅ Always |
-| `.kiro/hooks/pre-code-spec-check.json` | User story spec gate | ✅ Always |
-| `.kiro/hooks/post-task-governance.json` | Post-task DoD check | ✅ Always |
-| `.kiro/hooks/security-gate-check.json` | Security pattern enforcement | ✅ Always |
-| `.kiro/hooks/naming-check.json` | Naming convention enforcement | ✅ Always |
-| `.kiro/hooks/module-boundary-check.json` | Cross-boundary import detection | ✅ Always |
-| `.kiro/hooks/migration-safety.json` | Database migration safety | ✅ Always |
-| `.kiro/hooks/api-contract-check.json` | API contract before implementation | ✅ Always |
-| `.kiro/hooks/coverage-check.json` | Test coverage enforcement | ✅ Always |
-| `.kiro/hooks/sensitive-data-check.json` | PII/sensitive data logging detection | ✅ Always |
-| `.kiro/hooks/tenant-isolation-check.json` | Tenant data isolation | IF multi-tenancy steering exists |
+| `.governance/hooks/session-discipline.json` | Spec-before-code enforcement | ✅ Always |
+| `.governance/hooks/pre-code-spec-check.json` | User story spec gate | ✅ Always |
+| `.governance/hooks/post-task-governance.json` | Post-task DoD check | ✅ Always |
+| `.governance/hooks/security-gate-check.json` | Security pattern enforcement | ✅ Always |
+| `.governance/hooks/naming-check.json` | Naming convention enforcement | ✅ Always |
+| `.governance/hooks/module-boundary-check.json` | Cross-boundary import detection | ✅ Always |
+| `.governance/hooks/migration-safety.json` | Database migration safety | ✅ Always |
+| `.governance/hooks/api-contract-check.json` | API contract before implementation | ✅ Always |
+| `.governance/hooks/coverage-check.json` | Test coverage enforcement | ✅ Always |
+| `.governance/hooks/sensitive-data-check.json` | PII/sensitive data logging detection | ✅ Always |
+| `.governance/hooks/tenant-isolation-check.json` | Tenant data isolation | IF multi-tenancy steering exists |
 | `.governance/rules/` | Full rule set (markdown) | ✅ Always |
 | `.governance/agents/compliance-audit-agent.md` | Audit agent specification (`CAA__`) | ✅ Always |
 | `.governance/agents/pre-pr-checklist-agent.md` | PR readiness verification (`PRC__`) | ✅ Always |
@@ -199,6 +218,7 @@ AI-GCE runs as a **continuous compliance companion alongside AI-DLC v1** (the ex
 | `.governance/agents/steering-quality-agent.md` | Steering quality check (`SQC__`) | ✅ Always (Tier 2+) |
 | `.governance/agents/change-management-agent.md` | Change management gate (`CMG__`) | ✅ Always (Tier 3) |
 | `.governance/agents/dod-gate-agent.md` | Definition of Done gate (`DOD__`) | ✅ Always (Tier 2+) |
+| `.governance/GOVERNANCE_INDEX.md` | AI entry point — discovers ALL governance + test machinery (P3) | ✅ Always |
 | `.governance/AGENT-GUIDE.md` | Process agent user manual | ✅ Always |
 | `.governance/AGENT_REGISTRY.md` | Agent lookup registry | ✅ Always |
 | `.governance/compliance-log/` | Logging schema + workflows | ✅ Always |
@@ -212,16 +232,29 @@ AI-GCE runs as a **continuous compliance companion alongside AI-DLC v1** (the ex
 | `.governance/brownfield-baseline.md` | Acknowledged existing violations + remediation SLAs | brownfield-patterns.md exists |
 | `.governance/incremental-adoption-plan.md` | Progressive enforcement timeline | brownfield-patterns.md exists |
 
+**Drift governance output (present when a DWG baseline exists — `driftDetection` gate-out true):**
+
+| Path | Content | Present When |
+|------|---------|:------------:|
+| `.governance/drift-register.md` | Drift state (GCE sole writer — INV-L4-006) | baseline present |
+| `.governance/agents/drift-detect-agent.md` | `DFT__` drift-detection agent (GCE-AG-10) | baseline present |
+| `.governance/hooks/drift-session-end.json` | **Session-end drift check** — `agentStop` (Kiro) / `Stop` (Claude) invokes the `DFT__` agent at session close; **silent when clean**; on advisory platforms it degrades to manual `DFT__` / CI (rendered per `governance-rendering.md`) | baseline present |
+
+> The session-end drift hook is the automation behind the drift agent's "session-end" trigger — it makes drift a routine session-close check, not only a manual `DFT__`. It invokes the existing agent (no new agent —) and produces zero output when there is no new/open drift (Rule 4/silent-when-compliant). This is the **destination** session-end, distinct from the internal build `SEG__`.
+
 ### Contract Principles
 
 | Principle | Implementation |
 |-----------|---------------|
-| **Detection by marker, not by path** | Look for `.kiro/steering/workspace-rules.md`, not a specific folder name |
+| **Detection by marker, not by path** | Look for `rules/workspace-rules.md`, not a specific folder name |
 | **User chooses WHERE the workspace is** | AI-GCE installs into whatever workspace root the user points to |
 | **Package defines WHAT gets produced** | Hook names, rule file names, and governance structure are fixed |
 | **No manual configuration** | Everything derived from steering files |
-| **Standalone capable** | Works on any workspace with `.kiro/steering/` — even a minimal one gets the 10 built-in baseline rules |
+| **Standalone capable** | Works on any workspace with `rules/` — even a minimal one gets the 10 built-in baseline rules |
 | **Technology-agnostic rules, technology-specific hooks** | Rules are abstract; hooks use actual file globs for THIS stack |
+
+### Drift Detection Scope — GCE Does NOT Watch Itself
+AI-GCE detects drift **only** against the DWG **baseline** (governed elements sourced from AP/PBP/UXP — architecture/data/infrastructure, ux, product). GCE's OWN governance layer (rules/hooks/agents) is **not** a baseline element — DWG never generates it; GCE *derives* it from the workspace. Therefore a governance rule going stale or hand-edited is **not drift** — it is handled by GCE **re-derivation** (`re-derivation/selective-regeneration.md`, Mode 2, preserving `<!-- custom -->`), never the drift loop. There is **no `governance` drift domain and no self-heal** (a package's own derived output is not drift —).
 
 ---
 
@@ -232,17 +265,17 @@ AI-GCE operates in exactly four modes. Mode is detected automatically based on w
 ### Mode Detection Logic (Dispatcher)
 
 ```
-IF.kiro/hooks/ does NOT exist
-   OR.kiro/hooks/ is empty
+IF.governance/hooks/ does NOT exist
+   OR.governance/hooks/ is empty
    OR user explicitly says "generate compliance" / "install governance" / "derive rules"
    AND brownfield-patterns.md does NOT exist
 THEN → MODE 1: Full Generation (Tier 1 activation)
 
-IF.kiro/hooks/ EXISTS with content
+IF.governance/hooks/ EXISTS with content
    AND user says "workspace changed" / "steering updated" / "re-derive" / points to changed steering file
 THEN → MODE 2: Re-Derivation (Incremental Update)
 
-IF.kiro/steering/brownfield-patterns.md EXISTS
+IF rules/brownfield-patterns.md EXISTS
    AND.governance/brownfield-baseline.md does NOT exist
    OR user says "baseline scan" / "brownfield adoption" / "incremental enforcement"
 THEN → MODE 3: Brownfield Incremental Adoption
@@ -327,7 +360,7 @@ guarantees:
 ```yaml
 consumes:
   - type: development-workspace@^1   # satisfiable internally (AI-DWG)
-    mandatory: [workspaceStructure]  # needs the workspace to govern
+    mandatory: [workspaceStructure, workspaceManifest]  # manifest = discovery contract
     optional:  [steeringFiles, cicdPipeline, nfrCoverage, adrs]
 on-missing-all: standalone     # can generate governance from workspace scan alone (P4)
 strictness-default: warn

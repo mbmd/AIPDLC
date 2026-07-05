@@ -15,7 +15,7 @@ Build from Component Design (C4 L3) module ownership.
 # Adjust owners for your platform (GitHub @teams, GitLab groups, etc.)
 
 # Governance (architect review required)
-/.kiro/steering/                @{architect-team}
+/rules/                @{architect-team}
 /CODEOWNERS                     @{tech-lead}
 /PROJECT_INSTRUCTIONS.md        @{tech-lead}
 /DEFINITION_OF_DONE.md          @{tech-lead}

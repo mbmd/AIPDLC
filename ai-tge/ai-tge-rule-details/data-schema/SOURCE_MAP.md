@@ -13,13 +13,13 @@
 
 | Check | Path | Meaning if absent |
 |-------|------|-------------------|
-| Marker exists | `projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/.tge/tge-state.md` | `status: not-run` → TGE not initialized; payload `null` |
+| Marker exists | `projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/.governance/test/tge-state.md` | `status: not-run` → TGE not initialized; payload `null` |
 
 ## Source Files
 
 | # | Source path (relative to `pdlc-ws/`) | Holds |
 |---|-------------------------------------------|-------|
-| 1 | `projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/.tge/tge-state.md` | engine status, register stats, risk summary, depth, observation history |
+| 1 | `projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/.governance/test/tge-state.md` | engine status, register stats, risk summary, depth, observation history |
 
 ## Field Extraction
 

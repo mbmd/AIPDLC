@@ -9,7 +9,7 @@ ownership: generated
 # Event Sourcing Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate event sourcing and CQRS steering files
-> in the target project's `.kiro/steering/` folder. These templates encode event store patterns,
+> in the target project's `rules/` folder. These templates encode event store patterns,
 > CQRS boundaries, projection strategies, and event versioning rules derived from `event-sourcing.md`
 > (conditional — only if Event Sourcing extension is active).
 
@@ -17,7 +17,7 @@ ownership: generated
 
 ## event-sourcing-core.md (Always — within event sourcing scope)
 
-**Generates**: `.kiro/steering/event-sourcing-core.md`
+**Generates**: `rules/event-sourcing-core.md`
 **Condition**: Generated only IF `event-sourcing.md` exists in workspace steering
 **Derived From**: event-sourcing.md + domain-context.md + architecture-principles.md
 
@@ -59,7 +59,7 @@ inclusion: always
 
 ## event-sourcing-projections.md (FileMatch `{projection_layer_pattern}`)
 
-**Generates**: `.kiro/steering/event-sourcing-projections.md`
+**Generates**: `rules/event-sourcing-projections.md`
 **Derived From**: event-sourcing.md + database-rules.md
 
 ```markdown
@@ -92,7 +92,7 @@ fileMatchPattern: "{projection_layer_pattern}"
 
 ## event-sourcing-versioning.md (FileMatch `{event_definition_pattern}`)
 
-**Generates**: `.kiro/steering/event-sourcing-versioning.md`
+**Generates**: `rules/event-sourcing-versioning.md`
 **Derived From**: event-sourcing.md
 
 ```markdown

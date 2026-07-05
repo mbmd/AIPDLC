@@ -22,15 +22,15 @@ ownership: generated
 
 ## Day 2: Architecture
 - [ ] Read PROJECT_INSTRUCTIONS.md fully
-- [ ] Read .kiro/steering/workspace-rules.md
-- [ ] Read .kiro/steering/module-structure.md
-- [ ] Read .kiro/steering/domain-context.md
+- [ ] Read rules/workspace-rules.md
+- [ ] Read rules/module-structure.md
+- [ ] Read rules/domain-context.md
 - [ ] Review Architecture Vision document
 
 ## Day 3: Workflow
 - [ ] Read CONTRIBUTING.md
-- [ ] Read .kiro/steering/git-workflow.md
-- [ ] Read .kiro/steering/coding-standards.md
+- [ ] Read rules/git-workflow.md
+- [ ] Read rules/coding-standards.md
 - [ ] Make a trivial change (full PR cycle)
 
 ## Day 4-5: First Task

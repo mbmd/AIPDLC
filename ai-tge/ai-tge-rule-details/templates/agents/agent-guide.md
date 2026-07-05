@@ -37,7 +37,7 @@ AI-TGE ships two complementary governance agents that validate different phases 
 - Before presenting test strategy to team
 - Before starting AI-DLC v1 build (confirms governance is in place)
 
-**Recovery if skipped:** Run `TGV__` at any time — it reads current `.tge/` state. Fix gaps by re-deriving from AP, re-scoring risks, or updating state file counts.
+**Recovery if skipped:** Run `TGV__` at any time — it reads current `.governance/test/` state. Fix gaps by re-deriving from AP, re-scoring risks, or updating state file counts.
 
 ---
 

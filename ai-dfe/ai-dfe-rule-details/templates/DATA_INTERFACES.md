@@ -11,7 +11,7 @@
 
 | File | Package | Schema | Status |
 |------|---------|--------|--------|
-| `{pkg}-data.json` | ai-{pkg} | `.kiro/{family}/ai-{pkg}-rule-details/data-schema/{pkg}-data.schema.json` | {fresh\|stale\|not-run} |
+| `{pkg}-data.json` | ai-{pkg} | `.aiflc/{family}/ai-{pkg}-rule-details/data-schema/{pkg}-data.schema.json` | {fresh\|stale\|not-run} |
 | … | … | … | … |
 
 ## Demand-Driven Outputs (Layer 2)

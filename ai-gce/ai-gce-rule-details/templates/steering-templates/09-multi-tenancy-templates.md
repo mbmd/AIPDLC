@@ -9,7 +9,7 @@ ownership: generated
 # Multi-Tenancy Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate multi-tenancy steering files
-> in the target project's `.kiro/steering/` folder. These templates encode tenant isolation patterns,
+> in the target project's `rules/` folder. These templates encode tenant isolation patterns,
 > data partitioning strategy, and cross-tenant protection rules derived from `multi-tenancy.md`
 > (conditional — only if multi-tenant architecture exists).
 
@@ -17,7 +17,7 @@ ownership: generated
 
 ## multi-tenancy-core.md (Always — within multi-tenant scope)
 
-**Generates**: `.kiro/steering/multi-tenancy-core.md`
+**Generates**: `rules/multi-tenancy-core.md`
 **Condition**: Generated only IF `multi-tenancy.md` exists in workspace steering
 **Derived From**: multi-tenancy.md + security-rules.md + database-rules.md
 
@@ -55,7 +55,7 @@ inclusion: always
 
 ## multi-tenancy-data.md (FileMatch `{data_access_pattern}`)
 
-**Generates**: `.kiro/steering/multi-tenancy-data.md`
+**Generates**: `rules/multi-tenancy-data.md`
 **Derived From**: multi-tenancy.md + database-rules.md
 
 ```markdown
@@ -87,7 +87,7 @@ fileMatchPattern: "{data_access_pattern}"
 
 ## multi-tenancy-api.md (FileMatch `{presentation_layer_pattern}`)
 
-**Generates**: `.kiro/steering/multi-tenancy-api.md`
+**Generates**: `rules/multi-tenancy-api.md`
 **Derived From**: multi-tenancy.md + api-standards.md
 
 ```markdown

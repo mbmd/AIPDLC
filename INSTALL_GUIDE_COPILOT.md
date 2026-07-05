@@ -2,7 +2,7 @@
 
 **Applies to:** GitHub Copilot (VS Code / JetBrains) — partial support with workspace-level instructions.
 
-> **⚠️ Partial Support:** GitHub Copilot supports workspace-level instructions via `.github/copilot-instructions.md`, but has limitations: only one instructions file is supported per workspace, and on-demand file reading behavior varies. Workflow packages work, but multi-package installs require merging into a single file.
+> **⚠️ Partial Support:** GitHub Copilot supports workspace-level instructions via `.github/copilot-instructions.md`, but has limitations: only one instructions file is supported per workspace, and on-demand file reading behavior varies. Under the AIFLC model that single file carries only the compact orchestrator (package cores live in `.aiflc/pdlc/`, read on demand), so the full chain installs cleanly — the main caveat is that on-demand reading is less consistent than on Kiro/Claude Code/Cursor.
 
 ---
 
@@ -41,29 +41,28 @@
 
 ## How It Works
 
-Each AI-* package installs **two things** into your workspace, both **family-scoped** to the AI-* PDLC Family (per-package core files carry a `pdlc-` filename segment; rule-details live under a `.pdlc/` folder — so multiple AIFLC families can coexist in one workspace):
+The installer places **one always-loaded file** plus the **package home**, both scoped to the AI-* PDLC Family (multiple AIFLC families can coexist in one workspace):
 
-1. **Core workflow/engine file** — placed in `.github/` as a copilot instructions file
-2. **Rule-details folder** — phase-specific instructions and templates loaded on demand (placed under `.pdlc/`)
+1. **Session orchestrator** — the orchestrator block placed in `.github/copilot-instructions.md` (the single file Copilot reads automatically). It is the ONLY always-loaded file. It detects which package you want and `Read`s that package's core on demand — keeping the context window free.
+2. **Package home** — every package's core AND rule-details live together in the uniform, agent-neutral home `.aiflc/pdlc/`. Nothing here auto-loads; the orchestrator reads from it on demand.
 
 ```
 your-workspace/
 ├── .github/
-│   └── copilot-instructions-pdlc-ai-pilc.md    ← Copilot reads workspace instructions
-├── .pdlc/
-│   └── ai-pilc-rule-details/                    ← Loaded on-demand by the workflow
-│       ├── common/
-│       ├── inception/
-│       ├── assessment/
-│       ├── templates/
-│       └── ...
+│   └── copilot-instructions.md                 ← The ONLY always-loaded file (orchestrator block)
+├── .aiflc/
+│   └── pdlc/                                    ← AI-* PDLC Family home (cores + rule-details + fabric)
+│       ├── ai-pilc-rules/core-workflow.md          ← Read on demand by the orchestrator
+│       ├── ai-pilc-rule-details/                   ← Read on demand by the core
+│       │   ├── common/  inception/  assessment/  templates/  ...
+│       └── ... one {pkg}-rules/ + {pkg}-rule-details/ per installed package
 ├── pdlc-ws/                                      ← All runtime outputs land here (never workspace root)
 └── (your project files)
 ```
 
-> **Important:** GitHub Copilot only reads `.github/copilot-instructions.md` (singular). For multi-package installs, files must be merged into that one file (you cannot rename the file Copilot reads, so the family scope lives in the `pdlc-` per-package section headings and in the `.pdlc/` rule-details folder). The installer handles this. See [Multi-Package Installation](#multi-package-installation).
+> **Note:** GitHub Copilot only reads `.github/copilot-instructions.md` (singular). Under the AIFLC model this is a non-issue: that single file carries only the compact **orchestrator**, and every package core lives separately in `.aiflc/pdlc/`, read on demand. You no longer merge package cores into the instructions file — so the old single-file size constraint is largely lifted.
 
-> **The Kiro-style split:** the core instructions load always-on; rule-details are read on demand (`.pdlc/`); and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root.
+> **The AIFLC model:** one orchestrator loads always-on (`.github/copilot-instructions.md`); every package core + its rule-details live in the uniform home `.aiflc/pdlc/` and are read on demand; and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root. The `.aiflc/pdlc/` layout is identical on every platform.
 
 ---
 
@@ -123,13 +122,14 @@ cd <path-to-AIPDLC>
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-# Copy core workflow as copilot instructions
+# Place the orchestrator block in Copilot's slot (the ONLY always-loaded file)
 New-Item -ItemType Directory -Force -Path "$Target\.github"
-Copy-Item "$Source\ai-pilc\ai-pilc-rules\core-workflow.md" "$Target\.github\copilot-instructions.md"
+Copy-Item "$Source\session-orchestrator.md" "$Target\.github\copilot-instructions.md"
 
-# Copy rule-details folder (family-scoped under .pdlc/)
-New-Item -ItemType Directory -Force -Path "$Target\.pdlc\ai-pilc-rule-details"
-Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details\*" "$Target\.pdlc\ai-pilc-rule-details\"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rules" "$Target\.aiflc\pdlc\"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.aiflc\pdlc\"
 ```
 
 **macOS / Linux:**
@@ -138,73 +138,53 @@ Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details\*" "$Target\.pdlc\ai-pi
 SOURCE=<path-to-AIPDLC>
 TARGET=<your-project-path>
 
-# Copy core workflow as copilot instructions
+# Place the orchestrator block in Copilot's slot (the ONLY always-loaded file)
 mkdir -p "$TARGET/.github"
-cp "$SOURCE/ai-pilc/ai-pilc-rules/core-workflow.md" "$TARGET/.github/copilot-instructions.md"
+cp "$SOURCE/session-orchestrator.md" "$TARGET/.github/copilot-instructions.md"
 
-# Copy rule-details folder (family-scoped under .pdlc/)
-mkdir -p "$TARGET/.pdlc/ai-pilc-rule-details"
-cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details/"* "$TARGET/.pdlc/ai-pilc-rule-details/"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+mkdir -p "$TARGET/.aiflc/pdlc"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rules" "$TARGET/.aiflc/pdlc/"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details" "$TARGET/.aiflc/pdlc/"
 ```
 
 ---
 
 ## Multi-Package Installation
 
-### The Single-File Challenge
+### One Orchestrator, Many Cores
 
-GitHub Copilot reads only `.github/copilot-instructions.md`. For multiple packages, you must **merge** all core workflows into that one file:
+GitHub Copilot reads only `.github/copilot-instructions.md`. Under the AIFLC model that's all you need there — the compact orchestrator. Every package core lives in `.aiflc/pdlc/` and is read on demand, so adding more packages does **not** grow the always-loaded file:
 
 ```powershell
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
+# Place the single orchestrator block in Copilot's slot
 New-Item -ItemType Directory -Force -Path "$Target\.github" | Out-Null
+Copy-Item "$Source\session-orchestrator.md" "$Target\.github\copilot-instructions.md" -Force
 
-# Start the merged file
-$header = @"
-# AI-* Family — Workspace Instructions
-
-This workspace uses AIFLC injectable workflow packages.
-Activate a package by saying "Using AI-{PKG}, ..." (e.g., "Using AI-PILC, initiate a project").
-
----
-
-"@
-$header | Out-File "$Target\.github\copilot-instructions.md" -Encoding utf8
-
-# Append each package's core workflow
+# Copy every package core + rule-details into the uniform home
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc" | Out-Null
 $packages = @(
-    @{ Name = "ai-pilc"; Core = "core-workflow.md";  Rules = "ai-pilc-rules"; Details = "ai-pilc-rule-details" }
-    @{ Name = "ai-adlc"; Core = "core-workflow.md";  Rules = "ai-adlc-rules"; Details = "ai-adlc-rule-details" }
-    @{ Name = "ai-dwg";  Core = "core-generator.md"; Rules = "ai-dwg-rules";  Details = "ai-dwg-rule-details" }
+    "ai-ilc", "ai-pilc", "ai-ppm", "ai-flo", "ai-adlc",
+    "ai-uxd", "ai-polc", "ai-dwg", "ai-gce", "ai-tge", "ai-dfe"
 )
 
 foreach ($pkg in $packages) {
-    $coreSource = Join-Path $Source "$($pkg.Name)\$($pkg.Rules)\$($pkg.Core)"
-    $detailsSource = Join-Path $Source "$($pkg.Name)\$($pkg.Details)"
-    $detailsDest = Join-Path $Target ".pdlc\$($pkg.Details)"
-
-    if (Test-Path $coreSource) {
-        # Append separator + content (family-scoped section heading)
-        "`n`n---`n`n## PDLC / $($pkg.Name.ToUpper())`n`n" | Add-Content "$Target\.github\copilot-instructions.md"
-        Get-Content $coreSource | Add-Content "$Target\.github\copilot-instructions.md"
-
-        # Copy rule-details
-        if (Test-Path $detailsSource) {
-            if (Test-Path $detailsDest) { Remove-Item -Recurse -Force $detailsDest }
-            Copy-Item -Recurse $detailsSource $detailsDest
-        }
-        Write-Host "Installed $($pkg.Name)" -ForegroundColor Green
+    $rulesSource = Join-Path $Source "$pkg\$pkg-rules"
+    $detailsSource = Join-Path $Source "$pkg\$pkg-rule-details"
+    if (Test-Path $rulesSource) {
+        Copy-Item -Recurse $rulesSource "$Target\.aiflc\pdlc\" -Force
+        Copy-Item -Recurse $detailsSource "$Target\.aiflc\pdlc\" -Force
+        Write-Host "Installed $pkg into .aiflc/pdlc/" -ForegroundColor Green
     }
 }
 ```
 
-### Context Window Warning
+### Context Window Note
 
-Merging all 11 packages into one `copilot-instructions.md` creates a large file. Copilot may truncate instructions that exceed its context limit.
-
-**Recommendation:** Install 2–3 packages maximum on Copilot. For larger installs, use a different platform (Kiro, Claude Code, Cursor, or Cline).
+Because only the compact orchestrator loads always-on (package cores are read on demand from `.aiflc/pdlc/`), the old single-file size limit is largely lifted — you can install the full chain on Copilot. The remaining Copilot caveat is on-demand file reading, which can be less consistent than Kiro/Claude Code/Cursor: if Copilot doesn't auto-read a core, reference it explicitly (see [Tips for Copilot](#tips-for-copilot)).
 
 ---
 
@@ -226,7 +206,7 @@ Merging all 11 packages into one `copilot-instructions.md` creates a large file.
 
 ### Recommended Packages for Copilot
 
-Due to the single-file constraint and context limits, these combinations work best:
+With cores now living in `.aiflc/pdlc/` (read on demand), you can install the full chain. These combinations are common starting points:
 
 | Scenario | Packages | Why |
 |----------|----------|-----|
@@ -244,11 +224,15 @@ After installation (example with 3 packages):
 ```
 your-project/
 ├── .github/
-│   └── copilot-instructions.md          ← Single merged file (all PDLC packages)
-├── .pdlc/                               ← AI-* PDLC Family rule-details (on-demand)
-│   ├── ai-pilc-rule-details/
-│   ├── ai-adlc-rule-details/
-│   └── ai-dwg-rule-details/
+│   └── copilot-instructions.md          ← The ONLY always-loaded file (orchestrator block)
+├── .aiflc/
+│   └── pdlc/                            ← AI-* PDLC Family home (cores + rule-details, on-demand)
+│       ├── ai-pilc-rules/core-workflow.md
+│       ├── ai-pilc-rule-details/
+│       ├── ai-adlc-rules/core-workflow.md
+│       ├── ai-adlc-rule-details/
+│       ├── ai-dwg-rules/core-generator.md
+│       └── ai-dwg-rule-details/
 ├── pdlc-ws/                             ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 │   └── .ai-family-manifest.json         ← Installer tracking
 └── (your project files)
@@ -280,7 +264,8 @@ your-project/
 ### Tips for Copilot
 
 - Use `@workspace` prefix if Copilot doesn't pick up instructions automatically
-- Reference rule-details files explicitly if Copilot doesn't read them: "Read `.pdlc/ai-pilc-rule-details/inception/stage-01-source-analysis.md` and execute it"
+- Reference the package core explicitly if Copilot doesn't read it: "Read `.aiflc/pdlc/ai-pilc-rules/core-workflow.md` and follow it"
+- Reference rule-details files explicitly if Copilot doesn't read them: "Read `.aiflc/pdlc/ai-pilc-rule-details/inception/stage-01-source-analysis.md` and execute it"
 - Copilot Chat works better than inline suggestions for workflow execution
 
 ---
@@ -320,19 +305,17 @@ Before completing any file, verify against:
 
 | Limitation | Impact | Workaround |
 |-----------|--------|------------|
-| Single instructions file | Can't have per-package files | Merge into one (installer does this) |
-| Context window limits | May truncate large merged files | Install 2–3 packages max |
-| On-demand file reading inconsistent | May not auto-read rule-details | Reference files explicitly in prompts |
+| Single instructions file | Only the orchestrator lives there | Not a problem — package cores live in `.aiflc/pdlc/`, read on demand |
+| On-demand file reading inconsistent | May not auto-read a core or rule-details | Reference files explicitly in prompts |
 | No hook/agent execution | AI-GCE enforcement is advisory | Use CI/CD hooks instead |
 | Workspace-level only | No per-folder scoping | All packages apply globally |
 
 ### When to Consider a Different Platform
 
 If you need:
-- More than 3 packages → Use Cursor, Claude Code, or Kiro
 - AI-GCE enforcement → Use Kiro
-- Reliable on-demand file loading → Use any other supported platform
-- Full chain (all 11 packages) → Use Kiro, Claude Code, or Cursor
+- Reliable on-demand file loading → Use Kiro, Claude Code, Cursor, or Cline
+- The smoothest full-chain experience → Use Kiro, Claude Code, or Cursor
 
 ---
 
@@ -343,8 +326,9 @@ If you need:
 .\installer\install.ps1 -TargetWorkspace "<your-project-path>" -Uninstall
 
 # Manual
-Remove-Item "<your-project-path>\.github\copilot-instructions.md"
-Get-ChildItem "<your-project-path>\.pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
+Remove-Item "<your-project-path>\.github\copilot-instructions.md" -ErrorAction SilentlyContinue
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rules" -Directory | Remove-Item -Recurse -Force
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
 Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction SilentlyContinue
 ```
 
@@ -357,8 +341,8 @@ Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction 
 | Issue | Cause | Solution |
 |-------|-------|----------|
 | Copilot ignores instructions | File not in correct location | Must be exactly `.github/copilot-instructions.md` |
-| "Can't find rule-details" | Copilot not reading workspace files | Reference files explicitly: "Read `.pdlc/ai-pilc-rule-details/...`" |
-| Instructions seem truncated | File too large | Reduce to 2–3 packages |
+| Package core not found | Path mismatch | Verify `.aiflc/pdlc/ai-{pkg}-rules/core-*.md` exists |
+| "Can't find rule-details" | Copilot not reading workspace files | Reference files explicitly: "Read `.aiflc/pdlc/ai-pilc-rule-details/...`" |
 | No structured workflow | Copilot treating as suggestions | Use Copilot Chat, not inline. Try `@workspace` prefix |
 | State file not persisting | Copilot not writing files | Use Copilot Chat with "save this to file" instructions |
 
@@ -373,14 +357,14 @@ Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction 
 | Deliverable file output | ✅ |
 | State persistence | ✅ |
 | Chain marker detection | ✅ |
-| Multi-package install | ⚠️ 2–3 max (single file constraint) |
+| Multi-package install | ✅ All 11 (cores in `.aiflc/pdlc/`) |
 | AI-DWG workspace gen | ✅ |
 | AI-GCE rule generation | ✅ |
 | AI-GCE hook enforcement | ❌ (Kiro only) |
 | Depth adaptation | ✅ |
 | Session continuity | ✅ (if state file works) |
 
-**GitHub Copilot is viable for 1–3 packages.** For larger installs or governance enforcement, use a platform with better multi-file rule support.
+**GitHub Copilot supports the full chain** now that cores live in `.aiflc/pdlc/`. For governance enforcement (hooks/agents) or the most consistent on-demand loading, Kiro remains the strongest platform.
 
 ---
 

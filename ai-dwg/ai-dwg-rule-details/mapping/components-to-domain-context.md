@@ -5,7 +5,7 @@
 
 This mapping rule transforms the **bounded context definitions, entity model, and domain language** from the Component Design (C4 L3) document into a steering file that prevents the AI from inventing synonyms, violating domain boundaries, or misusing domain terminology during development.
 
-**Output:** `.kiro/steering/domain-context.md`
+**Output:** `rules/domain-context.md`
 
 ---
 

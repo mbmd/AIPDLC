@@ -5,9 +5,9 @@
 
 This mapping rule transforms the **CI/CD Strategy** and **Deployment Architecture** sections of the Infrastructure & Deployment document (AP artifact) into a comprehensive CI/CD pipeline guide — a root-level operational document that tells a DevOps engineer exactly how to set up, maintain, and evolve the project's delivery pipeline.
 
-**Output:** `CICD_GUIDE.md` — placed at project root alongside `CONTRIBUTING.md` and `PROJECT_INSTRUCTIONS.md`
+**Output:** `info/CICD_GUIDE.md` — placed at project root alongside `info/CONTRIBUTING.md` and `info/PROJECT_INSTRUCTIONS.md`
 
-**Relationship to git-workflow.md:** The `git-workflow.md` steering file (produced by `mapping/infra-to-config.md`) defines CI pipeline stages as RULES (GIT-CI-NN) — what the pipeline MUST do. `CICD_GUIDE.md` is the operational companion — HOW to set up and configure the pipeline, quality gates, rollback procedures, and troubleshooting.
+**Relationship to git-workflow.md:** The `git-workflow.md` steering file (produced by `mapping/infra-to-config.md`) defines CI pipeline stages as RULES (GIT-CI-NN) — what the pipeline MUST do. `info/CICD_GUIDE.md` is the operational companion — HOW to set up and configure the pipeline, quality gates, rollback procedures, and troubleshooting.
 
 ---
 
@@ -454,10 +454,10 @@ local (dev) ──► CI (test) ──► staging ──► production
 
 | File | Relationship |
 |------|-------------|
-| `.kiro/steering/git-workflow.md` | Contains CI rules (GIT-CI-NN) as enforcement. CICD_GUIDE expands these into operational detail. |
-| `.kiro/steering/security-rules.md` | Security scanning gates + secret handling must be consistent. |
-| `.kiro/steering/testing-strategy.md` | Test requirements feed quality gate definitions (coverage %, test types). |
-| `.kiro/steering/performance-standards.md` | Performance SLOs feed post-deploy monitoring thresholds. |
-| `CONTRIBUTING.md` | References CICD_GUIDE for pipeline details. |
-| `PROJECT_INSTRUCTIONS.md` | Points to CICD_GUIDE for pipeline operations. |
+| `rules/git-workflow.md` | Contains CI rules (GIT-CI-NN) as enforcement. CICD_GUIDE expands these into operational detail. |
+| `rules/security-rules.md` | Security scanning gates + secret handling must be consistent. |
+| `rules/testing-strategy.md` | Test requirements feed quality gate definitions (coverage %, test types). |
+| `rules/performance-standards.md` | Performance SLOs feed post-deploy monitoring thresholds. |
+| `info/CONTRIBUTING.md` | References CICD_GUIDE for pipeline details. |
+| `info/PROJECT_INSTRUCTIONS.md` | Points to CICD_GUIDE for pipeline operations. |
 | `management_framework/Issue_Log.md` | Rollback incidents logged here. |

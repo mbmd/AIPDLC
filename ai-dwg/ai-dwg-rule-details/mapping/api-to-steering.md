@@ -4,8 +4,8 @@
 ## Purpose
 
 This mapping rule transforms the **API Architecture & Contracts** document (AP artifact) into one or two steering files:
-1. `.kiro/steering/api-standards.md` — ALWAYS generated (REST conventions, error format, pagination, etc.)
-2. `.kiro/steering/api-versioning.md` — CONDITIONAL (only if AP specifies multi-version strategy)
+1. `rules/api-standards.md` — ALWAYS generated (REST conventions, error format, pagination, etc.)
+2. `rules/api-versioning.md` — CONDITIONAL (only if AP specifies multi-version strategy)
 
 ---
 

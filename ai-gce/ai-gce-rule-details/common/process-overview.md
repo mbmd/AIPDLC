@@ -79,14 +79,26 @@ AI-GCE sits at the **end of the preparation chain**. It reads what AI-DWG encode
 
 | Condition | Mode Selected |
 |-----------|:-------------:|
-| `.kiro/hooks/` does NOT exist or is empty | Mode 1: Full Generation |
+| `.governance/hooks/` does NOT exist or is empty | Mode 1: Full Generation |
 | User says "generate compliance" / "install governance" / "derive rules" | Mode 1: Full Generation |
-| `.kiro/hooks/` EXISTS with content AND user says "steering changed" / "re-derive" | Mode 2: Re-Derivation |
+| `.governance/hooks/` EXISTS with content AND user says "steering changed" / "re-derive" | Mode 2: Re-Derivation |
 | AI-DWG sends downstream signal: "Steering files updated: {list}" | Mode 2: Re-Derivation |
 | `brownfield-patterns.md` EXISTS AND `.governance/brownfield-baseline.md` does NOT | Mode 3: Brownfield |
 | User says "baseline scan" / "brownfield adoption" / "incremental enforcement" | Mode 3: Brownfield |
 | `.compliance-state.json` EXISTS AND user says "activate tier" / "next tier" | Mode 4: Tier Activation |
 | `nextTierReadiness` criteria all met in state file | Mode 4: Tier Activation |
+
+---
+
+## Discovery & Ownership (Manifest-Driven, Read-Only)
+
+**Discovery:** AI-GCE locates everything via `.governance/workspace-manifest.yaml` (the discovery contract DWG writes) — paths by semantic role (`paths.rules`, `files.definitionOfDone`, `platformTargets`, `storyStyle`), never hardcoded. Legacy fallback (no manifest) → warn + hardcoded scan.
+
+**P1 — Read-only on DWG output:** GCE reads DWG's workspace (`rules/`, `backlog/`, `ux/`, `architecture/`, `info/`) to derive governance. GCE NEVER modifies what DWG created — DWG owns and re-baselines those. GCE writes ONLY its own governance surface (`.governance/` + platform-appropriate hooks/agents).
+
+**P2 — GCE output is AI-agnostic:** GCE's governance layer (rules, hooks, agents, drift) renders per `manifest.platformTargets` — canonical governance + per-platform adapters (see `rendering/governance-rendering.md`).
+
+**Reads canonical, not adapter:** GCE reads `manifest.paths.rules` (canonical `rules/`), NOT `.kiro/steering/` (the Kiro adapter DWG also produced).
 
 ---
 
@@ -98,7 +110,7 @@ AI-GCE generates rules from TWO sources that combine:
 ┌─────────────────────────────────────────────────────────────────┐
 │  SOURCE 1: STEERING FILES (project-specific)                     │
 │  ─────────────────────────────────────────                       │
-│  What: .kiro/steering/ + operational docs from AI-DWG            │
+│  What: rules/ + operational docs from AI-DWG            │
 │  Covers: Architecture, team topology, methodology, governance    │
 │  If silent: Category gets baseline-only rules                    │
 │  If contradicts baseline: Steering WINS                          │
@@ -172,8 +184,8 @@ All output is installed INTO the development workspace:
 
 | Output | Path | Purpose |
 |--------|------|---------|
-| **Hooks** (15+) | `.kiro/hooks/*.json` | Real-time enforcement on IDE events |
-| **Hook Enforcement Guide** | `.kiro/hooks/ENFORCEMENT-GUIDE.md` | Tier-based adoption roadmap |
+| **Hooks** (15+) | `.governance/hooks/*.json` | Real-time enforcement on IDE events |
+| **Hook Enforcement Guide** | `.governance/hooks/ENFORCEMENT-GUIDE.md` | Tier-based adoption roadmap |
 | **Rules** (18+ always, 9 conditional) | `.governance/rules/*.md` | Compliance rule definitions |
 | **Audit Agent** | `.governance/agents/compliance-audit-agent.md` | 9-step scoring audit |
 | **Init Agent** | `.governance/agents/project-init-agent.md` | 5-question project scaffolding |
@@ -181,7 +193,7 @@ All output is installed INTO the development workspace:
 | **COMPLIANCE_README** | `.governance/COMPLIANCE_README.md` | Developer-facing guide |
 | **State File** | `.compliance-state.json` | Tier tracking, readiness, scores |
 | **Dashboard** | `management_framework/dashboards/compliance-dashboard.md` | 30+ variable compliance dashboard |
-| **Phase/Role Steering** | `.kiro/steering/compliance-*.md` | Optional enforcement steering (Step 4b) |
+| **Phase/Role Steering** | `rules/compliance-*.md` | Optional enforcement steering (Step 4b) |
 | **Brownfield Baseline** | `.governance/brownfield-baseline.md` | IF brownfield — acknowledged violations |
 | **Adoption Plan** | `.governance/incremental-adoption-plan.md` | IF brownfield — progressive timeline |
 

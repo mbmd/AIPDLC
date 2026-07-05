@@ -115,14 +115,14 @@ Workspace:  {absolute path to workspace root}
 Trigger:    {what AP change caused reconciliation}
 
 Files MODIFIED:
-  • .kiro/steering/{file-1} — {brief: what changed}
-  • .kiro/steering/{file-2} — {brief: what changed}
+  • rules/{file-1} — {brief: what changed}
+  • rules/{file-2} — {brief: what changed}
 
 Files ADDED:
-  • .kiro/steering/{new-file} — {reason: trigger now met}
+  • rules/{new-file} — {reason: trigger now met}
 
 Files REMOVED:
-  • .kiro/steering/{removed-file} — {reason: trigger no longer met}
+  • rules/{removed-file} — {reason: trigger no longer met}
 
 Files UNCHANGED:
   • (all others)
@@ -173,7 +173,7 @@ When AI-GCE receives the signal (via user invocation), it needs:
 
 | Information | Where to Find |
 |-------------|---------------|
-| Which steering files exist | Scan `.kiro/steering/` directory |
+| Which steering files exist | Scan `rules/` directory |
 | Which files changed (for selective) | Signal message lists them; OR compare hook derivation timestamps |
 | Rule categories per file | AI-GCE's own reading guide defines this |
 | Rule IDs (for hook mapping) | Read steering files — rules are numbered (AUTH-01, DB-QUERY-03, etc.) |
@@ -197,7 +197,7 @@ When AI-GCE processes the signal and derives/re-derives, it writes to:
 | Dashboard | `management_framework/dashboards/compliance-dashboard.md` | Visual compliance status |
 | Package Territory Registry | `.governance/PACKAGE_TERRITORIES.md` | Excluded-zone declarations for hook segregation |
 | Brownfield artifacts | `.governance/brownfield-baseline.md` + `incremental-adoption-plan.md` | IF brownfield |
-| Phase/role steering | `.kiro/steering/compliance-*.md` | Optional fileMatch enrichment (Step 4b) |
+| Phase/role steering | `rules/compliance-*.md` | Optional fileMatch enrichment (Step 4b) |
 
 ---
 

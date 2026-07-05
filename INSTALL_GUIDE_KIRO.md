@@ -42,32 +42,29 @@
 
 ## How It Works
 
-Each AI-* package installs **two things** into your workspace, both **family-scoped** under a `pdlc/` segment (this is the AI-* PDLC Family — every package file lives under the family name so multiple AIFLC families can coexist in one workspace):
+The installer places **one always-loaded file** plus the **package home**, both scoped to the AI-* PDLC Family (multiple AIFLC families can coexist in one workspace):
 
-1. **Core workflow/engine file** — a Markdown steering file that Kiro reads automatically at session start (placed in `.kiro/steering/pdlc/`)
-2. **Rule-details folder** — phase-specific instructions and templates that the core workflow loads on demand during execution (placed in `.kiro/pdlc/`)
+1. **Session orchestrator** — a single steering file Kiro reads automatically at session start (placed in `.kiro/steering/session-orchestrator.md`). It is the ONLY always-loaded file. It detects which package you want and `Read`s that package's core on demand — keeping the context window free.
+2. **Package home** — every package's core AND rule-details live together in the uniform, agent-neutral home `.aiflc/pdlc/`. Nothing here auto-loads; the orchestrator reads from it on demand.
 
 ```
 your-workspace/
 ├── .kiro/
-│   ├── steering/
-│   │   └── pdlc/
-│   │       └── ai-pilc-rules/
-│   │           └── core-workflow.md      ← Always loaded by Kiro (steering inclusion: always)
-│   └── pdlc/
-│       └── ai-pilc-rule-details/         ← Loaded on-demand by the core workflow
-│           ├── common/
-│           ├── inception/
-│           ├── assessment/
-│           ├── templates/
-│           └── ...
+│   └── steering/
+│       └── session-orchestrator.md       ← The ONLY always-loaded file (routes to cores)
+├── .aiflc/
+│   └── pdlc/                              ← AI-* PDLC Family home (cores + rule-details + fabric)
+│       ├── ai-pilc-rules/core-workflow.md    ← Read on demand by the orchestrator
+│       ├── ai-pilc-rule-details/             ← Read on demand by the core
+│       │   ├── common/  inception/  assessment/  templates/  ...
+│       └── ... one {pkg}-rules/ + {pkg}-rule-details/ per installed package
 ├── pdlc-ws/                              ← All runtime outputs land here (never workspace root)
 └── (your project files)
 ```
 
-Kiro automatically loads all files in `.kiro/steering/` (including the `pdlc/` subfolder) at session start. The rule-details folder sits alongside in `.kiro/pdlc/` and gets read on demand when the workflow transitions to each phase.
+Kiro auto-loads only `session-orchestrator.md` from `.kiro/steering/`. When you activate a package (by key or intent), the orchestrator `Read`s `.aiflc/pdlc/ai-{pkg}-rules/core-*.md`, and the core reads its rule-details from `.aiflc/pdlc/ai-{pkg}-rule-details/` as each phase needs them.
 
-> **The Kiro-style split:** core files load as always-on steering (`.kiro/steering/pdlc/`); rule-details are read on demand (`.kiro/pdlc/`); and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root.
+> **The AIFLC model:** one orchestrator loads always-on (`.kiro/steering/`); every package core + its rule-details live in the uniform home `.aiflc/pdlc/` and are read on demand; and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root. The `.aiflc/pdlc/` layout is identical on every platform.
 
 ---
 
@@ -135,13 +132,14 @@ cd <path-to-AIPDLC>
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-# Copy steering rules (core workflow — always loaded by Kiro), family-scoped under pdlc/
-New-Item -ItemType Directory -Force -Path "$Target\.kiro\steering\pdlc"
-Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rules" "$Target\.kiro\steering\pdlc\"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rules" "$Target\.aiflc\pdlc\"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.aiflc\pdlc\"
 
-# Copy rule details (phase instructions + templates — loaded on demand), family-scoped under pdlc/
-New-Item -ItemType Directory -Force -Path "$Target\.kiro\pdlc"
-Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.kiro\pdlc\"
+# Copy the session orchestrator into Kiro's auto-load slot (the ONLY always-loaded file)
+New-Item -ItemType Directory -Force -Path "$Target\.kiro\steering"
+Copy-Item "$Source\session-orchestrator.md" "$Target\.kiro\steering\session-orchestrator.md"
 ```
 
 **macOS / Linux:**
@@ -150,30 +148,33 @@ Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.kiro\pdlc\"
 SOURCE=<path-to-AIPDLC>
 TARGET=<your-project-path>
 
-# Copy steering rules (family-scoped under pdlc/)
-mkdir -p "$TARGET/.kiro/steering/pdlc"
-cp -R "$SOURCE/ai-pilc/ai-pilc-rules" "$TARGET/.kiro/steering/pdlc/"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+mkdir -p "$TARGET/.aiflc/pdlc"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rules" "$TARGET/.aiflc/pdlc/"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details" "$TARGET/.aiflc/pdlc/"
 
-# Copy rule details (family-scoped under pdlc/)
-mkdir -p "$TARGET/.kiro/pdlc"
-cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details" "$TARGET/.kiro/pdlc/"
+# Copy the session orchestrator into Kiro's auto-load slot (the ONLY always-loaded file)
+mkdir -p "$TARGET/.kiro/steering"
+cp "$SOURCE/session-orchestrator.md" "$TARGET/.kiro/steering/session-orchestrator.md"
 ```
 
-### File Placement Convention (Kiro)
+### File Placement Convention
 
-| Package | Steering (always loaded) | Details (on-demand) |
-|---------|--------------------------|---------------------|
-| AI-ILC | `.kiro/steering/pdlc/ai-ilc-rules/core-workflow.md` | `.kiro/pdlc/ai-ilc-rule-details/` |
-| AI-PILC | `.kiro/steering/pdlc/ai-pilc-rules/core-workflow.md` | `.kiro/pdlc/ai-pilc-rule-details/` |
-| AI-ADLC | `.kiro/steering/pdlc/ai-adlc-rules/core-workflow.md` | `.kiro/pdlc/ai-adlc-rule-details/` |
-| AI-UXD | `.kiro/steering/pdlc/ai-uxd-rules/core-workflow.md` | `.kiro/pdlc/ai-uxd-rule-details/` |
-| AI-POLC | `.kiro/steering/pdlc/ai-polc-rules/core-workflow.md` | `.kiro/pdlc/ai-polc-rule-details/` |
-| AI-DWG | `.kiro/steering/pdlc/ai-dwg-rules/core-generator.md` | `.kiro/pdlc/ai-dwg-rule-details/` |
-| AI-GCE | `.kiro/steering/pdlc/ai-gce-rules/core-generator.md` | `.kiro/pdlc/ai-gce-rule-details/` |
-| AI-TGE | `.kiro/steering/pdlc/ai-tge-rules/core-engine.md` | `.kiro/pdlc/ai-tge-rule-details/` |
-| AI-PPM | `.kiro/steering/pdlc/ai-ppm-rules/core-engine.md` | `.kiro/pdlc/ai-ppm-rule-details/` |
-| AI-FLO | `.kiro/steering/pdlc/ai-flo-rules/core-engine.md` | `.kiro/pdlc/ai-flo-rule-details/` |
-| AI-DFE | `.kiro/steering/pdlc/ai-dfe-rules/core-engine.md` | `.kiro/pdlc/ai-dfe-rule-details/` |
+Cores and rule-details both live in the uniform home `.aiflc/pdlc/` (read on demand). The only always-loaded file is `.kiro/steering/session-orchestrator.md`.
+
+| Package | Core (read on demand) | Details (read on demand) |
+|---------|-----------------------|--------------------------|
+| AI-ILC | `.aiflc/pdlc/ai-ilc-rules/core-workflow.md` | `.aiflc/pdlc/ai-ilc-rule-details/` |
+| AI-PILC | `.aiflc/pdlc/ai-pilc-rules/core-workflow.md` | `.aiflc/pdlc/ai-pilc-rule-details/` |
+| AI-ADLC | `.aiflc/pdlc/ai-adlc-rules/core-workflow.md` | `.aiflc/pdlc/ai-adlc-rule-details/` |
+| AI-UXD | `.aiflc/pdlc/ai-uxd-rules/core-workflow.md` | `.aiflc/pdlc/ai-uxd-rule-details/` |
+| AI-POLC | `.aiflc/pdlc/ai-polc-rules/core-workflow.md` | `.aiflc/pdlc/ai-polc-rule-details/` |
+| AI-DWG | `.aiflc/pdlc/ai-dwg-rules/core-generator.md` | `.aiflc/pdlc/ai-dwg-rule-details/` |
+| AI-GCE | `.aiflc/pdlc/ai-gce-rules/core-generator.md` | `.aiflc/pdlc/ai-gce-rule-details/` |
+| AI-TGE | `.aiflc/pdlc/ai-tge-rules/core-engine.md` | `.aiflc/pdlc/ai-tge-rule-details/` |
+| AI-PPM | `.aiflc/pdlc/ai-ppm-rules/core-engine.md` | `.aiflc/pdlc/ai-ppm-rule-details/` |
+| AI-FLO | `.aiflc/pdlc/ai-flo-rules/core-engine.md` | `.aiflc/pdlc/ai-flo-rule-details/` |
+| AI-DFE | `.aiflc/pdlc/ai-dfe-rules/core-engine.md` | `.aiflc/pdlc/ai-dfe-rule-details/` |
 
 ---
 
@@ -191,9 +192,12 @@ Or manually:
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-# Ensure base directories exist (family-scoped under pdlc/)
-New-Item -ItemType Directory -Force -Path "$Target\.kiro\steering\pdlc" | Out-Null
-New-Item -ItemType Directory -Force -Path "$Target\.kiro\pdlc" | Out-Null
+# Ensure base directories exist
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc" | Out-Null
+New-Item -ItemType Directory -Force -Path "$Target\.kiro\steering" | Out-Null
+
+# The single always-loaded orchestrator (in Kiro's auto-load slot)
+Copy-Item "$Source\session-orchestrator.md" "$Target\.kiro\steering\session-orchestrator.md" -Force
 
 $packages = @(
     "ai-ilc", "ai-pilc", "ai-ppm", "ai-flo", "ai-adlc",
@@ -204,12 +208,13 @@ foreach ($pkg in $packages) {
     $rulesSource = Join-Path $Source "$pkg\$pkg-rules"
     $detailsSource = Join-Path $Source "$pkg\$pkg-rule-details"
 
+    # Core + rule-details both go into the uniform home .aiflc/pdlc/ (read on demand)
     if (Test-Path $rulesSource) {
-        Copy-Item -Recurse $rulesSource "$Target\.kiro\steering\pdlc\" -Force
-        Write-Host "Steering installed: $pkg" -ForegroundColor Green
+        Copy-Item -Recurse $rulesSource "$Target\.aiflc\pdlc\" -Force
+        Write-Host "Core installed: $pkg" -ForegroundColor Green
     }
     if (Test-Path $detailsSource) {
-        Copy-Item -Recurse $detailsSource "$Target\.kiro\pdlc\" -Force
+        Copy-Item -Recurse $detailsSource "$Target\.aiflc\pdlc\" -Force
         Write-Host "Details installed: $pkg" -ForegroundColor Green
     }
 }
@@ -217,11 +222,11 @@ foreach ($pkg in $packages) {
 
 ### Context Window Consideration
 
-Kiro loads all files in `.kiro/steering/` at session start. With 11 packages installed, that's ~11 core files in context. Each is designed to be concise (orchestration logic only — the heavy detail is in rule-details, loaded on demand):
+Kiro auto-loads only `session-orchestrator.md` from `.kiro/steering/` — a single small file — no matter how many packages you install. Package cores live in `.aiflc/pdlc/` and are read on demand, so they cost zero context until activated:
 
-- **Recommended:** Install only the packages you'll use in a given project. Most projects need 3–5 packages, not all 11.
-- **If installing all 11:** Context usage is still manageable because core files are 1–3 KB each.
-- **The AI activates only one package at a time** — the others are dormant until you invoke them.
+- **Install as many packages as you like** — only the orchestrator is always in context; the 11 cores never all load at once.
+- **The AI activates only one package at a time** — the orchestrator `Read`s that package's core when you invoke it; the others stay on disk, dormant.
+- **Heavy detail is deferred** — rule-details load per phase, only when the active workflow needs them.
 
 ---
 
@@ -263,50 +268,26 @@ After a full install (`-Bundle full`), your workspace looks like this:
 your-project/
 ├── .kiro/
 │   ├── steering/
-│   │   └── pdlc/                          ← AI-* PDLC Family scope
-│   │       ├── ai-ilc-rules/
-│   │       │   └── core-workflow.md         ← Always loaded: Idea evaluation
-│   │       ├── ai-pilc-rules/
-│   │       │   └── core-workflow.md         ← Always loaded: Project initiation
-│   │       ├── ai-ppm-rules/
-│   │       │   └── core-engine.md           ← Always loaded: Portfolio management
-│   │       ├── ai-flo-rules/
-│   │       │   └── core-engine.md           ← Always loaded: Flow router
-│   │       ├── ai-adlc-rules/
-│   │       │   └── core-workflow.md         ← Always loaded: Architecture design
-│   │       ├── ai-uxd-rules/
-│   │       │   └── core-workflow.md         ← Always loaded: UX design
-│   │       ├── ai-polc-rules/
-│   │       │   └── core-workflow.md         ← Always loaded: Product ownership
-│   │       ├── ai-dwg-rules/
-│   │       │   └── core-generator.md        ← Always loaded: Workspace generator
-│   │       ├── ai-gce-rules/
-│   │       │   └── core-generator.md        ← Always loaded: Governance engine
-│   │       ├── ai-tge-rules/
-│   │       │   └── core-engine.md           ← Always loaded: Test governance
-│   │       └── ai-dfe-rules/
-│   │           └── core-engine.md           ← Always loaded: Data fabric
-│   ├── pdlc/                              ← AI-* PDLC Family rule-details (on-demand)
-│   │   ├── ai-ilc-rule-details/
-│   │   ├── ai-pilc-rule-details/
-│   │   │   ├── common/
-│   │   │   ├── inception/
-│   │   │   ├── assessment/
-│   │   │   ├── justification/
-│   │   │   ├── authorization/
-│   │   │   ├── planning/
-│   │   │   ├── mobilization/
-│   │   │   └── templates/
-│   │   ├── ai-adlc-rule-details/
-│   │   ├── ai-uxd-rule-details/
-│   │   ├── ai-polc-rule-details/
-│   │   ├── ai-ppm-rule-details/
-│   │   ├── ai-flo-rule-details/
-│   │   ├── ai-dwg-rule-details/
-│   │   ├── ai-gce-rule-details/
-│   │   ├── ai-tge-rule-details/
-│   │   └── ai-dfe-rule-details/
+│   │   └── session-orchestrator.md      ← The ONLY always-loaded file (routes to cores)
 │   └── hooks/                           ← Generated by AI-GCE (auto-executed on Kiro)
+├── .aiflc/
+│   └── pdlc/                            ← AI-* PDLC Family home (cores + rule-details, read on demand)
+│       ├── ai-ilc-rules/core-workflow.md
+│       ├── ai-ilc-rule-details/
+│       ├── ai-pilc-rules/core-workflow.md
+│       ├── ai-pilc-rule-details/
+│       │   ├── common/  inception/  assessment/  justification/
+│       │   ├── authorization/  planning/  mobilization/  templates/
+│       ├── ai-ppm-rules/core-engine.md         · ai-ppm-rule-details/
+│       ├── ai-flo-rules/core-engine.md         · ai-flo-rule-details/
+│       ├── ai-adlc-rules/core-workflow.md      · ai-adlc-rule-details/
+│       ├── ai-uxd-rules/core-workflow.md       · ai-uxd-rule-details/
+│       ├── ai-polc-rules/core-workflow.md      · ai-polc-rule-details/
+│       ├── ai-dwg-rules/core-generator.md      · ai-dwg-rule-details/
+│       ├── ai-gce-rules/core-generator.md      · ai-gce-rule-details/
+│       ├── ai-tge-rules/core-engine.md         · ai-tge-rule-details/
+│       ├── ai-dfe-rules/core-engine.md         · ai-dfe-rule-details/
+│       └── FAMILY_BINDINGS.md · GATE_PROTOCOL.md · FAMILY_INTERFACE.md · TRIGGER_KEYS_REFERENCE.md  (fabric)
 ├── pdlc-ws/                             ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 │   ├── .ai-family-manifest.json         ← Installer tracking (for uninstall)
 │   └── tools/                           ← Family tools (visual tools / extensions)
@@ -428,7 +409,7 @@ Each workflow package maintains a **state file** (e.g., `pilc-state.md`) that re
 
 AI-* package files coexist peacefully with your existing Kiro configuration:
 
-- **Existing steering files**: Untouched. Packages add their own folders under `.kiro/steering/`.
+- **Existing steering files**: Untouched. The installer adds only `session-orchestrator.md` to `.kiro/steering/`; all package cores + details go under `.aiflc/pdlc/`.
 - **Existing hooks**: Untouched. AI-GCE adds hooks in `.kiro/hooks/` without modifying yours.
 - **Other project files**: Never modified. Only AI-* steering files are added.
 - **Package isolation**: Each package activates ONLY when you invoke it by name.
@@ -452,11 +433,11 @@ AI-* package files coexist peacefully with your existing Kiro configuration:
 ### Manual Removal
 
 ```powershell
-# Remove steering rules
-Get-ChildItem "<your-project-path>\.kiro\steering\pdlc\ai-*-rules" -Directory | Remove-Item -Recurse -Force
+# Remove the package home (cores + rule-details)
+Remove-Item "<your-project-path>\.aiflc\pdlc" -Recurse -Force -ErrorAction SilentlyContinue
 
-# Remove rule-details folders
-Get-ChildItem "<your-project-path>\.kiro\pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
+# Remove the session orchestrator
+Remove-Item "<your-project-path>\.kiro\steering\session-orchestrator.md" -ErrorAction SilentlyContinue
 
 # Remove the manifest (lives under pdlc-ws/)
 Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction SilentlyContinue
@@ -471,8 +452,9 @@ Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction 
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| Package not visible in Steering panel | Folder structure wrong | Verify `.kiro/steering/pdlc/ai-{pkg}-rules/core-workflow.md` exists |
-| "Can't find rule-details" | Path mismatch | Core workflow checks `.kiro/pdlc/ai-{pkg}-rule-details/` first |
+| Orchestrator not loading | Wrong location | Verify `.kiro/steering/session-orchestrator.md` exists (must sit directly in `.kiro/steering/`, not a subfolder) |
+| Package core not found | Path mismatch | Verify `.aiflc/pdlc/ai-{pkg}-rules/core-*.md` exists |
+| "Can't find rule-details" | Path mismatch | Core resolves `.aiflc/pdlc/ai-{pkg}-rule-details/` first |
 | No welcome message | Wrong activation phrase | Use the exact format: "Using AI-PILC, ..." (uppercase package name) |
 | Hooks not firing | AI-GCE not run yet | Run "Using AI-GCE, set up governance" to generate hooks |
 | State file not created | First interaction only | State is created after the first stage completes |

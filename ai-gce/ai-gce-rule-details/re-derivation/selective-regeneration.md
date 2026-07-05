@@ -37,7 +37,7 @@ ONLY touch what's affected. Leave everything else exactly as-is.
 
 Changed steering: api-standards.md
   → Re-derive: .governance/rules/api-first-compliance.md
-  → Re-derive: .kiro/hooks/api-contract-check.json (if patterns changed)
+  → Re-derive: .governance/hooks/api-contract-check.json (if patterns changed)
   → DO NOT TOUCH: security-compliance.md, naming-conventions.md, all other rules/hooks
 ```
 

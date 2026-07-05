@@ -112,7 +112,7 @@ AP content changed (principle reworded, technology version bumped, rule threshol
 ```
 📝 MODIFICATION PROPOSED
 
-File: .kiro/steering/api-standards.md
+File: rules/api-standards.md
 Section: Rate Limiting (API-RATE-02)
 
 Current:  "Global limit: 1000 req/min per tenant"
@@ -139,7 +139,7 @@ AP no longer contains something that was previously there (principle removed, mo
 ```
 ⚠️ REMOVAL PROPOSED
 
-File: .kiro/steering/workspace-rules.md
+File: rules/workspace-rules.md
 Section: Constraint C4 (within AP-sourced Constraints section)
 
 Current:  "DO NOT use cloud services — on-premises only"
@@ -186,7 +186,7 @@ Team modified content inside AP-sourced markers (technically breaking the contra
 ```
 ⚡ CONFLICT DETECTED
 
-File: .kiro/steering/security-rules.md
+File: rules/security-rules.md
 Section: AUTH-02 (within AP-sourced Authentication Rules)
 
 AP says:      "Access tokens MUST expire after 15 minutes"

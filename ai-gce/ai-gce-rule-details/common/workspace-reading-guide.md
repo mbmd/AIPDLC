@@ -26,11 +26,21 @@ During THIS activity, ALSO adopt the mindset of a **Business Analyst**. This doe
 ### Quality Check
 A good output from this activity sounds like:
 - "Workspace scan found 14 steering files, 3 operational docs, confirmed NestJS/PostgreSQL stack from package.json + docker-compose.yml. Module-structure claims 6 modules; filesystem confirms 5 exist (flagging mismatch)."
-- "Detection method: marker file found at .kiro/steering/workspace-rules.md. Proceeding with full Priority 1-5 scan."
+- "Detection method: marker file found at rules/workspace-rules.md. Proceeding with full Priority 1-5 scan."
 
 ---
 
-## Step 1: Locate the Development Workspace
+## FOUNDATIONAL PRINCIPLES
+
+**P1 — READ-ONLY on DWG output.** GCE reads the DWG-generated workspace to *derive* governance. GCE MUST NEVER modify, move, or delete what DWG created (`rules/`, `backlog/`, `ux/`, `architecture/`, `info/`, `WORKSPACE_CONTEXT_MAP.md`, the baseline, the manifest). DWG owns those; DWG re-baselines them. GCE writes ONLY its own governance surface (`.governance/` + platform-appropriate hooks/agents). Litmus: DWG-generated → GCE reads it; GCE-derived → GCE owns it.
+
+**P2 — Discovery is manifest-driven.** GCE locates everything via `.governance/workspace-manifest.yaml` — the discovery contract DWG writes. GCE reads paths by semantic role (`manifest.paths.rules`, `manifest.files.definitionOfDone`, …), NEVER by hardcoded path. When DWG changes the layout, it updates the manifest; GCE adapts automatically.
+
+**Canonical, not adapter.** GCE reads DWG's **canonical `rules/`** (via `manifest.paths.rules`), NOT the platform adapter (`rules/`, `CLAUDE.md`, etc.). The canonical folder is the source of truth; adapters are wiring GCE ignores when reading.
+
+---
+
+## Step 1: Locate the Development Workspace (Manifest-First)
 
 ### Detection Strategy (Ordered)
 
@@ -39,70 +49,91 @@ A good output from this activity sounds like:
    → Use that path directly
 
 2. Assume current working directory
-   → Check for .kiro/steering/workspace-rules.md
+   → Check for .governance/workspace-manifest.yaml  ← PRIMARY MARKER
 
-3. Scan common locations for the marker file:
-   → ./
-   → ../
-   → Sibling folders of current directory
+3. Scan common locations for the manifest:
+   → ./ , ../ , sibling folders
 
-4. Marker not found
+4. Manifest found
+   → Read it. It provides paths (by role) to rules, backlog, ux, architecture,
+     info, src, governance, and files (DoD, DoR, vision, drift register, baseline).
+   → GCE uses these — no hardcoded paths, no guessing.
+
+5. Manifest NOT found (legacy / pre-manifest workspace)
+   → FALLBACK: look for a canonical rules/ folder or rules/workspace-rules.md
+   → Warn: "⚠️ Legacy workspace — no workspace-manifest.yaml found. Using legacy
+     hardcoded scan. Regenerate with current AI-DWG to get the manifest."
+   → Proceed with the legacy scan (Step 2-Legacy below)
+
+6. Nothing found
    → Ask user: "Where is the development workspace?"
-   → User points to the project root
-
-5. Partial workspace (steering exists but incomplete)
-   → Proceed with what exists + built-in baseline
-   → Warn about missing files that limit derivation depth
 ```
 
-### Marker File: `.kiro/steering/workspace-rules.md`
+### Primary Marker: `.governance/workspace-manifest.yaml`
 
-This is the anchor. Once found, the workspace root is the PARENT of `.kiro/`. All other files are located relative to this root.
+The anchor. AI-DWG writes it in every workspace it generates. Once found, GCE reads all locations by semantic role from it. The workspace root is the parent of `.governance/`.
 
-**Why this marker:** AI-DWG guarantees this file in every workspace it generates. If this file exists, AI-DWG has run (or someone manually created equivalent governance).
+**Manifest keys GCE uses:**
+- `paths.rules` — canonical AI rules (what GCE derives compliance from) — **READ-ONLY**
+- `paths.backlog` / `paths.ux` / `paths.architecture` / `paths.src` — reference + code — **READ-ONLY**
+- `files.definitionOfDone` / `files.definitionOfReady` / etc. — operational docs — **READ-ONLY**
+- `files.baselineManifest` / `files.driftRegister` — drift governance surface
+- `platformTargets` — which platform adapters exist (drives GCE's OWN output rendering — see `rendering/governance-rendering.md`)
+- `storyStyle` — AC format (EARS / G-W-T) for story-derived checks
+- `clusters` — which input clusters are present (skip absent ones)
+
+### Legacy Fallback Marker: `rules/workspace-rules.md` OR `rules/workspace-rules.md`
+
+Used ONLY when no manifest exists. Warns the user and proceeds with the pre-manifest hardcoded scan. Deprecation path — old workspaces keep working, degraded.
 
 ---
 
-## Step 2: Scan Workspace Contents
+## Step 2: Read Workspace Contents (Manifest-Resolved)
 
-### What to Scan (Ordered by Priority)
-
-After locating the workspace root, scan for the following in order:
+After reading the manifest, GCE resolves each source by semantic role. All reads are READ-ONLY (P1).
 
 ```
-PRIORITY 1 — STEERING FILES (primary derivation source)
+SOURCE 1 — CANONICAL RULES (primary derivation source)
 ─────────────────────────────────────────────────────────
-Scan: .kiro/steering/*.md
-For each file found: record filename, read front-matter (inclusion type), note existence
+Location: manifest.paths.rules  (canonical rules/ — NOT the rules/ adapter)
+Scan: {rules}/*.md
+For each file: record filename, note existence. These are the prescriptive rules
+GCE derives compliance from. (See categorization table below.)
 
-PRIORITY 2 — OPERATIONAL DOCUMENTS (governance enrichment)
+SOURCE 2 — OPERATIONAL DOCUMENTS (governance enrichment)
 ───────────────────────────────────────────────────────────
-Scan for:
-  • PROJECT_INSTRUCTIONS.md (project root)
-  • DEFINITION_OF_DONE.md (project root)
-  • TEAM_AGREEMENTS.md (project root)
-  • CONTRIBUTING.md (project root)
-  • CODEOWNERS (project root or .github/)
+Resolve by role from manifest.files:
+  • files.definitionOfDone      (backlog/DEFINITION_OF_DONE.md)
+  • files.definitionOfReady     (backlog/DEFINITION_OF_READY.md)
+  • manifest.paths.info + TEAM_AGREEMENTS.md / PROJECT_INSTRUCTIONS.md
+  • CODEOWNERS (root or .github/)
+  • files.poCharter / files.prioritizationRegister (backlog/)
 
-PRIORITY 3 — INFRASTRUCTURE FILES (technology confirmation)
+SOURCE 3 — INFRASTRUCTURE / TECH CONFIRMATION
 ─────────────────────────────────────────────────────────────
-Scan for:
-  • docker-compose.yml / docker-compose.yaml
+From manifest.paths.architecture + root:
+  • architecture/docker-compose.yml
   • package.json / pom.xml / *.csproj / Cargo.toml / go.mod
-  • .gitignore
-  • .editorconfig
+  • .gitignore · .editorconfig
 
-PRIORITY 4 — FOLDER STRUCTURE (module path discovery)
+SOURCE 4 — FOLDER STRUCTURE (module path discovery)
 ──────────────────────────────────────────────────────
-Scan actual source directories:
-  • src/ or src/Modules/ or app/ or lib/
+Location: manifest.paths.src
   • Record actual module folder names and paths
-  • These drive hook file patterns (MUST use real paths, never guess)
+  • These drive GCE's own hook/agent file patterns (MUST use real paths, never guess)
+
+SOURCE 5 — DRIFT GOVERNANCE SURFACE
+──────────────────────────────────────────────────────
+  • files.baselineManifest — governed elements (drift detection target)
+  • files.driftRegister — live drift state
+
+> **Legacy fallback (no manifest):** scan `rules/*.md` / `rules/*.md` and root
+> files by the pre-manifest priority order. Warn the user. Same categorization applies.
 
 PRIORITY 5 — EXISTING COMPLIANCE (detect prior AI-GCE run)
 ────────────────────────────────────────────────────────────
 Check for:
-  • .kiro/hooks/ (if populated → Mode 2 or Mode 4, not Mode 1)
+  • .governance/hooks/ (if populated → Mode 2 or Mode 4, not Mode 1)
   • .governance/ folder (if exists → compliance layer already installed)
   • .compliance-state.json (if exists → tier tracking active)
 ```
@@ -237,7 +268,7 @@ Extract module → owner mapping → feeds GOV-ROLE and GOV-TT rules.
 | CODEOWNERS Entry | AI-GCE Generates |
 |-----------------|-----------------|
 | `src/Modules/Finance/** @finance-team` | GOV-TT rule: Finance module owned by finance-team |
-| `.kiro/steering/architecture-*.md @architect` | GOV-STEER rule: architecture steering needs architect approval |
+| `rules/architecture-*.md @architect` | GOV-STEER rule: architecture steering needs architect approval |
 | `contracts/** @api-reviewer` | GOV-API rule: contract changes require api-reviewer |
 
 ### From `docker-compose.yml`
@@ -322,8 +353,8 @@ This context drives ALL subsequent rule generation, hook creation, and agent con
 
 | Finding | Mode |
 |---------|------|
-| No `.kiro/hooks/` or empty | Mode 1: Full Generation |
-| `.kiro/hooks/` has content + no `.compliance-state.json` | Legacy state — treat as Mode 1 with merge |
+| No `.governance/hooks/` or empty | Mode 1: Full Generation |
+| `.governance/hooks/` has content + no `.compliance-state.json` | Legacy state — treat as Mode 1 with merge |
 | `.compliance-state.json` exists with `complianceTier: 1` | Mode 4 candidate (if user wants tier upgrade) |
 | `.governance/brownfield-baseline.md` exists | Brownfield already baselined — Mode 2 or Mode 4 |
 | brownfield-patterns.md exists but NO brownfield-baseline.md | Mode 3: Brownfield first-time adoption |
@@ -334,7 +365,7 @@ This context drives ALL subsequent rule generation, hook creation, and agent con
 
 | Situation | Response |
 |-----------|----------|
-| `.kiro/steering/workspace-rules.md` not found | Ask user for workspace location. If truly absent → can only apply built-in baseline (10 rules) |
+| `rules/workspace-rules.md` not found | Ask user for workspace location. If truly absent → can only apply built-in baseline (10 rules) |
 | `tech-stack.md` missing or empty | WARN: cannot derive technology-specific file patterns. Use generic patterns as fallback. Mark hooks with `<!-- customize: tech-specific patterns needed -->` |
 | `module-structure.md` missing | WARN: cannot derive module-specific paths. Scan actual folder structure as fallback |
 | Steering file exists but has no extractable rules | Skip that category (no MUST/NEVER/table entries = nothing to derive from) |

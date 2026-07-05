@@ -75,10 +75,10 @@ If you skipped `WIA__` and the workspace is already in use:
 
 ### Steering File Completeness (S1–S5)
 
-1. **S1 — Always-present file verification:** Verify all 14 mandatory steering files exist in `.kiro/steering/`: `workspace-rules.md`, `architecture-principles.md`, `tech-stack.md`, `coding-standards.md`, `security-rules.md`, `api-standards.md`, `module-structure.md`, `testing-strategy.md`, `database-rules.md`, `naming-conventions.md`, `git-workflow.md`, `error-handling.md`, `observability-logging.md`, `observability-sensitive.md`.
+1. **S1 — Always-present file verification:** Verify all 14 mandatory steering files exist in `rules/`: `workspace-rules.md`, `architecture-principles.md`, `tech-stack.md`, `coding-standards.md`, `security-rules.md`, `api-standards.md`, `module-structure.md`, `testing-strategy.md`, `database-rules.md`, `naming-conventions.md`, `git-workflow.md`, `error-handling.md`, `observability-logging.md`, `observability-sensitive.md`.
 2. **S2 — Conditional file justification:** For each conditional steering file present (`multi-tenancy.md`, `resilience-standards.md`, `frontend-standards.md`, `event-sourcing.md`, `feature-flags.md`, `api-versioning.md`, `observability-tracing.md`, `domain-context.md`), verify the AP contains the architectural justification (extension active, pattern detected, or trigger condition met).
 3. **S3 — No unjustified conditionals:** Verify no conditional steering file exists WITHOUT AP justification. A conditional file without architectural backing = bloat.
-4. **S4 — Operational document presence:** Verify `DEFINITION_OF_DONE.md`, `CODEOWNERS`, `PROJECT_INSTRUCTIONS.md`, and `README.md` exist at workspace root.
+4. **S4 — Operational document presence:** Verify `DEFINITION_OF_DONE.md`, `CODEOWNERS`, `info/PROJECT_INSTRUCTIONS.md`, and `README.md` exist at workspace root.
 5. **S5 — Planning template presence:** Verify `templates/` contains planning templates appropriate to team size (sprint-planning, session-planning, standup at minimum for team size > 1).
 
 ### Workspace Structure Alignment (W1–W4)
@@ -103,9 +103,9 @@ If you skipped `WIA__` and the workspace is already in use:
 
 ### Downstream Readiness (D1–D3)
 
-17. **D1 — AI-GCE signal completeness:** Verify the workspace contains everything AI-GCE needs to derive compliance hooks: steering files present + `.kiro/steering/workspace-rules.md` as the entry point marker.
+17. **D1 — AI-GCE signal completeness:** Verify the workspace contains everything AI-GCE needs to derive compliance hooks: steering files present + `rules/workspace-rules.md` as the entry point marker.
 18. **D2 — State file consistency:** If `adlc-state.md` is accessible, verify the workspace reflects its declared extensions, containers, and technology decisions.
-19. **D3 — Marker file integrity:** Verify `.kiro/steering/workspace-rules.md` exists and contains the architecture identity section (system name, tech stack summary, constraint summary) that AI-GCE uses as its detection marker.
+19. **D3 — Marker file integrity:** Verify `rules/workspace-rules.md` exists and contains the architecture identity section (system name, tech stack summary, constraint summary) that AI-GCE uses as its detection marker.
 
 ## Output
 
@@ -134,5 +134,5 @@ If you skipped `WIA__` and the workspace is already in use:
 - **AP reading guide:** `ai-dwg-rule-details/common/ap-reading-guide.md` (how to parse AP for validation)
 - **Contract:** Agent Governance Contract §4, §5
 - **Predecessor dependency:** AI-ADLC's `adlc-state.md` informs what the workspace SHOULD contain
-- **Successor dependency:** AI-GCE reads `.kiro/steering/` — integrity of that folder directly impacts governance quality
+- **Successor dependency:** AI-GCE reads `rules/` — integrity of that folder directly impacts governance quality
 - **Complementary agents:** `compliance-audit-agent` (AI-GCE) checks code compliance; WIA checks workspace-level structural integrity

@@ -31,7 +31,7 @@ ownership: generated
 
 ## Development Rules
 
-All rules in `.kiro/steering/`. Must-read files:
+All rules in `rules/`. Must-read files:
 
 | File | Governs |
 |------|---------|

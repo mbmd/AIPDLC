@@ -199,7 +199,7 @@ Output detail must match the active depth level:
 
 | Rule | Example |
 |------|---------|
-| TGE output folder | `.tge/` (dotfolder, lowercase) |
+| TGE output folder | `.governance/test/` (dotfolder, lowercase) |
 | State file | `tge-state.md` (lowercase, hyphenated) |
 | Strategy file | `test-strategy.md` (lowercase, hyphenated) |
 | Register file | `test-register.md` (lowercase, hyphenated) |

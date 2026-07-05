@@ -108,7 +108,7 @@ pdlc-ws/projects/
     ├── backlog/                          ← AI-POLC output (read by DWG)
     │
     └── {slug}-workspace/                 ← AI-DWG output (dev workspace)
-        ├── .kiro/steering/               ← generated steering files
+        ├── rules/               ← generated steering files
         ├── .kiro/hooks/                  ← AI-GCE governs here
         ├── management_framework/         ← spine carried forward
         ├── src/                          ← code structure per C4 L3

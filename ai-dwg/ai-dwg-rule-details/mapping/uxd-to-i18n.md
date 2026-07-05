@@ -5,7 +5,7 @@
 
 Transforms the **internationalization, RTL, and localization tokens** produced by AI-UXD (the i18n/RTL conditional generation) into a prescriptive `i18n-standards.md` steering file. This governs how the build workspace handles multiple locales, text direction, and localizable values, so AI-DLC v1 builds i18n-ready interfaces from day one instead of retrofitting localization later (an expensive and error-prone path).
 
-**Output:** `.kiro/steering/i18n-standards.md`
+**Output:** `rules/i18n-standards.md`
 
 **Condition:** Generate IF `uxd-state.md` is present AND the UXP defines i18n/RTL/localization concerns (more than one locale OR multi-language mentioned — AI-UXD's i18n conditional generator). If single-locale, SKIP and note: "Single-locale product — i18n standards not generated."
 

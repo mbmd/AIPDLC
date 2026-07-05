@@ -13,7 +13,7 @@
 
 | Check | Path | Meaning if absent |
 |-------|------|-------------------|
-| Marker exists | `projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/.kiro/steering/workspace-rules.md` | `status: not-run` → the dev workspace hasn't been generated; payload `null` |
+| Marker exists | `projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/rules/workspace-rules.md` | `status: not-run` → the dev workspace hasn't been generated; payload `null` |
 
 > AI-DWG output is the generated dev workspace, opened separately. From the planning workspace (`pdlc-ws/`) it is reachable at `projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/`.
 
@@ -21,7 +21,7 @@
 
 | # | Source path (relative to `pdlc-ws/`) | Holds |
 |---|-------------------------------------------|-------|
-| 1 | `projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/.kiro/steering/workspace-rules.md` | provenance front-matter + Identity Assembly (Project ID, system/product identity), steering header |
+| 1 | `projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/rules/workspace-rules.md` | provenance front-matter + Identity Assembly (Project ID, system/product identity), steering header |
 
 ## Field Extraction
 
@@ -49,5 +49,5 @@
 ## Notes
 
 - DWG is a generator with no state file. Its "data" is the fact that a dev workspace exists + the identity it embedded. This lets a dashboard show "workspace generated: yes/no" and the tech identity.
-- The full steering set (tech-stack, coding-standards, etc.) inside `{slug}-workspace/.kiro/steering/` is not machine-extracted — too varied. DFE captures the identity block, which is the structured, predictable part.
+- The full steering set (tech-stack, coding-standards, etc.) inside `{slug}-workspace/rules/` is not machine-extracted — too varied. DFE captures the identity block, which is the structured, predictable part.
 - `workspace-rules.md` carries `ownership: hybrid` — teams edit it. DFE reads it read-only and never writes back.

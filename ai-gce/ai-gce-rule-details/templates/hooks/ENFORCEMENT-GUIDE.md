@@ -8,7 +8,7 @@ ownership: generated
 ---
 # Hook Enforcement Guide — Template
 
-Generated into `.kiro/hooks/ENFORCEMENT-GUIDE.md` in the target workspace. This template is populated with project-specific hooks during AI-GCE generation.
+Generated into `.governance/hooks/ENFORCEMENT-GUIDE.md` in the target workspace. This template is populated with project-specific hooks during AI-GCE generation.
 
 ---
 
@@ -97,5 +97,5 @@ If hooks produce too many warnings, remove in this order:
 ## Adding Hooks
 
 To activate next tier: say "Activate next compliance tier" — AI-GCE handles it.
-Or manually: copy the hook .json files listed above into `.kiro/hooks/`.
+Or manually: copy the hook .json files listed above into `.governance/hooks/`.
 ```

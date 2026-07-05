@@ -96,4 +96,26 @@ Routine hops logged ONLY in `routing-log.md` — not in the spine.
 
 ---
 
+## Drift Routing (Midflight Drift Governance)
+
+AI-GCE detects midflight design drift and logs it to `.governance/drift-register.md`. FLO routes each drift entry to the owning package by its `domainTag`. FLO carries and routes — it never interprets or disposes the drift.
+
+```yaml
+# Drift routing — domain tag → target package
+driftRouting:
+  architecture: AI-ADLC
+  data: AI-ADLC
+  infrastructure: AI-ADLC
+  ux: AI-UXD
+  product: AI-POLC
+# No `governance` route — GCE's own governance layer is not a DWG baseline element,
+# so it cannot drift; stale/edited rules are handled by GCE re-derivation, not drift.
+```
+
+**Behavior:** on `DFT__ route` (or automatically during `advance` pre-check), FLO reads the register **read-only** (via `manifest.files.driftRegister`), reads each OPEN entry's **envelope** (`driftId`+`domainTag`+`status`), resolves `domainTag` → target, and records the brokering decision in its own `.flo/routing-log.md`. When the owning package asks (inbox pull), FLO hands it the drift **address** — never the body. Unresolved HARD drift blocks gate advance via conflict **C10** (flag-and-hold). Advisory drift is not brokered unless `DFT__ route advisory`. Full logic: `route/drift-routing.md`.
+
+> FLO **never writes** the drift register — GCE is the sole writer (INV-L4-006). FLO reads the envelope read-only and records brokering only in its own `.flo/routing-log.md`. Drift state reconciles to GCE **only through the versioned baseline** (DWG writes `vN+1`; GCE reads it to close entries).
+
+---
+
 *PDLC overlay for AI-FLO | Loaded when family: PDLC detected | Author: Maheri*

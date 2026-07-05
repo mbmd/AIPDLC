@@ -32,7 +32,7 @@ ownership: generated
 | `project-governance.md` | `sprint-governance-agent`, `change-management-agent` | `SGV__`, `CMG__` | Sprint cadence, gate criteria, release governance |
 | `git-workflow.md` + `role-isolation.md` | `code-review-agent` | `CRV__` | Review requirements, trust spectrum, role separation |
 | `TEAM_AGREEMENTS.md` | `code-review-agent`, `sprint-governance-agent` | `CRV__`, `SGV__` | Team-specific agreements on review, sprint ceremonies |
-| Self-derived (all `.kiro/steering/`) | `steering-quality-agent` | `SQC__` | Meta-governance (checks the steering files themselves) |
+| Self-derived (all `rules/`) | `steering-quality-agent` | `SQC__` | Meta-governance (checks the steering files themselves) |
 | `DEFINITION_OF_DONE.md` | `dod-gate-agent` | `DOD__` | DoD checklist items, acceptance criteria patterns |
 | `testing-strategy.md` | `dod-gate-agent` | Test evidence requirements |
 
@@ -99,7 +99,7 @@ Replace `{placeholder}` values with project-specific content:
 ### Step 4: Install Agents
 
 ```
-Install to:.kiro/agents/{agent-name}.md
+Install to:.governance/agents/{agent-name}.md
 ```
 
 Rules:
@@ -138,13 +138,13 @@ Install to:.governance/AGENT_REGISTRY.md
 ### Step 7: Register Shortcuts in Workspace Rules
 
 For each generated agent that has a `trigger` field:
-- Check if `.kiro/steering/workspace-rules.md` exists
+- Check if `rules/workspace-rules.md` exists
 - If YES: append the shortcut rules block from the template (preserve existing content)
 - If NO: create a minimal workspace-rules with the shortcut block
 
 **Template:** Load `templates/agents/shortcut-rules-block.md` and append its content
 (between the `<!-- BEGIN AI-GCE AGENT SHORTCUTS -->` and `<!-- END AI-GCE AGENT SHORTCUTS -->` markers)
-to the destination workspace's `.kiro/steering/workspace-rules.md`.
+to the destination workspace's `rules/workspace-rules.md`.
 
 **Re-derivation behavior:** If the markers already exist in workspace-rules, REPLACE the content
 between them (overwrite with updated shortcut block). Content outside the markers is preserved.

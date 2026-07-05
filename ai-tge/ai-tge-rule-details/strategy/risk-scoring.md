@@ -239,7 +239,7 @@ For team assignment:
 
 ### Step 8: Save All Strategy Phase Outputs
 
-Save finalized artifacts to `.tge/`:
+Save finalized artifacts to `.governance/test/`:
 1. `tge-state.md` — update: Phase = Strategy Complete, Last Stage = 6
 2. `test-register.md` — update: Risk Score column populated for all Missing entries
 3. `test-strategy.md` — already saved in Stage 5
@@ -262,7 +262,7 @@ All strategy artifacts have been produced:
 2. {test name} — Score {n}: {brief why}
 3. {test name} — Score {n}: {brief why}
 
-**Saved to:** `.tge/` (test-register.md, test-strategy.md, debt-scorecard.md, tge-state.md)
+**Saved to:** `.governance/test/` (test-register.md, test-strategy.md, debt-scorecard.md, tge-state.md)
 
 ---
 
@@ -287,9 +287,9 @@ All strategy artifacts have been produced:
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| Debt Scorecard | `.tge/debt-scorecard.md` | Prioritized missing tests by risk |
-| Updated Test Register | `.tge/test-register.md` | Risk Score column populated |
-| Updated state file | `.tge/tge-state.md` | Strategy phase complete |
+| Debt Scorecard | `.governance/test/debt-scorecard.md` | Prioritized missing tests by risk |
+| Updated Test Register | `.governance/test/test-register.md` | Risk Score column populated |
+| Updated state file | `.governance/test/tge-state.md` | Strategy phase complete |
 
 ---
 
@@ -304,4 +304,4 @@ All strategy artifacts have been produced:
 | Top priorities clear | User can identify the #1 test to write next |
 | Sprint recommendations provided | (Standard+ depth) Actionable allocation per sprint |
 | State file updated | Phase = Strategy Complete; Stage 6 = complete |
-| Scorecard saved | `.tge/debt-scorecard.md` exists with full ranked list |
+| Scorecard saved | `.governance/test/debt-scorecard.md` exists with full ranked list |

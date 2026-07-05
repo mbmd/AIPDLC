@@ -5,7 +5,7 @@
 |-------|-------|
 | **Package** | AI-TGE (Test Governance Engine) |
 | **Phase Code** | `TGE` |
-| **Role** | Contributor — logs test-governance decisions to the shared spine; primary operational record remains `.tge/` |
+| **Role** | Contributor — logs test-governance decisions to the shared spine; primary operational record remains `.governance/test/` |
 | **Registers Contributed To** | 2 (Decision, Lessons) |
 | **Contract Reference** | Management Framework Contract v1.2.0 + Multi-Project Output & State Contract v1.0.0 |
 
@@ -13,22 +13,22 @@
 
 ## Purpose
 
-AI-TGE's primary record is its own `.tge/` folder (test register, coverage reports, debt scorecard, defect log). That remains unchanged — it is the **detailed test-governance operational record**.
+AI-TGE's primary record is its own `.governance/test/` folder (test register, coverage reports, debt scorecard, defect log). That remains unchanged — it is the **detailed test-governance operational record**.
 
-This guide defines when and how AI-TGE also writes **summary governance entries** to the shared project spine. The spine entries are the human-readable, cross-phase governance record; `.tge/` is the detailed test-specific record.
+This guide defines when and how AI-TGE also writes **summary governance entries** to the shared project spine. The spine entries are the human-readable, cross-phase governance record; `.governance/test/` is the detailed test-specific record.
 
 ---
 
 ## What AI-TGE Logs to the Spine (and What It Does NOT)
 
-| Logs to Spine (summary, human-governance) | Stays in `.tge/` (detail, operational) |
+| Logs to Spine (summary, human-governance) | Stays in `.governance/test/` (detail, operational) |
 |-------------------------------------------|----------------------------------------|
 | `TGE-XYZ-D-1: Test strategy finalized — pyramid model, 80% coverage target` | Full `test-strategy.md` document |
 | `TGE-XYZ-D-2: Risk acceptance — module X deliberately untested (low blast radius)` | Debt scorecard entry + risk score |
 | `TGE-XYZ-D-3: Brownfield assessment — 45% existing coverage, 23 gaps identified` | Complete brownfield gap map |
 | `TGE-XYZ-L-1: Architecture reconciliation added 8 tests — reconcile earlier next time` | Register delta details |
 
-**Rule of thumb:** if a human PM reading the Decision Log would care about it as a *project governance decision* → it goes in the spine. If it's a test register entry, coverage calculation, or risk score → it stays in `.tge/`.
+**Rule of thumb:** if a human PM reading the Decision Log would care about it as a *project governance decision* → it goes in the spine. If it's a test register entry, coverage calculation, or risk score → it stays in `.governance/test/`.
 
 ---
 

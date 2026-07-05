@@ -9,7 +9,7 @@ ownership: generated
 # Error Handling & Resilience Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate error handling and resilience steering files
-> in the target project's `.kiro/steering/` folder. These templates encode error response patterns,
+> in the target project's `rules/` folder. These templates encode error response patterns,
 > result types, exception strategy, and resilience pipelines derived from `error-handling.md`
 > and (if present) `resilience-standards.md`.
 
@@ -17,7 +17,7 @@ ownership: generated
 
 ## error-handling.md (Always)
 
-**Generates**: `.kiro/steering/error-handling.md`
+**Generates**: `rules/error-handling.md`
 **Derived From**: error-handling.md + api-standards.md + tech-stack.md
 
 ```markdown
@@ -58,7 +58,7 @@ inclusion: always
 
 ## resilience-standards.md (Conditional — IF distributed system or >3 integrations)
 
-**Generates**: `.kiro/steering/resilience-standards.md`
+**Generates**: `rules/resilience-standards.md`
 **Condition**: Generated IF `resilience-standards.md` exists in workspace OR architecture has external integrations
 **Derived From**: resilience-standards.md + integration architecture
 

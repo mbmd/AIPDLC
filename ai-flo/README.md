@@ -100,8 +100,8 @@ AI-FLO is part of **AIFLC** (AI Full Life Cycle). It sits on the **edge** betwee
 See `setup/INSTALL.md` for full multi-platform installation instructions.
 
 **Quick start (Kiro):**
-1. Copy `ai-flo-rules/` to your workspace `.kiro/steering/`
-2. Copy `ai-flo-rule-details/` alongside it
+1. Copy `ai-flo-rules/` and `ai-flo-rule-details/` into the uniform home `.aiflc/pdlc/`
+2. Copy `session-orchestrator.md` into `.kiro/steering/` (the only always-loaded file; it `Read`s the core on demand)
 3. Start a session — AI-FLO activates when you request routing operations
 
 ---

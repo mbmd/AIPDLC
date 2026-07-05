@@ -24,10 +24,10 @@ This `.governance/` folder contains the automated compliance engine for this pro
 ## How It Works (3 Mechanisms)
 
 ### 1. Steering Files (Preventive — Before Code)
-`.kiro/steering/` files are loaded into Kiro's context automatically. Rules encoded as steering become Kiro's default behavior — violations never get created.
+`rules/` files are loaded into Kiro's context automatically. Rules encoded as steering become Kiro's default behavior — violations never get created.
 
 ### 2. Hooks (Detective — On Events)
-`.kiro/hooks/*.json` fire on IDE events. When triggered, they check specific rules and warn if violations are detected. Most hooks are non-blocking (warn only).
+`.governance/hooks/*.json` fire on IDE events. When triggered, they check specific rules and warn if violations are detected. Most hooks are non-blocking (warn only).
 
 ### 3. Audit Agent (Corrective — On Demand)
 Trigger "Full Compliance Audit" to scan the entire project against all applicable rules. Produces a scored report with remediation recommendations.
@@ -48,7 +48,7 @@ Hooks fire automatically based on IDE events. You'll see warnings ONLY when some
 3. Fix the issue OR request an exception (see below)
 
 **If hooks are too noisy:**
-See `.kiro/hooks/ENFORCEMENT-GUIDE.md` for which hooks to disable first (🟡 Advisory → remove first).
+See `.governance/hooks/ENFORCEMENT-GUIDE.md` for which hooks to disable first (🟡 Advisory → remove first).
 
 ---
 
@@ -98,8 +98,8 @@ The audit agent will:
 | `.governance/rules/*.md` | All compliance rules (what must be true) |
 | `.governance/agents/compliance-audit-agent.md` | How the audit works |
 | `.governance/compliance-log/` | Audit trail (events, exceptions, remediations) |
-| `.kiro/hooks/*.json` | Active enforcement hooks |
-| `.kiro/hooks/ENFORCEMENT-GUIDE.md` | Which hooks to add/remove by tier |
+| `.governance/hooks/*.json` | Active enforcement hooks |
+| `.governance/hooks/ENFORCEMENT-GUIDE.md` | Which hooks to add/remove by tier |
 | `.compliance-state.json` | Tier tracking, readiness, score history |
 | `management_framework/dashboards/compliance-dashboard.md` | Visual compliance overview |
 

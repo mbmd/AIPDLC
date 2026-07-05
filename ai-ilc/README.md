@@ -131,8 +131,8 @@ See `setup/INSTALL.md` for step-by-step instructions.
 
 ### Manual Setup
 
-1. Copy `ai-ilc-rules/core-workflow.md` to your project's `.kiro/steering/ai-ilc-rules/` folder
-2. Copy `ai-ilc-rule-details/` to your project's `.kiro/ai-ilc-rule-details/` folder (or adjacent to your steering)
+1. Copy `ai-ilc-rules/` and `ai-ilc-rule-details/` into the uniform home `.aiflc/pdlc/`
+2. Copy `session-orchestrator.md` into `.kiro/steering/` (the only always-loaded file; it `Read`s the core on demand)
 3. Start a conversation with: "I have an idea"
 
 ### Standalone (No AI-* Family)

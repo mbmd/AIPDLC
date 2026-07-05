@@ -11,7 +11,7 @@ The step-by-step orchestration for **Mode 3: Brownfield Overlay** — layering g
 
 ## When to Use
 
-Mode 3 is for existing codebases that were built WITHOUT AI-DWG governance. The codebase has code, possibly its own conventions, but no `.kiro/steering/` files (or only partial ones). The goal: layer governance and steering onto an existing project WITHOUT disturbing existing code, configs, or team conventions.
+Mode 3 is for existing codebases that were built WITHOUT AI-DWG governance. The codebase has code, possibly its own conventions, but no `rules/` files (or only partial ones). The goal: layer governance and steering onto an existing project WITHOUT disturbing existing code, configs, or team conventions.
 
 **Typical scenarios:**
 - Team has a running project and wants to adopt AI-DWG governance retroactively
@@ -35,7 +35,7 @@ Mode 3 is for existing codebases that were built WITHOUT AI-DWG governance. The 
 | 1 | Where is the Architecture Package? | AP path for deriving steering content | Ask user (no default) |
 | 2 | Do you have existing conventions I should respect? | Identify README, CONTRIBUTING, etc. that should NOT be overwritten | Auto-detect existing files |
 | 3 | Should I generate folder structure? | Brownfield = code already exists; usually NO | No (skip source folders) |
-| 4 | Any existing `.kiro/steering/` files to preserve? | Partial overlay scenario | Auto-detect and preserve |
+| 4 | Any existing `rules/` files to preserve? | Partial overlay scenario | Auto-detect and preserve |
 | 5 | Merge or skip config files (.gitignore, CODEOWNERS)? | Respect vs. enhance existing configs | Merge (additive) |
 
 ---
@@ -47,7 +47,7 @@ STEP 1: DETECT EXISTING — Scan Workspace State
 ───────────────────────────────────────────────
 Scan the target workspace and catalog what exists:
 • Source code folders (DO NOT modify)
-• Existing.kiro/steering/ files (preserve; fill gaps only)
+• Existing rules/ files (preserve; fill gaps only)
 • Existing config files (.gitignore,.editorconfig, CODEOWNERS, docker-compose.yml)
 • Existing operational docs (README.md, CONTRIBUTING.md, etc.)
 • Existing conventions (detect from code: naming patterns, folder structure, test locations)
@@ -69,7 +69,7 @@ Same mapping rules as Mode 1, with these OVERRIDES:
 
 | Category | Mode 1 Behavior | Mode 3 Override |
 |----------|----------------|-----------------|
-| Steering files (.kiro/steering/) | Generate all | Generate ALL (steering doesn't conflict with code) |
+| Steering files (rules/) | Generate all | Generate ALL (steering doesn't conflict with code) |
 | Source folders | Create from C4 L3 | SKIP — code already exists |
 |.gitignore | Generate fresh | MERGE — add missing entries, preserve existing |
 |.editorconfig | Generate fresh | SKIP if exists; generate if missing |
@@ -86,7 +86,7 @@ Same mapping rules as Mode 1, with these OVERRIDES:
 | Planning templates | Generate fresh | Generate (new directory — won't conflict) |
 | management_framework/ | Generate fresh | **Spine-aware:** detect marker (`MANAGEMENT_FRAMEWORK.md`). If spine exists → append `DWG-*` entries. If missing → generate. If non-conforming (no marker) → add marker + Phase columns non-destructively. |
 
-**Key rule:** Steering files are ALWAYS generated (they live in.kiro/steering/ which is unlikely to have existing content in a non-AI-DWG workspace). Everything else respects existing files.
+**Key rule:** Steering files are ALWAYS generated (they live in rules/ which is unlikely to have existing content in a non-AI-DWG workspace). Everything else respects existing files.
 
 Also load: mapping/brownfield-to-steering.md (for brownfield-specific conditional steering)
 
@@ -119,7 +119,7 @@ For each config file that exists AND AI-DWG wants to modify:
 STEP 5: GENERATE BROWNFIELD-SPECIFIC CONDITIONAL
 ─────────────────────────────────────────────────
 IF `adlc-state.md` shows `Input Mode: Brownfield`:
-• Generate `.kiro/steering/brownfield-patterns.md` (conditional steering file)
+• Generate `rules/brownfield-patterns.md` (conditional steering file)
 • Content: characterization test rules, strangler-fig boundaries, legacy API compatibility, data migration guardrails
 • Derived from: AP Integration Architecture (legacy patterns) + Brownfield Strategy ADR
 
@@ -187,7 +187,7 @@ The workspace now has governance steering. Existing code and conventions are unt
 |------|-------------|
 | **Never modify source code** | Mode 3 ONLY touches.kiro/, configs, and docs — never source files |
 | **Never overwrite existing docs** | If README.md, CONTRIBUTING.md, etc. exist, respect them |
-| **Steering files always generated** |.kiro/steering/ is AI-DWG's domain — always create (won't conflict with code) |
+| **Steering files always generated** | rules/ is AI-DWG's domain — always create (won't conflict with code) |
 | **Config merges are additive** | Only ADD entries; never remove or modify existing config content |
 | **Respect existing conventions** | If the team has patterns (naming, folder structure), steering should acknowledge not contradict them |
 | **Ask before generating structure** | Source folders are NEVER created in Mode 3 (code already exists) |

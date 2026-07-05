@@ -12,7 +12,7 @@ The orchestration logic for installing the AI-DWG governance agent into the dest
 | Artifact | Destination | Action |
 |----------|-------------|--------|
 | `workspace-integrity-agent.md` | `.kiro/agents/` | Copy from `templates/agents/` |
-| Shortcut rules block | `.kiro/steering/workspace-rules.md` | Append `<!-- BEGIN AI-DWG AGENT SHORTCUTS -->` block (or replace if exists) |
+| Shortcut rules block | `rules/workspace-rules.md` | Append `<!-- BEGIN AI-DWG AGENT SHORTCUTS -->` block (or replace if exists) |
 | Agent registry entries | `.governance/AGENT_REGISTRY.md` | Create file if absent; append AI-DWG entries if exists |
 | Agent guide section | `.governance/AGENT-GUIDE.md` | Create file if absent; append AI-DWG section if exists |
 
@@ -20,7 +20,7 @@ The orchestration logic for installing the AI-DWG governance agent into the dest
 
 1. **Agent file:** Copy `templates/agents/workspace-integrity-agent.md` to `.kiro/agents/workspace-integrity-agent.md`. Populate `{version}` with current AI-DWG version and `{ISO-date}` with today's date.
 
-2. **Shortcut block:** Check `.kiro/steering/workspace-rules.md` for `<!-- BEGIN AI-DWG AGENT SHORTCUTS -->` marker:
+2. **Shortcut block:** Check `rules/workspace-rules.md` for `<!-- BEGIN AI-DWG AGENT SHORTCUTS -->` marker:
    - If found → replace the block (between BEGIN and END markers)
    - If not found → append the block from `templates/agents/shortcut-rules-block.md`
 

@@ -32,6 +32,24 @@ A good output from this activity sounds like:
 
 ## Detection Methods (Ordered by Preference)
 
+### Method 0: Manifest Baseline-Version Change (Primary, Manifest-Driven)
+
+The most reliable trigger: compare `manifest.baselineVersion` against the version GCE last derived against (persisted in `.compliance-state.json`).
+
+```
+Read .governance/workspace-manifest.yaml → baselineVersion (e.g., v4)
+Read .compliance-state.json → lastDerivedBaselineVersion (e.g., v3)
+
+IF manifest.baselineVersion > lastDerivedBaselineVersion:
+  → DWG re-baselined since last derivation. Re-derive.
+  → Read the baseline disposition ledger (files.baselineManifest) to see WHAT changed
+    (which governed elements were added/modified/retired → which rules/ files changed)
+  → Selective re-derivation on the affected rules only
+  → Update lastDerivedBaselineVersion = manifest.baselineVersion
+```
+
+A version bump is the authoritative signal that the governed surface changed. The ledger tells GCE precisely which elements moved, so re-derivation stays selective (not full).
+
 ### Method 1: AI-DWG Downstream Signal (Best)
 
 AI-DWG sends a structured signal after reconciliation:
@@ -42,7 +60,7 @@ AI-DWG sends a structured signal after reconciliation:
    To: AI-GCE
    Event: steering-files-updated
    Workspace root: {path}
-   Affected files: [list of changed .kiro/steering/ files]
+   Affected files: [list of changed rules/ files]
    Action required: Re-derive compliance for changed files
 ```
 
@@ -58,7 +76,7 @@ Use the files the user names. No scanning needed.
 
 If no signal and user doesn't specify:
 1. Read `.compliance-state.json` → `lastAudit` timestamp
-2. Scan `.kiro/steering/*.md` for files modified AFTER that timestamp
+2. Scan `rules/*.md` for files modified AFTER that timestamp
 3. Also scan: `TEAM_AGREEMENTS.md`, `CODEOWNERS`, `DEFINITION_OF_DONE.md`
 4. Present findings to user for confirmation before proceeding
 
@@ -121,7 +139,7 @@ When a conditional steering file is CREATED (didn't exist before):
 ```
 NEW: multi-tenancy.md created
   → GENERATE new rule file: .governance/rules/tenant-isolation.md
-  → GENERATE new hook: .kiro/hooks/tenant-isolation-check.json
+  → GENERATE new hook: .governance/hooks/tenant-isolation-check.json
   → UPDATE: knowledge-map.md (new entries)
   → UPDATE: COMPLIANCE_README.md (new rule category section)
   → UPDATE: ENFORCEMENT-GUIDE.md (new hook listed)
@@ -137,7 +155,7 @@ When a conditional steering file is DELETED:
 ```
 REMOVED: multi-tenancy.md deleted
   → REMOVE: .governance/rules/tenant-isolation.md
-  → REMOVE: .kiro/hooks/tenant-isolation-check.json
+  → REMOVE: .governance/hooks/tenant-isolation-check.json
   → UPDATE: knowledge-map.md (remove entries)
   → UPDATE: COMPLIANCE_README.md (remove section)
   → UPDATE: ENFORCEMENT-GUIDE.md (remove hook listing)
@@ -163,7 +181,7 @@ Impact:
 │ Affected Artifact               │ Action Required                        │
 ├─────────────────────────────────┼────────────────────────────────────────┤
 │ .governance/rules/{file}        │ Re-derive rules from updated steering  │
-│ .kiro/hooks/{file}              │ Update file patterns / rule references │
+│ .governance/hooks/{file}              │ Update file patterns / rule references │
 │ NEW: {file}                     │ Generate (new conditional activated)   │
 │ REMOVE: {file}                  │ Delete (conditional deactivated)       │
 └─────────────────────────────────┴────────────────────────────────────────┘

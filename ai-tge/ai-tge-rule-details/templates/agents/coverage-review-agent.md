@@ -28,7 +28,7 @@ Call this agent **during the Observation phase** — after coverage reports are 
 
 - **Trigger:** Type `CVR__` in the chat prompt
 - **Cadence:** After each coverage report generation (Stage 9); at sprint boundaries; before release gates
-- **Process point:** After Stage 9 (Coverage Reporting) completes and `.tge/coverage-report.md` is updated
+- **Process point:** After Stage 9 (Coverage Reporting) completes and `.governance/test/coverage-report.md` is updated
 
 **Concrete examples:**
 - "I've generated a coverage report" → call `CVR__` to validate accuracy
@@ -55,14 +55,14 @@ Call this agent **during the Observation phase** — after coverage reports are 
 
 If you skipped `CVR__` and coverage decisions were already made:
 
-1. Run `CVR__` now — it reads current `.tge/` state and validates against the latest coverage report
+1. Run `CVR__` now — it reads current `.governance/test/` state and validates against the latest coverage report
 2. For each issue found:
    - **Inflated coverage:** Recalculate excluding Deprecated/Overridden; communicate corrected % to team
    - **Missing gap detection:** Run gap analysis against current register; flag new entries added since last review
    - **Stale debt scores:** Trigger Stage 12 (Debt Reassessment) to re-score all missing tests with current factors
    - **Register/report drift:** Regenerate coverage report from current register state; diff against published version
 3. If a release decision was made on bad data:
-   - Document the discrepancy in `.tge/defect-log.md` as a process finding (not a code defect)
+   - Document the discrepancy in `.governance/test/defect-log.md` as a process finding (not a code defect)
    - Assess whether the actual coverage gap poses release risk
    - Communicate correction to decision-makers with revised risk assessment
 
@@ -110,7 +110,7 @@ If you skipped `CVR__` and coverage decisions were already made:
 
 **Date:** {ISO-date}
 **Package:** AI-TGE v{version}
-**Scope:** .tge/coverage-report.md + .tge/debt-scorecard.md + .tge/test-register.md
+**Scope:** .governance/test/coverage-report.md + .governance/test/debt-scorecard.md + .governance/test/test-register.md
 
 ### Summary
 | Category | Checks | Pass | Fail |

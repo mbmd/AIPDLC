@@ -2,7 +2,7 @@
 ---
 generatedBy: AI-TGE
 generatedVersion: "{version}"
-source: ".tge/coverage-report.md, .tge/debt-scorecard.md, .tge/defect-log.md"
+source: ".governance/test/coverage-report.md, .governance/test/debt-scorecard.md, .governance/test/defect-log.md"
 generatedOn: "{generation-date}"
 ownership: generated
 projectId: "{project_id}"
@@ -23,7 +23,7 @@ The TGE observation engine populates variables after each coverage/debt/defect c
 ---
 generatedBy: AI-TGE
 generatedVersion: {version}
-source: .tge/coverage-report.md, .tge/debt-scorecard.md, .tge/defect-log.md
+source: .governance/test/coverage-report.md, .governance/test/debt-scorecard.md, .governance/test/defect-log.md
 generatedOn: {date}
 ownership: generated
 projectId: {project_id}
@@ -168,10 +168,10 @@ When AI-TGE renders this dashboard:
 
 | Field | Source File | Path |
 |-------|-----------|------|
-| Coverage metrics | Coverage Report | `.tge/coverage-report.md` |
-| Debt items | Debt Scorecard | `.tge/debt-scorecard.md` |
-| Defect list | Defect Log | `.tge/defect-log.md` |
-| Risk scores | Test Register | `.tge/test-register.md` |
+| Coverage metrics | Coverage Report | `.governance/test/coverage-report.md` |
+| Debt items | Debt Scorecard | `.governance/test/debt-scorecard.md` |
+| Defect list | Defect Log | `.governance/test/defect-log.md` |
+| Risk scores | Test Register | `.governance/test/test-register.md` |
 | AP version | Architecture Package | `{ap-path}/` (detected by marker) |
 
 ## Refresh Trigger

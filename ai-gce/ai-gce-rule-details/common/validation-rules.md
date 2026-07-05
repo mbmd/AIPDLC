@@ -68,8 +68,8 @@ Every AI-GCE run (Mode 1) MUST produce these. Missing = validation failure.
 
 | Category | Artifacts | Check |
 |----------|-----------|-------|
-| Hooks (core set) | session-discipline, pre-code-spec-check, post-task-governance, security-gate-check, naming-check, module-boundary-check, migration-safety, api-contract-check, coverage-check, pre-pr-checklist, periodic-audit, sensitive-data-check, domain-layer-purity | Each .json file exists in `.kiro/hooks/` |
-| Hook enforcement guide | ENFORCEMENT-GUIDE.md | File exists in `.kiro/hooks/` |
+| Hooks (core set) | session-discipline, pre-code-spec-check, post-task-governance, security-gate-check, naming-check, module-boundary-check, migration-safety, api-contract-check, coverage-check, pre-pr-checklist, periodic-audit, sensitive-data-check, domain-layer-purity | Each .json file exists in `.governance/hooks/` |
+| Hook enforcement guide | ENFORCEMENT-GUIDE.md | File exists in `.governance/hooks/` |
 | Rules (always) | architecture-compliance, api-first-compliance, security-compliance, data-governance, module-boundaries, naming-conventions, error-handling-compliance, logging-compliance, sensitive-data-protection, domain-context-enforcement, phase-gates, session-governance | Each .md file exists in `.governance/rules/` |
 | Rules (tier-gated) | governance-checklist, role-isolation, team-topology, sprint-governance, pr-governance, cicd-gates, devops-deployment, steering-governance, compliance-log-governance | Generated but activation controlled by tier |
 | Agents | compliance-audit-agent.md, project-init-agent.md | Both exist in `.governance/agents/` |
@@ -104,7 +104,7 @@ V1: COMPLETENESS CHECK
 ### Rules
 
 1. Every rule in `.governance/rules/*.md` MUST have one of:
-   - `Derived From: .kiro/steering/{file} → {section}` (steering-derived)
+   - `Derived From: rules/{file} → {section}` (steering-derived)
    - `Derived From: Built-in Baseline → {baseline rule name}` (methodology floor)
    - `Derived From: {operational doc} → {section}` (enrichment source)
 
@@ -117,7 +117,7 @@ V1: COMPLETENESS CHECK
 | Check | Pass Criteria |
 |-------|--------------|
 | Every rule has a `Derived From` field | No rule without stated source |
-| Steering-derived rules reference existing files | Every `.kiro/steering/{file}` reference exists |
+| Steering-derived rules reference existing files | Every `rules/{file}` reference exists |
 | Built-in baseline rules match the 10 declared baselines | No baseline rule that isn't in the declared list |
 | Tier tags are valid | Every rule has `Tier: 1|2|3` and it matches the expected category tier |
 
@@ -126,7 +126,7 @@ V1: COMPLETENESS CHECK
 ```markdown
 ### GOV-ROLE-004: Session Owner ≠ Reviewer
 Tier: 2
-Derived From: Built-in Baseline → "Author ≠ Approver" + .kiro/steering/role-isolation.md → "Segregation of Duties" table
+Derived From: Built-in Baseline → "Author ≠ Approver" + rules/role-isolation.md → "Segregation of Duties" table
 ```
 
 This shows BOTH sources: baseline provides the universal principle; steering provides the project-specific detail.
@@ -141,14 +141,14 @@ This shows BOTH sources: baseline provides the universal principle; steering pro
 
 | Check | Artifacts Involved | What to Verify |
 |-------|-------------------|----------------|
-| Hook rule references | `.kiro/hooks/*.json` prompts vs. `.governance/rules/*.md` | Every rule ID cited in a hook prompt exists in a rule file |
-| Hook file patterns vs. tech stack | `.kiro/hooks/*.json` patterns vs. `tech-stack.md` | Patterns use correct extensions for the stated technology |
-| Hook file patterns vs. real folders | `.kiro/hooks/*.json` patterns vs. actual filesystem | Patterns reference paths that actually exist |
+| Hook rule references | `.governance/hooks/*.json` prompts vs. `.governance/rules/*.md` | Every rule ID cited in a hook prompt exists in a rule file |
+| Hook file patterns vs. tech stack | `.governance/hooks/*.json` patterns vs. `tech-stack.md` | Patterns use correct extensions for the stated technology |
+| Hook file patterns vs. real folders | `.governance/hooks/*.json` patterns vs. actual filesystem | Patterns reference paths that actually exist |
 | Rule severity consistency | Rules with same severity across categories | 🔴 Critical used consistently (not inflated) |
 | Tier assignments | Rules vs. tier model | GOV-ROLE rules all say Tier 2 (not mixed 1 and 2) |
 | Phase gate rules vs. DoD | phase-gates.md criteria vs. DEFINITION_OF_DONE.md | No contradiction between what gates require and what DoD defines |
 | COMPLIANCE_README vs. actual output | Description sections vs. generated artifacts | README describes what actually exists |
-| ENFORCEMENT-GUIDE vs. actual hooks | Listed hooks vs. `.kiro/hooks/` contents | All listed hooks exist; no unlisted hooks |
+| ENFORCEMENT-GUIDE vs. actual hooks | Listed hooks vs. `.governance/hooks/` contents | All listed hooks exist; no unlisted hooks |
 | State file schema | .compliance-state.json structure vs. audit agent expectations | State file has all fields the audit agent reads |
 
 ### Consistency Check Format
@@ -175,7 +175,7 @@ V3: CONSISTENCY CHECK
 
 | Conditional Artifact | Trigger | Verification |
 |---------------------|---------|--------------|
-| Tenant isolation rules + hook | `multi-tenancy.md` exists in `.kiro/steering/` | Check filesystem |
+| Tenant isolation rules + hook | `multi-tenancy.md` exists in `rules/` | Check filesystem |
 | API versioning rules | `api-versioning.md` exists | Check filesystem |
 | Resilience rules | `resilience-standards.md` exists | Check filesystem |
 | Tracing rules | `observability-tracing.md` exists | Check filesystem |
@@ -281,13 +281,13 @@ V6: ENFORCEABLE CHECK
 
 ### The Rule
 
-Total lines across ALL `inclusion: always` files in `.kiro/steering/` MUST NOT exceed 300 lines. AI-GCE's Step 4b can generate additional steering files — these MUST be `fileMatch` only (not `always`).
+Total lines across ALL `inclusion: always` files in `rules/` MUST NOT exceed 300 lines. AI-GCE's Step 4b can generate additional steering files — these MUST be `fileMatch` only (not `always`).
 
 ### Checks
 
 | Check | Pass Criteria |
 |-------|--------------|
-| AI-GCE generated steering uses fileMatch | Any `compliance-*.md` files in `.kiro/steering/` have `inclusion: fileMatch` in front-matter |
+| AI-GCE generated steering uses fileMatch | Any `compliance-*.md` files in `rules/` have `inclusion: fileMatch` in front-matter |
 | Total always-inclusion budget | Sum lines of all `inclusion: always` files ≤ 300 |
 | No always-inclusion from AI-GCE | AI-GCE NEVER generates `inclusion: always` steering (those are AI-DWG's domain) |
 
@@ -466,7 +466,7 @@ Beyond the V1–V10 validation pipeline above, AI-GCE enforces these completion 
 
 | Checkpoint | Requirement | Failure Action |
 |------------|-------------|---------------|
-| Workspace marker found | `.kiro/steering/workspace-rules.md` exists | Stop; ask user for workspace path |
+| Workspace marker found | `rules/workspace-rules.md` exists | Stop; ask user for workspace path |
 | Technology identified | `tech-stack.md` readable and has technology entry | Warn; use generic file patterns as fallback |
 | Module paths confirmed | `module-structure.md` readable and has module paths | Warn; scan actual folder structure as fallback |
 | Hooks use real paths | All hook file patterns match actual workspace structure | Fix before completing |

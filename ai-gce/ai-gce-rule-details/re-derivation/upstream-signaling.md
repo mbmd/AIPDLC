@@ -20,13 +20,13 @@ During THIS activity, ALSO adopt the mindset of a **Systems Engineer**. This doe
 
 ### Anti-Patterns for This Activity
 - Do NOT assume signals persist across sessions (they don't — use timestamp fallback for cross-session scenarios)
-- Do NOT enter Mode 2 when AI-GCE has never run on this workspace (empty .kiro/hooks/ = Mode 1 territory)
+- Do NOT enter Mode 2 when AI-GCE has never run on this workspace (empty .governance/hooks/ = Mode 1 territory)
 - Do NOT modify .compliance-state.json score/tier fields during re-derivation (only audit updates those)
 
 ### Quality Check
 A good output from this activity sounds like:
 - "Signal received: steering-files-updated, affected=[api-standards.md, testing-strategy.md]. Entering Mode 2. Impact: 2 rule files + 2 hooks to re-derive. Logging REDERIVATION event with rulesUpdated:2, hooksUpdated:2."
-- "Edge case: signal says 'workspace-generated' but .kiro/hooks/ is empty. Correct response: enter Mode 1 (full generation), not Mode 2. This is first-time AI-GCE activation."
+- "Edge case: signal says 'workspace-generated' but .governance/hooks/ is empty. Correct response: enter Mode 1 (full generation), not Mode 2. This is first-time AI-GCE activation."
 
 ---
 
@@ -40,7 +40,7 @@ AI-DWG emits this structured signal after any reconciliation:
    To: AI-GCE
    Event: {workspace-generated | steering-files-updated}
    Workspace root: {path}
-   Steering files: .kiro/steering/ ({n} files)
+   Steering files: rules/ ({n} files)
    Affected files: {list of changed steering file paths}
    Change type: {content-update | file-added | file-removed}
    Triggered by: {ADR reference or user action}
@@ -130,7 +130,7 @@ However: AI-GCE DOES log a `REDERIVATION` event in `compliance-log/events/{date}
 
 ## Edge Case: Signal Arrives But AI-GCE Hasn't Run Yet
 
-If AI-DWG signals "steering updated" but `.kiro/hooks/` is empty (AI-GCE was never run):
+If AI-DWG signals "steering updated" but `.governance/hooks/` is empty (AI-GCE was never run):
 - AI-GCE should enter **Mode 1 (Full Generation)** — not Mode 2
 - The signal means: "the workspace exists and is ready for compliance derivation"
 - This is the normal first-time trigger for AI-GCE in a chain workflow

@@ -150,7 +150,7 @@ AI-DWG is a one-shot generator, not a multi-session lifecycle. However:
 | Artifact | Purpose |
 |----------|---------|
 | `dwg-state.md` | Generation state + chain marker |
-| `.kiro/steering/*.md` | Prescriptive rules for the development workspace |
+| `rules/*.md` | Prescriptive rules for the development workspace |
 | `src/` or module folders | Source structure matching architecture containers/components |
 | `docs/` | Operational documents (README, onboarding, ADR index) |
 | Config files | CI/CD, linting, testing, environment configs |

@@ -2,7 +2,7 @@
 
 **Purpose:** Master registry of all knowledge documents for the AI-* Family — covering technical mechanics (HOW), operational practices (HOW TO), and impact rationale (WHY). Together these form the institutional knowledge base that serves builders, practitioners, and stakeholders.
 
-**Created:** 2026-06-11 | **Updated:** 2026-06-22
+**Created:** 2026-06-11 | **Updated:** 2026-07-05
 
 ---
 
@@ -41,6 +41,7 @@ How the AI-* packages function internally — their engines, modes, and behavior
 | 9 | [`HOW_TGE_TEST_GOVERNANCE_WORKS.md`](HOW_TGE_TEST_GOVERNANCE_WORKS.md) | AI-TGE | ✅ |
 | 10 | [`HOW_ILC_IDEA_LIFECYCLE_WORKS.md`](HOW_ILC_IDEA_LIFECYCLE_WORKS.md) | AI-ILC | ✅ |
 | 11 | [`HOW_POLC_PRODUCT_OWNERSHIP_WORKS.md`](HOW_POLC_PRODUCT_OWNERSHIP_WORKS.md) | AI-POLC | ✅ |
+| 117 | [`HOW_DFE_DATA_FABRIC_WORKS.md`](HOW_DFE_DATA_FABRIC_WORKS.md) | AI-DFE | ✅ |
 | 110 | [`HOW_PACKAGE_ARCHETYPES_WORK.md`](HOW_PACKAGE_ARCHETYPES_WORK.md) | Family-wide | ✅ |
 
 ---
@@ -95,6 +96,7 @@ How AI-GCE generates, validates, and enforces governance rules.
 | 32 | `HOW_COMPOUNDING_CORRECTION_LOOP_WORKS.md` | AI-GCE / AI-TGE | 💡 |
 | 33 | `HOW_DEPENDENCY_CVE_AWARENESS_WORKS.md` | AI-GCE | 💡 |
 | 34 | `HOW_GOVERNANCE_EFFECTIVENESS_BENCHMARK_WORKS.md` | AI-TGE / AI-GCE | 💡 |
+| 118 | [`HOW_DRIFT_INTAKE_WORKS.md`](HOW_DRIFT_INTAKE_WORKS.md) | AI-GCE + AI-FLO + AI-ADLC/POLC/UXD + AI-DWG | ✅ |
 
 ---
 
@@ -146,6 +148,7 @@ How practitioners apply the AI-* packages to accomplish real-world tasks — the
 | 56 | [`HOW_TO_USE_TEST_MODE.md`](HOW_TO_USE_TEST_MODE.md) | Family-wide | ✅ |
 | 115 | [`HOW_TO_SKIP_OR_REORDER_PACKAGES.md`](HOW_TO_SKIP_OR_REORDER_PACKAGES.md) | Family-wide | ✅ |
 | 116 | [`HOW_TO_USE_THE_DASHBOARD.md`](HOW_TO_USE_THE_DASHBOARD.md) | Family-wide (AIFLC-PDLC-Dashboard) | ✅ |
+| 119 | [`HOW_TO_RUN_THE_DATA_FABRIC.md`](HOW_TO_RUN_THE_DATA_FABRIC.md) | AI-DFE | ✅ |
 
 ---
 
@@ -219,6 +222,7 @@ Decision-timing guides for practitioners at a fork in the road — derived from 
 | 89 | [`WHEN_TO_TRIGGER_REDERIVATION.md`](WHEN_TO_TRIGGER_REDERIVATION.md) | Something changed — do I re-derive? | ✅ |
 | 90 | [`WHEN_TO_CUSTOMIZE_VS_USE_STEERING.md`](WHEN_TO_CUSTOMIZE_VS_USE_STEERING.md) | Edit the file or edit the source? | ✅ |
 | 91 | [`WHEN_TO_ACTIVATE_NEXT_GOVERNANCE_TIER.md`](WHEN_TO_ACTIVATE_NEXT_GOVERNANCE_TIER.md) | Ready to graduate tiers? | ✅ |
+| 120 | [`WHEN_TO_CONFORM_AMEND_OR_WAIVE_DRIFT.md`](WHEN_TO_CONFORM_AMEND_OR_WAIVE_DRIFT.md) | Drift detected — which disposition? | ✅ |
 
 ---
 
@@ -281,22 +285,22 @@ Consolidated lookup tables for specific reference data — instant answers witho
 
 | Category | Documents | ✅ Created | 📋 Planned | 💡 Future |
 |----------|:---------:|:----------:|:----------:|:---------:|
-| 1. Package Mechanics | 12 | 12 | 0 | 0 |
+| 1. Package Mechanics | 13 | 13 | 0 | 0 |
 | 2. Chain & Orchestration | 10 | 9 | 1 | 0 |
 | 3. Installation & Delivery | 5 | 3 | 0 | 2 |
-| 4. Governance & Compliance | 10 | 4 | 1 | 5 |
+| 4. Governance & Compliance | 11 | 5 | 1 | 5 |
 | 5. Versioning & Change | 3 | 0 | 2 | 1 |
 | 6. UX & Design | 3 | 1 | 0 | 2 |
-| 7. Operational Practices | 18 | 18 | 0 | 0 |
+| 7. Operational Practices | 19 | 19 | 0 | 0 |
 | 8. Impact & Rationale (WHY) | 16 | 16 | 0 | 0 |
 | 9. Design Patterns | 10 | 10 | 0 | 0 |
 | 10. Troubleshooting & Recovery | 5 | 5 | 0 | 0 |
-| 11. Decision Guides | 6 | 6 | 0 | 0 |
+| 11. Decision Guides | 7 | 7 | 0 | 0 |
 | 12. Artifact Anatomy | 4 | 4 | 0 | 0 |
 | 13. Lifecycle | 4 | 4 | 0 | 0 |
 | 14. Interactions | 4 | 4 | 0 | 0 |
 | 15. Reference Maps | 7 | 7 | 0 | 0 |
-| **TOTAL** | **117** | **103** | **4** | **10** |
+| **TOTAL** | **121** | **107** | **4** | **10** |
 
 ---
 
@@ -348,4 +352,4 @@ All planned knowledge docs for the four newest packages are now written (every b
 
 *Catalogue maintained by: Maheri | Created: 2026-06-11*
 
-*Knowledge Document | Created: 2026-06-11 | Updated: 2026-06-17 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-11 | Updated: 2026-07-05 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

@@ -23,32 +23,34 @@ The installer places package files in the correct location for your platform and
 ```
 your-workspace/
 ├── .kiro/
-│   ├── steering/
-│   │   └── pdlc/
-│   │       └── ai-ilc-rules/core-workflow.md   ← always-loaded steering (core)
+│   └── steering/
+│       └── session-orchestrator.md         ← the ONLY always-loaded file (routes to cores)
+├── .aiflc/
 │   └── pdlc/
-│       └── ai-ilc-rule-details/                ← on-demand rule details
-└── pdlc-ws/                                     ← AI-ILC OUTPUT lands here (created by installer)
+│       ├── ai-ilc-rules/core-workflow.md   ← core, read on demand by the orchestrator
+│       └── ai-ilc-rule-details/            ← rule details, read on demand by the core
+└── pdlc-ws/                                 ← AI-ILC OUTPUT lands here (created by installer)
 ```
 
-> **Kiro split:** the core file goes under `.kiro/steering/pdlc/` (Kiro auto-loads only from `steering/`); rule-details go under `.kiro/pdlc/` (read on-demand by the core file).
+> **The AIFLC model:** the session orchestrator is the only always-loaded file (it sits in Kiro's `.kiro/steering/` slot); the package core and its rule-details live together in the uniform home `.aiflc/pdlc/`, read on demand. The `.aiflc/pdlc/` layout is identical on every platform.
 
 ---
 
 ## Manual Install (Per Platform)
 
-If you prefer manual install, place the two artifacts at these locations (replace `<src>` with the path to the `ai-ilc` package source):
+If you prefer manual install, copy the package core to `.aiflc/pdlc/ai-ilc-rules/core-workflow.md` and the rule-details to `.aiflc/pdlc/ai-ilc-rule-details/` (identical on every platform), then place the **session orchestrator** — the only always-loaded file — in your platform's native slot:
 
-| Platform | Core file → | Rule-details → |
-|----------|-------------|----------------|
-| Kiro | `.kiro/steering/pdlc/ai-ilc-rules/core-workflow.md` | `.kiro/pdlc/ai-ilc-rule-details/` |
-| Amazon Q | `.amazonq/rules/pdlc/ai-ilc-rules/core-workflow.md` | `.amazonq/pdlc/ai-ilc-rule-details/` |
-| Cursor | `.cursor/rules/pdlc-ai-ilc-workflow.mdc` (prepend frontmatter: `---\ndescription: "AI-ILC"\nalwaysApply: true\n---`) | `.pdlc/ai-ilc-rule-details/` |
-| Cline | `.clinerules/pdlc-ai-ilc-core.md` | `.pdlc/ai-ilc-rule-details/` |
-| Claude Code | `CLAUDE_PDLC_AI_ILC.md` | `.pdlc/ai-ilc-rule-details/` |
-| Copilot | `.github/copilot-instructions-pdlc-ai-ilc.md` | `.pdlc/ai-ilc-rule-details/` |
+| Platform | Session orchestrator (always-loaded) → |
+|----------|----------------------------------------|
+| Kiro | `.kiro/steering/session-orchestrator.md` |
+| Amazon Q | `.amazonq/rules/pdlc/session-orchestrator.md` |
+| Cursor | `.cursor/rules/pdlc-session-orchestrator.mdc` (with `alwaysApply: true` frontmatter) |
+| Cline | `.clinerules/pdlc-session-orchestrator.md` |
+| Claude Code | root `CLAUDE.md` importing `@CLAUDE_PDLC_ORCHESTRATOR.md` |
+| Copilot | `.github/copilot-instructions.md` (orchestrator block) |
+| Codex | `AGENTS.md` (orchestrator block) |
 
-(Where the Claude Code filename uses the package code uppercased with hyphens as underscores, e.g. ai-ilc → AI_ILC.)
+The core (`core-workflow.md`) and `ai-ilc-rule-details/` are plain copies under `.aiflc/pdlc/` on every platform — there are no per-package `.mdc`, `.instructions.md`, or `CLAUDE_PDLC_AI_*` files anymore.
 
 ---
 
@@ -63,8 +65,8 @@ If you prefer manual install, place the two artifacts at these locations (replac
 
 ## Notes
 
-- The core file is always-loaded; rule-details load on demand.
-- AI-ILC coexists with other AI-* packages — each is family-scoped under `pdlc/`.
+- The session orchestrator is always-loaded; the package core and rule-details load on demand.
+- AI-ILC coexists with other AI-* packages — each is family-scoped under `.aiflc/pdlc/`.
 - Runtime output is written under `pdlc-ws/`, never at the workspace root.
 
 ---
@@ -87,7 +89,7 @@ After installation, these phrases activate the workflow:
 
 ### Custom Evaluation Rubric
 
-If your organization wants custom scoring criteria, create a steering file at `.kiro/steering/pdlc/ilc-evaluation-config.md` and define custom criteria there. AI-ILC's two-source model will use your criteria where provided and fall back to the built-in baseline where you're silent.
+If your organization wants custom scoring criteria, create a config file at `.aiflc/pdlc/ilc-evaluation-config.md` and define custom criteria there. AI-ILC's two-source model will use your criteria where provided and fall back to the built-in baseline where you're silent.
 
 ### Persona Steering (Optional)
 
@@ -101,29 +103,17 @@ AI-ILC includes a built-in **test mode** for capturing feedback (bugs, improveme
 
 ### Kiro IDE
 
-Test mode is **automatically installed** when the core rules are placed — `test-mode.md` is included with `inclusion: manual` frontmatter, meaning it only activates when you reference it.
+Test mode ships automatically with the package's rule-details — the file lives at `.aiflc/pdlc/ai-ilc-rule-details/common/test-mode.md` on every platform (Kiro included). Nothing extra is installed for Kiro.
 
-**To activate:** Type `#test-mode` in your chat prompt, or say "activate test mode".
+It is **not** auto-loaded and does **not** appear in Kiro's Steering panel — nothing under `.aiflc/` auto-loads.
 
-**To verify it's available:** Check the Steering Files panel — `test-mode` should appear under manual-inclusion files.
+**To activate:** tell the active package "enable test mode" (or "load test mode"). It reads `test-mode.md` from its rule-details home on demand and starts offering the optional feedback checkpoints.
 
-### Amazon Q Developer / Cursor / Cline / Claude Code / Copilot
+### Amazon Q Developer / Cursor / Cline / Claude Code / Copilot / Codex
 
-For non-Kiro platforms, test mode requires manually including the instructions:
+No manual copy needed — `test-mode.md` is installed with the package under `.aiflc/pdlc/ai-ilc-rule-details/common/`, the same on every platform.
 
-```powershell
-# Windows — copy test-mode steering alongside the core file
-Copy-Item "<src>\ai-ilc-rules\test-mode.md" "<your-rules-folder>\"
-```
-
-```bash
-# macOS/Linux
-cp <src>/ai-ilc-rules/test-mode.md <your-rules-folder>/
-```
-
-Then tell the AI: "I want to use test mode" — and it will follow the test mode instructions.
-
-> **Note:** On platforms without `inclusion: manual` support, `test-mode.md` loads alongside the core file. To avoid unwanted checkpoints, keep it in a separate location and only include it when you want test mode active.
+Activate it the same way: tell the AI "enable test mode". It reads `test-mode.md` from the rule-details home on demand and starts offering the optional feedback checkpoints.
 
 ### What Test Mode Does
 

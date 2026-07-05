@@ -23,7 +23,7 @@ docker compose up -d
 
 **Style:** {architecture style}
 **Stack:** {primary technology}
-**Docs:** See `PROJECT_INSTRUCTIONS.md` for full development guide
+**Docs:** See `info/PROJECT_INSTRUCTIONS.md` for full development guide
 
 ## Project Structure
 
@@ -48,7 +48,7 @@ docker compose up -d
 
 ## Documentation
 
-- Architecture rules: `.kiro/steering/`
+- Architecture rules: `rules/`
 - Architecture decisions: `{adr-path}`
 - API docs: `{api-docs-url}` (when running)
 

@@ -2,6 +2,9 @@
 # Packages are pure Markdown — nothing here needs compiling. This ignores
 # OS/editor noise and any runtime output a user may generate inside a clone.
 
+# --- Ignore this file itself ---
+.gitignore
+
 # --- OS / editor noise ---
 .DS_Store
 Thumbs.db

@@ -5,7 +5,7 @@
 
 Transforms quantified performance requirements (p95/p99 SLOs, throughput targets) from Quality Attributes into a steering file governing response time budgets, measurement, and optimization rules.
 
-**Output:** `.kiro/steering/performance-standards.md`
+**Output:** `rules/performance-standards.md`
 
 **Condition:** Generate ONLY IF Architecture Vision's Quality Attributes include specific latency targets (p95/p99 SLOs) or throughput numbers.
 

@@ -196,7 +196,7 @@ I've read your architecture sources and identified the following testable commit
 
 **Gaps flagged:** {n} items needing clarification
 
-**Full inventory saved to:** `.tge/architecture-commitments.md` (working document — not final output)
+**Full inventory saved to:** `.governance/test/architecture-commitments.md` (working document — not final output)
 
 ---
 
@@ -219,8 +219,8 @@ I've read your architecture sources and identified the following testable commit
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| Architecture Commitment Inventory | `.tge/architecture-commitments.md` | Working document — input for Stage 3 derivation |
-| Updated state file | `.tge/tge-state.md` | Stage 2 complete; commitment count recorded |
+| Architecture Commitment Inventory | `.governance/test/architecture-commitments.md` | Working document — input for Stage 3 derivation |
+| Updated state file | `.governance/test/tge-state.md` | Stage 2 complete; commitment count recorded |
 
 ---
 

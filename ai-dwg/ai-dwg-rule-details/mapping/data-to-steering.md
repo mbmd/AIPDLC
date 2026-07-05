@@ -5,7 +5,7 @@
 
 This mapping rule transforms the **Data Architecture & Schema** document (AP artifact) into a steering file that governs all database access, schema design, migrations, caching, and data lifecycle decisions.
 
-**Output:** `.kiro/steering/database-rules.md`
+**Output:** `rules/database-rules.md`
 
 ---
 
@@ -294,7 +294,7 @@ inclusion: always
 | DB-ES-06 | Event versioning: {from AP — e.g., upcasting strategy for schema evolution} |
 | DB-ES-07 | CQRS separation: write side (commands → events) and read side (projections) use separate models |
 
-NOTE: Full event sourcing rules are in `.kiro/steering/event-sourcing.md` (conditional file).
+NOTE: Full event sourcing rules are in `rules/event-sourcing.md` (conditional file).
 
 <!-- end: AP-sourced -->
 

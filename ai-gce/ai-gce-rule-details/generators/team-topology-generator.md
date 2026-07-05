@@ -50,7 +50,7 @@ A good output from this activity sounds like:
 | GOV-TT-004 | Stream teams can deploy independently (no circular dependencies) | module-structure.md dependency graph |
 | GOV-TT-005 | Cognitive load limit: max 2-3 modules per team | CODEOWNERS ownership count per team |
 | GOV-TT-006 | API contracts owned by producing team | CODEOWNERS: contracts/ path ownership |
-| GOV-TT-007 | Steering file ownership documented and enforced | CODEOWNERS: .kiro/steering/ entries |
+| GOV-TT-007 | Steering file ownership documented and enforced | CODEOWNERS: rules/ entries |
 
 ---
 

@@ -25,7 +25,7 @@ During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Speciali
 
 ### Quality Check
 A good output from this activity sounds like:
-- "GOV-STEER-005: All steering rules pass Five Qualities test (specific, actionable, verifiable, scoped, exemplified). Checked by steering-quality-check.json (agentStop, Tier B). Pattern: `.kiro/steering/**/*.md`."
+- "GOV-STEER-005: All steering rules pass Five Qualities test (specific, actionable, verifiable, scoped, exemplified). Checked by steering-quality-check.json (agentStop, Tier B). Pattern: `rules/**/*.md`."
 - "GOV-STEER-001: Always-included files total 247/300 lines. Budget healthy. No AI-GCE generated files use always-inclusion (fileMatch only, as required)."
 
 ---
@@ -58,7 +58,7 @@ A good output from this activity sounds like:
 ## Hook: `steering-quality-check.json`
 
 - **Event:** agentStop (Tier B 🟡)
-- **Pattern:** `.kiro/steering/**/*.md`
+- **Pattern:** `rules/**/*.md`
 - **Checks:** GOV-STEER-005/006/009 (quality, prescriptive language, no contradictions)
 
 ## Tier: 2 (steering quality enforcement needs established steering files)

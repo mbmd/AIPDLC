@@ -5,7 +5,7 @@
 
 Transforms the design system, design tokens, component inventory, and accessibility baseline produced by AI-UXD into a prescriptive steering file that governs all UI implementation in the destination workspace. This is the core UXD-cluster mapping — the design system steering file is the single source of truth for visual and interaction governance.
 
-**Output:** `.kiro/steering/design-system.md`
+**Output:** `rules/design-system.md`
 
 **Condition:** Generate IF `uxd-state.md` is present (UXD peer input detected).
 

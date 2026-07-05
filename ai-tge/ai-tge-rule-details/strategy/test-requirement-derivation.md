@@ -52,7 +52,7 @@ A good output at this stage sounds like:
 ### Step 1: Load Required Context
 
 Before derivation, load:
-1. Architecture Commitment Inventory from Stage 2 (`.tge/architecture-commitments.md`)
+1. Architecture Commitment Inventory from Stage 2 (`.governance/test/architecture-commitments.md`)
 2. `common/two-source-model.md` — baseline catalog and resolution rules
 3. `common/test-taxonomy.md` — classification dimensions and mapping table
 
@@ -212,7 +212,7 @@ I've derived the test register from your architecture commitments + universal ba
 - {SEC-001}: JWT authentication → 3 tests (valid, invalid, expired)
 - {INT-001}: Payment gateway → 3 tests (connectivity, error handling, timeout)
 
-**Full register saved to:** `.tge/test-register.md`
+**Full register saved to:** `.governance/test/test-register.md`
 
 ---
 
@@ -236,8 +236,8 @@ I've derived the test register from your architecture commitments + universal ba
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| Test Register | `.tge/test-register.md` | Master register — maintained throughout engine lifecycle |
-| Updated state file | `.tge/tge-state.md` | Stage 3 complete; register stats populated |
+| Test Register | `.governance/test/test-register.md` | Master register — maintained throughout engine lifecycle |
+| Updated state file | `.governance/test/tge-state.md` | Stage 3 complete; register stats populated |
 
 ---
 

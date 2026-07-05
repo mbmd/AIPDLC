@@ -42,30 +42,29 @@
 
 ## How It Works
 
-Each AI-* package installs **two things** into your workspace, both **family-scoped** to the AI-* PDLC Family (core files carry a `pdlc-` filename prefix; rule-details live under a `.pdlc/` folder — so multiple AIFLC families can coexist in one workspace):
+The installer places **one always-loaded file** plus the **package home**, both scoped to the AI-* PDLC Family (multiple AIFLC families can coexist in one workspace):
 
-1. **Core workflow/engine file** — a `.mdc` rule file with `alwaysApply: true` frontmatter in `.cursor/rules/` (loaded automatically every session)
-2. **Rule-details folder** — phase-specific instructions and templates that the core workflow loads on demand during execution (placed under `.pdlc/`)
+1. **Session orchestrator** — a single `.mdc` rule file with `alwaysApply: true` frontmatter in `.cursor/rules/pdlc-session-orchestrator.mdc`. It is the ONLY always-loaded file (and the only `.mdc` the family installs). Cursor loads it every session; it detects which package you want and `Read`s that package's core on demand — keeping the context window free.
+2. **Package home** — every package's core AND rule-details live together in the uniform, agent-neutral home `.aiflc/pdlc/`. Nothing here auto-loads; the orchestrator reads from it on demand.
 
 ```
 your-workspace/
 ├── .cursor/
 │   └── rules/
-│       └── pdlc-ai-pilc-workflow.mdc  ← Always loaded (frontmatter: alwaysApply: true)
-├── .pdlc/
-│   └── ai-pilc-rule-details/          ← Loaded on-demand by the core workflow
-│       ├── common/
-│       ├── inception/
-│       ├── assessment/
-│       ├── templates/
-│       └── ...
-├── pdlc-ws/                           ← All runtime outputs land here (never workspace root)
+│       └── pdlc-session-orchestrator.mdc  ← The ONLY always-loaded file (alwaysApply: true; routes to cores)
+├── .aiflc/
+│   └── pdlc/                              ← AI-* PDLC Family home (cores + rule-details + fabric)
+│       ├── ai-pilc-rules/core-workflow.md    ← Read on demand by the orchestrator
+│       ├── ai-pilc-rule-details/             ← Read on demand by the core
+│       │   ├── common/  inception/  assessment/  templates/  ...
+│       └── ... one {pkg}-rules/ + {pkg}-rule-details/ per installed package
+├── pdlc-ws/                              ← All runtime outputs land here (never workspace root)
 └── (your project files)
 ```
 
-Cursor reads all `.mdc` files in `.cursor/rules/` and loads those with `alwaysApply: true` at every session start.
+Cursor loads only `pdlc-session-orchestrator.mdc` (its `alwaysApply: true` frontmatter). When you activate a package (by key or intent), the orchestrator `Read`s `.aiflc/pdlc/ai-{pkg}-rules/core-*.md`, and the core reads its rule-details from `.aiflc/pdlc/ai-{pkg}-rule-details/` as each phase needs them.
 
-> **The Kiro-style split:** core files load as always-on rules (`.cursor/rules/pdlc-*.mdc`); rule-details are read on demand (`.pdlc/`); and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root.
+> **The AIFLC model:** one orchestrator loads always-on (`.cursor/rules/pdlc-session-orchestrator.mdc`); every package core + its rule-details live in the uniform home `.aiflc/pdlc/` and are read on demand; and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root. The `.aiflc/pdlc/` layout is identical on every platform.
 
 ---
 
@@ -125,23 +124,22 @@ cd <path-to-AIPDLC>
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-# Create the rules directory
-New-Item -ItemType Directory -Force -Path "$Target\.cursor\rules"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rules" "$Target\.aiflc\pdlc\"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.aiflc\pdlc\"
 
-# Create .mdc file with frontmatter + core workflow content
+# Create the session orchestrator .mdc in Cursor's auto-load slot (the ONLY always-loaded file)
+New-Item -ItemType Directory -Force -Path "$Target\.cursor\rules"
 $frontmatter = @"
 ---
-description: "AI-PILC (AI-Driven Project Initiation Life Cycle) workflow"
+description: "AI-* PDLC Family session orchestrator"
 alwaysApply: true
 ---
 
 "@
-$frontmatter | Out-File -FilePath "$Target\.cursor\rules\pdlc-ai-pilc-workflow.mdc" -Encoding utf8
-Get-Content "$Source\ai-pilc\ai-pilc-rules\core-workflow.md" | Add-Content "$Target\.cursor\rules\pdlc-ai-pilc-workflow.mdc"
-
-# Copy rule-details folder (family-scoped under .pdlc/)
-New-Item -ItemType Directory -Force -Path "$Target\.pdlc\ai-pilc-rule-details"
-Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details\*" "$Target\.pdlc\ai-pilc-rule-details\"
+$frontmatter | Out-File -FilePath "$Target\.cursor\rules\pdlc-session-orchestrator.mdc" -Encoding utf8
+Get-Content "$Source\session-orchestrator.md" | Add-Content "$Target\.cursor\rules\pdlc-session-orchestrator.mdc"
 ```
 
 **macOS / Linux:**
@@ -150,41 +148,42 @@ Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details\*" "$Target\.pdlc\ai-pi
 SOURCE=<path-to-AIPDLC>
 TARGET=<your-project-path>
 
-# Create the rules directory
-mkdir -p "$TARGET/.cursor/rules"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+mkdir -p "$TARGET/.aiflc/pdlc"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rules" "$TARGET/.aiflc/pdlc/"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details" "$TARGET/.aiflc/pdlc/"
 
-# Create .mdc file with frontmatter + core workflow content
-cat > "$TARGET/.cursor/rules/pdlc-ai-pilc-workflow.mdc" << 'EOF'
+# Create the session orchestrator .mdc in Cursor's auto-load slot (the ONLY always-loaded file)
+mkdir -p "$TARGET/.cursor/rules"
+cat > "$TARGET/.cursor/rules/pdlc-session-orchestrator.mdc" << 'EOF'
 ---
-description: "AI-PILC (AI-Driven Project Initiation Life Cycle) workflow"
+description: "AI-* PDLC Family session orchestrator"
 alwaysApply: true
 ---
 
 EOF
-cat "$SOURCE/ai-pilc/ai-pilc-rules/core-workflow.md" >> "$TARGET/.cursor/rules/pdlc-ai-pilc-workflow.mdc"
-
-# Copy rule-details folder (family-scoped under .pdlc/)
-mkdir -p "$TARGET/.pdlc/ai-pilc-rule-details"
-cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details/"* "$TARGET/.pdlc/ai-pilc-rule-details/"
+cat "$SOURCE/session-orchestrator.md" >> "$TARGET/.cursor/rules/pdlc-session-orchestrator.mdc"
 ```
 
-### File Naming Convention (Cursor)
+### File Placement Convention (Cursor)
 
-| Package | Rule File (.mdc) | Details Folder |
-|---------|-----------------|----------------|
-| AI-ILC | `.cursor/rules/pdlc-ai-ilc-workflow.mdc` | `.pdlc/ai-ilc-rule-details/` |
-| AI-PILC | `.cursor/rules/pdlc-ai-pilc-workflow.mdc` | `.pdlc/ai-pilc-rule-details/` |
-| AI-ADLC | `.cursor/rules/pdlc-ai-adlc-workflow.mdc` | `.pdlc/ai-adlc-rule-details/` |
-| AI-UXD | `.cursor/rules/pdlc-ai-uxd-workflow.mdc` | `.pdlc/ai-uxd-rule-details/` |
-| AI-POLC | `.cursor/rules/pdlc-ai-polc-workflow.mdc` | `.pdlc/ai-polc-rule-details/` |
-| AI-DWG | `.cursor/rules/pdlc-ai-dwg-workflow.mdc` | `.pdlc/ai-dwg-rule-details/` |
-| AI-GCE | `.cursor/rules/pdlc-ai-gce-workflow.mdc` | `.pdlc/ai-gce-rule-details/` |
-| AI-TGE | `.cursor/rules/pdlc-ai-tge-workflow.mdc` | `.pdlc/ai-tge-rule-details/` |
-| AI-PPM | `.cursor/rules/pdlc-ai-ppm-workflow.mdc` | `.pdlc/ai-ppm-rule-details/` |
-| AI-FLO | `.cursor/rules/pdlc-ai-flo-workflow.mdc` | `.pdlc/ai-flo-rule-details/` |
-| AI-DFE | `.cursor/rules/pdlc-ai-dfe-workflow.mdc` | `.pdlc/ai-dfe-rule-details/` |
+Cores and rule-details both live in the uniform home `.aiflc/pdlc/` (read on demand). The only always-loaded file is `.cursor/rules/pdlc-session-orchestrator.mdc` — the single `.mdc` with `alwaysApply: true`.
 
-> **Important:** The `.mdc` extension and `alwaysApply: true` frontmatter are required for Cursor to load the rules automatically. The installer handles this for you.
+| Package | Core (read on demand) | Details (read on demand) |
+|---------|-----------------------|--------------------------|
+| AI-ILC | `.aiflc/pdlc/ai-ilc-rules/core-workflow.md` | `.aiflc/pdlc/ai-ilc-rule-details/` |
+| AI-PILC | `.aiflc/pdlc/ai-pilc-rules/core-workflow.md` | `.aiflc/pdlc/ai-pilc-rule-details/` |
+| AI-ADLC | `.aiflc/pdlc/ai-adlc-rules/core-workflow.md` | `.aiflc/pdlc/ai-adlc-rule-details/` |
+| AI-UXD | `.aiflc/pdlc/ai-uxd-rules/core-workflow.md` | `.aiflc/pdlc/ai-uxd-rule-details/` |
+| AI-POLC | `.aiflc/pdlc/ai-polc-rules/core-workflow.md` | `.aiflc/pdlc/ai-polc-rule-details/` |
+| AI-DWG | `.aiflc/pdlc/ai-dwg-rules/core-generator.md` | `.aiflc/pdlc/ai-dwg-rule-details/` |
+| AI-GCE | `.aiflc/pdlc/ai-gce-rules/core-generator.md` | `.aiflc/pdlc/ai-gce-rule-details/` |
+| AI-TGE | `.aiflc/pdlc/ai-tge-rules/core-engine.md` | `.aiflc/pdlc/ai-tge-rule-details/` |
+| AI-PPM | `.aiflc/pdlc/ai-ppm-rules/core-engine.md` | `.aiflc/pdlc/ai-ppm-rule-details/` |
+| AI-FLO | `.aiflc/pdlc/ai-flo-rules/core-engine.md` | `.aiflc/pdlc/ai-flo-rule-details/` |
+| AI-DFE | `.aiflc/pdlc/ai-dfe-rules/core-engine.md` | `.aiflc/pdlc/ai-dfe-rule-details/` |
+
+> **Important:** The `.mdc` extension and `alwaysApply: true` frontmatter are required for Cursor to auto-load the orchestrator. It is now the ONLY `.mdc` the family installs — package cores are plain `.md` copies under `.aiflc/pdlc/`. The installer handles this for you.
 
 ---
 
@@ -202,42 +201,35 @@ Or manually (PowerShell example for multiple packages):
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
+# Ensure the uniform home and Cursor's rules slot exist
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc" | Out-Null
 New-Item -ItemType Directory -Force -Path "$Target\.cursor\rules" | Out-Null
 
 $packages = @(
-    @{ Name = "ai-ilc";  Core = "core-workflow.md";  Rules = "ai-ilc-rules";  Details = "ai-ilc-rule-details";  Desc = "AI-ILC (Idea Life Cycle) workflow" }
-    @{ Name = "ai-pilc"; Core = "core-workflow.md";  Rules = "ai-pilc-rules"; Details = "ai-pilc-rule-details"; Desc = "AI-PILC (Project Initiation Life Cycle) workflow" }
-    @{ Name = "ai-ppm";  Core = "core-engine.md";    Rules = "ai-ppm-rules";  Details = "ai-ppm-rule-details";  Desc = "AI-PPM (Portfolio Management) engine" }
-    @{ Name = "ai-flo";  Core = "core-engine.md";    Rules = "ai-flo-rules";  Details = "ai-flo-rule-details";  Desc = "AI-FLO (Flow Router) engine" }
-    @{ Name = "ai-adlc"; Core = "core-workflow.md";  Rules = "ai-adlc-rules"; Details = "ai-adlc-rule-details"; Desc = "AI-ADLC (Architecture Design Life Cycle) workflow" }
-    @{ Name = "ai-uxd";  Core = "core-workflow.md";  Rules = "ai-uxd-rules";  Details = "ai-uxd-rule-details";  Desc = "AI-UXD (UX Design Life Cycle) workflow" }
-    @{ Name = "ai-polc"; Core = "core-workflow.md";  Rules = "ai-polc-rules"; Details = "ai-polc-rule-details"; Desc = "AI-POLC (Product Ownership Life Cycle) workflow" }
-    @{ Name = "ai-dwg";  Core = "core-generator.md"; Rules = "ai-dwg-rules";  Details = "ai-dwg-rule-details";  Desc = "AI-DWG (Workspace Generator)" }
-    @{ Name = "ai-gce";  Core = "core-generator.md"; Rules = "ai-gce-rules";  Details = "ai-gce-rule-details";  Desc = "AI-GCE (Governance & Compliance Engine)" }
-    @{ Name = "ai-tge";  Core = "core-engine.md";    Rules = "ai-tge-rules";  Details = "ai-tge-rule-details";  Desc = "AI-TGE (Test Governance Engine)" }
-    @{ Name = "ai-dfe";  Core = "core-engine.md";    Rules = "ai-dfe-rules";  Details = "ai-dfe-rule-details";  Desc = "AI-DFE (Data Fabric Engine)" }
+    "ai-ilc", "ai-pilc", "ai-ppm", "ai-flo", "ai-adlc",
+    "ai-uxd", "ai-polc", "ai-dwg", "ai-gce", "ai-tge", "ai-dfe"
 )
 
+# Copy every package core + rule-details into the uniform home (plain copies, no per-package .mdc)
 foreach ($pkg in $packages) {
-    $coreSource = Join-Path $Source "$($pkg.Name)\$($pkg.Rules)\$($pkg.Core)"
-    $mdcDest = Join-Path $Target ".cursor\rules\pdlc-$($pkg.Name)-workflow.mdc"
-    $detailsSource = Join-Path $Source "$($pkg.Name)\$($pkg.Details)"
-    $detailsDest = Join-Path $Target ".pdlc\$($pkg.Details)"
+    $rulesSource = Join-Path $Source "$pkg\$pkg-rules"
+    $detailsSource = Join-Path $Source "$pkg\$pkg-rule-details"
 
-    if (Test-Path $coreSource) {
-        $frontmatter = "---`ndescription: `"$($pkg.Desc)`"`nalwaysApply: true`n---`n`n"
-        $frontmatter | Out-File -FilePath $mdcDest -Encoding utf8 -NoNewline
-        Get-Content $coreSource -Raw | Add-Content $mdcDest -NoNewline
-
-        if (Test-Path $detailsSource) {
-            if (Test-Path $detailsDest) { Remove-Item -Recurse -Force $detailsDest }
-            Copy-Item -Recurse $detailsSource $detailsDest
-        }
-        Write-Host "Installed $($pkg.Name)" -ForegroundColor Green
+    if (Test-Path $rulesSource) {
+        Copy-Item -Recurse $rulesSource "$Target\.aiflc\pdlc\" -Force
+        Copy-Item -Recurse $detailsSource "$Target\.aiflc\pdlc\" -Force
+        Write-Host "Installed $pkg into .aiflc/pdlc/" -ForegroundColor Green
     } else {
-        Write-Host "Skipped $($pkg.Name) - source not found" -ForegroundColor Yellow
+        Write-Host "Skipped $pkg - source not found" -ForegroundColor Yellow
     }
 }
+
+# Create the single always-loaded orchestrator .mdc (the ONLY .mdc)
+$frontmatter = "---`ndescription: `"AI-* PDLC Family session orchestrator`"`nalwaysApply: true`n---`n`n"
+$mdcDest = "$Target\.cursor\rules\pdlc-session-orchestrator.mdc"
+$frontmatter | Out-File -FilePath $mdcDest -Encoding utf8 -NoNewline
+Get-Content "$Source\session-orchestrator.md" -Raw | Add-Content $mdcDest -NoNewline
+Write-Host "Installed session orchestrator" -ForegroundColor Green
 ```
 
 ---
@@ -278,29 +270,31 @@ After a full install:
 your-project/
 ├── .cursor/
 │   └── rules/
-│       ├── pdlc-ai-ilc-workflow.mdc     ← Always loaded
-│       ├── pdlc-ai-pilc-workflow.mdc    ← Always loaded
-│       ├── pdlc-ai-ppm-workflow.mdc     ← Always loaded
-│       ├── pdlc-ai-flo-workflow.mdc     ← Always loaded
-│       ├── pdlc-ai-adlc-workflow.mdc    ← Always loaded
-│       ├── pdlc-ai-uxd-workflow.mdc     ← Always loaded
-│       ├── pdlc-ai-polc-workflow.mdc    ← Always loaded
-│       ├── pdlc-ai-dwg-workflow.mdc     ← Always loaded
-│       ├── pdlc-ai-gce-workflow.mdc     ← Always loaded
-│       ├── pdlc-ai-tge-workflow.mdc     ← Always loaded
-│       └── pdlc-ai-dfe-workflow.mdc     ← Always loaded
-├── .pdlc/                               ← AI-* PDLC Family rule-details (on-demand)
-│   ├── ai-ilc-rule-details/
-│   ├── ai-pilc-rule-details/
-│   ├── ai-adlc-rule-details/
-│   ├── ai-uxd-rule-details/
-│   ├── ai-polc-rule-details/
-│   ├── ai-ppm-rule-details/
-│   ├── ai-flo-rule-details/
-│   ├── ai-dwg-rule-details/
-│   ├── ai-gce-rule-details/
-│   ├── ai-tge-rule-details/
-│   └── ai-dfe-rule-details/
+│       └── pdlc-session-orchestrator.mdc  ← The ONLY always-loaded file (alwaysApply: true)
+├── .aiflc/
+│   └── pdlc/                              ← AI-* PDLC Family home (cores + rule-details, on-demand)
+│       ├── ai-ilc-rules/core-workflow.md
+│       ├── ai-ilc-rule-details/
+│       ├── ai-pilc-rules/core-workflow.md
+│       ├── ai-pilc-rule-details/
+│       ├── ai-ppm-rules/core-engine.md
+│       ├── ai-ppm-rule-details/
+│       ├── ai-flo-rules/core-engine.md
+│       ├── ai-flo-rule-details/
+│       ├── ai-adlc-rules/core-workflow.md
+│       ├── ai-adlc-rule-details/
+│       ├── ai-uxd-rules/core-workflow.md
+│       ├── ai-uxd-rule-details/
+│       ├── ai-polc-rules/core-workflow.md
+│       ├── ai-polc-rule-details/
+│       ├── ai-dwg-rules/core-generator.md
+│       ├── ai-dwg-rule-details/
+│       ├── ai-gce-rules/core-generator.md
+│       ├── ai-gce-rule-details/
+│       ├── ai-tge-rules/core-engine.md
+│       ├── ai-tge-rule-details/
+│       ├── ai-dfe-rules/core-engine.md
+│       └── ai-dfe-rule-details/
 ├── pdlc-ws/                             ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 │   └── .ai-family-manifest.json         ← Installer tracking
 └── (your project files)
@@ -399,7 +393,7 @@ State files persist between sessions. Say "Continue AI-PILC" to resume where you
 
 ## Coexistence with Other Rules
 
-- **Existing `.cursor/rules/`**: Untouched. AI-* packages add their own `.mdc` files alongside yours.
+- **Existing `.cursor/rules/`**: Untouched. The family adds only one `.mdc` (`pdlc-session-orchestrator.mdc`) alongside yours; all package cores live under `.aiflc/pdlc/`.
 - **Existing `.cursorrules`**: Untouched (legacy format, still respected by Cursor).
 - **Other project files**: Never modified.
 
@@ -412,8 +406,9 @@ State files persist between sessions. Say "Continue AI-PILC" to resume where you
 .\installer\install.ps1 -TargetWorkspace "<your-project-path>" -Uninstall
 
 # Manual
-Remove-Item "<your-project-path>\.cursor\rules\pdlc-ai-*-workflow.mdc"
-Get-ChildItem "<your-project-path>\.pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
+Remove-Item "<your-project-path>\.cursor\rules\pdlc-session-orchestrator.mdc" -ErrorAction SilentlyContinue
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rules" -Directory | Remove-Item -Recurse -Force
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
 Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction SilentlyContinue
 ```
 
@@ -423,8 +418,9 @@ Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction 
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| Rules not loading | Missing frontmatter | Ensure `.mdc` files have `alwaysApply: true` in YAML frontmatter |
-| "Can't find rule-details" | Path mismatch | Ensure `.pdlc/ai-{pkg}-rule-details/` exists at workspace root |
+| Orchestrator not loading | Missing frontmatter | Ensure `.cursor/rules/pdlc-session-orchestrator.mdc` has `alwaysApply: true` in YAML frontmatter |
+| Package core not found | Path mismatch | Verify `.aiflc/pdlc/ai-{pkg}-rules/core-*.md` exists |
+| "Can't find rule-details" | Path mismatch | Core resolves `.aiflc/pdlc/ai-{pkg}-rule-details/` first |
 | No welcome message | Wrong activation phrase | Use "Using AI-PILC, ..." format |
 | State file not created | First interaction only | State is created after first stage completes |
 

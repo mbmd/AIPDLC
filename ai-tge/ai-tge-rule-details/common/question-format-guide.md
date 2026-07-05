@@ -147,7 +147,7 @@ Used at the end of each strategy stage to confirm outputs before proceeding.
 - {Most important finding 2}
 - {Most important finding 3}
 
-**Saved to:** `.tge/{filename}.md`
+**Saved to:** `.governance/test/{filename}.md`
 
 **Your response:**
 - (a) **Approve** — proceed to Stage {N+1}: {next_stage_name}

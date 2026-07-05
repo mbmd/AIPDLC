@@ -37,7 +37,7 @@ fileMatchPattern: "{glob pattern}"
 ---
 ```
 
-Phase-aware steering (generated into .kiro/steering/):
+Phase-aware steering (generated into rules/):
 • compliance-phase-context.md:
   ```yaml
   ---
@@ -152,7 +152,7 @@ Present generation results:
    • Compliance state: initialized (.compliance-state.json — Tier 1)
    • Compliance dashboard: template ready (management_framework/dashboards/compliance-dashboard.md)
    • Compliance log: initialized
-   • Hook enforcement guide: .kiro/hooks/ENFORCEMENT-GUIDE.md
+   • Hook enforcement guide: .governance/hooks/ENFORCEMENT-GUIDE.md
 
 📋 Conditional enforcement activated:
    • {rule category}: because {steering file} exists

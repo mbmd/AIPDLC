@@ -59,9 +59,8 @@ The workflow adapts to the project, not the other way around. The AI assesses re
 
 CRITICAL: When performing any phase, you MUST read and use relevant content from rule detail files. Resolve the rule-details directory once — check these paths in order, use the first that exists:
 
-- `.ai-adlc/ai-adlc-rule-details/` (AI-assisted setup)
-- `.kiro/ai-adlc-rule-details/` (Kiro IDE setup)
-- `ai-adlc-rule-details/` (standalone setup)
+- `.aiflc/pdlc/ai-adlc-rule-details/` (canonical AIFLC home — all platforms)
+- `ai-adlc-rule-details/` (standalone / flattened fallback)
 
 All detail-file references below are relative to the resolved directory. **Before executing any stage, load that stage's detail file (see the Stage INDEX).**
 
@@ -179,6 +178,9 @@ Detect by marker (`adlc-state.md`), not by path: (1) user-provided path → use 
 ### Downstream Signal
 - **→ AI-DWG (fan-in):** reads `adlc-state.md` on demand — `Project ID` (correlation), `Route` (`architecture-ready`), enabled extensions, containers (name+tech), technology decisions, constraints, input mode (greenfield/brownfield), quality attributes, multi-tenancy model — to drive workspace generation. One-time handoff (no active push); revisions trigger manual AI-DWG reconciliation.
 - **→ AI-POLC (cost loop, same-layer peer):** emits relative effort/complexity bands (S/M/L/XL) + technical-risk flags per epic/area — **advisory, NOT dollar estimates** — recorded in `adlc-state.md` for AI-POLC's WSJF/re-prioritization. Standalone-safe. Full spec: `assembly/package-assembly.md` Step 9b.
+
+### Drift Intake (governance back-flow)
+AI-ADLC implements the `drift-intake@1.0` interface (`contracts/DRIFT_INTAKE_CONTRACT.md`) for the **architecture · data · infrastructure** domains. It **pulls** drift (asks AI-FLO → reads the drift body from AI-GCE's register read-only → digests → Conform/Amend/Waive), writes the disposition to its OWN artifacts (AP docs / ADR / `adlc-state.md`) + emits a `digest-ready` signal; AI-DWG later bakes it into the next baseline and AI-GCE closes it. ADLC never writes the drift register or the baseline (INV-L4-006). Full decision logic: `drift-intake/intake-digest.md`.
 
 ---
 

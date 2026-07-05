@@ -182,9 +182,9 @@ Produce updated ranked scorecard:
 
 ### Step 7: Update Artifacts
 
-1. **Debt Scorecard** (`.tge/debt-scorecard.md`) — overwrite with current ranked list
-2. **Test Register** (`.tge/test-register.md`) — update Risk Score column for re-scored entries
-3. **State File** (`.tge/tge-state.md`) — update timestamp, register stats
+1. **Debt Scorecard** (`.governance/test/debt-scorecard.md`) — overwrite with current ranked list
+2. **Test Register** (`.governance/test/test-register.md`) — update Risk Score column for re-scored entries
+3. **State File** (`.governance/test/tge-state.md`) — update timestamp, register stats
 
 ---
 
@@ -204,7 +204,7 @@ Produce updated ranked scorecard:
 {IF all clear:}
 ✅ No new Critical escalations. Current priorities stable.
 
-**Updated scorecard:** `.tge/debt-scorecard.md`
+**Updated scorecard:** `.governance/test/debt-scorecard.md`
 **Sprint recommendation:** Address {top entries} this sprint for maximum risk reduction.
 ```
 
@@ -231,9 +231,9 @@ The engine remains in Observation phase indefinitely — it runs each time AI-TG
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| Updated Debt Scorecard | `.tge/debt-scorecard.md` | Current ranked priorities |
-| Updated Test Register | `.tge/test-register.md` | Risk Score column updated |
-| Updated state file | `.tge/tge-state.md` | Stats and timestamp current |
+| Updated Debt Scorecard | `.governance/test/debt-scorecard.md` | Current ranked priorities |
+| Updated Test Register | `.governance/test/test-register.md` | Risk Score column updated |
+| Updated state file | `.governance/test/tge-state.md` | Stats and timestamp current |
 
 ---
 
@@ -245,7 +245,7 @@ The engine remains in Observation phase indefinitely — it runs each time AI-TG
 | Evidence considered | Recent defects, code changes, reconciliation factored in |
 | Movements highlighted | Any bucket change explicitly noted with reason |
 | Composite recalculated | Product of updated factors (not sum) |
-| Scorecard updated | `.tge/debt-scorecard.md` reflects current rankings |
+| Scorecard updated | `.governance/test/debt-scorecard.md` reflects current rankings |
 | Sprint recommendation current | Top priorities reflect latest evidence |
 | Trend tracked (Comprehensive) | Accumulation vs. resolution rate assessed |
 | State file updated | Timestamp and stats current |

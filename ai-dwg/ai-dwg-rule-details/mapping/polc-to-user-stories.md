@@ -1,15 +1,15 @@
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
-# Mapping: Product Backlog Package (AI-POLC) → user-stories.md + acceptance examples (POLC CLUSTER)
+# Mapping: Product Backlog Package (AI-POLC) → backlog/user-stories.md (index) + acceptance examples (POLC CLUSTER)
 
 ## Purpose
 
-Transforms the **Tier 2 INVEST stories** produced by AI-POLC (`tier2/story-elaboration.md`) — with Given/When/Then acceptance criteria — into a `user-stories.md` reference plus seeded acceptance-criteria examples in the workspace. This gives AI-DLC v1 ready-to-build, testable stories (not just epics) and gives AI-TGE the Given/When/Then format it derives acceptance tests from. It is generated ONLY when POLC ran Tier 2 (story elaboration is off by default in chain mode).
+Transforms the **Tier 2 INVEST stories** produced by AI-POLC (`tier2/story-elaboration.md`) — with Given/When/Then acceptance criteria — into a `backlog/user-stories.md` **index/entry-point** that references the full story files in `backlog/epics/EPIC-{id}_stories/`, plus seeded acceptance-criteria examples in the workspace. The full story files are copied by `polc-to-epics-backlog.md` — this mapping produces the index and the acceptance skeletons only.
 
 **Output:**
-- `{workspace-root}/user-stories.md` (INVEST stories grouped by epic)
+- `{workspace-root}/backlog/user-stories.md` (story INDEX grouped by epic — references full files in `backlog/epics/`)
 - `{workspace-root}/examples/acceptance/{story-id}.feature.md` (Given/When/Then per story — acceptance skeletons)
 
-**Condition:** Generate IF `polc-state.md` is present AND `tier2/story-elaboration.md` exists (Tier 2 was activated). If POLC present but Tier 2 not run, SKIP and note: "Stories deferred to AI-DLC v1 (POLC Tier 2 not activated)."
+**Condition:** Generate IF `polc-state.md` is present AND `tier2/story-elaboration.md` exists (Tier 2 was activated). If POLC present but Tier 2 not run, SKIP entirely — no index needed when no stories exist.
 
 **Cluster:** Product — belongs exclusively to the POLC input cluster.
 
@@ -68,21 +68,18 @@ projectId: "{project-id}"
 
 <!-- AI-DWG generated | source: AI-POLC Tier 2 Stories | date: {generation-date} -->
 
-# User Stories
+# User Stories Index
 
-> INVEST stories elaborated by AI-POLC. Acceptance criteria are Given/When/Then
-> and seed `examples/acceptance/*.feature.md` for AI-TGE test derivation.
+> Story index referencing full story files in `backlog/epics/EPIC-*_stories/`.
+> Each story's full content (narrative + G/W/T acceptance criteria) lives in its own file.
+> Acceptance skeletons for AI-TGE: `examples/acceptance/*.feature.md`.
 
 ## Epic: {epic-id} — {epic-title}
 <!-- begin: PBP-sourced -->
-### {STORY-id}: {short title}
-**As a** {persona/role} **I want** {capability} **so that** {benefit}.
-
-**Acceptance Criteria**
-- **Given** {context} **When** {action} **Then** {outcome}
-- **Given** … **When** … **Then** …
-
-**DoR met:** {yes/no}  ·  **Story points / size:** {if present}  ·  **Acceptance skeleton:** `examples/acceptance/{STORY-id}.feature.md`
+| Story ID | Title | Persona | Acceptance Skeleton | Full File |
+|----------|-------|---------|---------------------|-----------|
+| {STORY-id} | {short title} | {persona/role} | `examples/acceptance/{STORY-id}.feature.md` | `backlog/epics/EPIC-{id}_stories/{STORY-id}_{slug}.md` |
+| ... | ... | ... | ... | ... |
 <!-- end: PBP-sourced -->
 ```
 
@@ -107,8 +104,8 @@ Scenario: {scenario name}
 ### Rule 1: Given/When/Then Is VERBATIM
 Each clause is copied exactly — it becomes a test step downstream.
 
-### Rule 2: 1:1 Story Carry
-Every Tier 2 story produces one `user-stories.md` entry and one `.feature.md` skeleton. No merge, no split.
+### Rule 2: Index References Full Files
+`backlog/user-stories.md` is an INDEX — it references `backlog/epics/EPIC-{id}_stories/{STORY-id}_{slug}.md` for full content. The full story files are produced by `polc-to-epics-backlog.md`. Each story also gets one `.feature.md` skeleton in `examples/acceptance/`.
 
 ### Rule 3: Group By Parent Epic
 Stories are organized under their epic (IDs consistent with `polc-to-epics-backlog.md`).

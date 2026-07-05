@@ -4,7 +4,7 @@ inclusion: always
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AIFLC Session Orchestrator — AI-* PDLC Family
 
-> **This is the ONLY always-loaded steering file for the AI-* PDLC Family.** All package workflows (`ai-ilc-rules`, `ai-pilc-rules`, etc.) are set to `inclusion: manual` and load ONLY when activated. This keeps the context window free for actual work.
+> **This is the ONLY always-loaded steering file for the AI-* PDLC Family.** All package cores live in the uniform home `.aiflc/pdlc/` (OI-158) and are **not** auto-loaded — this orchestrator `Read`s the relevant core on demand when a package is activated. This keeps the context window free for actual work.
 
 ---
 
@@ -12,7 +12,7 @@ inclusion: always
 
 Prevent context overload. Instead of loading all package workflows into every session, this orchestrator:
 1. Detects what the user wants to do
-2. Loads ONLY the relevant package steering
+2. `Read`s ONLY the relevant package core from `.aiflc/pdlc/` (and its rule-details on demand)
 3. Provides the activation keys as a routing table
 
 ---
@@ -20,7 +20,7 @@ Prevent context overload. Instead of loading all package workflows into every se
 ## Activation Keys (Quick Reference)
 
 > **Full trigger registry (all package keys + all agent shortcuts):**
-> #[[file:TRIGGER_KEYS_REFERENCE.md]]
+> `Read` `.aiflc/pdlc/TRIGGER_KEYS_REFERENCE.md`
 
 | Key | Package | When to Use |
 |-----|---------|-------------|
@@ -48,22 +48,24 @@ Prevent context overload. Instead of loading all package workflows into every se
 
 When the user starts a session WITHOUT an explicit activation key, determine intent from their message:
 
-| User Intent Signal | Route To |
-|-------------------|----------|
-| "I have an idea" / "new idea" / "evaluate this" | Load `#ai-ilc-rules/core-workflow` |
-| "initiate project" / "start project" / "PIP" | Load `#ai-pilc-rules/core-workflow` |
-| "portfolio" / "cross-project" / "prioritize projects" | Load `#ai-ppm-rules/core-engine` |
-| "route" / "flow" / "handoff" / "where is entity" | Load `#ai-flo-rules/core-engine` |
-| "backlog" / "epics" / "product ownership" / "prioritize" | Load `#ai-polc-rules/core-workflow` |
-| "UX" / "personas" / "journeys" / "design system" / "user experience" | Load `#ai-uxd-rules/core-workflow` |
-| "architecture" / "system design" / "containers" / "C4" | Load `#ai-adlc-rules/core-workflow` |
-| "workspace" / "generate workspace" / "steering files" | Load `#ai-dwg-rules/core-generator` |
-| "compliance" / "hooks" / "enforcement" / "rules derivation" | Load `#ai-gce-rules/core-generator` |
-| "test governance" / "test strategy" / "coverage" | Load `#ai-tge-rules/core-engine` |
-| "data" / "gather" / "DAT__" / "DFA__" / "freshness" | Load `#ai-dfe-rules/core-engine` |
-| "FHC__" / "FLO health" / "is workspace ready for FLO" | Load `#ai-flo-rules/core-engine` → run FLO Health Check agent |
-| "FIA__" / "FLO integrity" / "routing state" | Load `#ai-flo-rules/core-engine` → run Flow Integrity agent |
-| "resume" / "continue" / "where was I" | Check `*-state.md` files for in-progress package → load that one |
+> All cores live under the uniform home `.aiflc/pdlc/`. When you route to a package, `Read` its core file first, then its rule-details folder (`.aiflc/pdlc/ai-<pkg>-rule-details/`) on demand.
+
+| User Intent Signal | Route To (`Read`) |
+|-------------------|-------------------|
+| "I have an idea" / "new idea" / "evaluate this" | `.aiflc/pdlc/ai-ilc-rules/core-workflow.md` |
+| "initiate project" / "start project" / "PIP" | `.aiflc/pdlc/ai-pilc-rules/core-workflow.md` |
+| "portfolio" / "cross-project" / "prioritize projects" | `.aiflc/pdlc/ai-ppm-rules/core-engine.md` |
+| "route" / "flow" / "handoff" / "where is entity" | `.aiflc/pdlc/ai-flo-rules/core-engine.md` |
+| "backlog" / "epics" / "product ownership" / "prioritize" | `.aiflc/pdlc/ai-polc-rules/core-workflow.md` |
+| "UX" / "personas" / "journeys" / "design system" / "user experience" | `.aiflc/pdlc/ai-uxd-rules/core-workflow.md` |
+| "architecture" / "system design" / "containers" / "C4" | `.aiflc/pdlc/ai-adlc-rules/core-workflow.md` |
+| "workspace" / "generate workspace" / "steering files" | `.aiflc/pdlc/ai-dwg-rules/core-generator.md` |
+| "compliance" / "hooks" / "enforcement" / "rules derivation" | `.aiflc/pdlc/ai-gce-rules/core-generator.md` |
+| "test governance" / "test strategy" / "coverage" | `.aiflc/pdlc/ai-tge-rules/core-engine.md` |
+| "data" / "gather" / "DAT__" / "DFA__" / "freshness" | `.aiflc/pdlc/ai-dfe-rules/core-engine.md` |
+| "FHC__" / "FLO health" / "is workspace ready for FLO" | `.aiflc/pdlc/ai-flo-rules/core-engine.md` → run FLO Health Check agent |
+| "FIA__" / "FLO integrity" / "routing state" | `.aiflc/pdlc/ai-flo-rules/core-engine.md` → run Flow Integrity agent |
+| "resume" / "continue" / "where was I" | Check `*-state.md` files for in-progress package → `Read` that one's core from `.aiflc/pdlc/` |
 | Ambiguous / general question | Ask: "Which AI-* package are you working with?" and list the keys |
 
 ---
@@ -79,7 +81,7 @@ When user says "resume" or "continue" without specifying a package:
    - `{family}-ws/projects/*/architecture/adlc-state.md` → check status
    - `{family}-ws/projects/*/ux/uxd-state.md` → check status
    - `{family}-ws/portfolio/ppm-state.md` → check status
-2. If exactly ONE package is in-progress → load that package's steering and resume.
+2. If exactly ONE package is in-progress → `Read` that package's core from `.aiflc/pdlc/` and resume.
 3. If MULTIPLE packages are in-progress → present the list, ask user which to resume.
 4. If NONE in-progress → ask what they want to do.
 
@@ -109,7 +111,7 @@ When user says "resume" or "continue" without specifying a package:
 
 ## What This File Does NOT Do
 
-- Does NOT contain any package workflow logic (that stays in each package's manual steering).
+- Does NOT contain any package workflow logic (that stays in each package's core under `.aiflc/pdlc/`).
 - Does NOT make routing decisions for the family (that is AI-FLO's job).
 - Does NOT auto-activate packages based on state changes.
 - Does NOT replace the activation key system — it supplements it with intent detection.

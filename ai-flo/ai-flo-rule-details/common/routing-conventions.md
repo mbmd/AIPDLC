@@ -48,8 +48,8 @@ All paths are **relative** to the workspace root:
 
 Remote projects use **absolute paths** or workspace references:
 ```yaml
-workspace_ref: C:\Users\Team\Projects\{project-name}\
-workspace_ref: /home/team/projects/{project-name}/
+workspace_ref: {absolute-workspace-root}\{project-name}\    # Windows
+workspace_ref: {absolute-workspace-root}/{project-name}/    # Linux/macOS
 ```
 
 FLO constructs the full path: `{workspace_ref}/{relative-marker-path}`

@@ -58,9 +58,8 @@ The workflow adapts to the idea, not the other way around. The AI assesses requi
 
 CRITICAL: When performing any stage, you MUST read and use relevant content from rule detail files. Resolve the rule-details directory once — check these paths in order, use the first that exists:
 
-- `.ai-ilc/ai-ilc-rule-details/` (AI-assisted setup)
-- `.kiro/ai-ilc-rule-details/` (Kiro IDE setup)
-- `ai-ilc-rule-details/` (standalone setup)
+- `.aiflc/pdlc/ai-ilc-rule-details/` (canonical AIFLC home — all platforms)
+- `ai-ilc-rule-details/` (standalone / flattened fallback)
 
 All detail-file references below are relative to the resolved directory. **Before executing any stage, load that stage's detail file (see the WORKFLOW STAGE INDEX).**
 

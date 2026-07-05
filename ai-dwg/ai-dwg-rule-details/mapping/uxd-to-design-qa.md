@@ -5,7 +5,7 @@
 
 Transforms the **Design QA framework** produced by AI-UXD (`validate/design-qa-framework.md` — design-to-code drift rules, severity model, report format) into a prescriptive `design-qa.md` steering file, and relays its enforceable rules to AI-GCE. This makes design-to-code fidelity a checkable discipline in the build workspace: AI-DLC v1 builds against it, and AI-GCE derives drift-detection hooks from it.
 
-**Output:** `.kiro/steering/design-qa.md`
+**Output:** `rules/design-qa.md`
 **Secondary effect:** Relay the rule set to AI-GCE (a `design-fidelity` / `design-qa` governance rule) via the downstream signal — enforcement is AI-GCE's responsibility, not DWG's.
 
 **Condition:** Generate IF `uxd-state.md` is present AND the UXP contains a Design QA framework artefact.

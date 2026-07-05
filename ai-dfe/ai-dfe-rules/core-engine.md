@@ -195,7 +195,7 @@ DFE learns the workspace once, then caches. Detail files: `configure/family-disc
 
 | Stage | What | Output |
 |-------|------|--------|
-| 1.1 Family discovery | Read `{family}-ws/.ai-family-manifest.json` + the installed `.kiro/{family}/` package set to learn family identity + anchors; enumerate projects from `PROJECTS.md`. (Producer→role-folder mapping is self-describing — it comes from each package's `SOURCE_MAP.md` in 1.2, **not** from `FAMILY_TABLE_MAP.md`, which is a build-time registry and is never installed.) | family map in `dfe-state.md` |
+| 1.1 Family discovery | Read `{family}-ws/.ai-family-manifest.json` + the installed `.aiflc/{family}/` package set to learn family identity + anchors; enumerate projects from `PROJECTS.md`. (Producer→role-folder mapping is self-describing — it comes from each package's `SOURCE_MAP.md` in 1.2, **not** from `FAMILY_TABLE_MAP.md`, which is a build-time registry and is never installed.) | family map in `dfe-state.md` |
 | 1.2 Package discovery | For each installed package, read `ai-{pkg}-rule-details/data-schema/SOURCE_MAP.md` + `{pkg}-data.schema.json`; cache source-file list + output shape | `discovered` registry in `dfe-state.md` |
 | 1.3 Demander discovery | Read `{family}-ws/data/CONSUMER_REGISTRY.md` → resolve each registered consumer's `data-demand/` declaration; **self-healing scan:** also check `tools/extensions/*/data-demand/` for unregistered consumers and auto-register them (+ honor ad-hoc drops in `data/demands/`) | `demands` registry (each `registered: true\|false`) in `dfe-state.md` |
 

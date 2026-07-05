@@ -9,7 +9,7 @@ ownership: generated
 # Observability Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate observability-related steering files
-> in the target project's `.kiro/steering/` folder. These templates encode logging standards,
+> in the target project's `rules/` folder. These templates encode logging standards,
 > tracing conventions, and sensitive data protection rules derived from `observability-logging.md`
 > and `observability-sensitive.md`.
 
@@ -17,7 +17,7 @@ ownership: generated
 
 ## observability-logging.md (Always)
 
-**Generates**: `.kiro/steering/observability-logging.md`
+**Generates**: `rules/observability-logging.md`
 **Derived From**: observability-logging.md + tech-stack.md
 
 ```markdown
@@ -62,7 +62,7 @@ inclusion: always
 
 ## observability-tracing.md (Conditional — IF tracing configured)
 
-**Generates**: `.kiro/steering/observability-tracing.md`
+**Generates**: `rules/observability-tracing.md`
 **Condition**: Generated IF `observability-tracing.md` exists in workspace OR tracing tool specified in tech-stack
 **Derived From**: observability-tracing.md + tech-stack.md
 
@@ -101,7 +101,7 @@ fileMatchPattern: "{application_and_infrastructure_pattern}"
 
 ## observability-sensitive-data.md (Always)
 
-**Generates**: `.kiro/steering/observability-sensitive-data.md`
+**Generates**: `rules/observability-sensitive-data.md`
 **Derived From**: observability-sensitive.md + security-rules.md
 
 ```markdown

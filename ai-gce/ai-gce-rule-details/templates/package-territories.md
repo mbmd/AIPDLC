@@ -18,9 +18,9 @@ Files in these paths are NOT subject to application compliance hooks.
 
 | Path Prefix | Owner Package | Reason |
 |-------------|---------------|--------|
-| `.kiro/hooks/` | AI-GCE | Hook infrastructure |
-| `.kiro/steering/` | AI-DWG / AI-GCE | Steering file infrastructure |
-| `.kiro/agents/` | AI-GCE | Agent infrastructure |
+| `.governance/hooks/` | AI-GCE | Hook infrastructure |
+| `rules/` | AI-DWG / AI-GCE | Steering file infrastructure |
+| `.governance/agents/` | AI-GCE | Agent infrastructure |
 | `.governance/` | AI-GCE | Governance rules, agents, logs |
 | `compliance-log/` | AI-GCE | Audit trail (append-only) |
 | `project-initiation/` | AI-PILC | Upstream lifecycle output |

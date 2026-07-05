@@ -29,10 +29,14 @@ AI-POLC is an injectable workflow that turns business intent into a prioritized,
 ## How It Works (5 Minutes)
 
 1. **Install** — Copy package files into your IDE's steering folder (see `setup/INSTALL.md`)
-2. **Start a session** — Say: *"Using AI-POLC, establish product ownership for this project"*
+2. **Start a session** — Type the activation key `_POLC_`, or say: *"Using AI-POLC, establish product ownership for this project"*
 3. **Answer questions** — AI-POLC detects your context and asks targeted questions
 4. **Approve at gates** — Every phase requires your approval before moving forward
 5. **Get your PBP** — A complete, governed backlog package ready for AI-DWG or manual development
+
+**Handy activation keys:**
+- `_POLC_` — activate AI-POLC directly (wins over keyword matching; switches immediately)
+- `_ACTIVE_` — ask which AI-* package is currently active (read-only check, changes nothing)
 
 ---
 
@@ -139,12 +143,30 @@ AI-POLC ◄──(feedback/completion)── AI-DLC v1
 
 ## Tier 2: Story Elaboration
 
-By default, AI-POLC stops at epic level. Story elaboration (INVEST-compliant user stories + Given/When/Then acceptance criteria) is handled by AI-DLC v1's Inception phase.
+By default, AI-POLC stops at epic level. Story elaboration (user stories + acceptance criteria) is handled by AI-DLC v1's Inception phase in chain mode.
 
-**When to activate Tier 2:**
+**AI-POLC asks you — you don't have to remember to enable it.** Once your epics are confirmed (end of Stage 5), AI-POLC explicitly offers the choice:
+
+- **Keep Tier 2 OFF** — epics are the handoff artifact (recommended in chain mode, since AI-DLC v1 elaborates stories)
+- **Turn Tier 2 ON now** — AI-POLC writes PO-quality user stories, and you pick the story format
+
+You can flip this decision at any point in the workflow, not just at the gate. Say *"turn on story elaboration"* (or *"turn it off"*) mid-session and AI-POLC adjusts on the fly.
+
+**When to turn Tier 2 ON:**
 - Standalone mode (no AI-DLC v1 available)
 - You want PO-quality pre-elaboration before handing to developers
-- Say: *"Elaborate stories for these epics"*
+
+**Choosing the story format:** When Tier 2 is on, AI-POLC asks which user-story type you want:
+
+| Story Type | Format | Best for |
+|------------|--------|----------|
+| **Classic INVEST** (default) | *As a…, I want…, So that…* + Given/When/Then AC | AI-DLC, freestyle |
+| **EARS** | *When {trigger} the {system} shall {response}* | Spec-driven build (e.g., GitHub Spec Kit) |
+| **Job Story** | *When {situation}, I want {motivation}, so I can {outcome}* | freestyle, AI-DLC |
+| **Freestyle** | Any narrative + acceptance criteria you prefer | freestyle only |
+| **Hybrid** | AI-POLC picks the most natural style per story | freestyle, AI-DLC |
+
+Your choice is recorded in `polc-state.md` so AI-DWG can advise on the best-fit build method downstream. Default is Classic INVEST; EARS is recommended if you mention spec-driven development.
 
 ---
 
@@ -206,7 +228,23 @@ After completing the workflow, your PBP contains:
 | `product-risk-register.md` | Risks + assumptions |
 | `traceability-matrix.md` | Intent→Epic→Story links |
 | `stakeholder-map.md` | Influence/interest + communication plan |
+| `release-notes-governance.md` | Release-notes / changelog governance framework |
 | `PBP_README.md` | Package index + completeness report |
+
+---
+
+## Backlog-Health Agent (`BLH__`)
+
+When AI-POLC finishes assembling your PBP, it automatically installs a lightweight governance agent into your workspace — no setup required on your part.
+
+| What | Detail |
+|------|--------|
+| Agent | `backlog-health-agent` (registered as `POLC-AG-01`) |
+| Shortcut | `BLH__` — active immediately after install |
+| Purpose | Validates backlog health (traceability, DoR/DoD coverage, orphan epics, priority integrity) |
+| When to use | Type `BLH__` before handing the PBP downstream to catch gaps early |
+
+The agent installs itself independently — it does not depend on any other AI-* package being present. Just type `BLH__` in your workspace whenever you want a backlog-health check.
 
 ---
 

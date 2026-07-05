@@ -89,7 +89,7 @@ AI-GCE is part of **AIFLC** (AI Full Life Cycle) — the AI-* PDLC Family of inj
 
 ### Quick Start
 
-In a workspace that has `.kiro/steering/` populated (by AI-DWG):
+In a workspace that has `rules/` populated (by AI-DWG):
 
 ```
 Using AI-GCE, generate the compliance engine for this workspace
@@ -113,8 +113,8 @@ AI-GCE asks 1-2 questions, then generates everything in one pass.
 Installed into the development workspace:
 
 ```
-.kiro/hooks/              ← 9 always-generated + up to 6 conditional enforcement hooks (JSON)
-.kiro/agents/             ← 6 process/audit governance agents (milestone-triggered)
+.governance/hooks/              ← 9 always-generated + up to 6 conditional enforcement hooks (JSON)
+.governance/agents/             ← 6 process/audit governance agents (milestone-triggered)
 .compliance-state.json    ← Tier tracking + readiness criteria
 management_framework/dashboards/compliance-dashboard.md  ← Visual compliance overview (Dashboard Framework Convention)
 .governance/
@@ -132,7 +132,7 @@ management_framework/dashboards/compliance-dashboard.md  ← Visual compliance o
 
 ## Standalone Usage
 
-AI-GCE works on **any workspace** that has `.kiro/steering/` files — it does NOT require AI-DWG to have generated those files. You can:
+AI-GCE works on **any workspace** that has `rules/` files — it does NOT require AI-DWG to have generated those files. You can:
 
 - Create steering files manually and run AI-GCE against them
 - Use AI-GCE on an existing project that already has its own steering setup

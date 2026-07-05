@@ -179,7 +179,7 @@ Connect the defect to test governance:
 
 ### Step 7: Update Defect Log
 
-Append entry to `.tge/defect-log.md`:
+Append entry to `.governance/test/defect-log.md`:
 
 ```markdown
 # Defect Log
@@ -249,7 +249,7 @@ Would you like me to update the register?
 {IF existing test should have caught it:}
 ⚠️ Entry {ID} exists but its assertions don't cover this path — expansion recommended.
 
-**Defect log saved to:** `.tge/defect-log.md`
+**Defect log saved to:** `.governance/test/defect-log.md`
 ```
 
 **No gate.** Defect logging is continuous — log and inform. Register update proposals are presented but don't block.
@@ -280,9 +280,9 @@ Open → Investigating → Fixed → Verified → Closed
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| Defect Log | `.tge/defect-log.md` | Structured defect tracking (append-only) |
-| Register update (if approved) | `.tge/test-register.md` | New entry or expanded assertion |
-| Updated state file | `.tge/tge-state.md` | Defect count updated |
+| Defect Log | `.governance/test/defect-log.md` | Structured defect tracking (append-only) |
+| Register update (if approved) | `.governance/test/test-register.md` | New entry or expanded assertion |
+| Updated state file | `.governance/test/tge-state.md` | Defect count updated |
 
 ---
 
@@ -297,5 +297,5 @@ Open → Investigating → Fixed → Verified → Closed
 | Status valid | One of the lifecycle states |
 | Governance connection made | Register entry linked (existing or gap noted) |
 | Root cause tracked | Present OR marked "_[Investigating]_" |
-| Defect log updated | Entry appended to `.tge/defect-log.md` |
+| Defect log updated | Entry appended to `.governance/test/defect-log.md` |
 | Non-blocking | No gate — log and inform |

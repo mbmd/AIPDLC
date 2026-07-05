@@ -29,7 +29,7 @@ Format: `{type}({scope}): {subject}`
 Types: feat, fix, refactor, docs, test, chore, perf, ci
 Scope: module name (see module-structure.md)
 
-Full convention: `.kiro/steering/git-workflow.md`
+Full convention: `rules/git-workflow.md`
 
 ## Pull Requests
 
@@ -41,7 +41,7 @@ Full convention: `.kiro/steering/git-workflow.md`
 
 ## Code Standards
 
-Follow `.kiro/steering/` rules:
+Follow `rules/` rules:
 - Module boundaries (module-structure.md)
 - Domain language (domain-context.md)
 - Error patterns (error-handling.md)

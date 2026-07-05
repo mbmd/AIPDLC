@@ -42,50 +42,27 @@
 
 ## How It Works
 
-Each AI-* package installs **two things** into your workspace, both **family-scoped** to the AI-* PDLC Family (core files live under an `.ai-rules/pdlc/` folder segment; rule-details live under a `.pdlc/` folder — so multiple AIFLC families can coexist in one workspace):
+The installer places **one always-loaded file** plus the **package home**, both scoped to the AI-* PDLC Family (multiple AIFLC families can coexist in one workspace):
 
-1. **Core workflow/engine file** — a Markdown file that Codex reads automatically at session start (placed as the root `AGENTS.md` index plus per-package `AGENTS.md` files under `.ai-rules/pdlc/`)
-2. **Rule-details folder** — phase-specific instructions and templates that the core workflow loads on demand during execution (placed under `.pdlc/`)
+1. **Session orchestrator** — the orchestrator placed in the root `AGENTS.md` that Codex reads automatically at every session start. It is the ONLY always-loaded file. It detects which package you want and `Read`s that package's core on demand — keeping the context window free.
+2. **Package home** — every package's core AND rule-details live together in the uniform, agent-neutral home `.aiflc/pdlc/`. Nothing here auto-loads; the orchestrator reads from it on demand.
 
 ```
 your-workspace/
-├── AGENTS.md                      ← Codex reads this automatically (always-loaded steering)
-├── .pdlc/
-│   └── ai-pilc-rule-details/      ← Loaded on-demand by the core workflow
-│       ├── common/
-│       ├── inception/
-│       ├── assessment/
-│       ├── templates/
-│       └── ...
+├── AGENTS.md                      ← The ONLY always-loaded file (orchestrator; routes to cores)
+├── .aiflc/
+│   └── pdlc/                      ← AI-* PDLC Family home (cores + rule-details + fabric)
+│       ├── ai-pilc-rules/core-workflow.md    ← Read on demand by the orchestrator
+│       ├── ai-pilc-rule-details/             ← Read on demand by the core
+│       │   ├── common/  inception/  assessment/  templates/  ...
+│       └── ... one {pkg}-rules/ + {pkg}-rule-details/ per installed package
 ├── pdlc-ws/                       ← All runtime outputs land here (never workspace root)
 └── (your project files)
 ```
 
-Codex reads `AGENTS.md` at the workspace root on every session start. This is how the packages inject their expertise into Codex's context without you needing to paste anything.
+Codex reads `AGENTS.md` at the workspace root on every session start. The family places the compact orchestrator there; when you activate a package (by key or intent), the orchestrator `Read`s `.aiflc/pdlc/ai-{pkg}-rules/core-*.md`, and the core reads its rule-details from `.aiflc/pdlc/ai-{pkg}-rule-details/` as each phase needs them.
 
-> **The Kiro-style split:** core files load as always-on steering (root `AGENTS.md` + `.ai-rules/pdlc/`); rule-details are read on demand (`.pdlc/`); and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root.
-
-### Subdirectory AGENTS.md (Multi-Package Approach)
-
-Codex supports hierarchical `AGENTS.md` files — it reads the root file plus any `AGENTS.md` in subdirectories relevant to the work. The installer leverages this for multi-package installs, family-scoped under `.ai-rules/pdlc/`:
-
-```
-your-workspace/
-├── AGENTS.md                      ← Root: package index + shared instructions
-├── .ai-rules/
-│   └── pdlc/                      ← AI-* PDLC Family scope
-│       ├── AGENTS.md              ← Optional: aggregated workflows (Codex reads this too)
-│       ├── ai-pilc/
-│       │   └── AGENTS.md          ← AI-PILC core workflow
-│       ├── ai-adlc/
-│       │   └── AGENTS.md          ← AI-ADLC core workflow
-│       └── ai-dwg/
-│           └── AGENTS.md          ← AI-DWG core workflow
-├── .pdlc/
-│   └── ai-pilc-rule-details/      ← On-demand details
-├── pdlc-ws/                       ← All runtime outputs
-└── (your project files)
-```
+> **The AIFLC model:** one orchestrator loads always-on (root `AGENTS.md`); every package core + its rule-details live in the uniform home `.aiflc/pdlc/` and are read on demand; and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root. The `.aiflc/pdlc/` layout is identical on every platform.
 
 ---
 
@@ -153,12 +130,13 @@ cd <path-to-AIPDLC>
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-# Copy the core workflow as AGENTS.md (Codex reads this automatically)
-Copy-Item "$Source\ai-pilc\ai-pilc-rules\core-workflow.md" "$Target\AGENTS.md"
+# Place the orchestrator as the root AGENTS.md (Codex reads this automatically)
+Copy-Item "$Source\session-orchestrator.md" "$Target\AGENTS.md"
 
-# Copy the rule-details folder (family-scoped under .pdlc/)
-New-Item -ItemType Directory -Force -Path "$Target\.pdlc\ai-pilc-rule-details"
-Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details\*" "$Target\.pdlc\ai-pilc-rule-details\"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rules" "$Target\.aiflc\pdlc\"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.aiflc\pdlc\"
 ```
 
 **macOS / Linux:**
@@ -167,17 +145,18 @@ Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details\*" "$Target\.pdlc\ai-pi
 SOURCE=<path-to-AIPDLC>
 TARGET=<your-project-path>
 
-# Copy the core workflow as AGENTS.md
-cp "$SOURCE/ai-pilc/ai-pilc-rules/core-workflow.md" "$TARGET/AGENTS.md"
+# Place the orchestrator as the root AGENTS.md
+cp "$SOURCE/session-orchestrator.md" "$TARGET/AGENTS.md"
 
-# Copy the rule-details folder (family-scoped under .pdlc/)
-mkdir -p "$TARGET/.pdlc/ai-pilc-rule-details"
-cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details/"* "$TARGET/.pdlc/ai-pilc-rule-details/"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+mkdir -p "$TARGET/.aiflc/pdlc"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rules" "$TARGET/.aiflc/pdlc/"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details" "$TARGET/.aiflc/pdlc/"
 ```
 
-### Multi-Package Manual Install (Subdirectory Approach)
+### Multi-Package Manual Install
 
-For multiple packages, use the subdirectory pattern so each package gets its own `AGENTS.md`:
+Add more packages by copying their cores + rule-details into the same uniform home. The root `AGENTS.md` orchestrator stays as-is — it routes to whichever cores are present:
 
 **Windows (PowerShell):**
 
@@ -185,23 +164,17 @@ For multiple packages, use the subdirectory pattern so each package gets its own
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-# Create the rules directory structure (family-scoped under .ai-rules/pdlc/)
-New-Item -ItemType Directory -Force -Path "$Target\.ai-rules\pdlc"
+# Orchestrator at root (once)
+Copy-Item "$Source\session-orchestrator.md" "$Target\AGENTS.md" -Force
 
-# Install AI-PILC
-New-Item -ItemType Directory -Force -Path "$Target\.ai-rules\pdlc\ai-pilc"
-Copy-Item "$Source\ai-pilc\ai-pilc-rules\core-workflow.md" "$Target\.ai-rules\pdlc\ai-pilc\AGENTS.md"
-Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.pdlc\ai-pilc-rule-details"
+# Uniform home
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc"
 
-# Install AI-ADLC
-New-Item -ItemType Directory -Force -Path "$Target\.ai-rules\pdlc\ai-adlc"
-Copy-Item "$Source\ai-adlc\ai-adlc-rules\core-workflow.md" "$Target\.ai-rules\pdlc\ai-adlc\AGENTS.md"
-Copy-Item -Recurse "$Source\ai-adlc\ai-adlc-rule-details" "$Target\.pdlc\ai-adlc-rule-details"
-
-# Install AI-DWG
-New-Item -ItemType Directory -Force -Path "$Target\.ai-rules\pdlc\ai-dwg"
-Copy-Item "$Source\ai-dwg\ai-dwg-rules\core-generator.md" "$Target\.ai-rules\pdlc\ai-dwg\AGENTS.md"
-Copy-Item -Recurse "$Source\ai-dwg\ai-dwg-rule-details" "$Target\.pdlc\ai-dwg-rule-details"
+# Install AI-PILC + AI-ADLC + AI-DWG (cores + rule-details) into .aiflc/pdlc/
+foreach ($pkg in @("ai-pilc", "ai-adlc", "ai-dwg")) {
+    Copy-Item -Recurse "$Source\$pkg\$pkg-rules" "$Target\.aiflc\pdlc\" -Force
+    Copy-Item -Recurse "$Source\$pkg\$pkg-rule-details" "$Target\.aiflc\pdlc\" -Force
+}
 ```
 
 **macOS / Linux:**
@@ -210,80 +183,36 @@ Copy-Item -Recurse "$Source\ai-dwg\ai-dwg-rule-details" "$Target\.pdlc\ai-dwg-ru
 SOURCE=<path-to-AIPDLC>
 TARGET=<your-project-path>
 
-# Create the rules directory structure (family-scoped under .ai-rules/pdlc/)
-mkdir -p "$TARGET/.ai-rules/pdlc"
+# Orchestrator at root (once)
+cp "$SOURCE/session-orchestrator.md" "$TARGET/AGENTS.md"
 
-# Install AI-PILC
-mkdir -p "$TARGET/.ai-rules/pdlc/ai-pilc"
-cp "$SOURCE/ai-pilc/ai-pilc-rules/core-workflow.md" "$TARGET/.ai-rules/pdlc/ai-pilc/AGENTS.md"
-cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details" "$TARGET/.pdlc/ai-pilc-rule-details"
+# Uniform home
+mkdir -p "$TARGET/.aiflc/pdlc"
 
-# Install AI-ADLC
-mkdir -p "$TARGET/.ai-rules/pdlc/ai-adlc"
-cp "$SOURCE/ai-adlc/ai-adlc-rules/core-workflow.md" "$TARGET/.ai-rules/pdlc/ai-adlc/AGENTS.md"
-cp -R "$SOURCE/ai-adlc/ai-adlc-rule-details" "$TARGET/.pdlc/ai-adlc-rule-details"
-
-# Install AI-DWG
-mkdir -p "$TARGET/.ai-rules/pdlc/ai-dwg"
-cp "$SOURCE/ai-dwg/ai-dwg-rules/core-generator.md" "$TARGET/.ai-rules/pdlc/ai-dwg/AGENTS.md"
-cp -R "$SOURCE/ai-dwg/ai-dwg-rule-details" "$TARGET/.pdlc/ai-dwg-rule-details"
+# Install AI-PILC + AI-ADLC + AI-DWG (cores + rule-details) into .aiflc/pdlc/
+for pkg in ai-pilc ai-adlc ai-dwg; do
+    cp -R "$SOURCE/$pkg/${pkg}-rules" "$TARGET/.aiflc/pdlc/"
+    cp -R "$SOURCE/$pkg/${pkg}-rule-details" "$TARGET/.aiflc/pdlc/"
+done
 ```
-
-### Alternative: Single Root AGENTS.md (Concatenated)
-
-If you prefer a single root `AGENTS.md` with all packages merged:
-
-```powershell
-$Source = "<path-to-AIPDLC>"
-$Target = "<your-project-path>"
-
-$header = @"
-# AI-* Family Steering (AIFLC)
-
-This workspace uses AIFLC injectable workflow packages.
-Activate a package by saying: "Using AI-{PKG}, ..."
-
----
-
-"@
-$header | Out-File -FilePath "$Target\AGENTS.md" -Encoding utf8
-
-$packages = @(
-    @{ Name = "ai-pilc"; Core = "core-workflow.md";  Rules = "ai-pilc-rules";  Details = "ai-pilc-rule-details" }
-    @{ Name = "ai-adlc"; Core = "core-workflow.md";  Rules = "ai-adlc-rules"; Details = "ai-adlc-rule-details" }
-    @{ Name = "ai-dwg";  Core = "core-generator.md"; Rules = "ai-dwg-rules";  Details = "ai-dwg-rule-details" }
-)
-
-foreach ($pkg in $packages) {
-    $coreSource = Join-Path $Source "$($pkg.Name)\$($pkg.Rules)\$($pkg.Core)"
-    if (Test-Path $coreSource) {
-        "`n---`n`n## PDLC / $($pkg.Name.ToUpper())`n`n" | Add-Content "$Target\AGENTS.md"
-        Get-Content $coreSource -Raw | Add-Content "$Target\AGENTS.md"
-        $detailsSource = Join-Path $Source "$($pkg.Name)\$($pkg.Details)"
-        if (Test-Path $detailsSource) {
-            Copy-Item -Recurse $detailsSource "$Target\.pdlc\$($pkg.Details)" -Force
-        }
-    }
-}
-```
-
-> **Trade-off:** Single file is simpler; subdirectory approach allows independent updates per package.
 
 ### File Placement Convention (Codex)
 
-| Package | Core File (always loaded) | Details Folder (on-demand) |
-|---------|--------------------------|---------------------------|
-| AI-ILC | `.ai-rules/pdlc/ai-ilc/AGENTS.md` | `.pdlc/ai-ilc-rule-details/` |
-| AI-PILC | `.ai-rules/pdlc/ai-pilc/AGENTS.md` | `.pdlc/ai-pilc-rule-details/` |
-| AI-ADLC | `.ai-rules/pdlc/ai-adlc/AGENTS.md` | `.pdlc/ai-adlc-rule-details/` |
-| AI-UXD | `.ai-rules/pdlc/ai-uxd/AGENTS.md` | `.pdlc/ai-uxd-rule-details/` |
-| AI-POLC | `.ai-rules/pdlc/ai-polc/AGENTS.md` | `.pdlc/ai-polc-rule-details/` |
-| AI-DWG | `.ai-rules/pdlc/ai-dwg/AGENTS.md` | `.pdlc/ai-dwg-rule-details/` |
-| AI-GCE | `.ai-rules/pdlc/ai-gce/AGENTS.md` | `.pdlc/ai-gce-rule-details/` |
-| AI-TGE | `.ai-rules/pdlc/ai-tge/AGENTS.md` | `.pdlc/ai-tge-rule-details/` |
-| AI-PPM | `.ai-rules/pdlc/ai-ppm/AGENTS.md` | `.pdlc/ai-ppm-rule-details/` |
-| AI-FLO | `.ai-rules/pdlc/ai-flo/AGENTS.md` | `.pdlc/ai-flo-rule-details/` |
-| AI-DFE | `.ai-rules/pdlc/ai-dfe/AGENTS.md` | `.pdlc/ai-dfe-rule-details/` |
+The orchestrator is the only always-loaded file (root `AGENTS.md`). Every package core + its rule-details live in the uniform home `.aiflc/pdlc/`, read on demand.
+
+| Package | Core (read on demand) | Details (read on demand) |
+|---------|-----------------------|--------------------------|
+| AI-ILC | `.aiflc/pdlc/ai-ilc-rules/core-workflow.md` | `.aiflc/pdlc/ai-ilc-rule-details/` |
+| AI-PILC | `.aiflc/pdlc/ai-pilc-rules/core-workflow.md` | `.aiflc/pdlc/ai-pilc-rule-details/` |
+| AI-ADLC | `.aiflc/pdlc/ai-adlc-rules/core-workflow.md` | `.aiflc/pdlc/ai-adlc-rule-details/` |
+| AI-UXD | `.aiflc/pdlc/ai-uxd-rules/core-workflow.md` | `.aiflc/pdlc/ai-uxd-rule-details/` |
+| AI-POLC | `.aiflc/pdlc/ai-polc-rules/core-workflow.md` | `.aiflc/pdlc/ai-polc-rule-details/` |
+| AI-DWG | `.aiflc/pdlc/ai-dwg-rules/core-generator.md` | `.aiflc/pdlc/ai-dwg-rule-details/` |
+| AI-GCE | `.aiflc/pdlc/ai-gce-rules/core-generator.md` | `.aiflc/pdlc/ai-gce-rule-details/` |
+| AI-TGE | `.aiflc/pdlc/ai-tge-rules/core-engine.md` | `.aiflc/pdlc/ai-tge-rule-details/` |
+| AI-PPM | `.aiflc/pdlc/ai-ppm-rules/core-engine.md` | `.aiflc/pdlc/ai-ppm-rule-details/` |
+| AI-FLO | `.aiflc/pdlc/ai-flo-rules/core-engine.md` | `.aiflc/pdlc/ai-flo-rule-details/` |
+| AI-DFE | `.aiflc/pdlc/ai-dfe-rules/core-engine.md` | `.aiflc/pdlc/ai-dfe-rule-details/` |
 
 ---
 
@@ -301,80 +230,38 @@ Or manually:
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-New-Item -ItemType Directory -Force -Path "$Target\.ai-rules\pdlc" | Out-Null
+# Uniform home for all cores + rule-details
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc" | Out-Null
 
 $packages = @(
-    @{ Name = "ai-ilc";  Core = "core-workflow.md";  Rules = "ai-ilc-rules";  Details = "ai-ilc-rule-details" }
-    @{ Name = "ai-pilc"; Core = "core-workflow.md";  Rules = "ai-pilc-rules"; Details = "ai-pilc-rule-details" }
-    @{ Name = "ai-ppm";  Core = "core-engine.md";    Rules = "ai-ppm-rules";  Details = "ai-ppm-rule-details" }
-    @{ Name = "ai-flo";  Core = "core-engine.md";    Rules = "ai-flo-rules";  Details = "ai-flo-rule-details" }
-    @{ Name = "ai-adlc"; Core = "core-workflow.md";  Rules = "ai-adlc-rules"; Details = "ai-adlc-rule-details" }
-    @{ Name = "ai-uxd";  Core = "core-workflow.md";  Rules = "ai-uxd-rules";  Details = "ai-uxd-rule-details" }
-    @{ Name = "ai-polc"; Core = "core-workflow.md";  Rules = "ai-polc-rules"; Details = "ai-polc-rule-details" }
-    @{ Name = "ai-dwg";  Core = "core-generator.md"; Rules = "ai-dwg-rules";  Details = "ai-dwg-rule-details" }
-    @{ Name = "ai-gce";  Core = "core-generator.md"; Rules = "ai-gce-rules";  Details = "ai-gce-rule-details" }
-    @{ Name = "ai-tge";  Core = "core-engine.md";    Rules = "ai-tge-rules";  Details = "ai-tge-rule-details" }
-    @{ Name = "ai-dfe";  Core = "core-engine.md";    Rules = "ai-dfe-rules";  Details = "ai-dfe-rule-details" }
+    "ai-ilc", "ai-pilc", "ai-ppm", "ai-flo", "ai-adlc",
+    "ai-uxd", "ai-polc", "ai-dwg", "ai-gce", "ai-tge", "ai-dfe"
 )
 
+# Copy every package core + rule-details into the uniform home
 foreach ($pkg in $packages) {
-    $pkgDir = Join-Path $Target ".ai-rules\pdlc\$($pkg.Name)"
-    New-Item -ItemType Directory -Force -Path $pkgDir | Out-Null
-
-    $coreSource = Join-Path $Source "$($pkg.Name)\$($pkg.Rules)\$($pkg.Core)"
-    if (Test-Path $coreSource) {
-        Copy-Item $coreSource (Join-Path $pkgDir "AGENTS.md") -Force
-        $detailsSource = Join-Path $Source "$($pkg.Name)\$($pkg.Details)"
-        $detailsDest = Join-Path $Target ".pdlc\$($pkg.Details)"
-        if (Test-Path $detailsSource) {
-            if (Test-Path $detailsDest) { Remove-Item -Recurse -Force $detailsDest }
-            Copy-Item -Recurse $detailsSource $detailsDest
-        }
-        Write-Host "Installed $($pkg.Name)" -ForegroundColor Green
+    $rulesSource = Join-Path $Source "$pkg\$pkg-rules"
+    $detailsSource = Join-Path $Source "$pkg\$pkg-rule-details"
+    if (Test-Path $rulesSource) {
+        Copy-Item -Recurse $rulesSource "$Target\.aiflc\pdlc\" -Force
+        Copy-Item -Recurse $detailsSource "$Target\.aiflc\pdlc\" -Force
+        Write-Host "Installed $pkg into .aiflc/pdlc/" -ForegroundColor Green
     } else {
-        Write-Host "Skipped $($pkg.Name) - source not found" -ForegroundColor Yellow
+        Write-Host "Skipped $pkg - source not found" -ForegroundColor Yellow
     }
 }
 
-# Create root AGENTS.md with package index
-$rootAgents = @"
-# AI-* Family (AIFLC) — Package Index
-
-This workspace has AIFLC injectable workflow packages installed.
-
-## Installed Packages
-
-Activate any package by saying: "Using AI-{PKG}, ..."
-
-| Package | Activation | What It Does |
-|---------|-----------|--------------|
-| AI-ILC | "Using AI-ILC, evaluate this idea" | Idea evaluation → Approved Brief |
-| AI-PILC | "Using AI-PILC, initiate a project" | Requirement → Project Initiation Package |
-| AI-PPM | "Using AI-PPM, manage my portfolio" | Portfolio governance |
-| AI-FLO | "Using AI-FLO, route this output" | Inter-package handoff routing |
-| AI-ADLC | "Using AI-ADLC, design the architecture" | Requirements → Architecture Package |
-| AI-UXD | "Using AI-UXD, design the user experience" | PIP/AP → UX Design Package |
-| AI-POLC | "Using AI-POLC, build the product backlog" | PIP/AP → Product Backlog |
-| AI-DWG | "Using AI-DWG, generate the workspace" | Architecture → Ready-to-code workspace |
-| AI-GCE | "Using AI-GCE, set up governance" | Workspace → Compliance enforcement |
-| AI-TGE | "Using AI-TGE, establish test governance" | Workspace → Test strategy |
-| AI-DFE | "Using AI-DFE, gather data" | Gather, shape, and distribute structured data |
-
-## How It Works
-
-Each package's full instructions are in `.ai-rules/pdlc/{package}/AGENTS.md`.
-Phase-specific details are in `.pdlc/{package}-rule-details/` (loaded on demand during execution).
-State markers (e.g. `pilc-state.md`) enable chain handoffs between packages.
-"@
-$rootAgents | Out-File -FilePath "$Target\AGENTS.md" -Encoding utf8
+# Place the single always-loaded orchestrator at the workspace root
+Copy-Item "$Source\session-orchestrator.md" "$Target\AGENTS.md" -Force
+Write-Host "Installed session orchestrator (AGENTS.md)" -ForegroundColor Green
 ```
 
 ### Context Window Consideration
 
-Codex loads `AGENTS.md` files from the workspace hierarchy. With 11 packages installed in subdirectories:
+Codex loads only the root `AGENTS.md` (the orchestrator) at session start — not the package cores. With 11 packages installed:
 
-- **Recommended:** Install only the packages you'll use in a given project. Most projects need 3–5 packages, not all 11.
-- **If installing all 11:** Core files are orchestration logic (1–3 KB each). The root `AGENTS.md` serves as a lightweight index; subdirectory files are loaded based on relevance.
+- **The orchestrator is compact** — it routes by intent and `Read`s exactly one package core from `.aiflc/pdlc/` when you activate it.
+- **Package cores stay dormant** in `.aiflc/pdlc/` until invoked (each is orchestration logic, 1–3 KB), so installing all 11 costs nothing at session start.
 - **The AI activates only one package at a time** — the others are dormant until you invoke them.
 
 ---
@@ -415,51 +302,39 @@ After a full install (`-Bundle full`), your workspace looks like this:
 
 ```
 your-project/
-├── AGENTS.md                            ← Root: package index (always loaded by Codex)
-├── .ai-rules/
-│   └── pdlc/                            ← AI-* PDLC Family scope
-│       ├── ai-ilc/
-│       │   └── AGENTS.md               ← AI-ILC core workflow
-│       ├── ai-pilc/
-│       │   └── AGENTS.md               ← AI-PILC core workflow
-│       ├── ai-ppm/
-│       │   └── AGENTS.md               ← AI-PPM core engine
-│       ├── ai-flo/
-│       │   └── AGENTS.md               ← AI-FLO core engine
-│       ├── ai-adlc/
-│       │   └── AGENTS.md               ← AI-ADLC core workflow
-│       ├── ai-uxd/
-│       │   └── AGENTS.md               ← AI-UXD core workflow
-│       ├── ai-polc/
-│       │   └── AGENTS.md               ← AI-POLC core workflow
-│       ├── ai-dwg/
-│       │   └── AGENTS.md               ← AI-DWG core generator
-│       ├── ai-gce/
-│       │   └── AGENTS.md               ← AI-GCE core generator
-│       ├── ai-tge/
-│       │   └── AGENTS.md               ← AI-TGE core engine
-│       └── ai-dfe/
-│           └── AGENTS.md               ← AI-DFE core engine
-├── .pdlc/                               ← AI-* PDLC Family rule-details (on-demand)
-│   ├── ai-ilc-rule-details/                ← idea lifecycle details
-│   ├── ai-pilc-rule-details/               ← project initiation details
-│   │   ├── common/
-│   │   ├── inception/
-│   │   ├── assessment/
-│   │   ├── justification/
-│   │   ├── authorization/
-│   │   ├── planning/
-│   │   ├── mobilization/
-│   │   └── templates/
-│   ├── ai-adlc-rule-details/               ← architecture design details
-│   ├── ai-uxd-rule-details/                ← UX design details
-│   ├── ai-polc-rule-details/               ← product ownership details
-│   ├── ai-ppm-rule-details/                ← portfolio management details
-│   ├── ai-flo-rule-details/                ← flow routing details
-│   ├── ai-dwg-rule-details/                ← workspace generation details
-│   ├── ai-gce-rule-details/                ← governance engine details
-│   ├── ai-tge-rule-details/                ← test governance details
-│   └── ai-dfe-rule-details/                ← data fabric details
+├── AGENTS.md                            ← The ONLY always-loaded file (orchestrator; routes to cores)
+├── .aiflc/
+│   └── pdlc/                            ← AI-* PDLC Family home (cores + rule-details, on-demand)
+│       ├── ai-ilc-rules/core-workflow.md
+│       ├── ai-ilc-rule-details/            ← idea lifecycle details
+│       ├── ai-pilc-rules/core-workflow.md
+│       ├── ai-pilc-rule-details/           ← project initiation details
+│       │   ├── common/
+│       │   ├── inception/
+│       │   ├── assessment/
+│       │   ├── justification/
+│       │   ├── authorization/
+│       │   ├── planning/
+│       │   ├── mobilization/
+│       │   └── templates/
+│       ├── ai-ppm-rules/core-engine.md
+│       ├── ai-ppm-rule-details/            ← portfolio management details
+│       ├── ai-flo-rules/core-engine.md
+│       ├── ai-flo-rule-details/            ← flow routing details
+│       ├── ai-adlc-rules/core-workflow.md
+│       ├── ai-adlc-rule-details/           ← architecture design details
+│       ├── ai-uxd-rules/core-workflow.md
+│       ├── ai-uxd-rule-details/            ← UX design details
+│       ├── ai-polc-rules/core-workflow.md
+│       ├── ai-polc-rule-details/           ← product ownership details
+│       ├── ai-dwg-rules/core-generator.md
+│       ├── ai-dwg-rule-details/            ← workspace generation details
+│       ├── ai-gce-rules/core-generator.md
+│       ├── ai-gce-rule-details/            ← governance engine details
+│       ├── ai-tge-rules/core-engine.md
+│       ├── ai-tge-rule-details/            ← test governance details
+│       ├── ai-dfe-rules/core-engine.md
+│       └── ai-dfe-rule-details/            ← data fabric details
 ├── pdlc-ws/                             ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 │   ├── .ai-family-manifest.json         ← Installer tracking (for uninstall)
 │   └── tools/                           ← Family tools (visual tools / extensions)
@@ -469,7 +344,7 @@ your-project/
 └── (your project files)
 ```
 
-> **Note:** The `.ai-rules/` and `.pdlc/` folders are dot-prefixed (hidden) and won't clutter your project view in most file explorers.
+> **Note:** The `.aiflc/pdlc/` home is dot-prefixed (hidden) and won't clutter your project view in most file explorers.
 
 ---
 
@@ -482,15 +357,15 @@ After installation, verify everything is working:
 ```powershell
 # Windows
 Get-ChildItem "<your-project-path>\AGENTS.md"
-Get-ChildItem "<your-project-path>\.ai-rules\pdlc" -Directory
-Get-ChildItem "<your-project-path>\.pdlc\ai-*-rule-details" -Directory
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rules" -Directory
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rule-details" -Directory
 ```
 
 ```bash
 # macOS/Linux
 ls <your-project-path>/AGENTS.md
-ls -d <your-project-path>/.ai-rules/pdlc/*/
-ls -d <your-project-path>/.pdlc/ai-*-rule-details/
+ls -d <your-project-path>/.aiflc/pdlc/ai-*-rules/
+ls -d <your-project-path>/.aiflc/pdlc/ai-*-rule-details/
 ```
 
 ### Step 2: Start Codex in your workspace
@@ -523,7 +398,7 @@ Using AI-ILC, evaluate this idea: [describe your idea]
 
 ### Step 4: Verify on-demand loading
 
-During a workflow, when Codex transitions to a new phase, it reads the corresponding rule-details file. You'll see file-read operations in Codex's output referencing paths like `.pdlc/ai-pilc-rule-details/inception/stage-01-...`.
+During a workflow, when Codex transitions to a new phase, it reads the corresponding rule-details file. You'll see file-read operations in Codex's output referencing paths like `.aiflc/pdlc/ai-pilc-rule-details/inception/stage-01-...`.
 
 ---
 
@@ -639,8 +514,8 @@ Each workflow package maintains a **state file** (e.g., `pilc-state.md`) that re
 
 AI-* package files coexist peacefully with your existing Codex configuration:
 
-- **Existing `AGENTS.md`**: The installer merges or appends to your existing file (never overwrites without asking).
-- **Existing subdirectory `AGENTS.md` files**: Untouched. Packages use `.ai-rules/pdlc/` as their namespace.
+- **Existing `AGENTS.md`**: The installer merges or appends the orchestrator block to your existing file (never overwrites without asking).
+- **Existing subdirectory `AGENTS.md` files**: Untouched. Package cores live under `.aiflc/pdlc/`, not in subdirectory `AGENTS.md` files.
 - **Other project files**: Never modified. Only AI-* steering files are added.
 - **Package isolation**: Each package activates ONLY when you invoke it by name. Dormant packages don't interfere.
 
@@ -677,11 +552,9 @@ The installer reads `.ai-family-manifest.json` and removes exactly what it insta
 ### Manual Removal
 
 ```powershell
-# Remove the family rules directory
-Remove-Item -Recurse -Force "<your-project-path>\.ai-rules\pdlc"
-
-# Remove all rule-details folders
-Get-ChildItem "<your-project-path>\.pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
+# Remove all package cores + rule-details from the uniform home
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rules" -Directory | Remove-Item -Recurse -Force
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
 
 # Remove the manifest (lives under pdlc-ws/)
 Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction SilentlyContinue
@@ -702,8 +575,9 @@ Remove-Item "<your-project-path>\AGENTS.md" -ErrorAction SilentlyContinue
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| Codex doesn't recognize the package | Root `AGENTS.md` missing or not referencing packages | Verify `AGENTS.md` exists at workspace root with the package index |
-| "Can't find rule-details" | Path mismatch | Ensure `.pdlc/ai-{pkg}-rule-details/` exists at workspace root |
+| Codex doesn't recognize the package | Root `AGENTS.md` missing or not the orchestrator | Verify `AGENTS.md` exists at workspace root and contains the session orchestrator |
+| Package core not found | Path mismatch | Verify `.aiflc/pdlc/ai-{pkg}-rules/core-*.md` exists |
+| "Can't find rule-details" | Path mismatch | Core resolves `.aiflc/pdlc/ai-{pkg}-rule-details/` first |
 | No welcome message | Wrong activation phrase | Use the exact format: "Using AI-PILC, ..." (uppercase package name) |
 | State file not created | First interaction only | State is created after the first stage completes, not immediately |
 | Chain detection not working | Upstream state file missing | Run packages in order. Verify `pilc-state.md` exists before running AI-ADLC |

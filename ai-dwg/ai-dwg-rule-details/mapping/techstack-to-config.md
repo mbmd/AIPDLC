@@ -4,7 +4,7 @@
 ## Purpose
 
 This mapping rule transforms the **Technology Stack** document (AP artifact) and its associated ADRs into four workspace artifacts:
-1. `.kiro/steering/tech-stack.md` — Technology reference and constraints
+1. `rules/tech-stack.md` — Technology reference and constraints
 2. `.gitignore` — Stack-appropriate ignore patterns
 3. `docker-compose.yml` — Development infrastructure skeleton
 4. `.editorconfig` — Code style enforcement

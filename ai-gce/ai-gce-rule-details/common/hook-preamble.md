@@ -14,9 +14,9 @@ This file defines the **standard preamble** that MUST be prepended to every hook
 Before performing any checks below, verify the triggering file path.
 
 EXCLUDED ZONES (package infrastructure — NOT compliance subjects):
-• .kiro/hooks/          — AI-GCE hook infrastructure
-• .kiro/steering/       — AI-DWG/AI-GCE steering infrastructure
-• .kiro/agents/         — AI-GCE agent infrastructure
+• .governance/hooks/          — AI-GCE hook infrastructure
+• rules/       — AI-DWG/AI-GCE steering infrastructure
+• .governance/agents/         — AI-GCE agent infrastructure
 • .governance/          — AI-GCE governance rules/agents/logs
 • compliance-log/       — AI-GCE audit trail (append-only infrastructure)
 • project-initiation/   — AI-PILC output (upstream documentation, not code)

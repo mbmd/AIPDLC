@@ -281,7 +281,7 @@ See `common/session-continuity.md` for full state management specification.
 
 ```
 <workspace-root>/
-└── .tge/
+└── .governance/test/
     ├── tge-state.md              ← Engine state + progress tracking (MARKER FILE)
     ├── test-strategy.md          ← Test approach, pyramid, tools, goals
     ├── test-register.md          ← Master list: commitment → test → status

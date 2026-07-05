@@ -9,7 +9,7 @@ ownership: generated
 # Brownfield Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate brownfield-specific steering files
-> in the target project's `.kiro/steering/` folder. These templates encode reverse-engineered
+> in the target project's `rules/` folder. These templates encode reverse-engineered
 > business rules, characterization test requirements, legacy behavior preservation rules,
 > and incremental modernization patterns. Generated ONLY when `brownfield-patterns.md` exists.
 >
@@ -21,7 +21,7 @@ ownership: generated
 
 ## brownfield-{component_name}.md (FileMatch `{component_path_pattern}`)
 
-**Generates**: `.kiro/steering/brownfield-{component_name}.md` (one per legacy component)
+**Generates**: `rules/brownfield-{component_name}.md` (one per legacy component)
 **Condition**: Generated only IF `brownfield-patterns.md` exists in workspace steering
 **Derived From**: brownfield-patterns.md + reverse-engineering sessions
 
@@ -69,7 +69,7 @@ fileMatchPattern: "{component_path_pattern}"
 
 ## brownfield-integration-map.md (Always — within brownfield scope)
 
-**Generates**: `.kiro/steering/brownfield-integration-map.md`
+**Generates**: `rules/brownfield-integration-map.md`
 **Condition**: Generated alongside brownfield component stubs
 **Derived From**: brownfield-patterns.md + integration analysis
 
@@ -110,7 +110,7 @@ inclusion: always
 
 ## brownfield-modernization-rules.md (Always — within brownfield scope)
 
-**Generates**: `.kiro/steering/brownfield-modernization-rules.md`
+**Generates**: `rules/brownfield-modernization-rules.md`
 **Derived From**: brownfield-patterns.md + architecture-principles.md
 
 ```markdown

@@ -118,9 +118,9 @@ This system does NOT include: {out-of-scope-items}
 
 ## References
 
-- Architecture Principles (full detail): `.kiro/steering/architecture-principles.md`
-- Technology Stack: `.kiro/steering/tech-stack.md`
-- Module Structure: `.kiro/steering/module-structure.md`
+- Architecture Principles (full detail): `rules/architecture-principles.md`
+- Technology Stack: `rules/tech-stack.md`
+- Module Structure: `rules/module-structure.md`
 ```
 
 ## Filling Instructions

@@ -24,58 +24,54 @@ The installer places package files in the correct location for your platform and
 your-workspace/
 ├── .kiro/
 │   ├── steering/
-│   │   └── pdlc/
-│   │       └── ai-flo-rules/core-engine.md   ← always-loaded steering (core)
-│   ├── pdlc/
-│   │   ├── ai-flo-rule-details/              ← on-demand rule details
-│   │   ├── FAMILY_BINDINGS.md                ← fabric trio (routing graph) — REQUIRED
-│   │   ├── GATE_PROTOCOL.md                  ← fabric trio (gate matching)  — REQUIRED
-│   │   └── FAMILY_INTERFACE.md               ← fabric trio (discovery)      — REQUIRED
+│   │   └── session-orchestrator.md           ← the ONLY always-loaded file (routes to cores)
 │   └── agents/
 │       ├── flo-health-check.md               ← FHC__ health check (Kiro)
 │       └── flow-integrity-agent.md           ← FIA__ integrity agent (Kiro)
+├── .aiflc/
+│   └── pdlc/
+│       ├── ai-flo-rules/core-engine.md       ← core, read on demand by the orchestrator
+│       ├── ai-flo-rule-details/              ← rule details, read on demand by the core
+│       ├── FAMILY_BINDINGS.md                ← fabric trio (routing graph) — REQUIRED
+│       ├── GATE_PROTOCOL.md                  ← fabric trio (gate matching)  — REQUIRED
+│       └── FAMILY_INTERFACE.md               ← fabric trio (discovery)      — REQUIRED
 └── pdlc-ws/                                   ← AI-FLO OUTPUT lands here (created by installer)
 ```
 
-> **Kiro split:** the core file goes under `.kiro/steering/pdlc/` (Kiro auto-loads only from `steering/`); rule-details + the fabric trio go under `.kiro/pdlc/` (read on-demand by the core file).
+> **The AIFLC model:** the session orchestrator is the only always-loaded file (it sits in Kiro's `.kiro/steering/` slot); the package core, its rule-details, and the fabric trio all live together in the uniform home `.aiflc/pdlc/`, read on demand. The `.aiflc/pdlc/` layout is identical on every platform.
 
-> **Fabric trio (REQUIRED):** AI-FLO reads `FAMILY_BINDINGS.md`, `GATE_PROTOCOL.md`, and `FAMILY_INTERFACE.md` at runtime to build its routing graph. Without them FLO returns **NOT READY** — "no bindings = no routing; FLO never invents routes." The installer deploys them automatically; manual installers must copy them (see below). AI-FLO runs in the **planning / orchestration workspace** (where the lifecycle packages live), never inside an AI-DWG-generated dev workspace — so the trio belongs here, not in a generated workspace.
+> **Fabric trio (REQUIRED):** AI-FLO reads `FAMILY_BINDINGS.md`, `GATE_PROTOCOL.md`, and `FAMILY_INTERFACE.md` from `.aiflc/pdlc/` at runtime to build its routing graph. Without them FLO returns **NOT READY** — "no bindings = no routing; FLO never invents routes." The installer deploys them automatically; manual installers must copy them (see below). AI-FLO runs in the **planning / orchestration workspace** (where the lifecycle packages live), never inside an AI-DWG-generated dev workspace — so the trio belongs here, not in a generated workspace.
 
 ---
 
 ## Manual Install (Per Platform)
 
-If you prefer manual install, place the two artifacts at these locations (replace `<src>` with the path to the `ai-flo` package source):
+If you prefer manual install, copy the package core to `.aiflc/pdlc/ai-flo-rules/core-engine.md` and the rule-details to `.aiflc/pdlc/ai-flo-rule-details/` (identical on every platform), then place the **session orchestrator** — the only always-loaded file — in your platform's native slot:
 
-| Platform | Core file → | Rule-details → |
-|----------|-------------|----------------|
-| Kiro | `.kiro/steering/pdlc/ai-flo-rules/core-engine.md` | `.kiro/pdlc/ai-flo-rule-details/` |
-| Amazon Q | `.amazonq/rules/pdlc/ai-flo-rules/core-engine.md` | `.amazonq/pdlc/ai-flo-rule-details/` |
-| Cursor | `.cursor/rules/pdlc-ai-flo-workflow.mdc` (prepend frontmatter: `---\ndescription: "AI-FLO"\nalwaysApply: true\n---`) | `.pdlc/ai-flo-rule-details/` |
-| Cline | `.clinerules/pdlc-ai-flo-core.md` | `.pdlc/ai-flo-rule-details/` |
-| Claude Code | `CLAUDE_PDLC_AI_FLO.md` | `.pdlc/ai-flo-rule-details/` |
-| Copilot | `.github/copilot-instructions-pdlc-ai-flo.md` | `.pdlc/ai-flo-rule-details/` |
+| Platform | Session orchestrator (always-loaded) → |
+|----------|----------------------------------------|
+| Kiro | `.kiro/steering/session-orchestrator.md` |
+| Amazon Q | `.amazonq/rules/pdlc/session-orchestrator.md` |
+| Cursor | `.cursor/rules/pdlc-session-orchestrator.mdc` (with `alwaysApply: true` frontmatter) |
+| Cline | `.clinerules/pdlc-session-orchestrator.md` |
+| Claude Code | root `CLAUDE.md` importing `@CLAUDE_PDLC_ORCHESTRATOR.md` |
+| Copilot | `.github/copilot-instructions.md` (orchestrator block) |
+| Codex | `AGENTS.md` (orchestrator block) |
 
-(Where the Claude Code filename uses the package code uppercased with hyphens as underscores, e.g. ai-flo → AI_FLO.)
+The core (`core-engine.md`) and `ai-flo-rule-details/` are plain copies under `.aiflc/pdlc/` on every platform — there are no per-package `.mdc`, `.instructions.md`, or `CLAUDE_PDLC_AI_*` files anymore.
 
 ### Manual: copy the fabric trio (REQUIRED)
 
-After placing the core + rule-details, copy the three fabric files from the family root into the **family rule-details root** for your platform (the parent of `ai-flo-rule-details/`):
-
-| Platform | Fabric trio → |
-|----------|---------------|
-| Kiro | `.kiro/pdlc/` |
-| Amazon Q | `.amazonq/pdlc/` |
-| Cursor / Cline / Claude Code / Copilot | `.pdlc/` |
+After placing the core + rule-details, copy the three fabric files from the family root into `.aiflc/pdlc/` — the same uniform home, identical on every platform:
 
 ```powershell
-# Windows (PowerShell) — Kiro example
-Copy-Item "<family-root>\FAMILY_BINDINGS.md","<family-root>\GATE_PROTOCOL.md","<family-root>\FAMILY_INTERFACE.md" ".kiro\pdlc\"
+# Windows (PowerShell)
+Copy-Item "<family-root>\FAMILY_BINDINGS.md","<family-root>\GATE_PROTOCOL.md","<family-root>\FAMILY_INTERFACE.md" ".aiflc\pdlc\"
 ```
 
 ```bash
-# macOS/Linux — Kiro example
-cp <family-root>/FAMILY_BINDINGS.md <family-root>/GATE_PROTOCOL.md <family-root>/FAMILY_INTERFACE.md .kiro/pdlc/
+# macOS/Linux
+cp <family-root>/FAMILY_BINDINGS.md <family-root>/GATE_PROTOCOL.md <family-root>/FAMILY_INTERFACE.md .aiflc/pdlc/
 ```
 
 ### Manual: install the FLO agents (Kiro)
@@ -101,7 +97,7 @@ Then add the `FHC__` / `FIA__` shortcut blocks (see `ai-flo-rule-details/templat
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| `FHC__` returns **NOT READY** / "no routing graph" | Fabric trio missing from `.kiro/{family}/` | Run the family installer, or copy `FAMILY_BINDINGS.md` / `GATE_PROTOCOL.md` / `FAMILY_INTERFACE.md` into the family rule-details root (see Manual: copy the fabric trio). |
+| `FHC__` returns **NOT READY** / "no routing graph" | Fabric trio missing from `.aiflc/pdlc/` | Run the family installer, or copy `FAMILY_BINDINGS.md` / `GATE_PROTOCOL.md` / `FAMILY_INTERFACE.md` into `.aiflc/pdlc/` (see Manual: copy the fabric trio). |
 | FLO activates but won't route | `FAMILY_BINDINGS.md` present but empty/partial | Confirm the family root copy has internal edges; regenerate if needed. |
 | `FHC__` / `FIA__` not recognized | Agent files or shortcut blocks not installed | Install the agents (Kiro) or add the shortcut blocks (other platforms). |
 
@@ -109,8 +105,8 @@ Then add the `FHC__` / `FIA__` shortcut blocks (see `ai-flo-rule-details/templat
 
 ## Notes
 
-- The core file is always-loaded; rule-details load on demand.
-- AI-FLO coexists with other AI-* packages — each is family-scoped under `pdlc/`. Install order doesn't matter; AI-FLO detects available packages by marker file.
+- The session orchestrator is always-loaded; the package core and rule-details load on demand.
+- AI-FLO coexists with other AI-* packages — each is family-scoped under `.aiflc/pdlc/`. Install order doesn't matter; AI-FLO detects available packages by marker file.
 - AI-FLO is the only cross-layer transport: it routes decisions down from AI-PPM and relays telemetry up from Project-layer packages.
 - Runtime output is written under `pdlc-ws/`, never at the workspace root.
 
@@ -151,29 +147,17 @@ AI-FLO includes a built-in **test mode** for capturing feedback (bugs, improveme
 
 ### Kiro IDE
 
-Test mode is **automatically installed** when the core rules are placed — `test-mode.md` is included with `inclusion: manual` frontmatter, meaning it only activates when you reference it.
+Test mode ships automatically with the package's rule-details — the file lives at `.aiflc/pdlc/ai-flo-rule-details/common/test-mode.md` on every platform (Kiro included). Nothing extra is installed for Kiro.
 
-**To activate:** Type `#test-mode` in your chat prompt, or say "activate test mode".
+It is **not** auto-loaded and does **not** appear in Kiro's Steering panel — nothing under `.aiflc/` auto-loads.
 
-**To verify it's available:** Check the Steering Files panel — `test-mode` should appear under manual-inclusion files.
+**To activate:** tell the active package "enable test mode" (or "load test mode"). It reads `test-mode.md` from its rule-details home on demand and starts offering the optional feedback checkpoints.
 
-### Amazon Q Developer / Cursor / Cline / Claude Code / Copilot
+### Amazon Q Developer / Cursor / Cline / Claude Code / Copilot / Codex
 
-For non-Kiro platforms, test mode requires manually including the instructions:
+No manual copy needed — `test-mode.md` is installed with the package under `.aiflc/pdlc/ai-flo-rule-details/common/`, the same on every platform.
 
-```powershell
-# Windows — copy test-mode steering alongside the core file
-Copy-Item "<src>\ai-flo-rules\test-mode.md" "<your-rules-folder>\"
-```
-
-```bash
-# macOS/Linux
-cp <src>/ai-flo-rules/test-mode.md <your-rules-folder>/
-```
-
-Then tell the AI: "I want to use test mode" — and it will follow the test mode instructions.
-
-> **Note:** On platforms without `inclusion: manual` support, `test-mode.md` loads alongside the core file. To avoid unwanted checkpoints, keep it in a separate location and only include it when you want test mode active.
+Activate it the same way: tell the AI "enable test mode". It reads `test-mode.md` from the rule-details home on demand and starts offering the optional feedback checkpoints.
 
 ### What Test Mode Does
 

@@ -64,13 +64,13 @@ IF ADLC present — load tech-cluster mappings:
 
 IF POLC present — load product-cluster mappings:
 • mapping/polc-uxd-to-vision-document.md  (+ UXD personas/journeys if UXD also present)
-• mapping/quality-to-dod.md
+• mapping/quality-to-dod.md               (DoD + DoR → backlog/)
 • mapping/team-to-agreements.md
-• mapping/governance-derivation.md
+• mapping/governance-derivation.md        (+ po-charter, prioritization-register → backlog/)
 • mapping/polc-to-traceability.md          (conditional — PBP has traceability artefact)
 • mapping/polc-to-value-metrics.md         (conditional — PBP has value/KPI artefact)
-• mapping/polc-to-epics-backlog.md         (conditional — PBP has epic decomposition)
-• mapping/polc-to-user-stories.md          (conditional — POLC Tier 2 stories activated)
+• mapping/polc-to-epics-backlog.md         (conditional — PBP has epic decomposition; full story copy if Tier 2)
+• mapping/polc-to-user-stories.md          (conditional — POLC Tier 2 stories activated; index only)
 
 IF UXD present — load UX-cluster mappings:
 • mapping/uxd-to-design-system.md
@@ -94,39 +94,79 @@ Generate files using templates from: templates/
 Only produce output for clusters whose input is present:
 
 IF ADLC present:
-• Tech steering files (13+ always when ADLC present + conditionals) → .kiro/steering/
+• Tech steering files (13+ always when ADLC present + conditionals) → rules/
 • technical-environment.md → project root
 • Config files → project root
 • Folder structure → {src-structure}/
 
 IF POLC present:
-• vision.md → project root (enriched with UXD personas if UXD also present)
+• vision.md → info/ (enriched with UXD personas/journeys if both present)d with UXD personas if UXD also present)
 • DEFINITION_OF_DONE.md → project root
 • Planning templates (3 files) → templates/
-• scope-and-risks.md → .kiro/steering/
-• traceability-matrix.md → project root          (IF PBP has traceability)
-• value-metrics.md → project root                (IF PBP has value/KPIs; relays KPIs to observability if ADLC present)
-• epics-and-backlog.md + backlog/EPIC-*.md       (IF PBP has epic decomposition)
-• user-stories.md + examples/acceptance/*.feature.md (IF POLC Tier 2 stories activated)
+• scope-and-risks.md → backlog/
+• traceability-matrix.md → backlog/              (IF PBP has traceability)
+• value-metrics.md → backlog/                    (IF PBP has value/KPIs; relays KPIs to observability if ADLC present)
+• DEFINITION_OF_DONE.md → backlog/               (IF POLC or ADLC)
+• DEFINITION_OF_READY.md → backlog/              (IF POLC)
+• epics-and-backlog.md → backlog/                (IF PBP has epic decomposition)
+• backlog/epics/ (full story files per epic)     (IF PBP Tier 2)
+• user-stories.md → backlog/ (index only)        (IF POLC Tier 2 stories activated)
+• examples/acceptance/*.feature.md               (IF POLC Tier 2)
+• po-charter.md → backlog/                       (IF PBP has PO charter)
+• prioritization-register.md → backlog/          (IF PBP has prioritization register)
 
 IF UXD present:
-• design-system.md → .kiro/steering/
-• frontend-standards.md → .kiro/steering/
-• ui-implementation-spec.md → project root
+• design-system.md → rules/
+• frontend-standards.md → rules/
+• ui-implementation-spec.md → ux/
+• ux/wireframes/ (copy all WF-* files)           (IF UXP has wireframe specs)
+• ux/user-flows/ (copy all flow files)           (IF UXP has user flows)
+• ux/personas/ (copy all persona files)          (IF UXP has personas)
+• ux/journey-maps/ (copy all journey maps)       (IF UXP has journey maps)
 • Accessibility baseline relay → signaled to AI-GCE
-• navigation-structure.md → .kiro/steering/       (IF UXP has IA)
-• design-qa.md → .kiro/steering/ + relay to AI-GCE (IF UXP has Design QA framework)
-• content-guidelines.md → .kiro/steering/         (IF UXP has voice & tone)
-• theming.md → .kiro/steering/                    (IF UXP multi-brand/color-mode)
-• i18n-standards.md → .kiro/steering/             (IF UXP i18n/RTL/multi-locale)
+• navigation-structure.md → rules/       (IF UXP has IA)
+• design-qa.md → rules/ + relay to AI-GCE (IF UXP has Design QA framework)
+• content-guidelines.md → rules/         (IF UXP has voice & tone)
+• theming.md → rules/                    (IF UXP multi-brand/color-mode)
+• i18n-standards.md → rules/             (IF UXP i18n/RTL/multi-locale)
 
 ALWAYS (regardless of which inputs):
-• Operational docs (PROJECT_INSTRUCTIONS, CONTRIBUTING, ONBOARDING, etc.) → project root
+• Operational docs (PROJECT_INSTRUCTIONS, CONTRIBUTING, ONBOARDING, CICD_GUIDE, TEAM_AGREEMENTS, vision.md) → info/
 • PR template → .github/
+• WORKSPACE_CONTEXT_MAP.md → root (discovery index; mapping/context-map-generation.md)
+• backlog/README.md · ux/README.md · architecture/README.md → per present cluster
+• rules/relevance-map.md → IF ADLC + (POLC or UXD) (mapping/relevance-map-generation.md)
+
+DISCOVERY LAYER (generated last, after all clusters exist):
+• Derive WORKSPACE_CONTEXT_MAP.md + folder READMEs from the actual file manifest (counts, lists)
+• Derive rules/relevance-map.md from C4 modules ↔ backlog/ux naming (auto-map + <!-- VERIFY --> fallback)
+• These are regenerated fresh on every re-baseline (derived indexes — not governed elements)
 
 IMPORTANT: Generated content must be POPULATED, not placeholders.
 Steering files derive actual rules from input decisions.
 The output is ready-to-use, not fill-in-the-blank.
+
+STEP 3B: BASELINE + STAMP — Version the Governed Surface
+─────────────────────────────────────────────────────────
+Load: baseline/baseline-generation.md + baseline/document-stamping.md
+• Extract governed elements from present peer inputs (hard vs advisory)
+• Write baselines/v1/baseline-manifest.yaml + snapshot-meta.yaml (planning side)
+• Stamp EVERY carried file with Approach C mark: v1 (confirmed v1)
+  (per file type — .md/.yaml/.ts/.py/dotfiles; JSON via manifest only)
+
+STEP 3C: RENDER — Platform Adapters
+────────────────────────────────────
+Load: rendering/renderer-model.md + rendering/{platform}-adapter.md (per Config Gate Q2 target)
+• Canonical rules/ already generated; wire each selected platform's adapter (references rules/)
+• Multi-target: one adapter per platform, all pointing at rules/
+• Generate PLATFORM_NOTES.md for any below-full-capability target
+
+STEP 3D: MANIFEST — Write the Discovery Contract
+──────────────────────────────────────────────────
+Load: baseline/workspace-manifest-generation.md
+• Write .governance/workspace-manifest.yaml (paths + files by role + adapters + clusters
+  + platformTargets + storyStyle; buildProfile PARKED/absent)
+• This is what GCE/TGE/FLO read to discover the workspace — no hardcoded paths downstream
 
 STEP 4: VALIDATE — Cross-Check Against Present Inputs
 ──────────────────────────────────────────────────────

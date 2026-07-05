@@ -48,12 +48,12 @@ From the 5 answers, derive:
 - Risk Register (top 5 standard risks pre-filled)
 
 ### Step 3: Generate Steering (If Not Already Present)
-If `.kiro/steering/` is sparse or missing domain-specific files:
+If `rules/` is sparse or missing domain-specific files:
 - Use `steering-templates/` to generate per-module domain steering
 - Phase-context steering for current phase awareness
 
 ### Step 4: Install Tier 1 Hooks
-Copy Tier 1 hook set into `.kiro/hooks/`
+Copy Tier 1 hook set into `.governance/hooks/`
 
 ### Step 5: Initialize State
 Generate `.compliance-state.json` with Tier 1 active

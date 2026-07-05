@@ -1,15 +1,17 @@
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
-# Mapping: Governance Context → PROJECT_INSTRUCTIONS.md + CONTRIBUTING.md + ONBOARDING.md + PR Template
+# Mapping: Governance Context → PROJECT_INSTRUCTIONS.md + CONTRIBUTING.md + ONBOARDING.md + PR Template + backlog/po-charter.md + backlog/prioritization-register.md
 
 ## Purpose
 
-Derives operational governance documents from multiple AP sources — methodology decisions, team context, and quality attributes. These are NOT steering files but root-level operational documents that guide team workflow.
+Derives operational governance documents from multiple AP sources — methodology decisions, team context, and quality attributes. These are NOT steering files but root-level operational documents that guide team workflow. Also carries POLC governance reference documents (PO Charter, Prioritization Register) into the backlog folder for developer context.
 
 **Outputs:**
-1. `PROJECT_INSTRUCTIONS.md` — Master developer guide (single entry point)
-2. `CONTRIBUTING.md` — Commit strategy, PR process, branching model
-3. `ONBOARDING.md` — New developer checklist
+1. `info/PROJECT_INSTRUCTIONS.md` — Master developer guide (single entry point)
+2. `info/CONTRIBUTING.md` — Commit strategy, PR process, branching model
+3. `info/ONBOARDING.md` — New developer checklist
 4. `.github/pull_request_template.md` — PR checklist template
+5. `backlog/po-charter.md` — PO authority/escalation reference (IF POLC)
+6. `backlog/prioritization-register.md` — Build order rationale (IF POLC)
 
 ---
 
@@ -47,7 +49,7 @@ A good output from this activity sounds like:
 
 ---
 
-## Target 1: PROJECT_INSTRUCTIONS.md
+## Target 1: info/PROJECT_INSTRUCTIONS.md
 
 ### Role
 
@@ -79,7 +81,7 @@ The ONE document every developer reads first. Points to everything else. Answers
 
 ## Development Rules (Must Read)
 
-All development rules are in `.kiro/steering/`. Key files:
+All development rules are in `rules/`. Key files:
 
 | File | Governs |
 |------|---------|
@@ -120,7 +122,7 @@ Architecture Decision Records (ADRs) document why things are the way they are:
 
 ---
 
-## Target 2: CONTRIBUTING.md
+## Target 2: info/CONTRIBUTING.md
 
 ### Structure
 
@@ -142,7 +144,7 @@ Architecture Decision Records (ADRs) document why things are the way they are:
 
 Format: `{type}({scope}): {subject}` (Conventional Commits)
 
-See `.kiro/steering/git-workflow.md` for full commit convention.
+See `rules/git-workflow.md` for full commit convention.
 
 ## Pull Requests
 
@@ -154,7 +156,7 @@ See `.kiro/steering/git-workflow.md` for full commit convention.
 
 ## Code Standards
 
-All coding standards are enforced via `.kiro/steering/` files. Key requirements:
+All coding standards are enforced via `rules/` files. Key requirements:
 - Follow module boundaries (see `module-structure.md`)
 - Use domain language (see `domain-context.md`)
 - Handle errors per `error-handling.md`
@@ -174,7 +176,7 @@ When reviewing, check:
 
 ---
 
-## Target 3: ONBOARDING.md
+## Target 3: info/ONBOARDING.md
 
 ### Structure
 
@@ -192,16 +194,16 @@ When reviewing, check:
 - [ ] Verify local environment runs
 
 ### Day 2: Understand the Architecture
-- [ ] Read `PROJECT_INSTRUCTIONS.md` completely
-- [ ] Read `.kiro/steering/workspace-rules.md` (golden rules)
-- [ ] Read `.kiro/steering/module-structure.md` (what depends on what)
-- [ ] Read `.kiro/steering/domain-context.md` (domain vocabulary)
+- [ ] Read `info/PROJECT_INSTRUCTIONS.md` completely
+- [ ] Read `rules/workspace-rules.md` (golden rules)
+- [ ] Read `rules/module-structure.md` (what depends on what)
+- [ ] Read `rules/domain-context.md` (domain vocabulary)
 - [ ] Review the Architecture Vision document (from AP)
 
 ### Day 3: Understand the Workflow
-- [ ] Read `CONTRIBUTING.md`
-- [ ] Read `.kiro/steering/git-workflow.md`
-- [ ] Read `.kiro/steering/coding-standards.md`
+- [ ] Read `info/CONTRIBUTING.md`
+- [ ] Read `rules/git-workflow.md`
+- [ ] Read `rules/coding-standards.md`
 - [ ] Make a trivial change (typo fix) → full PR cycle (branch, commit, PR, review, merge)
 
 ### Day 4-5: First Real Task
@@ -306,3 +308,80 @@ When reviewing, check:
 3. **PR template checklist mirrors steering files** — each checkbox traces to a specific steering rule
 4. **Onboarding is week-by-week** — progressive complexity, not everything at once
 5. **CONTRIBUTING is action-oriented** — "do this", not "we follow these principles"
+
+
+---
+
+## Target 5: backlog/po-charter.md (IF POLC)
+
+### Purpose
+
+The PO Charter answers "who decides what gets built and how escalation works." Essential developer context when questions arise about priority, scope trade-offs, or acceptance disputes.
+
+### Source
+
+**From:** AI-POLC → PBP governance (`governance/po-charter.md` or equivalent role-definition document).
+
+### Transformation
+
+**Copy with provenance** — this is a reference document, not a steering file. DWG copies the PBP's PO Charter verbatim and adds provenance front-matter. No distillation, no summarization.
+
+```markdown
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "AI-POLC — governance/po-charter.md"
+generatedOn: "{generation-date}"
+ownership: generated
+projectId: "{project-id}"
+---
+
+{verbatim PO Charter content from PBP}
+```
+
+### Condition
+
+Generate IF `polc-state.md` is present AND the PBP contains a PO Charter or equivalent authority/role document. If no such document exists in PBP, SKIP — do not fabricate.
+
+---
+
+## Target 6: backlog/prioritization-register.md (IF POLC)
+
+### Purpose
+
+The Prioritization Register answers "why this build order" — the rationale behind which epics/stories are higher priority. Developers need this when questioning why they're working on Feature A before Feature B.
+
+### Source
+
+**From:** AI-POLC → PBP governance (`governance/prioritization-register.md` or `strategy/value-prioritization.md` with full register).
+
+### Transformation
+
+**Copy with provenance** — reference document, not steering. DWG copies the register verbatim and adds provenance front-matter.
+
+```markdown
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "AI-POLC — governance/prioritization-register.md"
+generatedOn: "{generation-date}"
+ownership: generated
+projectId: "{project-id}"
+---
+
+{verbatim Prioritization Register content from PBP}
+```
+
+### Condition
+
+Generate IF `polc-state.md` is present AND the PBP contains a prioritization register or equivalent ordering-rationale document. If no such document exists, SKIP — the ordering in `backlog/epics-and-backlog.md` already carries the rank (but not the full rationale).
+
+---
+
+## Key Rules (Targets 5 & 6)
+
+1. **Reference documents, not steering** — these do NOT influence AI behavior per code change; they are human-readable governance context
+2. **Copy verbatim** — do not paraphrase, summarize, or restructure POLC's content
+3. **Provenance front-matter only** — the only DWG addition is the metadata header
+4. **Skip if absent** — do NOT fabricate governance docs that POLC didn't produce
+5. **Location: `backlog/`** — these are product governance, not operational docs; they live with the backlog they govern

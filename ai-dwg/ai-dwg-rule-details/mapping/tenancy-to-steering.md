@@ -5,7 +5,7 @@
 
 This mapping rule transforms the **Multi-Tenancy Architecture** document (AP artifact) into a steering file that enforces tenant isolation across every layer of the system — from API request through data storage.
 
-**Output:** `.kiro/steering/multi-tenancy.md`
+**Output:** `rules/multi-tenancy.md`
 
 **Condition:** Generate ONLY IF the AP contains a Multi-Tenancy Architecture document. Skip for single-tenant systems.
 

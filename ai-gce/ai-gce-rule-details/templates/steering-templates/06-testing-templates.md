@@ -9,14 +9,14 @@ ownership: generated
 # Testing Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate testing-related steering files
-> in the target project's `.kiro/steering/` folder. These templates encode QA standards,
+> in the target project's `rules/` folder. These templates encode QA standards,
 > coverage requirements, quality gates, and test generation guidance derived from `testing-strategy.md`.
 
 ---
 
 ## qa-standards.md (Always)
 
-**Generates**: `.kiro/steering/qa-standards.md`
+**Generates**: `rules/qa-standards.md`
 **Derived From**: testing-strategy.md + project-governance.md + DEFINITION_OF_DONE.md
 
 ```markdown
@@ -59,7 +59,7 @@ inclusion: always
 
 ## qa-review-triggers.md (FileMatch `{test_file_pattern}`)
 
-**Generates**: `.kiro/steering/qa-review-triggers.md`
+**Generates**: `rules/qa-review-triggers.md`
 **Derived From**: testing-strategy.md
 
 ```markdown
@@ -83,7 +83,7 @@ When test files are created or modified, verify:
 
 ## testing-advanced.md (Conditional — IF advanced testing strategy defined)
 
-**Generates**: `.kiro/steering/testing-advanced.md`
+**Generates**: `rules/testing-advanced.md`
 **Condition**: Generated IF testing-strategy.md defines property-based testing, mutation testing, or contract testing
 **Derived From**: testing-strategy.md
 
@@ -115,7 +115,7 @@ inclusion: always
 
 ## testing-domain-specific.md (FileMatch `{domain_test_pattern}`)
 
-**Generates**: `.kiro/steering/testing-{domain_name}.md` (one per critical domain)
+**Generates**: `rules/testing-{domain_name}.md` (one per critical domain)
 **Condition**: Generated IF domain-context.md identifies critical business invariants
 **Derived From**: domain-context.md + testing-strategy.md
 

@@ -12,7 +12,7 @@ ownership: generated
 # AI-TGE State
 
 > **MARKER FILE** — This file's existence signals that AI-TGE has been initialized in this workspace.
-> Location: `.tge/tge-state.md`
+> Location: `.governance/test/tge-state.md`
 
 ---
 
@@ -118,11 +118,11 @@ ownership: generated
 
 | Artifact | Path | Last Modified |
 |----------|------|:------------:|
-| Test Strategy | `.tge/test-strategy.md` | {date or "not generated"} |
-| Test Register | `.tge/test-register.md` | {date or "not generated"} |
-| Coverage Report | `.tge/coverage-report.md` | {date or "not generated"} |
-| Debt Scorecard | `.tge/debt-scorecard.md` | {date or "not generated"} |
-| Defect Log | `.tge/defect-log.md` | {date or "not generated"} |
+| Test Strategy | `.governance/test/test-strategy.md` | {date or "not generated"} |
+| Test Register | `.governance/test/test-register.md` | {date or "not generated"} |
+| Coverage Report | `.governance/test/coverage-report.md` | {date or "not generated"} |
+| Debt Scorecard | `.governance/test/debt-scorecard.md` | {date or "not generated"} |
+| Defect Log | `.governance/test/defect-log.md` | {date or "not generated"} |
 
 ---
 

@@ -5,7 +5,7 @@
 
 This mapping rule transforms **brownfield-specific architecture content** from the AP into a prescriptive steering file that governs how the development team interacts with legacy systems during the transition period.
 
-**Output:** `.kiro/steering/brownfield-patterns.md` — conditional steering file
+**Output:** `rules/brownfield-patterns.md` — conditional steering file
 
 **Trigger:** AI-ADLC `adlc-state.md` shows `Input Mode: Brownfield` OR AI-DWG Mode 3 (Brownfield Overlay) is active with legacy integration context in the AP.
 
@@ -162,10 +162,10 @@ The file SHOULD include a note at the top:
 
 | File | Relationship |
 |------|-------------|
-| `.kiro/steering/module-structure.md` | ACL module path must be listed here |
-| `.kiro/steering/api-standards.md` | Legacy API compatibility rules must not contradict API standards |
-| `.kiro/steering/database-rules.md` | Data migration rules must be consistent with DB conventions |
-| `.kiro/steering/testing-strategy.md` | Characterization tests fit within the testing strategy |
-| `.kiro/steering/resilience-standards.md` | Circuit breakers for legacy calls should be documented in both files |
-| `CICD_GUIDE.md` | Migration scripts may have their own pipeline stages |
+| `rules/module-structure.md` | ACL module path must be listed here |
+| `rules/api-standards.md` | Legacy API compatibility rules must not contradict API standards |
+| `rules/database-rules.md` | Data migration rules must be consistent with DB conventions |
+| `rules/testing-strategy.md` | Characterization tests fit within the testing strategy |
+| `rules/resilience-standards.md` | Circuit breakers for legacy calls should be documented in both files |
+| `info/CICD_GUIDE.md` | Migration scripts may have their own pipeline stages |
 | `management_framework/Issue_Log.md` | Undocumented legacy behavior logged here |

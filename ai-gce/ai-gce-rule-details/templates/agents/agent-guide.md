@@ -127,7 +127,7 @@ Hooks protect you automatically. Agents protect you deliberately. The audit catc
 | Prescriptive language quality | Ensures rules are enforceable (MUST/NEVER) |
 | Freshness against codebase | Prevents hooks firing on stale paths |
 
-**When exactly:** After saving any edit to a `.kiro/steering/*.md` file. Also: monthly health check.
+**When exactly:** After saving any edit to a `rules/*.md` file. Also: monthly health check.
 
 **Self-healing:** This agent checks current state — calling it late still catches all current issues.
 

@@ -51,9 +51,9 @@ A consolidated session-end sweep that runs ALL advisory compliance checks in a s
 Before performing any checks, verify each file's path in your scan.
 
 **EXCLUDED ZONES (skip silently):**
-- `.kiro/hooks/` — hook infrastructure
-- `.kiro/steering/` — steering infrastructure
-- `.kiro/agents/` — agent infrastructure
+- `.governance/hooks/` — hook infrastructure
+- `rules/` — steering infrastructure
+- `.governance/agents/` — agent infrastructure
 - `.governance/` — governance rules/agents/logs
 - `compliance-log/` — audit trail
 - `project-initiation/` — AI-PILC output (provenance only)
@@ -115,7 +115,7 @@ For each modified file:
 
 ### Check 5: Steering Quality (Tier 3 ONLY, Pre-Release)
 
-If any `.kiro/steering/*.md` files were modified during this session:
+If any `rules/*.md` files were modified during this session:
 
 1. Still prescriptive (MUST/NEVER language)?
 2. Provenance comment intact (`<!-- AI-DWG generated | source: ... -->`)?
@@ -195,7 +195,7 @@ After completing all checks, append ONE summary event to `compliance-log/events/
 
 ## Installation
 
-1. Copy `session-end-compliance-agent.md` to `.kiro/agents/` (Kiro) or equivalent
+1. Copy `session-end-compliance-agent.md` to `.governance/agents/` (Kiro) or equivalent
 2. Add shortcut to workspace rules:
 
 ```markdown

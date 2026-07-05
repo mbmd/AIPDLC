@@ -16,7 +16,7 @@ Defines the JSONL event schema for the compliance logging infrastructure. This f
 
 ## Log Structure
 
-> **Project ID resolution:** Every log event includes `projectId` — the immutable family-wide correlation key. AI-GCE reads it from `.kiro/steering/workspace-rules.md` → `## Project Identity` section (placed there by AI-DWG). This enables portfolio-level queries across multiple projects when AI-PPM aggregates compliance data via AI-FLO.
+> **Project ID resolution:** Every log event includes `projectId` — the immutable family-wide correlation key. AI-GCE reads it from `rules/workspace-rules.md` → `## Project Identity` section (placed there by AI-DWG). This enables portfolio-level queries across multiple projects when AI-PPM aggregates compliance data via AI-FLO.
 
 ```
 {project-root}/compliance-log/
@@ -41,7 +41,7 @@ Defines the JSONL event schema for the compliance logging infrastructure. This f
   "timestamp": "{ISO-8601-UTC}",
   "type": "check",
   "id": "chk-{YYYYMMDD}-{HHmmss}-{seq}",
-  "projectId": "{project-id from.kiro/steering/workspace-rules.md → Project Identity section}",
+  "projectId": "{project-id from rules/workspace-rules.md → Project Identity section}",
   "hook": "{hook-filename-without-extension}",
   "trigger": "{event-type: fileEdited|fileCreated|preToolUse|postTaskExecution|promptSubmit|agentStop|userTriggered}",
   "ruleId": "{RULE-ID checked}",

@@ -28,7 +28,7 @@ Call this agent **after completing the AI-TGE Strategy phase** — before enteri
 
 - **Trigger:** Type `TGV__` in the chat prompt
 - **Cadence:** Once after Strategy phase (Stages 1–6); optionally after major reconciliation events
-- **Process point:** After Stage 6 (Risk Scoring) completes and `.tge/debt-scorecard.md` is generated
+- **Process point:** After Stage 6 (Risk Scoring) completes and `.governance/test/debt-scorecard.md` is generated
 
 **Concrete examples:**
 - "I've finished the test strategy" → call `TGV__` to validate governance quality
@@ -54,7 +54,7 @@ Call this agent **after completing the AI-TGE Strategy phase** — before enteri
 
 If you skipped `TGV__` and the strategy is already in use:
 
-1. Run `TGV__` now — it checks the CURRENT state of all `.tge/` artifacts
+1. Run `TGV__` now — it checks the CURRENT state of all `.governance/test/` artifacts
 2. For each gap found:
    - **Missing commitment coverage:** Add register entries; re-derive from AP
    - **Broken traceability:** Link entries to source commitments; mark source type
@@ -115,7 +115,7 @@ If you skipped `TGV__` and the strategy is already in use:
 
 **Date:** {ISO-date}
 **Package:** AI-TGE v{version}
-**Scope:** .tge/ directory
+**Scope:** .governance/test/ directory
 
 ### Summary
 | Category | Checks | Pass | Fail |

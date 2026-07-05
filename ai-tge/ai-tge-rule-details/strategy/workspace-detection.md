@@ -13,6 +13,24 @@ Detect the project context: what inputs exist, what mode to operate in, and how 
 
 This stage produces the **state file** (`tge-state.md`) and determines the operating mode and depth level for all subsequent stages.
 
+## Discovery (Manifest-First, Read-Only — P1/P2/P3)
+
+**Step 0 — read the discovery contract:**
+```
+1. Locate.governance/workspace-manifest.yaml (primary marker)
+2. Resolve by semantic role:
+   - manifest.paths.rules      → canonical rules/ (NOT the.kiro/steering/ adapter)
+   - manifest.paths.backlog    → stories/ACs (honor manifest.storyStyle: ears/invest/…)
+   - manifest.paths.architecture → AP-derived reference
+   - manifest.platformTargets  → how TGE renders its OWN agents (P2)
+   - manifest.governance.*     → where TGE writes (.governance/test/,.governance/agents/, engine)
+   - manifest.clusters         → skip absent inputs
+3. No manifest → legacy fallback: scan rules/ + adlc-state.md/aidlc-docs + warn "legacy workspace"
+```
+
+**P1 (read-only):** TGE reads DWG's canonical files; it NEVER modifies them. TGE writes only under `.governance/`.
+**P3 (single home):** TGE output → `.governance/test/`; agents → `.governance/agents/`; engine → `.governance/engine/ai-tge/`; contributes to `.governance/GOVERNANCE_INDEX.md`. No separate `.tge/`.
+
 ---
 
 ## Depth Adaptation
@@ -54,7 +72,7 @@ Look for `tge-state.md` in the workspace:
 
 | Location to Check | Meaning if Found |
 |-------------------|-----------------|
-| `.tge/tge-state.md` | AI-TGE has run before — offer to resume |
+| `.governance/test/tge-state.md` | AI-TGE has run before — offer to resume |
 | `./tge-state.md` (workspace root) | Possible non-standard location — confirm with user |
 | Not found anywhere | Fresh run — proceed with new initialization |
 
@@ -86,7 +104,7 @@ Scan workspace for the presence of each input source:
 | Input Source | Detection Method | What It Enables |
 |-------------|-----------------|-----------------|
 | **Architecture Package (AP)** | Look for `adlc-state.md` marker file; OR folder containing API contracts, component designs, ADRs | Architecture-derived test requirements |
-| **Development Workspace (DW)** | Look for `.kiro/steering/workspace-rules.md`; OR `.kiro/steering/tech-stack.md` | Tech stack awareness, testing framework detection |
+| **Development Workspace (DW)** | Look for `rules/workspace-rules.md`; OR `rules/tech-stack.md` | Tech stack awareness, testing framework detection |
 | **AI-DLC v1 State (aidlc-docs)** | Look for `aidlc-docs/aidlc-state.md`; OR `aidlc-docs/` folder | Observation phase capability |
 | **Existing Test Directories** | Scan for: `tests/`, `test/`, `__tests__/`, `spec/`, `*.test.*`, `*.spec.*` patterns | Brownfield assessment capability |
 | **User Stories** | Look for `aidlc-docs/inception/user-stories/` | Story-derived acceptance tests |
@@ -94,7 +112,7 @@ Scan workspace for the presence of each input source:
 
 **Detection priority order:**
 1. AP marker (`adlc-state.md`) — strongest signal for Full Chain
-2. DW marker (`.kiro/steering/`) — confirms workspace is AI-DWG prepared
+2. DW marker (`rules/`) — confirms workspace is AI-DWG prepared
 3. aidlc-docs presence — enables observation
 4. Existing tests — enables brownfield assessment
 5. None of the above — ask user
@@ -141,7 +159,7 @@ Calculate the depth score from 5 factors (each scored 1-5):
 
 ### Step 5: Initialize State File
 
-Create `.tge/tge-state.md` with initial values:
+Create `.governance/test/tge-state.md` with initial values:
 
 ```markdown
 # AI-TGE State
@@ -220,7 +238,7 @@ No gate wait required at this stage — but confirmation of mode selection is ne
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| State file | `.tge/tge-state.md` | Engine state — persists across sessions |
+| State file | `.governance/test/tge-state.md` | Engine state — persists across sessions |
 
 ---
 
@@ -230,7 +248,7 @@ No gate wait required at this stage — but confirmation of mode selection is ne
 |-------|---------------|
 | Mode determined | One of: Full Chain / Architecture Only / Brownfield / Observation Only |
 | Depth scored | 5 factors assessed; total within valid range (5-25) |
-| State file created | `.tge/tge-state.md` exists with all mandatory fields |
+| State file created | `.governance/test/tge-state.md` exists with all mandatory fields |
 | Input paths recorded | All available sources have paths in state file |
 | User confirmed | Mode and depth acknowledged (explicit or implicit) |
 | No dangling assumptions | Any factor scored at assumed-3 is flagged for user awareness |

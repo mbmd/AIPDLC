@@ -55,11 +55,11 @@ Gather inputs for strategy derivation:
 
 | Input | Source | What It Provides |
 |-------|--------|-----------------|
-| Test Register | Stage 3 output (`.tge/test-register.md`) | What tests are needed, their levels and types |
+| Test Register | Stage 3 output (`.governance/test/test-register.md`) | What tests are needed, their levels and types |
 | Brownfield Gap Map | Stage 4 output (if exists) | Current coverage baseline (what's already done) |
-| Tech Stack | DW `.kiro/steering/tech-stack.md` | Available testing frameworks, languages, tools |
-| Testing Conventions | DW `.kiro/steering/testing-strategy.md` (if exists) | Team's existing testing approach |
-| Module Structure | DW `.kiro/steering/module-structure.md` (if exists) | Boundaries that define test scopes |
+| Tech Stack | DW `rules/tech-stack.md` | Available testing frameworks, languages, tools |
+| Testing Conventions | DW `rules/testing-strategy.md` (if exists) | Team's existing testing approach |
+| Module Structure | DW `rules/module-structure.md` (if exists) | Boundaries that define test scopes |
 | Depth Level | State file | How detailed the strategy should be |
 
 ---
@@ -306,7 +306,7 @@ I've produced the Test Strategy based on your register ({N} test requirements) a
 - Automation: {n}% automated, {n}% manual
 - Gates: {key entry/exit criteria highlight}
 
-**Full strategy saved to:** `.tge/test-strategy.md`
+**Full strategy saved to:** `.governance/test/test-strategy.md`
 
 ---
 
@@ -330,8 +330,8 @@ I've produced the Test Strategy based on your register ({N} test requirements) a
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| Test Strategy | `.tge/test-strategy.md` | Defines testing approach for the project |
-| Updated state file | `.tge/tge-state.md` | Stage 5 complete |
+| Test Strategy | `.governance/test/test-strategy.md` | Defines testing approach for the project |
+| Updated state file | `.governance/test/tge-state.md` | Stage 5 complete |
 
 ---
 

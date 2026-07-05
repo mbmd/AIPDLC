@@ -319,7 +319,7 @@ OVERWRITE it (keep only the latest result). Add "sessionDedup": true to the even
 
 ## ENFORCEMENT-GUIDE Generation
 
-When generating `.kiro/hooks/ENFORCEMENT-GUIDE.md`, organize hooks by tier:
+When generating `.governance/hooks/ENFORCEMENT-GUIDE.md`, organize hooks by tier:
 
 ```markdown
 # Hook Enforcement Guide

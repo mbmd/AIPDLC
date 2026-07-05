@@ -229,7 +229,7 @@ List the most important missing tests:
 {View 6: Top Gaps}
 ```
 
-Save to `.tge/coverage-report.md` (overwrites previous — each report is a current snapshot).
+Save to `.governance/test/coverage-report.md` (overwrites previous — each report is a current snapshot).
 
 ---
 
@@ -247,7 +247,7 @@ Save to `.tge/coverage-report.md` (overwrites previous — each report is a curr
 - Example: "PaymentService is the biggest risk: 33% coverage with 3 Critical-risk gaps"
 - Example: "All Critical tests now exist — focus on High-priority integration tests"
 
-**Full report:** `.tge/coverage-report.md`
+**Full report:** `.governance/test/coverage-report.md`
 
 ---
 
@@ -270,8 +270,8 @@ Save to `.tge/coverage-report.md` (overwrites previous — each report is a curr
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| Coverage Report | `.tge/coverage-report.md` | Current coverage snapshot (multi-view) |
-| Updated state file | `.tge/tge-state.md` | Coverage % and stats updated |
+| Coverage Report | `.governance/test/coverage-report.md` | Current coverage snapshot (multi-view) |
+| Updated state file | `.governance/test/tge-state.md` | Coverage % and stats updated |
 
 ---
 
@@ -285,5 +285,5 @@ Save to `.tge/coverage-report.md` (overwrites previous — each report is a curr
 | Trend included | If prior report exists, delta calculated |
 | Gaps specific | Named entries, not just counts |
 | Targets referenced | Coverage goals from test strategy shown |
-| Report saved | `.tge/coverage-report.md` updated |
+| Report saved | `.governance/test/coverage-report.md` updated |
 | State file updated | Coverage stats current |

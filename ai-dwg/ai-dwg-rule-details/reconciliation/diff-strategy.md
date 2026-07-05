@@ -57,9 +57,9 @@ are downstream of the changed AP artifact.
 
 Example:
   API Architecture changed → affects:
-    • .kiro/steering/api-standards.md
-    • .kiro/steering/api-versioning.md (if exists)
-    • .kiro/steering/error-handling.md (error format section)
+    • rules/api-standards.md
+    • rules/api-versioning.md (if exists)
+    • rules/error-handling.md (error format section)
     • .github/pull_request_template.md (API checklist item)
 
 STEP 3: COMPARE AP CONTENT VS. CURRENT STEERING
@@ -149,7 +149,7 @@ When user requests full reconciliation:
 For each affected file, produce:
 
 ```
-FILE: .kiro/steering/{filename}
+FILE: rules/{filename}
 CHANGE TYPE: {ADD | MODIFY | REMOVE | STRUCTURAL}
 SECTIONS AFFECTED:
   - Section: "{section name}"

@@ -73,9 +73,8 @@ The workflow adapts its depth to the project, not the other way around — asses
 
 CRITICAL: when performing any stage, you MUST read and use the relevant rule detail files. Resolve the rule-details directory once — check these paths in order, use the first that exists:
 
-- `.ai-uxd/ai-uxd-rule-details/` (AI-assisted setup)
-- `.kiro/ai-uxd-rule-details/` (Kiro IDE setup)
-- `ai-uxd-rule-details/` (standalone setup)
+- `.aiflc/pdlc/ai-uxd-rule-details/` (canonical AIFLC home — all platforms)
+- `ai-uxd-rule-details/` (standalone / flattened fallback)
 
 All detail-file references below are relative to the resolved directory. Only ONE stage detail file is active at a time — this file orchestrates, detail files execute. **Before executing any stage, load that stage's detail file (see the Stage INDEX).**
 
@@ -184,6 +183,9 @@ AI-UXD is contract-aware — a Project-layer lifecycle that reads PIP + PBP (+ o
 - **Conditional:** multi-brand token architecture (>1 brand or color modes), i18n/RTL token extensions (>1 locale), service blueprints (Comprehensive + service-oriented), empathy maps (Comprehensive).
 - **Downstream signals:** AI-POLC (personas + journeys), AI-DWG (design system + tokens + components → `design-system.md` + `frontend-standards.md`), AI-GCE (accessibility baseline → `accessibility-compliance` rule).
 - **Principles:** detection by marker (not folder name) · fixed output root · graceful standalone (works from a brief alone) · format tolerant (reads numbered + legacy flat).
+
+### Drift Intake (governance back-flow)
+AI-UXD implements the `drift-intake@1.0` interface (`contracts/DRIFT_INTAKE_CONTRACT.md`) for the **ux** domain (design tokens, components/UI patterns, accessibility baseline, IA/navigation, theming). It **pulls** drift (asks AI-FLO → reads the drift body from AI-GCE's register read-only → digests → Conform/Amend/Waive; accessibility defaults to Conform per Rule 4), writes the disposition to its OWN artifacts (design system / tokens / components / `uxd-state.md`) + emits a `digest-ready` signal; AI-DWG later bakes it into the next baseline and AI-GCE closes it. UXD never writes the drift register or the baseline (INV-L4-006). Full decision logic: `drift-intake/intake-digest.md`.
 
 ---
 

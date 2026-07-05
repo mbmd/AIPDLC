@@ -4,7 +4,9 @@
 **Date:** 2026-06-17
 **Author:** Maheri
 
-> **Amendment (2026-06-22 — family-workspace prefix + install split):** PART 2 runtime trees now nest all output under the family workspace `pdlc-ws/` (`pdlc-ws/projects/…`, `pdlc-ws/ideas/`, `pdlc-ws/portfolio/`, `pdlc-ws/data/`). PART 1 gains an "Installed Location" subsection documenting the Kiro split — core files → `.kiro/steering/{family}/`, rule-details → `.kiro/{family}/`. See the install-lock design + `OUTPUT_AND_STATE_CONTRACT.md`.
+> **Amendment (2026-06-22 — family-workspace prefix + install split):** PART 2 runtime trees now nest all output under the family workspace `pdlc-ws/` (`pdlc-ws/projects/…`, `pdlc-ws/ideas/`, `pdlc-ws/portfolio/`, `pdlc-ws/data/`). See the install-lock design + `OUTPUT_AND_STATE_CONTRACT.md`.
+>
+> **Amendment (OI-158 — unified core placement):** cores + rule-details now install into ONE uniform home `.aiflc/{family}/` on every platform (superseding the earlier Kiro `.kiro/steering/{family}/` + `.kiro/{family}/` split); only the always-loaded orchestrator sits in each platform's native slot. See the "Installed Location" subsection in PART 1.
 
 ---
 
@@ -225,28 +227,30 @@ The family root (``) carries family-wide files alongside the package folders:
 
 ---
 
-### Installed Location — Where Package Files Land (Kiro core/rule-details split)
+### Installed Location — Where Package Files Land (uniform `.aiflc/` home, all platforms)
 
-The package **source** above (`ai-{pkg}-rules/` + `ai-{pkg}-rule-details/`) is installed into a user's workspace **family-scoped**, and on Kiro it is **split** across two locations because Kiro auto-loads steering **only** from `.kiro/steering/`:
+The package **source** above (`ai-{pkg}-rules/` + `ai-{pkg}-rule-details/`) installs into ONE brand-scoped, family-scoped home that is **identical on every platform** (OI-158). Only the single always-loaded **orchestrator** sits in each platform's native auto-load slot; it `Read`s the relevant core on demand.
 
 ```
 {AIFLC-workspace-root}/
-└──.kiro/
-    ├── steering/
-    │   └── pdlc/                                ← PDLC family CORE files (auto-loaded)
-    │       ├── ai-pilc-rules/core-workflow.md
-    │       ├── ai-adlc-rules/core-workflow.md
-    │       └── … one {pkg}-rules/ per installed package
-    └── pdlc/                                    ← PDLC family RULE-DETAILS (on-demand, NOT auto-loaded)
-        ├── ai-pilc-rule-details/
-        ├── ai-adlc-rule-details/
-        └── … one {pkg}-rule-details/ per installed package
+├──.aiflc/                                     ← AIFLC brand root (agent-neutral, uniform)
+│   └── pdlc/                                   ← PDLC family home (cores + rule-details + fabric together)
+│       ├── ai-pilc-rules/core-workflow.md      ← core (dispatcher) — Read on demand
+│       ├── ai-pilc-rule-details/               ← details — Read on demand
+│       ├── ai-adlc-rules/core-workflow.md
+│       ├── ai-adlc-rule-details/
+│       ├── … one {pkg}-rules/ + {pkg}-rule-details/ per installed package
+│       └── FAMILY_BINDINGS.md · GATE_PROTOCOL.md · FAMILY_INTERFACE.md · TRIGGER_KEYS_REFERENCE.md  (fabric)
+│
+└──.kiro/steering/session-orchestrator.md      ← the ONLY auto-loaded file (Kiro slot shown)
+                                                   routes to.aiflc/pdlc/…/core-*.md on demand
 ```
 
-- **Core file** (`core-{workflow|engine|generator}.md`) → `.kiro/steering/{family}/{pkg}-rules/` — must sit where Kiro auto-loads.
-- **Rule-details** → `.kiro/{family}/{pkg}-rule-details/` — read on demand by the core file (kept out of `steering/` to keep it lean).
-- Runtime paths in the rules are **workspace-root-relative** (`{family}-ws/…`), so they resolve identically regardless of this split.
-- **Other platforms differ** (Amazon Q nests under `.amazonq/`; Cursor/Cline/Claude Code/Copilot use a `{family}-` filename prefix). The installer applies the verified per-platform path table — see the per-platform `INSTALL_GUIDE_*.md` and each package's `setup/INSTALL.md`.
+- **Core + rule-details** → `.aiflc/{family}/{pkg}-rules/` and `.aiflc/{family}/{pkg}-rule-details/` — the SAME path on every platform. No Kiro split, no `{family}-` filename prefix, no `.amazonq/` nesting.
+- **Orchestrator only** lands in each platform's native auto-load slot (Kiro `.kiro/steering/`, Claude `CLAUDE.md` `@import`, Cursor `.cursor/rules/*.mdc`, Amazon Q `.amazonq/rules/`, Cline `.clinerules/`, Copilot/VS Code `.github/copilot-instructions.md`, Codex `AGENTS.md`).
+- **Cores resolve rule-details from one canonical path**: `.aiflc/{family}/{pkg}-rule-details/` (standalone/flattened fallback: `{pkg}-rule-details/`).
+- Runtime paths in the rules remain **workspace-root-relative** (`{family}-ws/…`).
+- **Claude Code only** additionally gets generated `.claude/commands/pdlc/*.md` slash commands (destination triggers only) that `Read` the same cores under `.aiflc/pdlc/`.
 
 ---
 

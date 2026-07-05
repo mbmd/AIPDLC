@@ -1,13 +1,14 @@
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
-# Mapping: Product Backlog Package (AI-POLC) → epics-and-backlog.md + backlog/ seed (POLC CLUSTER)
+# Mapping: Product Backlog Package (AI-POLC) → backlog/epics-and-backlog.md + backlog/epics/ (POLC CLUSTER)
 
 ## Purpose
 
-Transforms the epic decomposition produced by AI-POLC (`strategy/epic-decomposition.md`) into a **backlog scaffold** in the destination workspace: an epic overview document plus a `backlog/` folder structure that AI-DLC v1 fills with stories during build. This gives the build workspace a ready-made, prioritized backbone of work — goals decomposed into epics with acceptance criteria and a stable order — instead of starting from an empty backlog.
+Transforms the epic decomposition produced by AI-POLC (`strategy/epic-decomposition.md`) into a **backlog scaffold** in the destination workspace: an epic overview document plus a `backlog/epics/` folder structure with full story files when Tier 2 is available. This gives the build workspace a ready-made, prioritized backbone of work — goals decomposed into epics with acceptance criteria and a stable order — instead of starting from an empty backlog.
 
 **Output:**
-- `{workspace-root}/epics-and-backlog.md` (the epic overview + prioritized order)
-- `{workspace-root}/backlog/` (one stub file per epic: `EPIC-{id}-{slug}.md`)
+- `{workspace-root}/backlog/epics-and-backlog.md` (the epic overview + prioritized order)
+- `{workspace-root}/backlog/epics/EPIC-{id}-{slug}.md` (one per epic)
+- `{workspace-root}/backlog/epics/EPIC-{id}_stories/` (full story files, IF Tier 2)
 
 **Condition:** Generate IF `polc-state.md` is present AND the PBP contains epic decomposition.
 
@@ -47,7 +48,7 @@ During THIS activity, ALSO adopt the mindset of a **Business Analyst** (with a r
 
 ## Target Structure
 
-### epics-and-backlog.md
+### backlog/epics-and-backlog.md
 
 ```markdown
 ---
@@ -64,13 +65,13 @@ projectId: "{project-id}"
 # Epics & Backlog
 
 > Prioritized epic backbone seeded from the Product Backlog Package.
-> AI-DLC v1 elaborates stories into `backlog/EPIC-*.md`; order is POLC-authoritative.
+> AI-DLC v1 elaborates stories into `backlog/epics/EPIC-*_stories/`; order is POLC-authoritative.
 
 ## Prioritized Order
 <!-- begin: PBP-sourced -->
 | Rank | Epic ID | Epic | Parent Goal | Priority Model | Release | Stub |
 |------|---------|------|-------------|----------------|---------|------|
-| 1 | {epic-id} | {title} | {goal-id} | {WSJF=.. / Must} | {MVP} | `backlog/EPIC-{id}-{slug}.md` |
+| 1 | {epic-id} | {title} | {goal-id} | {WSJF=.. / Must} | {MVP} | `backlog/epics/EPIC-{id}-{slug}.md` |
 | ... | ... | ... | ... | ... | ... | ... |
 <!-- end: PBP-sourced -->
 
@@ -80,7 +81,7 @@ projectId: "{project-id}"
 <!-- end: PBP-sourced -->
 ```
 
-### backlog/EPIC-{id}-{slug}.md (one per epic)
+### backlog/epics/EPIC-{id}-{slug}.md (one per epic)
 
 ```markdown
 ---
@@ -103,9 +104,43 @@ parentGoal: "{goal-id}"
 <!-- end: PBP-sourced -->
 
 ## Stories
-<!-- If POLC Tier 2 elaborated stories, list them here; else leave for AI-DLC v1 -->
-{elaborated stories OR "_Stories elaborated by AI-DLC v1 during build._"}
+<!-- If POLC Tier 2, stories are in backlog/epics/EPIC-{id}_stories/ -->
+{IF Tier 2: "See `EPIC-{id}_stories/` for full elaborated stories."}
+{IF Tier 1 only: "_Stories elaborated by AI-DLC v1 during build._"}
 ```
+
+### backlog/epics/EPIC-{id}_stories/ (IF Tier 2 — full story files)
+
+When POLC Tier 2 elaboration is complete, DWG copies the **full story files** into this folder. These are the acceptance criteria developers build against.
+
+```markdown
+backlog/epics/EPIC-001_stories/
+├── US-001_{slug}.md
+├── US-002_{slug}.md
+└── US-00N_{slug}.md
+```
+
+Each story file is copied from the PBP with provenance front-matter added:
+
+```markdown
+---
+generatedBy: AI-DWG
+source: "AI-POLC — tier2/story-elaboration.md"
+ownership: generated
+epicId: "{epic-id}"
+storyId: "{story-id}"
+projectId: "{project-id}"
+generatedOn: "{generation-date}"
+---
+
+{full story content from PBP — verbatim copy including G/W/T ACs}
+```
+
+**Generation rules for story files:**
+- Copy verbatim — do NOT paraphrase, summarize, or restructure
+- Preserve all Given/When/Then acceptance criteria exactly as written
+- One file per story (same filename as in PBP if available, else `US-{NNN}_{slug}.md`)
+- Add provenance front-matter only — no other modifications to content
 
 ---
 
@@ -120,8 +155,17 @@ Every epic in the PBP gets exactly one `backlog/EPIC-*.md`. No epic dropped, non
 ### Rule 3: Acceptance Criteria Copied, Not Paraphrased
 Epic-level acceptance criteria are quoted verbatim.
 
-### Rule 4: Stories Deferred Unless Already Elaborated
-In chain mode POLC defers stories to AI-DLC v1 — leave the placeholder. Only carry stories if POLC Tier 2 produced them.
+### Rule 4: Full Story Files Copied When Tier 2 Available
+When POLC Tier 2 story elaboration is complete (detected via `polc-state.md` status or presence of `tier2/story-elaboration.md`):
+- Copy ALL elaborated story files into `backlog/epics/EPIC-{id}_stories/`
+- Add provenance front-matter to each file
+- Generate `backlog/README.md` confirming stories are present
+- Cross-link from epic stubs to their stories folder
+
+When Tier 2 is NOT available (Tier 1 only):
+- Leave epic stubs with placeholder: "_Stories elaborated by AI-DLC v1 during build._"
+- Do NOT generate empty `_stories/` folders
+- `backlog/user-stories.md` is NOT generated (no Tier 2 content to index)
 
 ---
 
@@ -141,16 +185,21 @@ In chain mode POLC defers stories to AI-DLC v1 — leave the placeholder. Only c
 |-----------|----------|
 | POLC present, no epic decomposition | Skip backlog seed; flag: "PBP has no epics — backlog left empty for AI-DLC v1" |
 | Epics have no rank | Use document order; mark `Priority Model = unranked (PO to confirm)` |
-| Tier 2 stories present | Populate each epic stub `## Stories`; cross-link to `polc-to-user-stories.md` output |
+| Tier 2 stories present | Copy full story files into `backlog/epics/EPIC-{id}_stories/`; populate `backlog/user-stories.md` index |
+| Tier 1 only (no story elaboration) | Leave epic stub placeholders; do NOT generate empty `_stories/` folders or `user-stories.md` |
 | Epic references missing goal | Keep epic; flag goal gap (also surfaces in traceability matrix) |
+| Story file has no structured G/W/T | Copy verbatim anyway — format is POLC's responsibility, not DWG's |
 
 ---
 
 ## Output Validation
 
-- [ ] One `backlog/EPIC-*.md` per PBP epic (exhaustive)
+- [ ] One `backlog/epics/EPIC-*.md` per PBP epic (exhaustive)
 - [ ] Prioritized order matches POLC rank verbatim
 - [ ] Epic acceptance criteria copied verbatim
 - [ ] Epic IDs consistent with traceability matrix
-- [ ] Stories placeholder left when not elaborated
-- [ ] Provenance front-matter + projectId present
+- [ ] IF Tier 2: full story files present in `backlog/epics/EPIC-{id}_stories/`
+- [ ] IF Tier 2: story content copied verbatim (no paraphrase)
+- [ ] IF Tier 1: stories placeholder present, no empty `_stories/` folders
+- [ ] Provenance front-matter + projectId present on all generated files
+- [ ] All outputs located under `backlog/` (nothing at workspace root)

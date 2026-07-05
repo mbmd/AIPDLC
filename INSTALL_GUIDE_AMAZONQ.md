@@ -42,32 +42,30 @@
 
 ## How It Works
 
-Each AI-* package installs **two things** into your workspace, both **family-scoped** under a `pdlc/` segment (this is the AI-* PDLC Family — every package file lives under the family name so multiple AIFLC families can coexist in one workspace):
+The installer places **one always-loaded file** plus the **package home**, both scoped to the AI-* PDLC Family (multiple AIFLC families can coexist in one workspace):
 
-1. **Core workflow/engine file** — a Markdown file placed in `.amazonq/rules/pdlc/` (Amazon Q reads these automatically)
-2. **Rule-details folder** — phase-specific instructions and templates loaded on demand during execution (placed in `.amazonq/pdlc/`)
+1. **Session orchestrator** — a single Markdown rule Amazon Q reads automatically at session start (placed in `.amazonq/rules/pdlc/session-orchestrator.md`). It is the ONLY always-loaded file. It detects which package you want and `Read`s that package's core on demand — keeping the context window free.
+2. **Package home** — every package's core AND rule-details live together in the uniform, agent-neutral home `.aiflc/pdlc/`. Nothing here auto-loads; the orchestrator reads from it on demand.
 
 ```
 your-workspace/
 ├── .amazonq/
-│   ├── rules/
-│   │   └── pdlc/
-│   │       └── ai-pilc-rules/
-│   │           └── core-workflow.md       ← Always loaded by Amazon Q
-│   └── pdlc/
-│       └── ai-pilc-rule-details/          ← Loaded on-demand by the core workflow
-│           ├── common/
-│           ├── inception/
-│           ├── assessment/
-│           ├── templates/
-│           └── ...
+│   └── rules/
+│       └── pdlc/
+│           └── session-orchestrator.md    ← The ONLY always-loaded file (routes to cores)
+├── .aiflc/
+│   └── pdlc/                              ← AI-* PDLC Family home (cores + rule-details + fabric)
+│       ├── ai-pilc-rules/core-workflow.md    ← Read on demand by the orchestrator
+│       ├── ai-pilc-rule-details/             ← Read on demand by the core
+│       │   ├── common/  inception/  assessment/  templates/  ...
+│       └── ... one {pkg}-rules/ + {pkg}-rule-details/ per installed package
 ├── pdlc-ws/                               ← All runtime outputs land here (never workspace root)
 └── (your project files)
 ```
 
-Amazon Q reads all files in `.amazonq/rules/` (including the `pdlc/` subfolder) at session start. The rule-details folders sit alongside in `.amazonq/pdlc/` and get read on demand when the workflow transitions to each phase.
+Amazon Q auto-loads only `session-orchestrator.md` from `.amazonq/rules/pdlc/`. When you activate a package (by key or intent), the orchestrator `Read`s `.aiflc/pdlc/ai-{pkg}-rules/core-*.md`, and the core reads its rule-details from `.aiflc/pdlc/ai-{pkg}-rule-details/` as each phase needs them.
 
-> **The Kiro-style split:** core files load as always-on rules (`.amazonq/rules/pdlc/`); rule-details are read on demand (`.amazonq/pdlc/`); and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root.
+> **The AIFLC model:** one orchestrator loads always-on (`.amazonq/rules/pdlc/`); every package core + its rule-details live in the uniform home `.aiflc/pdlc/` and are read on demand; and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root. The `.aiflc/pdlc/` layout is identical on every platform.
 
 ---
 
@@ -127,13 +125,14 @@ cd <path-to-AIPDLC>
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-# Copy steering rules (core workflow — always loaded), family-scoped under pdlc/
-New-Item -ItemType Directory -Force -Path "$Target\.amazonq\rules\pdlc"
-Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rules" "$Target\.amazonq\rules\pdlc\"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rules" "$Target\.aiflc\pdlc\"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.aiflc\pdlc\"
 
-# Copy rule details (phase instructions + templates — on demand), family-scoped under pdlc/
-New-Item -ItemType Directory -Force -Path "$Target\.amazonq\pdlc"
-Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.amazonq\pdlc\"
+# Copy the session orchestrator into Amazon Q's auto-load slot (the ONLY always-loaded file)
+New-Item -ItemType Directory -Force -Path "$Target\.amazonq\rules\pdlc"
+Copy-Item "$Source\session-orchestrator.md" "$Target\.amazonq\rules\pdlc\session-orchestrator.md"
 ```
 
 **macOS / Linux:**
@@ -142,30 +141,33 @@ Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.amazonq\pdlc
 SOURCE=<path-to-AIPDLC>
 TARGET=<your-project-path>
 
-# Copy steering rules (family-scoped under pdlc/)
-mkdir -p "$TARGET/.amazonq/rules/pdlc"
-cp -R "$SOURCE/ai-pilc/ai-pilc-rules" "$TARGET/.amazonq/rules/pdlc/"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+mkdir -p "$TARGET/.aiflc/pdlc"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rules" "$TARGET/.aiflc/pdlc/"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details" "$TARGET/.aiflc/pdlc/"
 
-# Copy rule details (family-scoped under pdlc/)
-mkdir -p "$TARGET/.amazonq/pdlc"
-cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details" "$TARGET/.amazonq/pdlc/"
+# Copy the session orchestrator into Amazon Q's auto-load slot (the ONLY always-loaded file)
+mkdir -p "$TARGET/.amazonq/rules/pdlc"
+cp "$SOURCE/session-orchestrator.md" "$TARGET/.amazonq/rules/pdlc/session-orchestrator.md"
 ```
 
 ### File Placement Convention (Amazon Q)
 
-| Package | Rules (always loaded) | Details (on-demand) |
-|---------|----------------------|---------------------|
-| AI-ILC | `.amazonq/rules/pdlc/ai-ilc-rules/core-workflow.md` | `.amazonq/pdlc/ai-ilc-rule-details/` |
-| AI-PILC | `.amazonq/rules/pdlc/ai-pilc-rules/core-workflow.md` | `.amazonq/pdlc/ai-pilc-rule-details/` |
-| AI-ADLC | `.amazonq/rules/pdlc/ai-adlc-rules/core-workflow.md` | `.amazonq/pdlc/ai-adlc-rule-details/` |
-| AI-UXD | `.amazonq/rules/pdlc/ai-uxd-rules/core-workflow.md` | `.amazonq/pdlc/ai-uxd-rule-details/` |
-| AI-POLC | `.amazonq/rules/pdlc/ai-polc-rules/core-workflow.md` | `.amazonq/pdlc/ai-polc-rule-details/` |
-| AI-DWG | `.amazonq/rules/pdlc/ai-dwg-rules/core-generator.md` | `.amazonq/pdlc/ai-dwg-rule-details/` |
-| AI-GCE | `.amazonq/rules/pdlc/ai-gce-rules/core-generator.md` | `.amazonq/pdlc/ai-gce-rule-details/` |
-| AI-TGE | `.amazonq/rules/pdlc/ai-tge-rules/core-engine.md` | `.amazonq/pdlc/ai-tge-rule-details/` |
-| AI-PPM | `.amazonq/rules/pdlc/ai-ppm-rules/core-engine.md` | `.amazonq/pdlc/ai-ppm-rule-details/` |
-| AI-FLO | `.amazonq/rules/pdlc/ai-flo-rules/core-engine.md` | `.amazonq/pdlc/ai-flo-rule-details/` |
-| AI-DFE | `.amazonq/rules/pdlc/ai-dfe-rules/core-engine.md` | `.amazonq/pdlc/ai-dfe-rule-details/` |
+Cores and rule-details both live in the uniform home `.aiflc/pdlc/` (read on demand). The only always-loaded file is `.amazonq/rules/pdlc/session-orchestrator.md`.
+
+| Package | Core (read on demand) | Details (read on demand) |
+|---------|-----------------------|--------------------------|
+| AI-ILC | `.aiflc/pdlc/ai-ilc-rules/core-workflow.md` | `.aiflc/pdlc/ai-ilc-rule-details/` |
+| AI-PILC | `.aiflc/pdlc/ai-pilc-rules/core-workflow.md` | `.aiflc/pdlc/ai-pilc-rule-details/` |
+| AI-ADLC | `.aiflc/pdlc/ai-adlc-rules/core-workflow.md` | `.aiflc/pdlc/ai-adlc-rule-details/` |
+| AI-UXD | `.aiflc/pdlc/ai-uxd-rules/core-workflow.md` | `.aiflc/pdlc/ai-uxd-rule-details/` |
+| AI-POLC | `.aiflc/pdlc/ai-polc-rules/core-workflow.md` | `.aiflc/pdlc/ai-polc-rule-details/` |
+| AI-DWG | `.aiflc/pdlc/ai-dwg-rules/core-generator.md` | `.aiflc/pdlc/ai-dwg-rule-details/` |
+| AI-GCE | `.aiflc/pdlc/ai-gce-rules/core-generator.md` | `.aiflc/pdlc/ai-gce-rule-details/` |
+| AI-TGE | `.aiflc/pdlc/ai-tge-rules/core-engine.md` | `.aiflc/pdlc/ai-tge-rule-details/` |
+| AI-PPM | `.aiflc/pdlc/ai-ppm-rules/core-engine.md` | `.aiflc/pdlc/ai-ppm-rule-details/` |
+| AI-FLO | `.aiflc/pdlc/ai-flo-rules/core-engine.md` | `.aiflc/pdlc/ai-flo-rule-details/` |
+| AI-DFE | `.aiflc/pdlc/ai-dfe-rules/core-engine.md` | `.aiflc/pdlc/ai-dfe-rule-details/` |
 
 ---
 
@@ -183,27 +185,30 @@ Or manually:
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
+# Ensure the uniform home and Amazon Q's rules slot exist
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc" | Out-Null
 New-Item -ItemType Directory -Force -Path "$Target\.amazonq\rules\pdlc" | Out-Null
-New-Item -ItemType Directory -Force -Path "$Target\.amazonq\pdlc" | Out-Null
 
 $packages = @(
     "ai-ilc", "ai-pilc", "ai-ppm", "ai-flo", "ai-adlc",
     "ai-uxd", "ai-polc", "ai-dwg", "ai-gce", "ai-tge", "ai-dfe"
 )
 
+# Copy every package core + rule-details into the uniform home
 foreach ($pkg in $packages) {
     $rulesSource = Join-Path $Source "$pkg\$pkg-rules"
     $detailsSource = Join-Path $Source "$pkg\$pkg-rule-details"
 
     if (Test-Path $rulesSource) {
-        Copy-Item -Recurse $rulesSource "$Target\.amazonq\rules\pdlc\" -Force
-        Write-Host "Rules installed: $pkg" -ForegroundColor Green
-    }
-    if (Test-Path $detailsSource) {
-        Copy-Item -Recurse $detailsSource "$Target\.amazonq\pdlc\" -Force
-        Write-Host "Details installed: $pkg" -ForegroundColor Green
+        Copy-Item -Recurse $rulesSource "$Target\.aiflc\pdlc\" -Force
+        Copy-Item -Recurse $detailsSource "$Target\.aiflc\pdlc\" -Force
+        Write-Host "Installed $pkg into .aiflc/pdlc/" -ForegroundColor Green
     }
 }
+
+# Copy the single always-loaded orchestrator into Amazon Q's slot
+Copy-Item "$Source\session-orchestrator.md" "$Target\.amazonq\rules\pdlc\session-orchestrator.md" -Force
+Write-Host "Installed session orchestrator" -ForegroundColor Green
 ```
 
 ---
@@ -243,41 +248,32 @@ After a full install:
 ```
 your-project/
 ├── .amazonq/
-│   ├── rules/
-│   │   └── pdlc/                         ← AI-* PDLC Family scope
-│   │       ├── ai-ilc-rules/
-│   │       │   └── core-workflow.md         ← Always loaded
-│   │       ├── ai-pilc-rules/
-│   │       │   └── core-workflow.md         ← Always loaded
-│   │       ├── ai-ppm-rules/
-│   │       │   └── core-engine.md           ← Always loaded
-│   │       ├── ai-flo-rules/
-│   │       │   └── core-engine.md           ← Always loaded
-│   │       ├── ai-adlc-rules/
-│   │       │   └── core-workflow.md         ← Always loaded
-│   │       ├── ai-uxd-rules/
-│   │       │   └── core-workflow.md         ← Always loaded
-│   │       ├── ai-polc-rules/
-│   │       │   └── core-workflow.md         ← Always loaded
-│   │       ├── ai-dwg-rules/
-│   │       │   └── core-generator.md        ← Always loaded
-│   │       ├── ai-gce-rules/
-│   │       │   └── core-generator.md        ← Always loaded
-│   │       ├── ai-tge-rules/
-│   │       │   └── core-engine.md           ← Always loaded
-│   │       └── ai-dfe-rules/
-│   │           └── core-engine.md           ← Always loaded
-│   └── pdlc/                             ← AI-* PDLC Family rule-details (on-demand)
+│   └── rules/
+│       └── pdlc/
+│           └── session-orchestrator.md   ← The ONLY always-loaded file (routes to cores)
+├── .aiflc/
+│   └── pdlc/                             ← AI-* PDLC Family home (cores + rule-details, on-demand)
+│       ├── ai-ilc-rules/core-workflow.md
 │       ├── ai-ilc-rule-details/
+│       ├── ai-pilc-rules/core-workflow.md
 │       ├── ai-pilc-rule-details/
-│       ├── ai-adlc-rule-details/
-│       ├── ai-uxd-rule-details/
-│       ├── ai-polc-rule-details/
+│       ├── ai-ppm-rules/core-engine.md
 │       ├── ai-ppm-rule-details/
+│       ├── ai-flo-rules/core-engine.md
 │       ├── ai-flo-rule-details/
+│       ├── ai-adlc-rules/core-workflow.md
+│       ├── ai-adlc-rule-details/
+│       ├── ai-uxd-rules/core-workflow.md
+│       ├── ai-uxd-rule-details/
+│       ├── ai-polc-rules/core-workflow.md
+│       ├── ai-polc-rule-details/
+│       ├── ai-dwg-rules/core-generator.md
 │       ├── ai-dwg-rule-details/
+│       ├── ai-gce-rules/core-generator.md
 │       ├── ai-gce-rule-details/
+│       ├── ai-tge-rules/core-engine.md
 │       ├── ai-tge-rule-details/
+│       ├── ai-dfe-rules/core-engine.md
 │       └── ai-dfe-rule-details/
 ├── pdlc-ws/                             ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 │   └── .ai-family-manifest.json         ← Installer tracking
@@ -352,7 +348,7 @@ State files persist between sessions. Say "Continue AI-PILC" to resume where you
 
 ## Coexistence with Other Rules
 
-- **Existing `.amazonq/rules/`**: Untouched. AI-* packages add their own rule folders alongside yours.
+- **Existing `.amazonq/rules/`**: Untouched. The family adds only one always-loaded file (`.amazonq/rules/pdlc/session-orchestrator.md`); package cores live under `.aiflc/pdlc/`.
 - **Other project files**: Never modified.
 
 ---
@@ -364,8 +360,9 @@ State files persist between sessions. Say "Continue AI-PILC" to resume where you
 .\installer\install.ps1 -TargetWorkspace "<your-project-path>" -Uninstall
 
 # Manual
-Get-ChildItem "<your-project-path>\.amazonq\rules\pdlc\ai-*-rules" -Directory | Remove-Item -Recurse -Force
-Get-ChildItem "<your-project-path>\.amazonq\pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
+Remove-Item "<your-project-path>\.amazonq\rules\pdlc\session-orchestrator.md" -ErrorAction SilentlyContinue
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rules" -Directory | Remove-Item -Recurse -Force
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
 Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction SilentlyContinue
 ```
 
@@ -375,8 +372,9 @@ Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction 
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| Rules not loading | Folder structure wrong | Verify `.amazonq/rules/pdlc/ai-{pkg}-rules/` exists |
-| "Can't find rule-details" | Path mismatch | Ensure `.amazonq/pdlc/ai-{pkg}-rule-details/` exists |
+| Orchestrator not loading | Wrong location | Verify `.amazonq/rules/pdlc/session-orchestrator.md` exists |
+| Package core not found | Path mismatch | Verify `.aiflc/pdlc/ai-{pkg}-rules/core-*.md` exists |
+| "Can't find rule-details" | Path mismatch | Core resolves `.aiflc/pdlc/ai-{pkg}-rule-details/` first |
 | No welcome message | Wrong activation phrase | Use "Using AI-PILC, ..." format |
 | State file not created | First interaction only | State is created after first stage completes |
 

@@ -42,15 +42,15 @@ Think of it as a structured notepad that knows what stage you just completed and
 
 ## How to Activate
 
-Load the `#test-mode` context key in your chat session:
+Just tell the AI in plain language. Any of these work:
 
 ```
-#test-mode
+enable test mode
 ```
 
-That's it. The package detects which steering file is active (e.g., `ai-pilc-rules`, `ai-adlc-rules`) and starts offering feedback checkpoints after each stage completes.
+You can also say "I want to run <package> in test mode" or "test mode on". The active package detects which package is running (e.g., `ai-pilc-rules`, `ai-adlc-rules`) and reads `test-mode.md` on demand from its rule-details home (`.aiflc/{family}/{package}-rule-details/common/test-mode.md`), then starts offering feedback checkpoints after each stage completes.
 
-**Important:** Test mode is a manually-loaded steering file (`inclusion: manual`). It never activates on its own — you choose when to use it.
+**Important:** Test mode never auto-loads. It is read on demand only when you ask for it, so it works the same on every platform.
 
 ---
 
@@ -173,9 +173,9 @@ Options: **save** / **edit** / **discard**
 
 Three ways:
 
-1. **Don't load it next session** — simply omit `#test-mode` from your context
+1. **Don't enable it next session** — test mode never auto-loads
 2. **Mid-session:** Say "exit test mode" — checkpoints stop immediately
-3. **Skip checkpoints only:** Say "skip-all" at any checkpoint — test mode stays loaded but goes silent
+3. **Skip checkpoints only:** Say "skip-all" at any checkpoint — test mode stays active but goes silent
 
 Deactivation does NOT delete the outbox. Your findings remain for review.
 

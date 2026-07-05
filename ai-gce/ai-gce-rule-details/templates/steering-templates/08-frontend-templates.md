@@ -9,7 +9,7 @@ ownership: generated
 # Frontend Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate frontend-related steering files
-> in the target project's `.kiro/steering/` folder. These templates encode component architecture,
+> in the target project's `rules/` folder. These templates encode component architecture,
 > state management, accessibility requirements, and API integration patterns derived from
 > `frontend-standards.md` (conditional — only if UI containers exist).
 
@@ -17,7 +17,7 @@ ownership: generated
 
 ## frontend-core.md (Always — within frontend scope)
 
-**Generates**: `.kiro/steering/frontend-core.md`
+**Generates**: `rules/frontend-core.md`
 **Condition**: Generated only IF `frontend-standards.md` exists in workspace steering
 **Derived From**: frontend-standards.md + tech-stack.md + module-structure.md
 
@@ -61,7 +61,7 @@ inclusion: always
 
 ## frontend-accessibility.md (Always — within frontend scope)
 
-**Generates**: `.kiro/steering/frontend-accessibility.md`
+**Generates**: `rules/frontend-accessibility.md`
 **Condition**: Generated alongside frontend-core.md (accessibility is non-negotiable)
 **Derived From**: frontend-standards.md + WCAG requirements
 
@@ -103,7 +103,7 @@ inclusion: always
 
 ## frontend-testing.md (FileMatch `{frontend_test_pattern}`)
 
-**Generates**: `.kiro/steering/frontend-testing.md`
+**Generates**: `rules/frontend-testing.md`
 **Condition**: Generated IF frontend-standards.md defines frontend testing requirements
 **Derived From**: frontend-standards.md + testing-strategy.md
 

@@ -73,7 +73,7 @@ Every numbered principle → one compliance rule:
 | **Severity** | 🔴 Critical |
 | **Tier** | 1 |
 | **Phase** | Foundation+ |
-| **Derived From** | .kiro/steering/architecture-principles.md → P{n}: "{principle statement}" |
+| **Derived From** | rules/architecture-principles.md → P{n}: "{principle statement}" |
 
 **Requirement:** {One sentence — what MUST be true}
 

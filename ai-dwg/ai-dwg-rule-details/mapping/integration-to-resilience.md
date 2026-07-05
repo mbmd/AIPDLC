@@ -5,7 +5,7 @@
 
 Transforms failure handling patterns from the Integration Architecture into a steering file governing retry policies, circuit breakers, timeouts, and graceful degradation.
 
-**Output:** `.kiro/steering/resilience-standards.md`
+**Output:** `rules/resilience-standards.md`
 
 **Condition:** Generate IF Integration Architecture shows >3 external integrations OR system is distributed (microservices) OR Microservices/Resilience extension was active in AI-ADLC.
 

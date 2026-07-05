@@ -165,8 +165,8 @@ ai-ppm/
 See `setup/INSTALL.md` for detailed multi-platform instructions.
 
 **Quick start (Kiro):**
-1. Copy `ai-ppm-rules/` to `.kiro/steering/ai-ppm-rules/`
-2. Copy `ai-ppm-rule-details/` to `.kiro/ai-ppm-rule-details/`
+1. Copy `ai-ppm-rules/` and `ai-ppm-rule-details/` into the uniform home `.aiflc/pdlc/`
+2. Copy `session-orchestrator.md` into `.kiro/steering/` (the only always-loaded file; it `Read`s the core on demand)
 3. Say: "I want to manage my project portfolio using AI-PPM"
 
 ---

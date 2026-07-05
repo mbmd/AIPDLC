@@ -51,27 +51,25 @@ Test mode is always **opt-in and non-blocking** — you can ignore every checkpo
 
 ## 3. Activating Test Mode
 
-### Method 1: Context Key (Recommended)
+### Just Tell the AI
 
-In your chat with the AI, include the `#test-mode` context reference:
+Test mode activates by intent — you simply tell the AI in plain language. Any of these work:
 
 ```
-#test-mode
+enable test mode
 
 Let's start the project initiation workflow.
 ```
 
-This loads the test mode steering file for the session.
-
-### Method 2: Mention It in Your Prompt
-
-Simply tell the AI:
-
 ```
-I want to run AI-PILC in test mode.
+I want to run AI-POLC in test mode.
 ```
 
-The AI will load the test mode context and begin.
+```
+test mode on
+```
+
+The active package reads `test-mode.md` on demand from its rule-details home (`.aiflc/pdlc/ai-polc-rule-details/common/test-mode.md`) and begins offering feedback checkpoints after each stage completes. Nothing auto-loads — test mode starts only when you ask for it, and it works the same on every platform.
 
 ### What Happens on Activation
 
@@ -304,7 +302,7 @@ The AI will stop offering checkpoints. Your outbox files remain untouched.
 
 ### For Future Sessions
 
-Simply don't include `#test-mode` in your next prompt. Test mode only activates when you explicitly load it.
+Simply don't enable test mode in your next session (it never auto-loads). Test mode only activates when you explicitly ask for it.
 
 ### Cleaning Up
 
@@ -371,7 +369,7 @@ The templates are available in the package source at `the package source under t
 │  TEST MODE — QUICK REFERENCE                        │
 ├─────────────────────────────────────────────────────┤
 │                                                     │
-│  ACTIVATE:    #test-mode  (or say "test mode on")   │
+│  ACTIVATE:    say "test mode on"                    │
 │  REPORT:      "log feedback" or "report a bug"      │
 │  SKIP:        "skip-all" at any checkpoint          │
 │  DEACTIVATE:  "exit test mode"                      │

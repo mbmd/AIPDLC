@@ -132,9 +132,8 @@ The Portfolio Manager persona is the **primary lead for the entire engine**; spe
 
 CRITICAL: When performing any stage, you MUST read and use relevant content from rule detail files. Check these paths in order and use the first one that exists:
 
-- `.ai-ppm/ai-ppm-rule-details/` (AI-assisted setup)
-- `.kiro/ai-ppm-rule-details/` (Kiro IDE setup)
-- `ai-ppm-rule-details/` (standalone setup)
+- `.aiflc/pdlc/ai-ppm-rule-details/` (canonical AIFLC home — all platforms)
+- `ai-ppm-rule-details/` (standalone / flattened fallback)
 
 All subsequent rule detail file references are relative to whichever rule details directory was resolved above.
 

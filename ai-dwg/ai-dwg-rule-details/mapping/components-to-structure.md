@@ -6,7 +6,7 @@
 This mapping rule transforms the **Component Design (C4 Level 3)** document into three workspace artifacts:
 1. `{src-structure}/` — Physical folder layout reflecting module decomposition
 2. `CODEOWNERS` — Ownership mapping per module/folder
-3. `.kiro/steering/module-structure.md` — Module boundaries, dependency rules, and layer conventions
+3. `rules/module-structure.md` — Module boundaries, dependency rules, and layer conventions
 
 ---
 
@@ -181,7 +181,7 @@ IF shared kernel exists:
   Map: /src/shared/ → @{architecture-team or all}
 
 ALWAYS include:
-  /.kiro/steering/ → @{architect or tech-lead}
+  /rules/ → @{architect or tech-lead}
   /CODEOWNERS → @{tech-lead}
 ```
 
@@ -197,7 +197,7 @@ ALWAYS include:
 # ═══════════════════════════════════════════
 
 # Governance & Architecture (requires architect review)
-/.kiro/steering/                @{architect-team}
+/rules/                @{architect-team}
 /CODEOWNERS                     @{tech-lead}
 /PROJECT_INSTRUCTIONS.md        @{tech-lead}
 /DEFINITION_OF_DONE.md          @{tech-lead}

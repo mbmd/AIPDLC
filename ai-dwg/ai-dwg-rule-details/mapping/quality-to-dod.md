@@ -1,11 +1,17 @@
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
-# Mapping: Quality Attributes → DEFINITION_OF_DONE.md
+# Mapping: Quality Attributes → backlog/DEFINITION_OF_DONE.md + backlog/DEFINITION_OF_READY.md
 
 ## Purpose
 
-Transforms quality attributes and testing strategy from the Architecture Vision into a Definition of Done document that defines when work is "complete" — covering code quality, testing, documentation, and review gates.
+Transforms quality attributes and testing strategy from the Architecture Vision into a Definition of Done document that defines when work is "complete" — covering code quality, testing, documentation, and review gates. Also produces the paired Definition of Ready that defines when a story is ready to enter a sprint.
 
-**Output:** `DEFINITION_OF_DONE.md` (project root)
+**Output:**
+- `{workspace-root}/backlog/DEFINITION_OF_DONE.md` — quality gate: when work is "done"
+- `{workspace-root}/backlog/DEFINITION_OF_READY.md` — entry gate: when a story is ready for sprint
+
+**Condition:**
+- `DEFINITION_OF_DONE.md` — Generate IF POLC or ADLC present (quality attrs from either)
+- `DEFINITION_OF_READY.md` — Generate IF POLC present (sprint entry is a product concern)
 
 ---
 
@@ -164,3 +170,88 @@ A task (user story, bug fix, feature) is DONE when ALL of the following are met.
 3. **Security is non-negotiable** — security section is present regardless of depth
 4. **Conditional sections** — Database and API sections only apply when those areas are touched
 5. **DoD is a gate** — work that doesn't pass ALL applicable items is not done
+
+
+---
+
+## Target: backlog/DEFINITION_OF_READY.md (Paired Output)
+
+### Purpose
+
+The Definition of Ready (DoR) is the **sprint entry gate** — it defines when a story is sufficiently prepared to be worked on. It is the natural pair to DoD: DoR gates entry, DoD gates exit.
+
+### Source
+
+**From:** AI-POLC → PBP governance (`governance/definition-of-ready-done.md`) if present, else DWG derives from the story format and team standards.
+
+### Structure
+
+```markdown
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "AI-POLC — governance/definition-of-ready-done.md"
+generatedOn: "{generation-date}"
+ownership: hybrid
+projectId: "{project-id}"
+---
+
+<!-- AI-DWG generated | source: AI-POLC DoR + AI-DWG derivation | date: {generation-date} -->
+
+# Definition of Ready
+
+## When Is a Story "Ready" for Sprint?
+
+A user story is READY to enter a sprint when ALL of the following are met. Unready stories MUST NOT be pulled into a sprint — they create waste and block flow.
+
+---
+
+## Story Completeness
+
+- [ ] Story follows INVEST format (Independent, Negotiable, Valuable, Estimable, Small, Testable)
+- [ ] "As a / I want / So that" narrative is complete and specific
+- [ ] Acceptance criteria are written in Given/When/Then format
+- [ ] At least 2 acceptance criteria per story (covers happy path + one edge case minimum)
+- [ ] Story is small enough for one sprint (≤ {team story point cap, e.g., 8 points})
+
+---
+
+## Dependencies Resolved
+
+- [ ] No unresolved blockers or dependencies on other stories in same sprint
+- [ ] External dependencies (APIs, third-party services) confirmed available
+- [ ] Design/UX assets available (wireframes, specs) if UI work
+- [ ] Test data or environment requirements identified
+
+---
+
+## Acceptance & Validation
+
+- [ ] Acceptance criteria are testable (can write a test for each G/W/T clause)
+- [ ] PO has confirmed acceptance criteria represent business intent
+- [ ] Story has been estimated by the team
+- [ ] Edge cases and error scenarios identified
+
+---
+
+## Technical Readiness
+
+- [ ] Architecture approach clear (no open design questions)
+- [ ] Relevant steering files identified (which rules apply to this story)
+- [ ] No ambiguity that would require mid-sprint PO consultation
+
+---
+
+## Traceability
+
+- [ ] Story links to parent epic
+- [ ] Story appears in traceability matrix (backlog/traceability-matrix.md)
+```
+
+### Transformation Rules (DoR-specific)
+
+1. **DoR is POLC-gated** — only generate when POLC is present (sprint readiness is a product concern)
+2. **Source POLC's DoR if available** — if `governance/definition-of-ready-done.md` exists in PBP, use it as primary source (copy relevant criteria verbatim)
+3. **Derive from story format** — if no explicit DoR in PBP, derive from the INVEST/G-W-T format the stories use
+4. **Keep it short** — DoR should be quick to verify (< 20 items); long DoRs create ceremony overhead
+5. **Binary checkboxes only** — same rule as DoD: every item is verifiable yes/no

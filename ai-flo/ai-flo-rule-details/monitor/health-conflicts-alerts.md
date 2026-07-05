@@ -166,6 +166,46 @@ This stage runs continuously:
 
 ---
 
+### C10: Drift Gate Block
+
+**Detection:** An entity is ready to advance a gate, but the drift register (`manifest.files.driftRegister`) has HARD entries in status `OPEN` for that project. GCE detects the drift (sole register writer); FLO reads it read-only and enforces the gate block.
+
+```
+⛔ DRIFT GATE BLOCK
+
+  Project:  {ID}
+  Entity:   {entity-id} (ready to advance {edge})
+  
+  Unresolved HARD drift: {count}
+    • DRF-006 [architecture] ARCH-003 — API versioning diverged → brokered to AI-ADLC
+    • DRF-011 [product] PROD-002 — AC unmet → brokered to AI-POLC
+  
+  Severity: CRITICAL (hold)
+  Resolution: broker address → package disposes → DWG re-baseline → GCE re-scan → release
+  
+  [R] Broker unbrokered drift now (domainTag → target)
+  [F] Force advance (override — logged; drift remains as known debt)
+  [E] Escalate
+```
+
+**Action:** Flag-and-hold. FLO brokers HARD drift addresses to owning packages (via `route/drift-routing.md`, recording in `.flo/routing-log.md`), then holds until GCE confirms closure (register entries CLOSED against the re-baselined version — GCE writes this, not FLO). Advisory drift never triggers C10. Operator may force-advance (logged as known debt).
+
+---
+
+## Drift Status in Monitor
+
+FLO surfaces drift counts in `status` / `check` output (read from the drift register):
+
+```
+Drift: {H} hard, {A} advisory, {W} waived
+  {IF H > 0}: ⛔ {H} hard — entity drift-blocked (C10)
+  {IF H == 0}: ✅ no hard drift
+```
+
+This gives portfolio-level visibility into drift without GCE emitting a separate signal — FLO reads the register as part of position tracking (Phase 3 Monitor).
+
+---
+
 ## Stall Detection
 
 Beyond individual conflicts, monitor for stalls:

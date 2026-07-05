@@ -43,31 +43,28 @@
 
 ## How It Works
 
-Each AI-* package installs into your workspace, all **family-scoped** to the AI-* PDLC Family (core files carry a `CLAUDE_PDLC_` filename prefix; rule-details live under a `.pdlc/` folder — so multiple AIFLC families can coexist in one workspace):
+The installer places **one always-loaded file** plus the **package home**, both scoped to the AI-* PDLC Family (multiple AIFLC families can coexist in one workspace):
 
-1. **Session orchestrator** — deployed as `CLAUDE_PDLC_ORCHESTRATOR.md` and wired into a real root `CLAUDE.md` via an `@import`. This is the single always-loaded entry point.
-2. **Core workflow/engine file** — one per package (`CLAUDE_PDLC_{PKG}.md` at workspace root). **Not** auto-loaded; the orchestrator `Read`s the relevant one on demand when you activate a package.
-3. **Rule-details folder** — phase-specific instructions and templates that the core workflow loads on demand during execution (placed under `.pdlc/`)
+1. **Session orchestrator** — deployed as `CLAUDE_PDLC_ORCHESTRATOR.md` at the workspace root and wired into a real root `CLAUDE.md` via an `@import`. This is the single always-loaded entry point. It detects which package you want and `Read`s that package's core on demand from `.aiflc/pdlc/`.
+2. **Package home** — every package's core AND rule-details live together in the uniform, agent-neutral home `.aiflc/pdlc/`. Nothing here auto-loads; the orchestrator reads from it on demand. Package cores are **not** root files anymore.
 
 ```
 your-workspace/
 ├── CLAUDE.md                      ← Auto-loaded; imports @CLAUDE_PDLC_ORCHESTRATOR.md
 ├── CLAUDE_PDLC_ORCHESTRATOR.md    ← Always-on router (loaded via the import above)
-├── CLAUDE_PDLC_AI_PILC.md         ← Read on demand when you activate AI-PILC
-├── .pdlc/
-│   └── ai-pilc-rule-details/      ← Loaded on-demand by the core workflow
-│       ├── common/
-│       ├── inception/
-│       ├── assessment/
-│       ├── templates/
-│       └── ...
+├── .aiflc/
+│   └── pdlc/                      ← AI-* PDLC Family home (cores + rule-details + fabric)
+│       ├── ai-pilc-rules/core-workflow.md    ← Read on demand when you activate AI-PILC
+│       ├── ai-pilc-rule-details/             ← Read on demand by the core
+│       │   ├── common/  inception/  assessment/  templates/  ...
+│       └── ... one {pkg}-rules/ + {pkg}-rule-details/ per installed package
 ├── pdlc-ws/                       ← All runtime outputs land here (never workspace root)
 └── (your project files)
 ```
 
-Claude Code auto-loads **only** `CLAUDE.md` (plus `CLAUDE.local.md`, `.claude/CLAUDE.md`, and `.claude/rules/*.md`) — there is no `CLAUDE*.md` filename wildcard. The installer creates a root `CLAUDE.md` that imports the orchestrator (`@CLAUDE_PDLC_ORCHESTRATOR.md`); the orchestrator then `Read`s each package core on demand. That is how the packages inject their expertise into Claude's context without you needing to paste anything.
+Claude Code auto-loads **only** `CLAUDE.md` (plus `CLAUDE.local.md`, `.claude/CLAUDE.md`, and `.claude/rules/*.md`) — there is no `CLAUDE*.md` filename wildcard. The installer creates a root `CLAUDE.md` that imports the orchestrator (`@CLAUDE_PDLC_ORCHESTRATOR.md`); the orchestrator then `Read`s each package core from `.aiflc/pdlc/` on demand. That is how the packages inject their expertise into Claude's context without you needing to paste anything. (The installer also generates `.claude/commands/pdlc/*.md` slash commands so you can invoke a package as, e.g., `/pdlc:pilc`, plus destination shortcuts like `/pdlc:dat` and `/pdlc:fhc`.)
 
-> **The load model:** `CLAUDE.md` (auto) → imports the orchestrator (always-on router) → `Read`s one package core + its `.pdlc/` rule-details on demand. Everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root. This is the Claude Code analog of Kiro's "one always-on steering file + manual-inclusion workflows" design.
+> **The AIFLC model:** `CLAUDE.md` (auto) → imports the orchestrator (always-on router) → `Read`s one package core + its rule-details from the uniform home `.aiflc/pdlc/` on demand. Everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root. The `.aiflc/pdlc/` layout is identical on every platform.
 
 ---
 
@@ -139,12 +136,15 @@ If you prefer to install manually or need to understand what goes where.
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-# Copy the core workflow (Claude reads CLAUDE_*.md files automatically), family-scoped filename
-Copy-Item "$Source\ai-pilc\ai-pilc-rules\core-workflow.md" "$Target\CLAUDE_PDLC_AI_PILC.md"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rules" "$Target\.aiflc\pdlc\"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.aiflc\pdlc\"
 
-# Copy the rule-details folder (family-scoped under .pdlc/)
-New-Item -ItemType Directory -Force -Path "$Target\.pdlc\ai-pilc-rule-details"
-Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details\*" "$Target\.pdlc\ai-pilc-rule-details\"
+# Place the orchestrator at the root and wire it into CLAUDE.md via an @import
+Copy-Item "$Source\session-orchestrator.claude.md" "$Target\CLAUDE_PDLC_ORCHESTRATOR.md"
+if (-not (Test-Path "$Target\CLAUDE.md")) { New-Item -ItemType File -Path "$Target\CLAUDE.md" | Out-Null }
+Add-Content "$Target\CLAUDE.md" "`n@CLAUDE_PDLC_ORCHESTRATOR.md`n"
 ```
 
 **macOS / Linux:**
@@ -153,57 +153,55 @@ Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details\*" "$Target\.pdlc\ai-pi
 SOURCE=<path-to-AIPDLC>
 TARGET=<your-project-path>
 
-# Copy the core workflow (family-scoped filename)
-cp "$SOURCE/ai-pilc/ai-pilc-rules/core-workflow.md" "$TARGET/CLAUDE_PDLC_AI_PILC.md"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+mkdir -p "$TARGET/.aiflc/pdlc"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rules" "$TARGET/.aiflc/pdlc/"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details" "$TARGET/.aiflc/pdlc/"
 
-# Copy the rule-details folder (family-scoped under .pdlc/)
-mkdir -p "$TARGET/.pdlc/ai-pilc-rule-details"
-cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details/"* "$TARGET/.pdlc/ai-pilc-rule-details/"
+# Place the orchestrator at the root and wire it into CLAUDE.md via an @import
+cp "$SOURCE/session-orchestrator.claude.md" "$TARGET/CLAUDE_PDLC_ORCHESTRATOR.md"
+printf '\n@CLAUDE_PDLC_ORCHESTRATOR.md\n' >> "$TARGET/CLAUDE.md"
 ```
 
-### File Naming Convention (Claude Code)
+### File Placement Convention (Claude Code)
 
-The installer uses this naming pattern per package:
+The orchestrator is the only always-loaded file (root `CLAUDE_PDLC_ORCHESTRATOR.md`, imported by `CLAUDE.md`). Every package core + its rule-details live in the uniform home `.aiflc/pdlc/`, read on demand.
 
-| Package | Core File (always loaded) | Details Folder (on-demand) |
-|---------|--------------------------|---------------------------|
-| AI-ILC | `CLAUDE_PDLC_AI_ILC.md` | `.pdlc/ai-ilc-rule-details/` |
-| AI-PILC | `CLAUDE_PDLC_AI_PILC.md` | `.pdlc/ai-pilc-rule-details/` |
-| AI-ADLC | `CLAUDE_PDLC_AI_ADLC.md` | `.pdlc/ai-adlc-rule-details/` |
-| AI-UXD | `CLAUDE_PDLC_AI_UXD.md` | `.pdlc/ai-uxd-rule-details/` |
-| AI-POLC | `CLAUDE_PDLC_AI_POLC.md` | `.pdlc/ai-polc-rule-details/` |
-| AI-DWG | `CLAUDE_PDLC_AI_DWG.md` | `.pdlc/ai-dwg-rule-details/` |
-| AI-GCE | `CLAUDE_PDLC_AI_GCE.md` | `.pdlc/ai-gce-rule-details/` |
-| AI-TGE | `CLAUDE_PDLC_AI_TGE.md` | `.pdlc/ai-tge-rule-details/` |
-| AI-PPM | `CLAUDE_PDLC_AI_PPM.md` | `.pdlc/ai-ppm-rule-details/` |
-| AI-FLO | `CLAUDE_PDLC_AI_FLO.md` | `.pdlc/ai-flo-rule-details/` |
-| AI-DFE | `CLAUDE_PDLC_AI_DFE.md` | `.pdlc/ai-dfe-rule-details/` |
+| Package | Core (read on demand) | Details (read on demand) |
+|---------|-----------------------|--------------------------|
+| AI-ILC | `.aiflc/pdlc/ai-ilc-rules/core-workflow.md` | `.aiflc/pdlc/ai-ilc-rule-details/` |
+| AI-PILC | `.aiflc/pdlc/ai-pilc-rules/core-workflow.md` | `.aiflc/pdlc/ai-pilc-rule-details/` |
+| AI-ADLC | `.aiflc/pdlc/ai-adlc-rules/core-workflow.md` | `.aiflc/pdlc/ai-adlc-rule-details/` |
+| AI-UXD | `.aiflc/pdlc/ai-uxd-rules/core-workflow.md` | `.aiflc/pdlc/ai-uxd-rule-details/` |
+| AI-POLC | `.aiflc/pdlc/ai-polc-rules/core-workflow.md` | `.aiflc/pdlc/ai-polc-rule-details/` |
+| AI-DWG | `.aiflc/pdlc/ai-dwg-rules/core-generator.md` | `.aiflc/pdlc/ai-dwg-rule-details/` |
+| AI-GCE | `.aiflc/pdlc/ai-gce-rules/core-generator.md` | `.aiflc/pdlc/ai-gce-rule-details/` |
+| AI-TGE | `.aiflc/pdlc/ai-tge-rules/core-engine.md` | `.aiflc/pdlc/ai-tge-rule-details/` |
+| AI-PPM | `.aiflc/pdlc/ai-ppm-rules/core-engine.md` | `.aiflc/pdlc/ai-ppm-rule-details/` |
+| AI-FLO | `.aiflc/pdlc/ai-flo-rules/core-engine.md` | `.aiflc/pdlc/ai-flo-rule-details/` |
+| AI-DFE | `.aiflc/pdlc/ai-dfe-rules/core-engine.md` | `.aiflc/pdlc/ai-dfe-rule-details/` |
 
-> **Why `CLAUDE_PDLC_AI_PILC.md` instead of `CLAUDE.md`?** Claude Code auto-loads only `CLAUDE.md` — it does **not** read files by a `CLAUDE*.md` wildcard. Package cores use the `CLAUDE_PDLC_` prefix so they stay out of the auto-load path and are `Read` on demand by the orchestrator (the Claude analog of Kiro's `inclusion: manual`). The prefix also family-scopes each file to the AI-* PDLC Family, so multiple packages (and multiple AIFLC families) coexist without conflicts. Loading is driven by the orchestrator import in `CLAUDE.md`, not by these filenames.
+> **Why the orchestrator + `.aiflc/pdlc/` split?** Claude Code auto-loads only `CLAUDE.md` — it does **not** read files by a `CLAUDE*.md` wildcard. So the family puts a single always-on router at the root (imported by `CLAUDE.md`) and keeps every package core out of the auto-load path, in the uniform home `.aiflc/pdlc/`, where the orchestrator `Read`s them on demand (the Claude analog of Kiro's `inclusion: manual`). This keeps the always-on context tiny and lets multiple packages (and multiple AIFLC families) coexist without conflicts.
 
 ### Alternative: Using `.claude/rules/` Directory
 
-Claude Code also supports a `.claude/rules/` directory where each rule file is loaded on every session (unless `paths:`-scoped). Family-scope it under a `pdlc/` subfolder for a cleaner multi-package install:
+Claude Code also supports a `.claude/rules/` directory where each rule file is loaded on every session (unless `paths:`-scoped). If you deliberately want a small always-on subset, you can place a copy of a package core there — but the cores themselves still live in `.aiflc/pdlc/`:
 
 ```powershell
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-# Create the family-scoped rules directory
+# Copy the package cores + rule-details into the uniform home (as usual)
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rules" "$Target\.aiflc\pdlc\"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.aiflc\pdlc\"
+
+# OPTIONAL: pin one core as always-on by copying it into .claude/rules/pdlc/
 New-Item -ItemType Directory -Force -Path "$Target\.claude\rules\pdlc"
-
-# Copy each package's core file into .claude/rules/pdlc/
 Copy-Item "$Source\ai-pilc\ai-pilc-rules\core-workflow.md" "$Target\.claude\rules\pdlc\ai-pilc.md"
-Copy-Item "$Source\ai-adlc\ai-adlc-rules\core-workflow.md" "$Target\.claude\rules\pdlc\ai-adlc.md"
-Copy-Item "$Source\ai-dwg\ai-dwg-rules\core-generator.md" "$Target\.claude\rules\pdlc\ai-dwg.md"
-
-# Copy rule-details folders (family-scoped under .pdlc/)
-Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.pdlc\ai-pilc-rule-details"
-Copy-Item -Recurse "$Source\ai-adlc\ai-adlc-rule-details" "$Target\.pdlc\ai-adlc-rule-details"
-Copy-Item -Recurse "$Source\ai-dwg\ai-dwg-rule-details" "$Target\.pdlc\ai-dwg-rule-details"
 ```
 
-Both approaches work, with one important caveat: files in `.claude/rules/` load on **every** session unless you `paths:`-scope them, so putting all 11 cores there would load every workflow into every session and defeat the lightweight on-demand design. The installer's `CLAUDE.md` + orchestrator approach (cores `Read` on demand) is the recommended path; use `.claude/rules/pdlc/` only if you deliberately want a small, always-on subset.
+Use this only when you want a specific core loaded every session; files in `.claude/rules/` load on **every** session unless you `paths:`-scope them, so pinning all 11 cores there would defeat the lightweight on-demand design. The recommended path is the root `CLAUDE.md` + orchestrator (cores `Read` from `.aiflc/pdlc/` on demand).
 
 ---
 
@@ -221,46 +219,44 @@ Or manually:
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
+# Ensure the uniform home exists
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc" | Out-Null
+
 $packages = @(
-    @{ Name = "ai-ilc";  Core = "core-workflow.md";  Rules = "ai-ilc-rules";  Details = "ai-ilc-rule-details" }
-    @{ Name = "ai-pilc"; Core = "core-workflow.md";  Rules = "ai-pilc-rules"; Details = "ai-pilc-rule-details" }
-    @{ Name = "ai-ppm";  Core = "core-engine.md";    Rules = "ai-ppm-rules";  Details = "ai-ppm-rule-details" }
-    @{ Name = "ai-flo";  Core = "core-engine.md";    Rules = "ai-flo-rules";  Details = "ai-flo-rule-details" }
-    @{ Name = "ai-adlc"; Core = "core-workflow.md";  Rules = "ai-adlc-rules"; Details = "ai-adlc-rule-details" }
-    @{ Name = "ai-uxd";  Core = "core-workflow.md";  Rules = "ai-uxd-rules";  Details = "ai-uxd-rule-details" }
-    @{ Name = "ai-polc"; Core = "core-workflow.md";  Rules = "ai-polc-rules"; Details = "ai-polc-rule-details" }
-    @{ Name = "ai-dwg";  Core = "core-generator.md"; Rules = "ai-dwg-rules";  Details = "ai-dwg-rule-details" }
-    @{ Name = "ai-gce";  Core = "core-generator.md"; Rules = "ai-gce-rules";  Details = "ai-gce-rule-details" }
-    @{ Name = "ai-tge";  Core = "core-engine.md";    Rules = "ai-tge-rules";  Details = "ai-tge-rule-details" }
-    @{ Name = "ai-dfe";  Core = "core-engine.md";    Rules = "ai-dfe-rules";  Details = "ai-dfe-rule-details" }
+    "ai-ilc", "ai-pilc", "ai-ppm", "ai-flo", "ai-adlc",
+    "ai-uxd", "ai-polc", "ai-dwg", "ai-gce", "ai-tge", "ai-dfe"
 )
 
+# Copy every package core + rule-details into the uniform home (plain copies, no CLAUDE_PDLC_AI_* root files)
 foreach ($pkg in $packages) {
-    $upperName = $pkg.Name.ToUpper().Replace('-','_')
-    $coreSource = Join-Path $Source "$($pkg.Name)\$($pkg.Rules)\$($pkg.Core)"
-    $coreDest = Join-Path $Target "CLAUDE_PDLC_$upperName.md"
-    $detailsSource = Join-Path $Source "$($pkg.Name)\$($pkg.Details)"
-    $detailsDest = Join-Path $Target ".pdlc\$($pkg.Details)"
+    $rulesSource = Join-Path $Source "$pkg\$pkg-rules"
+    $detailsSource = Join-Path $Source "$pkg\$pkg-rule-details"
 
-    if (Test-Path $coreSource) {
-        Copy-Item $coreSource $coreDest -Force
-        if (Test-Path $detailsSource) {
-            Copy-Item -Recurse $detailsSource $detailsDest -Force
-        }
-        Write-Host "Installed $($pkg.Name)" -ForegroundColor Green
+    if (Test-Path $rulesSource) {
+        Copy-Item -Recurse $rulesSource "$Target\.aiflc\pdlc\" -Force
+        Copy-Item -Recurse $detailsSource "$Target\.aiflc\pdlc\" -Force
+        Write-Host "Installed $pkg into .aiflc/pdlc/" -ForegroundColor Green
     } else {
-        Write-Host "Skipped $($pkg.Name) - source not found" -ForegroundColor Yellow
+        Write-Host "Skipped $pkg - source not found" -ForegroundColor Yellow
     }
 }
+
+# Place the orchestrator at the root and wire it into CLAUDE.md
+Copy-Item "$Source\session-orchestrator.claude.md" "$Target\CLAUDE_PDLC_ORCHESTRATOR.md" -Force
+if (-not (Test-Path "$Target\CLAUDE.md")) { New-Item -ItemType File -Path "$Target\CLAUDE.md" | Out-Null }
+if (-not (Select-String -Path "$Target\CLAUDE.md" -Pattern 'CLAUDE_PDLC_ORCHESTRATOR' -Quiet)) {
+    Add-Content "$Target\CLAUDE.md" "`n@CLAUDE_PDLC_ORCHESTRATOR.md`n"
+}
+Write-Host "Installed session orchestrator" -ForegroundColor Green
 ```
 
 ### Context Window Consideration
 
-All `CLAUDE_*.md` files load at session start. With 11 packages installed, that's ~11 core workflow files in context. Each is designed to be concise (the heavy detail is in the rule-details folders, loaded on demand), but be aware:
+Only the orchestrator loads at session start — not the package cores. With 11 packages installed, the always-on footprint is just the single router file:
 
-- **Recommended:** Install only the packages you'll use in a given project. Most projects need 3–5 packages, not all 11.
-- **If installing all 11:** Context usage is still manageable because core files are orchestration logic (1–3 KB each), not full instruction sets.
-- **The AI activates only one package at a time** — the others are dormant until you invoke them.
+- **The orchestrator is compact** — it routes by intent and `Read`s exactly one package core from `.aiflc/pdlc/` when you activate it.
+- **Package cores stay dormant** in `.aiflc/pdlc/` until invoked (each is orchestration logic, 1–3 KB), so installing all 11 costs nothing at session start.
+- **The AI activates only one package at a time** — the others remain unread until you need them.
 
 ---
 
@@ -300,37 +296,43 @@ After a full install (`-Bundle full`), your workspace looks like this:
 
 ```
 your-project/
-├── CLAUDE_PDLC_AI_ILC.md            ← Always loaded: Idea evaluation workflow
-├── CLAUDE_PDLC_AI_PILC.md           ← Always loaded: Project initiation workflow
-├── CLAUDE_PDLC_AI_PPM.md            ← Always loaded: Portfolio management engine
-├── CLAUDE_PDLC_AI_FLO.md            ← Always loaded: Flow router engine
-├── CLAUDE_PDLC_AI_ADLC.md           ← Always loaded: Architecture design workflow
-├── CLAUDE_PDLC_AI_UXD.md            ← Always loaded: UX design workflow
-├── CLAUDE_PDLC_AI_POLC.md           ← Always loaded: Product ownership workflow
-├── CLAUDE_PDLC_AI_DWG.md            ← Always loaded: Workspace generator
-├── CLAUDE_PDLC_AI_GCE.md            ← Always loaded: Governance engine
-├── CLAUDE_PDLC_AI_TGE.md            ← Always loaded: Test governance engine
-├── CLAUDE_PDLC_AI_DFE.md            ← Always loaded: Data fabric engine
-├── .pdlc/                           ← AI-* PDLC Family rule-details (on-demand)
-│   ├── ai-ilc-rule-details/            ← idea lifecycle details
-│   ├── ai-pilc-rule-details/           ← project initiation details
-│   │   ├── common/
-│   │   ├── inception/
-│   │   ├── assessment/
-│   │   ├── justification/
-│   │   ├── authorization/
-│   │   ├── planning/
-│   │   ├── mobilization/
-│   │   └── templates/
-│   ├── ai-adlc-rule-details/           ← architecture design details
-│   ├── ai-uxd-rule-details/            ← UX design details
-│   ├── ai-polc-rule-details/           ← product ownership details
-│   ├── ai-ppm-rule-details/            ← portfolio management details
-│   ├── ai-flo-rule-details/            ← flow routing details
-│   ├── ai-dwg-rule-details/            ← workspace generation details
-│   ├── ai-gce-rule-details/            ← governance engine details
-│   ├── ai-tge-rule-details/            ← test governance details
-│   └── ai-dfe-rule-details/            ← data fabric details
+├── CLAUDE.md                        ← Auto-loaded; imports @CLAUDE_PDLC_ORCHESTRATOR.md
+├── CLAUDE_PDLC_ORCHESTRATOR.md      ← The ONLY always-loaded family file (routes to cores)
+├── .claude/
+│   └── commands/
+│       └── pdlc/                    ← Generated slash commands (/pdlc:pilc, /pdlc:adlc, /pdlc:dat, ...)
+├── .aiflc/
+│   └── pdlc/                        ← AI-* PDLC Family home (cores + rule-details, on-demand)
+│       ├── ai-ilc-rules/core-workflow.md
+│       ├── ai-ilc-rule-details/        ← idea lifecycle details
+│       ├── ai-pilc-rules/core-workflow.md
+│       ├── ai-pilc-rule-details/       ← project initiation details
+│       │   ├── common/
+│       │   ├── inception/
+│       │   ├── assessment/
+│       │   ├── justification/
+│       │   ├── authorization/
+│       │   ├── planning/
+│       │   ├── mobilization/
+│       │   └── templates/
+│       ├── ai-ppm-rules/core-engine.md
+│       ├── ai-ppm-rule-details/
+│       ├── ai-flo-rules/core-engine.md
+│       ├── ai-flo-rule-details/
+│       ├── ai-adlc-rules/core-workflow.md
+│       ├── ai-adlc-rule-details/
+│       ├── ai-uxd-rules/core-workflow.md
+│       ├── ai-uxd-rule-details/
+│       ├── ai-polc-rules/core-workflow.md
+│       ├── ai-polc-rule-details/
+│       ├── ai-dwg-rules/core-generator.md
+│       ├── ai-dwg-rule-details/
+│       ├── ai-gce-rules/core-generator.md
+│       ├── ai-gce-rule-details/
+│       ├── ai-tge-rules/core-engine.md
+│       ├── ai-tge-rule-details/
+│       ├── ai-dfe-rules/core-engine.md
+│       └── ai-dfe-rule-details/
 ├── pdlc-ws/                         ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 │   ├── .ai-family-manifest.json     ← Installer tracking (for uninstall)
 │   └── tools/                       ← Family tools (visual tools / extensions)
@@ -340,7 +342,7 @@ your-project/
 └── (your project files)
 ```
 
-> **Note:** The `.pdlc/` rule-details folder is dot-prefixed (hidden) and won't clutter your project view in most file explorers.
+> **Note:** The `.aiflc/pdlc/` home is dot-prefixed (hidden) and won't clutter your project view in most file explorers.
 
 ---
 
@@ -352,14 +354,16 @@ After installation, verify everything is working:
 
 ```powershell
 # Windows
-Get-ChildItem "<your-project-path>\CLAUDE_PDLC_*.md"
-Get-ChildItem "<your-project-path>\.pdlc\ai-*-rule-details" -Directory
+Get-ChildItem "<your-project-path>\CLAUDE_PDLC_ORCHESTRATOR.md"
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rules" -Directory
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rule-details" -Directory
 ```
 
 ```bash
 # macOS/Linux
-ls <your-project-path>/CLAUDE_PDLC_*.md
-ls -d <your-project-path>/.pdlc/ai-*-rule-details/
+ls <your-project-path>/CLAUDE_PDLC_ORCHESTRATOR.md
+ls -d <your-project-path>/.aiflc/pdlc/ai-*-rules/
+ls -d <your-project-path>/.aiflc/pdlc/ai-*-rule-details/
 ```
 
 ### Step 2: Start Claude Code in your workspace
@@ -392,7 +396,7 @@ Using AI-ILC, evaluate this idea: [describe your idea]
 
 ### Step 4: Verify on-demand loading
 
-During a workflow, when Claude transitions to a new phase, it should read the corresponding rule-details file automatically. You'll see file-read tool calls in Claude Code's output referencing paths like `.pdlc/ai-pilc-rule-details/inception/stage-01-...`.
+During a workflow, when Claude transitions to a new phase, it should read the corresponding rule-details file automatically. You'll see file-read tool calls in Claude Code's output referencing paths like `.aiflc/pdlc/ai-pilc-rule-details/inception/stage-01-...`.
 
 If Claude says it can't find rule details, check the folder paths match what the core workflow expects (see [Troubleshooting](#troubleshooting)).
 
@@ -572,26 +576,18 @@ AI-* package files coexist peacefully with your existing Claude configuration:
 - **Other project files**: Never modified. Only AI-* steering files (and the `CLAUDE.md` import block) are added.
 - **Package isolation**: Each package is `Read` ONLY when you invoke it by name. Dormant packages are not loaded and consume no context.
 
-### If You Want a Single CLAUDE.md Instead
+### If You Want Everything In CLAUDE.md Instead
 
-Some users prefer a single `CLAUDE.md`. You can concatenate:
+Some users prefer to inline the orchestrator directly into `CLAUDE.md` rather than using an `@import`. You can concatenate it:
 
 ```powershell
-# Merge all package core files into one CLAUDE.md
-$packages = Get-ChildItem "<your-project-path>\CLAUDE_PDLC_AI_*.md"
+# Inline the orchestrator into CLAUDE.md (instead of the @import)
 $header = "# AI-* PDLC Family Steering`n`nThis workspace uses AIFLC packages.`n`n---`n"
 $header | Out-File "<your-project-path>\CLAUDE.md" -Encoding utf8
-
-foreach ($pkg in $packages) {
-    "`n`n---`n`n## $($pkg.BaseName)`n`n" | Add-Content "<your-project-path>\CLAUDE.md"
-    Get-Content $pkg.FullName | Add-Content "<your-project-path>\CLAUDE.md"
-}
-
-# Then remove the individual files
-Remove-Item "<your-project-path>\CLAUDE_PDLC_AI_*.md"
+Get-Content "<your-project-path>\CLAUDE_PDLC_ORCHESTRATOR.md" | Add-Content "<your-project-path>\CLAUDE.md"
 ```
 
-> **Trade-off:** A single file is cleaner but harder to update individual packages. The multi-file approach lets you update one package without touching others.
+> **Trade-off:** Inlining is marginally simpler, but the `@import` keeps `CLAUDE.md` clean and lets you update the orchestrator without touching your own instructions. Either way, package cores stay in `.aiflc/pdlc/` and are read on demand — never inlined into `CLAUDE.md`.
 
 ---
 
@@ -614,11 +610,16 @@ The installer reads `.ai-family-manifest.json` and removes exactly what it insta
 ### Manual Removal
 
 ```powershell
-# Remove all CLAUDE_PDLC_AI_* files
-Remove-Item "<your-project-path>\CLAUDE_PDLC_AI_*.md"
+# Remove the root orchestrator and strip its @import from CLAUDE.md
+Remove-Item "<your-project-path>\CLAUDE_PDLC_ORCHESTRATOR.md" -ErrorAction SilentlyContinue
+# (If you kept your own CLAUDE.md, delete the line "@CLAUDE_PDLC_ORCHESTRATOR.md" from it)
 
-# Remove all rule-details folders
-Get-ChildItem "<your-project-path>\.pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
+# Remove the generated slash commands
+Remove-Item "<your-project-path>\.claude\commands\pdlc" -Recurse -Force -ErrorAction SilentlyContinue
+
+# Remove all package cores + rule-details from the uniform home
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rules" -Directory | Remove-Item -Recurse -Force
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
 
 # Remove the manifest (lives under pdlc-ws/)
 Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction SilentlyContinue
@@ -636,13 +637,13 @@ Remove-Item "<your-project-path>\pdlc-ws\tools\extensions" -Recurse -Force -Erro
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| Claude doesn't recognize the package | Orchestrator not loaded | Verify root `CLAUDE.md` exists and contains `@CLAUDE_PDLC_ORCHESTRATOR.md` (outside any code fence). Run `/memory` to confirm both `CLAUDE.md` and the orchestrator are loaded. Then activate a package (e.g. `_PILC_`) so the orchestrator `Read`s `CLAUDE_PDLC_AI_PILC.md`. |
-| "Can't find rule-details" | Path mismatch | The core workflow checks `.pdlc/{pkg}-rule-details/`, `pdlc/{pkg}-rule-details/`, and `.kiro/pdlc/{pkg}-rule-details/`. Ensure one of these exists. |
+| Claude doesn't recognize the package | Orchestrator not loaded | Verify root `CLAUDE.md` exists and contains `@CLAUDE_PDLC_ORCHESTRATOR.md` (outside any code fence). Run `/memory` to confirm both `CLAUDE.md` and the orchestrator are loaded. Then activate a package (e.g. `_PILC_`) so the orchestrator `Read`s `.aiflc/pdlc/ai-pilc-rules/core-workflow.md`. |
+| "Can't find rule-details" | Path mismatch | The core workflow checks `.aiflc/pdlc/{pkg}-rule-details/` first. Ensure `.aiflc/pdlc/ai-{pkg}-rule-details/` exists. |
 | No welcome message | Wrong activation phrase | Use the exact format: "Using AI-PILC, ..." (uppercase package name) |
 | State file not created | First interaction only | State is created after the first stage completes, not immediately |
 | Chain detection not working | Upstream state file missing | Run packages in order. If AI-ADLC can't find PILC output, verify `pilc-state.md` exists |
-| Context window getting large | Too many packages loaded | Remove packages you don't actively need. Or use `.claude/rules/` with path-scoped frontmatter |
-| Claude Code not reading files | Working directory wrong | Ensure you launched `claude` from your project root (where the CLAUDE_*.md files are) |
+| Context window getting large | — | Only the orchestrator loads at session start, so this is rare. If it happens, ensure package cores are under `.aiflc/pdlc/` and not pinned in `.claude/rules/` |
+| Claude Code not reading files | Working directory wrong | Ensure you launched `claude` from your project root (where `CLAUDE.md` and `.aiflc/pdlc/` are) |
 | Installer "source not found" | Package folder missing | Verify `ai-{package}/` exists in your AIPDLC clone |
 
 ### Getting Help

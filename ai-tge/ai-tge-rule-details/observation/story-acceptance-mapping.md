@@ -206,9 +206,9 @@ Register updated. Coverage stats will be recalculated in Stage 9.
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| Updated Test Register | `.tge/test-register.md` | New story-derived entries appended |
+| Updated Test Register | `.governance/test/test-register.md` | New story-derived entries appended |
 | Deduplication log | (inline in register notes) | Records which criteria are covered elsewhere |
-| Updated state file | `.tge/tge-state.md` | Stage 8 complete; entry counts updated |
+| Updated state file | `.governance/test/tge-state.md` | Stage 8 complete; entry counts updated |
 
 ---
 

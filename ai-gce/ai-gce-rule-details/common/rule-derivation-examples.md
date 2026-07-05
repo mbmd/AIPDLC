@@ -33,7 +33,7 @@ Rule file (`.governance/rules/api-first-compliance.md`):
 ```markdown
 ### API-01: Contract Before Implementation
 Severity: 🟠 High
-Derived From: .kiro/steering/api-standards.md → "OpenAPI 3.1 spec"
+Derived From: rules/api-standards.md → "OpenAPI 3.1 spec"
 Rule: Every API endpoint MUST have an OpenAPI contract defined BEFORE
       controller implementation is written.
 Verification:
@@ -43,7 +43,7 @@ File Patterns: src/modules/*/presentation/**/*.controller.ts
 Anti-Pattern: Creating controller files before the API contract is reviewed
 ```
 
-Hook file (`.kiro/hooks/api-contract-check.json`):
+Hook file (`.governance/hooks/api-contract-check.json`):
 ```json
 {
   "name": "API Contract Check",
@@ -90,7 +90,7 @@ Rule file (`.governance/rules/role-isolation.md`):
 ### GOV-ROLE-004: Session Owner ≠ Reviewer
 Severity: 🔴 Critical
 Tier: 2
-Derived From: .kiro/steering/role-isolation.md → "Segregation of Duties" + Built-in Baseline
+Derived From: rules/role-isolation.md → "Segregation of Duties" + Built-in Baseline
 Rule: The person who wrote code (Session Owner) MUST NOT be the person who
       reviews/approves the PR. CODEOWNERS assigns a different reviewer per module.
 Verification:
@@ -99,7 +99,7 @@ Verification:
 Anti-Pattern: Same person authoring and approving a PR
 ```
 
-Hook file (`.kiro/hooks/segregation-check.json`):
+Hook file (`.governance/hooks/segregation-check.json`):
 ```json
 {
   "name": "Segregation of Duties Reminder",

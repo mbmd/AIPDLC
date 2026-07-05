@@ -121,8 +121,8 @@ If the user doesn't explicitly choose a mode, the engine auto-detects:
 ```
 1. Scan for tge-state.md → RESUME (not fresh start)
 2. Scan for adlc-state.md:
-   a. Found + .kiro/steering/ exists → Full Chain candidate
-   b. Found + no .kiro/steering/ → Architecture Only
+   a. Found + rules/ exists → Full Chain candidate
+   b. Found + no rules/ → Architecture Only
 3. Scan for `aidlc-docs/aidlc-state.md` → Observation possible
 4. Scan for test directories (test/, tests/, __tests__/, spec/, *_test.*):
    a. Found + no AP → Brownfield

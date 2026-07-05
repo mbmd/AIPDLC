@@ -8,8 +8,9 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # AI-* Family — Package Installer (macOS / Linux)
 # Installs into the locked family-workspace structure:
-#   Package files  -> .kiro/{family}/ (rule-details) + .kiro/steering/{family}/ (core, Kiro)
-#   Family outputs -> {family}-ws/   (ideas/ projects/ portfolio/ data/)
+#   Package files  -> .aiflc/{family}/   (cores + rule-details, uniform on every platform; OI-158)
+#   Orchestrator   -> platform-native auto-load slot (e.g. .kiro/steering/) - sole always-loaded file
+#   Family outputs -> {family}-ws/        (ideas/ projects/ portfolio/ data/)
 # Family auto-derived from this installer's parent folder name (e.g. "pdlc").
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -226,30 +227,14 @@ install_package() {
 
     if [[ ! -f "$core_source" ]]; then warn "Source not found: $core_source - skipping $pkg_name"; return 1; fi
 
+    # OI-158 (unified core placement): cores AND rule-details land in ONE uniform
+    # brand-scoped home on EVERY platform -> .aiflc/{family}/. Only the orchestrator
+    # sits in each platform's native auto-load slot (see orchestrator_dest); it Reads
+    # the relevant core on demand. Collapses the former 6-way matrix and fixes the
+    # rule-details resolution mismatch. Mirror of install.ps1 Get-PlatformPaths (INV-L3-029). [INV-L3-031]
     local core_dest="" details_dest=""
-    case "$platform" in
-        kiro)
-            core_dest="$target/.kiro/steering/$FAMILY/$rules_dir/$core_file"
-            details_dest="$target/.kiro/$FAMILY/$details_dir" ;;
-        amazonq)
-            core_dest="$target/.amazonq/rules/$FAMILY/$rules_dir/$core_file"
-            details_dest="$target/.amazonq/$FAMILY/$details_dir" ;;
-        cursor)
-            core_dest="$target/.cursor/rules/${FAMILY}-${pkg_name}-workflow.mdc"
-            details_dest="$target/.$FAMILY/$details_dir" ;;
-        cline)
-            core_dest="$target/.clinerules/${FAMILY}-${pkg_name}-core.md"
-            details_dest="$target/.$FAMILY/$details_dir" ;;
-        claude-code)
-            local uf un
-            uf=$(echo "$FAMILY" | tr '[:lower:]-' '[:upper:]_')
-            un=$(echo "$pkg_name" | tr '[:lower:]-' '[:upper:]_')
-            core_dest="$target/CLAUDE_${uf}_${un}.md"
-            details_dest="$target/.$FAMILY/$details_dir" ;;
-        copilot)
-            core_dest="$target/.github/copilot-instructions-${FAMILY}-${pkg_name}.md"
-            details_dest="$target/.$FAMILY/$details_dir" ;;
-    esac
+    core_dest="$target/.aiflc/$FAMILY/$rules_dir/$core_file"
+    details_dest="$target/.aiflc/$FAMILY/$details_dir"
 
     if [[ -f "$core_dest" ]] && [[ "$FORCE" != true ]] && [[ "$DRY_RUN" != true ]]; then
         read -rp "    $pkg_name already exists at target. Overwrite? [y/N] " response
@@ -267,18 +252,10 @@ install_package() {
     fi
 
     mkdir -p "$(dirname "$core_dest")"
-    if [[ "$platform" == "cursor" ]]; then
-        cat > "$core_dest" << EOF
----
-description: "${pkg_name} (${PKG_DESCS[$idx]})"
-alwaysApply: true
----
-
-EOF
-        cat "$core_source" >> "$core_dest"
-    else
-        cp "$core_source" "$core_dest"
-    fi
+    # OI-158: cores are neutral files in .aiflc/{family}/, Read on demand by the
+    # orchestrator - no platform-specific auto-load frontmatter is injected
+    # (the former Cursor .mdc alwaysApply wrapper is gone).
+    cp "$core_source" "$core_dest"
 
     if [[ -d "$details_source" ]]; then
         mkdir -p "$(dirname "$details_dest")"
@@ -350,12 +327,10 @@ install_tools() {
 # ─────────────────────────────────────────────────────────────────────────────
 
 family_root_dest() {
-    # Family rule-details root per platform (parent of package details dirs). [D1]
-    case "$1" in
-        kiro)    echo ".kiro/$FAMILY" ;;
-        amazonq) echo ".amazonq/$FAMILY" ;;
-        *)       echo ".$FAMILY" ;;   # cursor, cline, claude-code, copilot
-    esac
+    # Family home root - parent of every package rules/ + rule-details/ dir.
+    # OI-158: uniform .aiflc/{family}/ on every platform. Fabric files land here
+    # (beside cores + details). Mirror of install.ps1 Get-FamilyRootDest (INV-L3-029).
+    echo ".aiflc/$FAMILY"
 }
 
 install_fabric() {
@@ -459,6 +434,96 @@ install_claude_entrypoint() {   # args: platform target orchestrator_rel
         step "Created root CLAUDE.md importing the orchestrator" >&2
         echo "created"
     fi
+    return 0
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Claude Code slash-command adapter (OI-158 D5). Generates .claude/commands/{family}/*.md
+# (=> /{family}:<key>), one per installed package plus its destination agent shortcuts.
+# Additive & Claude-only; DESTINATION triggers ONLY (never internal build triggers);
+# each command is a pointer that Reads the canonical core under .aiflc/{family}/.
+# Mirror of install.ps1 Install-ClaudeCommands (INV-L3-029). Echoes deployed rel-paths.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Destination agent shortcuts per package: echo "cmd|desc|hint" lines (bash-3.2 safe, no assoc arrays).
+claude_agent_cmds() {
+    case "$1" in
+        ai-dfe)
+            echo "dat|AI-DFE data operations (gather / status / discover) - the DAT__ shortcut|[all | status | gather | discover]"
+            echo "dfa|AI-DFE data fabric audit (read-only report) - the DFA__ shortcut|"
+            echo "dhc|AI-DFE data fabric bootstrap readiness check - the DHC__ shortcut|" ;;
+        ai-flo)
+            echo "fhc|AI-FLO health check - the FHC__ shortcut|"
+            echo "fia|AI-FLO integrity audit - the FIA__ shortcut|" ;;
+    esac
+}
+
+install_claude_commands() {
+    local platform="$1" target="$2"; shift 2
+    local names=("$@")
+    [[ "$platform" == "claude-code" ]] || return 0
+    local cmd_root_rel=".claude/commands/$FAMILY"
+    local cmd_root="$target/$cmd_root_rel"
+    local written=()
+    local name idx short key rules core details desc up line ac_cmd ac_desc ac_hint rest
+    [[ "$DRY_RUN" != true ]] && mkdir -p "$cmd_root"
+
+    for name in "${names[@]}"; do
+        idx=$(pkg_index "$name")
+        [[ "$idx" == "-1" ]] && continue
+        rules="${PKG_RULESDIRS[$idx]}"; core="${PKG_COREFILES[$idx]}"
+        details="${PKG_DETAILSDIRS[$idx]}"; desc="${PKG_DESCS[$idx]}"
+        short="${name#ai-}"
+        up="$(echo "$name" | tr '[:lower:]' '[:upper:]')"
+        key="_$(echo "$short" | tr '[:lower:]' '[:upper:]')_"
+
+        if [[ "$DRY_RUN" != true ]]; then
+            {
+                echo "---"
+                echo "description: \"$up - $desc\""
+                echo "argument-hint: \"[raw input or brief]\""
+                echo "---"
+                echo "Activate the $up workflow - slash-command equivalent of the \`$key\` key."
+                echo ""
+                echo "1. \`Read\` and obey \`.aiflc/$FAMILY/$rules/$core\` as the dispatcher for the rest of this session."
+                echo "2. Resolve rule-details on demand from \`.aiflc/$FAMILY/$details/\`."
+                echo "3. Enforce multi-package isolation: if another AI-* package is mid-flow (a non-complete \`*-state.md\` exists), confirm the switch first."
+                echo "4. Announce \"Active package: $up\" as the first line, then begin with this input:"
+                echo ""
+                echo "\$ARGUMENTS"
+            } > "$cmd_root/$short.md"
+        fi
+        written+=("$cmd_root_rel/$short.md")
+
+        while IFS= read -r line; do
+            [[ -z "$line" ]] && continue
+            ac_cmd="${line%%|*}"; rest="${line#*|}"
+            ac_desc="${rest%%|*}"; ac_hint="${rest##*|}"
+            if [[ "$DRY_RUN" != true ]]; then
+                {
+                    echo "---"
+                    echo "description: \"$ac_desc\""
+                    [[ -n "$ac_hint" ]] && echo "argument-hint: \"$ac_hint\""
+                    echo "---"
+                    echo "Run the $up operation equivalent to this shortcut."
+                    echo ""
+                    echo "1. \`Read\` \`.aiflc/$FAMILY/$rules/$core\`."
+                    echo "2. Execute the operation named by the argument (default: status/report)."
+                    echo ""
+                    echo "\$ARGUMENTS"
+                } > "$cmd_root/$ac_cmd.md"
+            fi
+            written+=("$cmd_root_rel/$ac_cmd.md")
+        done < <(claude_agent_cmds "$name")
+    done
+
+    [[ ${#written[@]} -eq 0 ]] && return 0
+    if [[ "$DRY_RUN" == true ]]; then
+        echo -e "    ${YELLOW}[DRY RUN] Would generate ${#written[@]} Claude slash command(s) under $cmd_root_rel/ (destination triggers only)${NC}" >&2
+    else
+        step "Generated ${#written[@]} Claude slash command(s) -> $cmd_root_rel/  (/$FAMILY:<key>)" >&2
+    fi
+    printf '%s\n' "${written[@]}"
     return 0
 }
 
@@ -593,6 +658,18 @@ do_uninstall() {
                 sed -i.bak '/orchestrator-import:start/,/orchestrator-import:end/d' "$target/$ep_path" && rm -f "$target/$ep_path.bak"
                 step "Removed orchestrator import block from existing CLAUDE.md (content preserved)"
             fi
+        fi
+        # Remove generated Claude slash commands (.claude/commands/{family}/)
+        cc_count=0
+        while IFS= read -r cc; do
+            [[ -z "$cc" ]] && continue
+            [[ -f "$target/$cc" ]] && rm -f "$target/$cc" && cc_count=$((cc_count+1))
+        done < <(jq -r '.claudeCommands[]? // empty' "$manifest" 2>/dev/null)
+        if [[ $cc_count -gt 0 ]]; then
+            step "Removed $cc_count Claude slash command(s)"
+            rmdir "$target/.claude/commands/$FAMILY" 2>/dev/null || true
+            rmdir "$target/.claude/commands" 2>/dev/null || true
+            rmdir "$target/.claude" 2>/dev/null || true
         fi
         # Prune now-empty .kiro/agents
         agents_dir="$target/.kiro/agents"
@@ -735,9 +812,12 @@ fabric_out="$(install_fabric "$PLATFORM" "$TARGET")"
 while IFS= read -r l; do [[ -n "$l" ]] && FABRIC_DEPLOYED+=("$l"); done <<< "$fabric_out"
 ORCHESTRATOR_DEPLOYED="$(install_orchestrator "$PLATFORM" "$TARGET")"
 CLAUDE_ENTRY_STATUS="$(install_claude_entrypoint "$PLATFORM" "$TARGET" "$ORCHESTRATOR_DEPLOYED")"
+declare -a CLAUDE_COMMANDS=()
 if [[ ${#INSTALLED_NAMES[@]} -gt 0 ]]; then
     agents_out="$(install_agents "$PLATFORM" "$TARGET" "${INSTALLED_NAMES[@]}")"
     while IFS= read -r l; do [[ -n "$l" ]] && AGENTS_INSTALLED+=("$l"); done <<< "$agents_out"
+    cc_out="$(install_claude_commands "$PLATFORM" "$TARGET" "${INSTALLED_NAMES[@]}")"
+    while IFS= read -r l; do [[ -n "$l" ]] && CLAUDE_COMMANDS+=("$l"); done <<< "$cc_out"
 fi
 
 if [[ "$DRY_RUN" != true && ${#INSTALLED_JSON[@]} -gt 0 ]]; then
@@ -752,9 +832,10 @@ if [[ "$DRY_RUN" != true && ${#INSTALLED_JSON[@]} -gt 0 ]]; then
         done
     fi
     # Fabric + agent relative paths (JSON strings).
-    declare -a FABRIC_JSON=() AGENTS_JSON=()
+    declare -a FABRIC_JSON=() AGENTS_JSON=() CLAUDE_CMD_JSON=()
     for p in "${FABRIC_DEPLOYED[@]}"; do FABRIC_JSON+=("\"$p\""); done
     for p in "${AGENTS_INSTALLED[@]}"; do AGENTS_JSON+=("\"$p\""); done
+    for p in "${CLAUDE_COMMANDS[@]}"; do CLAUDE_CMD_JSON+=("\"$p\""); done
     # Claude Code entry-point record (for clean uninstall). null on other platforms.
     claude_ep_json="null"
     if [[ "$CLAUDE_ENTRY_STATUS" == "created" ]]; then
@@ -767,7 +848,7 @@ if [[ "$DRY_RUN" != true && ${#INSTALLED_JSON[@]} -gt 0 ]]; then
         echo "  \"installedAt\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\","
         echo "  \"family\": \"$FAMILY\","
         echo "  \"platform\": \"$PLATFORM\","
-        echo "  \"installerVersion\": \"2.3.0\","
+        echo "  \"installerVersion\": \"2.4.0\","
         echo "  \"packages\": ["
         echo "    $(IFS=','; echo "${INSTALLED_JSON[*]}" | sed 's/},{/},\n    {/g')"
         echo "  ],"
@@ -775,7 +856,8 @@ if [[ "$DRY_RUN" != true && ${#INSTALLED_JSON[@]} -gt 0 ]]; then
         echo "  \"fabric\": [$(IFS=','; echo "${FABRIC_JSON[*]}")],"
         echo "  \"agents\": [$(IFS=','; echo "${AGENTS_JSON[*]}")],"
         echo "  \"orchestrator\": \"$ORCHESTRATOR_DEPLOYED\","
-        echo "  \"claudeEntrypoint\": $claude_ep_json"
+        echo "  \"claudeEntrypoint\": $claude_ep_json,"
+        echo "  \"claudeCommands\": [$(IFS=','; echo "${CLAUDE_CMD_JSON[*]}")]"
         echo "}"
     } > "$manifest_path"
     info "Manifest saved: $FAMILY_WS/$MANIFEST_FILE"

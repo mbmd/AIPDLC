@@ -83,7 +83,7 @@ Starter patterns demonstrating the correct implementation approach for this work
  * - Responsive behavior
  *
  * Source: AI-UXD Component Inventory → DS-CMP-NN
- * Tokens: See .kiro/steering/design-system.md
+ * Tokens: See rules/design-system.md
  */
 
 // Token usage — ALWAYS reference tokens, NEVER hardcode

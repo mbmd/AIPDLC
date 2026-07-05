@@ -208,9 +208,9 @@ This stage executes when:
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| Updated Test Register | `.tge/test-register.md` | Status field updated for checked entries |
-| Updated state file | `.tge/tge-state.md` | Stats recalculated; timestamp updated |
-| Observation log (Comprehensive) | `.tge/observation-log.md` | Append-only history of observation cycles |
+| Updated Test Register | `.governance/test/test-register.md` | Status field updated for checked entries |
+| Updated state file | `.governance/test/tge-state.md` | Stats recalculated; timestamp updated |
+| Observation log (Comprehensive) | `.governance/test/observation-log.md` | Append-only history of observation cycles |
 
 ---
 

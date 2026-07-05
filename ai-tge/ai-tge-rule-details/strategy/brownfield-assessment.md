@@ -19,7 +19,7 @@ This stage is first-class — existing projects with existing tests get proper a
 
 | Execute IF | Skip IF |
 |-----------|---------|
-| Existing test directories detected in Stage 1 (`.tge/tge-state.md` shows test paths) | Greenfield project with zero existing test files |
+| Existing test directories detected in Stage 1 (`.governance/test/tge-state.md` shows test paths) | Greenfield project with zero existing test files |
 | Mode is Brownfield (no AP, just existing code + tests) | Mode is Architecture Only AND no test directories exist |
 | Mode is Full Chain AND test directories exist | User explicitly says "skip brownfield — we're starting fresh" |
 
@@ -226,7 +226,7 @@ I've scanned your existing test suite against the derived test register.
 
 **Orphan highlight:** {n} tests may indicate architecture documentation gaps — recommend reviewing
 
-**Full gap map saved to:** `.tge/brownfield-gap-map.md` (working document)
+**Full gap map saved to:** `.governance/test/brownfield-gap-map.md` (working document)
 
 ---
 
@@ -249,9 +249,9 @@ I've scanned your existing test suite against the derived test register.
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| Brownfield Gap Map | `.tge/brownfield-gap-map.md` | Working document — current coverage reality |
-| Updated Test Register | `.tge/test-register.md` | Status field updated (Required → Exists / Missing) |
-| Updated state file | `.tge/tge-state.md` | Stage 4 complete; coverage stats populated |
+| Brownfield Gap Map | `.governance/test/brownfield-gap-map.md` | Working document — current coverage reality |
+| Updated Test Register | `.governance/test/test-register.md` | Status field updated (Required → Exists / Missing) |
+| Updated state file | `.governance/test/tge-state.md` | Stage 4 complete; coverage stats populated |
 
 ---
 

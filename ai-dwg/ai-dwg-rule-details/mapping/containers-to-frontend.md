@@ -5,7 +5,7 @@
 
 Transforms frontend/UI container definitions from C4 L2 into a steering file governing component patterns, state management, accessibility, and UI conventions. **When UXD peer input is also present**, enriches the output with design-system-derived patterns, component architecture from UXP, and the accessibility baseline.
 
-**Output:** `.kiro/steering/frontend-standards.md`
+**Output:** `rules/frontend-standards.md`
 
 **Condition:** Generate IF Container Design (C4 L2) includes SPA/UI containers OR BFF Pattern extension was active OR `uxd-state.md` is present (UXD peer input provides frontend patterns independently of ADLC).
 

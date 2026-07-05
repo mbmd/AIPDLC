@@ -9,14 +9,14 @@ ownership: generated
 # Domain Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate domain-specific steering files
-> in the target project's `.kiro/steering/` folder. These templates encode bounded context rules,
+> in the target project's `rules/` folder. These templates encode bounded context rules,
 > layer patterns, and domain-specific conventions derived from `domain-context.md` and `module-structure.md`.
 
 ---
 
 ## domain-core.md (Always)
 
-**Generates**: `.kiro/steering/domain-core.md`
+**Generates**: `rules/domain-core.md`
 **Derived From**: domain-context.md + architecture-principles.md + module-structure.md
 
 ```markdown
@@ -48,7 +48,7 @@ inclusion: always
 
 ## domain-{module_name}.md (FileMatch `{module_path_pattern}`)
 
-**Generates**: `.kiro/steering/domain-{module_name}.md` (one per bounded context)
+**Generates**: `rules/domain-{module_name}.md` (one per bounded context)
 **Derived From**: domain-context.md (ubiquitous language section for this module)
 
 > **Note:** The init agent generates ONE file per bounded context identified in `domain-context.md`.
@@ -93,7 +93,7 @@ fileMatchPattern: "{module_path_pattern}"
 
 ## layer-domain.md (FileMatch `{domain_layer_pattern}`)
 
-**Generates**: `.kiro/steering/layer-domain.md`
+**Generates**: `rules/layer-domain.md`
 **Derived From**: architecture-principles.md + domain-context.md
 
 ```markdown
@@ -135,7 +135,7 @@ fileMatchPattern: "{domain_layer_pattern}"
 
 ## layer-api.md (FileMatch `{presentation_layer_pattern}`)
 
-**Generates**: `.kiro/steering/layer-api.md`
+**Generates**: `rules/layer-api.md`
 **Derived From**: api-standards.md + tech-stack.md
 
 ```markdown

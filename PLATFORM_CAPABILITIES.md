@@ -130,7 +130,8 @@ Claude Code has workspace file access. This means:
 
 | What Works | How |
 |-----------|-----|
-| All 9 workflow/generator packages | Copy `core-workflow.md` → `CLAUDE.md`; rule-details in `.ai-{package}-rule-details/` |
+| All 9 workflow/generator packages | Cores + rule-details install in `.aiflc/pdlc/`; the orchestrator (imported by `CLAUDE.md` via `@import`) `Read`s them on demand |
+| Slash commands (`/pdlc:<key>`) | The installer generates `.claude/commands/pdlc/*.md` — one per package (e.g. `/pdlc:pilc`) plus destination agent shortcuts (`/pdlc:dat`, `/pdlc:fhc`, …), each a pointer that `Read`s the canonical core |
 | On-demand file loading | Core workflow instructs Claude to read detail files — Claude Code does this natively |
 | State file persistence | `pilc-state.md` etc. written and read between sessions |
 | Chain marker detection | Claude reads marker files to detect predecessor outputs |
@@ -141,7 +142,7 @@ Claude Code has workspace file access. This means:
 | What Doesn't Work | Why | Workaround |
 |-------------------|-----|------------|
 | Hook auto-execution | No event bus in Claude Code | Append critical rules to `CLAUDE.md` as "always check" instructions |
-| Agent shortcuts (`SDC__`, etc.) | No `.kiro/agents/` runtime | Paste the agent's prompt directly, or include it in `CLAUDE.md` |
+| GCE-generated agent shortcuts (`SDC__`, etc.) | No `.kiro/agents/` runtime | Paste the agent's prompt directly, or include it in `CLAUDE.md`. (Note: package keys + AI-DFE/AI-FLO destination shortcuts ARE exposed as `/pdlc:*` slash commands — see "What Works".) |
 | Automatic compliance logging | Logging is triggered by hooks | Ask Claude to log manually: "Log this check to compliance-log/" |
 | Re-derivation auto-trigger | Requires fileEdited events | Say "Steering changed — re-derive" manually (Mode 2 still works) |
 | Tier auto-progression | Hook reads `.compliance-state.json` | Say "Activate next compliance tier" manually (Mode 4 still works) |

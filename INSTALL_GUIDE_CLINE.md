@@ -42,29 +42,28 @@
 
 ## How It Works
 
-Each AI-* package installs **two things** into your workspace, both **family-scoped** to the AI-* PDLC Family (core files carry a `pdlc-` filename prefix; rule-details live under a `.pdlc/` folder — so multiple AIFLC families can coexist in one workspace):
+The installer places **one always-loaded file** plus the **package home**, both scoped to the AI-* PDLC Family (multiple AIFLC families can coexist in one workspace):
 
-1. **Core workflow/engine file** — a Markdown file placed in `.clinerules/` (Cline reads all files in this directory automatically)
-2. **Rule-details folder** — phase-specific instructions and templates that the core workflow loads on demand (placed under `.pdlc/`)
+1. **Session orchestrator** — a single Markdown file Cline reads automatically at session start (placed in `.clinerules/pdlc-session-orchestrator.md`). It is the ONLY always-loaded file. It detects which package you want and `Read`s that package's core on demand — keeping the context window free.
+2. **Package home** — every package's core AND rule-details live together in the uniform, agent-neutral home `.aiflc/pdlc/`. Nothing here auto-loads; the orchestrator reads from it on demand.
 
 ```
 your-workspace/
 ├── .clinerules/
-│   └── pdlc-ai-pilc-core.md           ← Cline reads this automatically
-├── .pdlc/
-│   └── ai-pilc-rule-details/          ← Loaded on-demand by the core workflow
-│       ├── common/
-│       ├── inception/
-│       ├── assessment/
-│       ├── templates/
-│       └── ...
+│   └── pdlc-session-orchestrator.md   ← The ONLY always-loaded file (routes to cores)
+├── .aiflc/
+│   └── pdlc/                          ← AI-* PDLC Family home (cores + rule-details + fabric)
+│       ├── ai-pilc-rules/core-workflow.md    ← Read on demand by the orchestrator
+│       ├── ai-pilc-rule-details/             ← Read on demand by the core
+│       │   ├── common/  inception/  assessment/  templates/  ...
+│       └── ... one {pkg}-rules/ + {pkg}-rule-details/ per installed package
 ├── pdlc-ws/                           ← All runtime outputs land here (never workspace root)
 └── (your project files)
 ```
 
-Cline reads all Markdown files in `.clinerules/` at session start. Each package gets its own `pdlc-`prefixed file in that directory.
+Cline reads all Markdown files in `.clinerules/` at session start — the family places exactly one there: `pdlc-session-orchestrator.md`. When you activate a package (by key or intent), the orchestrator `Read`s `.aiflc/pdlc/ai-{pkg}-rules/core-*.md`, and the core reads its rule-details from `.aiflc/pdlc/ai-{pkg}-rule-details/` as each phase needs them.
 
-> **The Kiro-style split:** core files load as always-on rules (`.clinerules/pdlc-*.md`); rule-details are read on demand (`.pdlc/`); and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root.
+> **The AIFLC model:** one orchestrator loads always-on (`.clinerules/pdlc-session-orchestrator.md`); every package core + its rule-details live in the uniform home `.aiflc/pdlc/` and are read on demand; and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root. The `.aiflc/pdlc/` layout is identical on every platform.
 
 ---
 
@@ -124,13 +123,14 @@ cd <path-to-AIPDLC>
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-# Copy core workflow into .clinerules/ (family-scoped filename)
-New-Item -ItemType Directory -Force -Path "$Target\.clinerules"
-Copy-Item "$Source\ai-pilc\ai-pilc-rules\core-workflow.md" "$Target\.clinerules\pdlc-ai-pilc-core.md"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rules" "$Target\.aiflc\pdlc\"
+Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details" "$Target\.aiflc\pdlc\"
 
-# Copy rule-details folder (family-scoped under .pdlc/)
-New-Item -ItemType Directory -Force -Path "$Target\.pdlc\ai-pilc-rule-details"
-Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details\*" "$Target\.pdlc\ai-pilc-rule-details\"
+# Copy the session orchestrator into Cline's auto-load slot (the ONLY always-loaded file)
+New-Item -ItemType Directory -Force -Path "$Target\.clinerules"
+Copy-Item "$Source\session-orchestrator.md" "$Target\.clinerules\pdlc-session-orchestrator.md"
 ```
 
 **macOS / Linux:**
@@ -139,30 +139,33 @@ Copy-Item -Recurse "$Source\ai-pilc\ai-pilc-rule-details\*" "$Target\.pdlc\ai-pi
 SOURCE=<path-to-AIPDLC>
 TARGET=<your-project-path>
 
-# Copy core workflow into .clinerules/ (family-scoped filename)
-mkdir -p "$TARGET/.clinerules"
-cp "$SOURCE/ai-pilc/ai-pilc-rules/core-workflow.md" "$TARGET/.clinerules/pdlc-ai-pilc-core.md"
+# Copy the package core + rule-details into the uniform home .aiflc/pdlc/
+mkdir -p "$TARGET/.aiflc/pdlc"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rules" "$TARGET/.aiflc/pdlc/"
+cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details" "$TARGET/.aiflc/pdlc/"
 
-# Copy rule-details folder (family-scoped under .pdlc/)
-mkdir -p "$TARGET/.pdlc/ai-pilc-rule-details"
-cp -R "$SOURCE/ai-pilc/ai-pilc-rule-details/"* "$TARGET/.pdlc/ai-pilc-rule-details/"
+# Copy the session orchestrator into Cline's auto-load slot (the ONLY always-loaded file)
+mkdir -p "$TARGET/.clinerules"
+cp "$SOURCE/session-orchestrator.md" "$TARGET/.clinerules/pdlc-session-orchestrator.md"
 ```
 
-### File Naming Convention (Cline)
+### File Placement Convention (Cline)
 
-| Package | Rule File | Details Folder |
-|---------|-----------|----------------|
-| AI-ILC | `.clinerules/pdlc-ai-ilc-core.md` | `.pdlc/ai-ilc-rule-details/` |
-| AI-PILC | `.clinerules/pdlc-ai-pilc-core.md` | `.pdlc/ai-pilc-rule-details/` |
-| AI-ADLC | `.clinerules/pdlc-ai-adlc-core.md` | `.pdlc/ai-adlc-rule-details/` |
-| AI-UXD | `.clinerules/pdlc-ai-uxd-core.md` | `.pdlc/ai-uxd-rule-details/` |
-| AI-POLC | `.clinerules/pdlc-ai-polc-core.md` | `.pdlc/ai-polc-rule-details/` |
-| AI-DWG | `.clinerules/pdlc-ai-dwg-core.md` | `.pdlc/ai-dwg-rule-details/` |
-| AI-GCE | `.clinerules/pdlc-ai-gce-core.md` | `.pdlc/ai-gce-rule-details/` |
-| AI-TGE | `.clinerules/pdlc-ai-tge-core.md` | `.pdlc/ai-tge-rule-details/` |
-| AI-PPM | `.clinerules/pdlc-ai-ppm-core.md` | `.pdlc/ai-ppm-rule-details/` |
-| AI-FLO | `.clinerules/pdlc-ai-flo-core.md` | `.pdlc/ai-flo-rule-details/` |
-| AI-DFE | `.clinerules/pdlc-ai-dfe-core.md` | `.pdlc/ai-dfe-rule-details/` |
+Cores and rule-details both live in the uniform home `.aiflc/pdlc/` (read on demand). The only always-loaded file is `.clinerules/pdlc-session-orchestrator.md`.
+
+| Package | Core (read on demand) | Details (read on demand) |
+|---------|-----------------------|--------------------------|
+| AI-ILC | `.aiflc/pdlc/ai-ilc-rules/core-workflow.md` | `.aiflc/pdlc/ai-ilc-rule-details/` |
+| AI-PILC | `.aiflc/pdlc/ai-pilc-rules/core-workflow.md` | `.aiflc/pdlc/ai-pilc-rule-details/` |
+| AI-ADLC | `.aiflc/pdlc/ai-adlc-rules/core-workflow.md` | `.aiflc/pdlc/ai-adlc-rule-details/` |
+| AI-UXD | `.aiflc/pdlc/ai-uxd-rules/core-workflow.md` | `.aiflc/pdlc/ai-uxd-rule-details/` |
+| AI-POLC | `.aiflc/pdlc/ai-polc-rules/core-workflow.md` | `.aiflc/pdlc/ai-polc-rule-details/` |
+| AI-DWG | `.aiflc/pdlc/ai-dwg-rules/core-generator.md` | `.aiflc/pdlc/ai-dwg-rule-details/` |
+| AI-GCE | `.aiflc/pdlc/ai-gce-rules/core-generator.md` | `.aiflc/pdlc/ai-gce-rule-details/` |
+| AI-TGE | `.aiflc/pdlc/ai-tge-rules/core-engine.md` | `.aiflc/pdlc/ai-tge-rule-details/` |
+| AI-PPM | `.aiflc/pdlc/ai-ppm-rules/core-engine.md` | `.aiflc/pdlc/ai-ppm-rule-details/` |
+| AI-FLO | `.aiflc/pdlc/ai-flo-rules/core-engine.md` | `.aiflc/pdlc/ai-flo-rule-details/` |
+| AI-DFE | `.aiflc/pdlc/ai-dfe-rules/core-engine.md` | `.aiflc/pdlc/ai-dfe-rule-details/` |
 
 ---
 
@@ -180,39 +183,32 @@ Or manually:
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
+# Ensure the uniform home and Cline's rules slot exist
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc" | Out-Null
 New-Item -ItemType Directory -Force -Path "$Target\.clinerules" | Out-Null
 
 $packages = @(
-    @{ Name = "ai-ilc";  Core = "core-workflow.md";  Rules = "ai-ilc-rules";  Details = "ai-ilc-rule-details" }
-    @{ Name = "ai-pilc"; Core = "core-workflow.md";  Rules = "ai-pilc-rules"; Details = "ai-pilc-rule-details" }
-    @{ Name = "ai-ppm";  Core = "core-engine.md";    Rules = "ai-ppm-rules";  Details = "ai-ppm-rule-details" }
-    @{ Name = "ai-flo";  Core = "core-engine.md";    Rules = "ai-flo-rules";  Details = "ai-flo-rule-details" }
-    @{ Name = "ai-adlc"; Core = "core-workflow.md";  Rules = "ai-adlc-rules"; Details = "ai-adlc-rule-details" }
-    @{ Name = "ai-uxd";  Core = "core-workflow.md";  Rules = "ai-uxd-rules";  Details = "ai-uxd-rule-details" }
-    @{ Name = "ai-polc"; Core = "core-workflow.md";  Rules = "ai-polc-rules"; Details = "ai-polc-rule-details" }
-    @{ Name = "ai-dwg";  Core = "core-generator.md"; Rules = "ai-dwg-rules";  Details = "ai-dwg-rule-details" }
-    @{ Name = "ai-gce";  Core = "core-generator.md"; Rules = "ai-gce-rules";  Details = "ai-gce-rule-details" }
-    @{ Name = "ai-tge";  Core = "core-engine.md";    Rules = "ai-tge-rules";  Details = "ai-tge-rule-details" }
-    @{ Name = "ai-dfe";  Core = "core-engine.md";    Rules = "ai-dfe-rules";  Details = "ai-dfe-rule-details" }
+    "ai-ilc", "ai-pilc", "ai-ppm", "ai-flo", "ai-adlc",
+    "ai-uxd", "ai-polc", "ai-dwg", "ai-gce", "ai-tge", "ai-dfe"
 )
 
+# Copy every package core + rule-details into the uniform home
 foreach ($pkg in $packages) {
-    $coreSource = Join-Path $Source "$($pkg.Name)\$($pkg.Rules)\$($pkg.Core)"
-    $coreDest = Join-Path $Target ".clinerules\pdlc-$($pkg.Name)-core.md"
-    $detailsSource = Join-Path $Source "$($pkg.Name)\$($pkg.Details)"
-    $detailsDest = Join-Path $Target ".pdlc\$($pkg.Details)"
+    $rulesSource = Join-Path $Source "$pkg\$pkg-rules"
+    $detailsSource = Join-Path $Source "$pkg\$pkg-rule-details"
 
-    if (Test-Path $coreSource) {
-        Copy-Item $coreSource $coreDest -Force
-        if (Test-Path $detailsSource) {
-            if (Test-Path $detailsDest) { Remove-Item -Recurse -Force $detailsDest }
-            Copy-Item -Recurse $detailsSource $detailsDest
-        }
-        Write-Host "Installed $($pkg.Name)" -ForegroundColor Green
+    if (Test-Path $rulesSource) {
+        Copy-Item -Recurse $rulesSource "$Target\.aiflc\pdlc\" -Force
+        Copy-Item -Recurse $detailsSource "$Target\.aiflc\pdlc\" -Force
+        Write-Host "Installed $pkg into .aiflc/pdlc/" -ForegroundColor Green
     } else {
-        Write-Host "Skipped $($pkg.Name) - source not found" -ForegroundColor Yellow
+        Write-Host "Skipped $pkg - source not found" -ForegroundColor Yellow
     }
 }
+
+# Copy the single always-loaded orchestrator into Cline's slot
+Copy-Item "$Source\session-orchestrator.md" "$Target\.clinerules\pdlc-session-orchestrator.md" -Force
+Write-Host "Installed session orchestrator" -ForegroundColor Green
 ```
 
 ---
@@ -242,30 +238,31 @@ After a full install:
 ```
 your-project/
 ├── .clinerules/
-│   ├── pdlc-ai-ilc-core.md              ← Always loaded
-│   ├── pdlc-ai-pilc-core.md             ← Always loaded
-│   ├── pdlc-ai-ppm-core.md              ← Always loaded
-│   ├── pdlc-ai-flo-core.md              ← Always loaded
-│   ├── pdlc-ai-adlc-core.md             ← Always loaded
-│   ├── pdlc-ai-uxd-core.md              ← Always loaded
-│   ├── pdlc-ai-polc-core.md             ← Always loaded
-│   ├── pdlc-ai-dwg-core.md              ← Always loaded
-│   ├── pdlc-ai-gce-core.md              ← Always loaded
-│   ├── pdlc-ai-gce-core.md              ← Always loaded
-│   ├── pdlc-ai-tge-core.md              ← Always loaded
-│   └── pdlc-ai-dfe-core.md              ← Always loaded
-├── .pdlc/                               ← AI-* PDLC Family rule-details (on-demand)
-│   ├── ai-ilc-rule-details/
-│   ├── ai-pilc-rule-details/
-│   ├── ai-adlc-rule-details/
-│   ├── ai-uxd-rule-details/
-│   ├── ai-polc-rule-details/
-│   ├── ai-ppm-rule-details/
-│   ├── ai-flo-rule-details/
-│   ├── ai-dwg-rule-details/
-│   ├── ai-gce-rule-details/
-│   ├── ai-tge-rule-details/
-│   └── ai-dfe-rule-details/
+│   └── pdlc-session-orchestrator.md     ← The ONLY always-loaded file (routes to cores)
+├── .aiflc/
+│   └── pdlc/                            ← AI-* PDLC Family home (cores + rule-details, on-demand)
+│       ├── ai-ilc-rules/core-workflow.md
+│       ├── ai-ilc-rule-details/
+│       ├── ai-pilc-rules/core-workflow.md
+│       ├── ai-pilc-rule-details/
+│       ├── ai-ppm-rules/core-engine.md
+│       ├── ai-ppm-rule-details/
+│       ├── ai-flo-rules/core-engine.md
+│       ├── ai-flo-rule-details/
+│       ├── ai-adlc-rules/core-workflow.md
+│       ├── ai-adlc-rule-details/
+│       ├── ai-uxd-rules/core-workflow.md
+│       ├── ai-uxd-rule-details/
+│       ├── ai-polc-rules/core-workflow.md
+│       ├── ai-polc-rule-details/
+│       ├── ai-dwg-rules/core-generator.md
+│       ├── ai-dwg-rule-details/
+│       ├── ai-gce-rules/core-generator.md
+│       ├── ai-gce-rule-details/
+│       ├── ai-tge-rules/core-engine.md
+│       ├── ai-tge-rule-details/
+│       ├── ai-dfe-rules/core-engine.md
+│       └── ai-dfe-rule-details/
 ├── pdlc-ws/                             ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 │   └── .ai-family-manifest.json         ← Installer tracking
 └── (your project files)
@@ -331,7 +328,7 @@ State files persist between sessions. Say "Continue AI-PILC" to resume where you
 
 ## Coexistence with Other Rules
 
-- **Existing `.clinerules/`**: Untouched. AI-* packages add their own files alongside yours.
+- **Existing `.clinerules/`**: Untouched. The family adds only one file (`pdlc-session-orchestrator.md`) alongside yours; package cores live under `.aiflc/pdlc/`.
 - **Other project files**: Never modified.
 
 ---
@@ -343,8 +340,9 @@ State files persist between sessions. Say "Continue AI-PILC" to resume where you
 .\installer\install.ps1 -TargetWorkspace "<your-project-path>" -Uninstall
 
 # Manual
-Remove-Item "<your-project-path>\.clinerules\pdlc-ai-*"
-Get-ChildItem "<your-project-path>\.pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
+Remove-Item "<your-project-path>\.clinerules\pdlc-session-orchestrator.md" -ErrorAction SilentlyContinue
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rules" -Directory | Remove-Item -Recurse -Force
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
 Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction SilentlyContinue
 ```
 
@@ -354,8 +352,9 @@ Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction 
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| Rules not loading | Cline not reading `.clinerules/` | Verify the folder exists at workspace root and files are `.md` |
-| "Can't find rule-details" | Path mismatch | Ensure `.pdlc/ai-{pkg}-rule-details/` exists at workspace root |
+| Orchestrator not loading | Cline not reading `.clinerules/` | Verify `.clinerules/pdlc-session-orchestrator.md` exists and is `.md` |
+| Package core not found | Path mismatch | Verify `.aiflc/pdlc/ai-{pkg}-rules/core-*.md` exists |
+| "Can't find rule-details" | Path mismatch | Core resolves `.aiflc/pdlc/ai-{pkg}-rule-details/` first |
 | No welcome message | Wrong activation phrase | Use "Using AI-PILC, ..." format |
 | State file not created | First interaction only | State is created after first stage completes |
 

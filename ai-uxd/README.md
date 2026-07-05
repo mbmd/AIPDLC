@@ -100,8 +100,8 @@ AI-UXD is part of **AIFLC** (AI Full Life Cycle) — the AI-* PDLC Family of inj
 See `setup/INSTALL.md` for full multi-platform installation instructions.
 
 **Quick start (Kiro):**
-1. Copy `ai-uxd-rules/` to your workspace `.kiro/steering/` (or reference via rules path)
-2. Copy `ai-uxd-rule-details/` alongside it
+1. Copy `ai-uxd-rules/` and `ai-uxd-rule-details/` into the uniform home `.aiflc/pdlc/`
+2. Copy `session-orchestrator.md` into `.kiro/steering/` (the only always-loaded file; it `Read`s the core on demand)
 3. Start a session — AI-UXD activates automatically
 
 ---

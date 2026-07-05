@@ -4,9 +4,9 @@
 ## Purpose
 
 This mapping rule transforms the **observability section** of the Infrastructure & Deployment document into two or three steering files:
-1. `.kiro/steering/observability-logging.md` — ALWAYS generated (log levels, format, required logging points)
-2. `.kiro/steering/observability-sensitive.md` — ALWAYS generated (what NEVER to log, masking rules)
-3. `.kiro/steering/observability-tracing.md` — CONDITIONAL (only if distributed tracing tool specified or Microservices extension active)
+1. `rules/observability-logging.md` — ALWAYS generated (log levels, format, required logging points)
+2. `rules/observability-sensitive.md` — ALWAYS generated (what NEVER to log, masking rules)
+3. `rules/observability-tracing.md` — CONDITIONAL (only if distributed tracing tool specified or Microservices extension active)
 
 ---
 

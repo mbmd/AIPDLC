@@ -5,7 +5,7 @@
 
 Transforms error handling patterns from Component Design (C4 L3 cross-cutting concerns) into a steering file governing how errors are created, propagated, logged, and returned to clients.
 
-**Output:** `.kiro/steering/error-handling.md` (ALWAYS generated)
+**Output:** `rules/error-handling.md` (ALWAYS generated)
 
 ---
 

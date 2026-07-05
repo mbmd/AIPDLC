@@ -146,6 +146,35 @@ If Tier 2 is inactive (default in chain mode):
 - Epics are the terminal output of this stage
 - AI-DLC v1's Inception will decompose epics into stories later
 
+**On-the-fly Tier 2 offer:** POLC does NOT silently assume the Tier 2 setting. At the Stage 5 gate (Step 5.7 below), it explicitly asks the user whether to keep Tier 2 off (epics are the handoff) or turn it on now (elaborate stories). The user can flip this decision at any time during the workflow, not only here — if they later say "elaborate stories", activate Tier 2 and return to this integration point for the confirmed epics.
+
+### Step 5.7: Offer Tier 2 at the Gate
+
+Before closing the stage, surface the Tier 2 choice as a structured question so the user makes an informed, explicit decision:
+
+```
+### Q-5T: Story elaboration (Tier 2)
+
+Context: Epics are confirmed. By default I stop at the epic level — in chain
+mode AI-DLC v1 elaborates these into user stories during its Inception phase.
+You can keep it there, or have me (POLC) write PO-quality user stories now.
+
+Options:
+  a) No — keep Tier 2 OFF; epics are the handoff artifact
+  b) Yes — turn Tier 2 ON now; I'll elaborate stories (you'll then pick the format)
+
+Recommended: (a) in chain mode with AI-DLC v1 present · (b) in standalone mode
+or when you want PO-quality pre-elaboration before development.
+
+Rationale: {state-derived — mention detected mode and whether AI-DLC v1 is chained}
+
+Your Decision: _[awaiting input]_
+```
+
+- **On (a) "No":** set `Tier 2: inactive` in `polc-state.md`, log the decision, proceed to Gate 5.
+- **On (b) "Yes":** set `Tier 2: active` in `polc-state.md`, load `tier2/story-elaboration.md`, ask the story-format question (Q2), then elaborate stories per confirmed epic before proceeding.
+- Skip Q-5T only if the user has ALREADY explicitly set the Tier 2 state earlier in the session (then just confirm the recorded setting in one line).
+
 ---
 
 ## Gate
@@ -160,6 +189,7 @@ Epic decomposition complete:
 • Dependencies: {N} inter-epic dependencies identified
 • Size distribution: {S: N, M: N, L: N, XL: N}
 • Coverage: All {N} goals have serving epics ✅
+• Tier 2 (story elaboration): {ON — format: {style} | OFF — epics are the handoff}
 
 Review the epic list. Any additions, removals, or adjustments?
 Approve to proceed to Prioritization.

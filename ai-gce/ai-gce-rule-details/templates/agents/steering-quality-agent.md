@@ -19,7 +19,7 @@ type: audit
 
 ## Purpose
 
-Analyzes the quality and health of `.kiro/steering/` files in the workspace. Checks context budget compliance (≤300 lines for always-inclusion files), prescriptive language quality, cross-file contradictions, freshness (stale rules), and ownership clarity. Prevents steering drift from degrading hook accuracy and AI behavior.
+Analyzes the quality and health of `rules/` files in the workspace. Checks context budget compliance (≤300 lines for always-inclusion files), prescriptive language quality, cross-file contradictions, freshness (stale rules), and ownership clarity. Prevents steering drift from degrading hook accuracy and AI behavior.
 
 ## When to Invoke
 
@@ -27,7 +27,7 @@ Call this agent **after editing any steering file** — to validate the edit did
 
 - **Trigger:** Type `SQC__` in the chat prompt
 - **Cadence:** After every steering file edit; also periodically (monthly health check)
-- **Process point:** After saving changes to any `.kiro/steering/*.md` file
+- **Process point:** After saving changes to any `rules/*.md` file
 
 **Concrete examples:**
 - "I just updated `tech-stack.md`" → call `SQC__` to validate

@@ -140,7 +140,8 @@ This is the authoritative dispatch for every command. When a command arrives, ru
 | `hold [entity-id]` / `release [entity-id]` | mutate | Pause / resume routing for an entity | `route/exceptions-overrides.md` |
 | `override [entity-id] [target]` | mutate | Force route to a non-default successor edge | `route/exceptions-overrides.md` |
 | `force [entity-id]` | mutate | Override any active hold immediately | `route/exceptions-overrides.md` |
-| `conflicts` / `dismiss [conflict-id]` | report / mutate | Show active flag-and-hold conflicts (C1–C9) / dismiss one (logged) | `monitor/health-conflicts-alerts.md` |
+| `conflicts` / `dismiss [conflict-id]` | report / mutate | Show active flag-and-hold conflicts (C1–C10) / dismiss one (logged) | `monitor/health-conflicts-alerts.md` |
+| `DFT__ route` / `DFT__ route advisory` | broker | Broker drift (read envelope from `.governance/drift-register.md`, domainTag→target); record in `.flo/routing-log.md`; answer package inbox pulls with drift **addresses**. Never writes the register. | `route/drift-routing.md` |
 | `routing table` / `bindings` / `bindings [family]` | report | Active routing graph / full edge topology (from `FAMILY_BINDINGS.md`) | `configure/routing-table-build.md` |
 | `families` | report | Discovered families + control status (controlled / standalone) | `configure/workspace-detection.md` |
 | `register [family]` / `deregister [family]` | mutate | Bring a family under / release from central FLO control (lossless) | `configure/workspace-detection.md` |
@@ -223,7 +224,7 @@ FLO runs three phases; step bodies live in detail files (load one at a time). Ea
 | | Handoff execution | Update position, log the hop, announce | `route/handoff-execution.md` |
 | | Holds & overrides | `hold` / `release` / `override` / `force` / `dismiss` | `route/exceptions-overrides.md` |
 | **3 Monitor** | Position tracking *(continuous)* | Watch marker changes; detect stalls | `monitor/position-tracking.md` |
-| | Health / conflicts / alerts *(continuous)* | Detect C1–C9; surface alerts proactively | `monitor/health-conflicts-alerts.md` |
+| | Health / conflicts / alerts *(continuous)* | Detect C1–C10 (incl. drift gate block); surface alerts proactively | `monitor/health-conflicts-alerts.md` |
 | | Roll-up & relay | Compile portfolio roll-ups on request | `monitor/roll-up-relay.md` |
 
 ---
@@ -248,6 +249,8 @@ Consumer (next pkg, gate-in):     consumes-types[], mandatory[], optional[], str
 
 FLO logs the gate result in `flo-state.md` and the routing log. On BLOCK (C7/C8/C9) it enters flag-and-hold for the entity.
 
+**Drift pre-check (Step 0, before the 5-step stack):** on `advance`, FLO first reads the drift register **read-only** (`manifest.files.driftRegister`) and counts HARD entries in status `OPEN`. If any exist, FLO ensures each is brokered (envelope→domainTag→target, recorded in `.flo/routing-log.md`) and BLOCKS advance via **C10** (flag-and-hold) until they resolve. Zero HARD drift → proceed to Step 1. FLO never writes the register (INV-L4-006). See `route/drift-routing.md`.
+
 **Enforcement mode (GATE_PROTOCOL §17):** `advisory` (default — log + warn, never block) or `strict` (production — Step 4/5 failures BLOCK/DEGRADE). Set per family in `flo-state.md`: `gateEnforcement: advisory | strict`.
 
 **Fabric audit log (GATE_PROTOCOL §16):** every cross-family handoff (advance on an `external` edge) is appended to `_FLO_/fabric-audit-log.md` (`timestamp`, `flow`, `entity`, `from`, `to`, `type`, `gateResult`). Intra-family hops go to `routing-log.md` only.
@@ -267,6 +270,7 @@ FLO logs the gate result in `flo-state.md` and the routing log. On BLOCK (C7/C8/
 | C7 | Type-Version Mismatch | Producer emits @N, consumer requires @^M (incompatible) | Critical (hold) | Alert; suggest version upgrade |
 | C8 | Structural Incompatibility | interfaceVersion mismatch between producer/consumer | Critical (hold) | Alert; structural alignment required |
 | C9 | Mandatory-Field Block | Producer guarantees do not cover consumer mandatory | Critical (hold) | Alert; add field or relax constraint |
+| C10 | Drift Gate Block | Entity cannot advance — unresolved HARD drift (GCE-detected, `.governance/drift-register.md`) | Critical (hold) | Route drift (domainTag→target) → dispose → DWG re-baseline → GCE re-scan → release · `route/drift-routing.md` |
 
 **Lifecycle:** `DETECTED → FLAGGED → HOLDING → RESOLVED → CLOSED` (on timeout → `ESCALATED`; on escalation timeout → `AUTO-RESOLVED` with deterministic fallback logged).
 

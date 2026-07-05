@@ -102,8 +102,8 @@ AI-DFE is part of **AIFLC** (AI Full Life Cycle) and the **AI-* PDLC Family**. L
 See `setup/INSTALL.md` for full multi-platform installation instructions.
 
 **Quick start (Kiro):**
-1. Copy `ai-dfe-rules/` to your workspace `.kiro/steering/pdlc/`
-2. Copy `ai-dfe-rule-details/` to `.kiro/pdlc/`
+1. Copy `ai-dfe-rules/` and `ai-dfe-rule-details/` into the uniform home `.aiflc/pdlc/`
+2. Copy `session-orchestrator.md` into `.kiro/steering/` (the only always-loaded file; it `Read`s the core on demand)
 3. The installer bootstraps an empty `pdlc-ws/data/`; run `DAT__ all` to populate it.
 
 ---

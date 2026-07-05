@@ -9,14 +9,14 @@ ownership: generated
 # Architecture Steering Templates
 
 > **Purpose:** Used by the project-init-agent to generate architecture-related steering files
-> in the target project's `.kiro/steering/` folder. Templates are parameterized with `{variables}`
+> in the target project's `rules/` folder. Templates are parameterized with `{variables}`
 > that the init agent populates from project context (tech-stack, module-structure, architecture decisions).
 
 ---
 
 ## architecture-core.md (Always)
 
-**Generates**: `.kiro/steering/architecture-core.md`
+**Generates**: `rules/architecture-core.md`
 **Derived From**: tech-stack.md + module-structure.md + architecture-principles.md
 
 ```markdown
@@ -79,7 +79,7 @@ inclusion: always
 
 ## architecture-domain.md (FileMatch `{domain_layer_pattern}`)
 
-**Generates**: `.kiro/steering/architecture-domain.md`
+**Generates**: `rules/architecture-domain.md`
 **Derived From**: module-structure.md + domain-context.md + architecture-principles.md
 
 ```markdown
@@ -123,7 +123,7 @@ fileMatchPattern: "{domain_layer_pattern}"
 
 ## architecture-infrastructure.md (FileMatch `{infrastructure_layer_pattern}`)
 
-**Generates**: `.kiro/steering/architecture-infrastructure.md`
+**Generates**: `rules/architecture-infrastructure.md`
 **Derived From**: tech-stack.md + database-rules.md + module-structure.md
 
 ```markdown
@@ -167,7 +167,7 @@ fileMatchPattern: "{infrastructure_layer_pattern}"
 
 ## architecture-api.md (FileMatch `{presentation_layer_pattern}`)
 
-**Generates**: `.kiro/steering/architecture-api.md`
+**Generates**: `rules/architecture-api.md`
 **Derived From**: api-standards.md + tech-stack.md + module-structure.md
 
 ```markdown

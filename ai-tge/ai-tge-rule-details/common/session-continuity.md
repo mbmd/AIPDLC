@@ -11,7 +11,7 @@ AI-TGE test governance typically spans multiple sessions — strategy may be bui
 
 ### Location
 
-The state file is always located at: `{workspace_root}/.tge/tge-state.md`
+The state file is always located at: `{workspace_root}/.governance/test/tge-state.md`
 
 ### Structure
 
@@ -111,9 +111,9 @@ The state file is always located at: `{workspace_root}/.tge/tge-state.md`
 
 ### Step 1: Detect State
 
-1. Scan for `.tge/tge-state.md` in expected locations:
-   - `./.tge/tge-state.md`
-   - `{workspace_root}/.tge/tge-state.md`
+1. Scan for `.governance/test/tge-state.md` in expected locations:
+   - `./.governance/test/tge-state.md`
+   - `{workspace_root}/.governance/test/tge-state.md`
 2. If NOT found → treat as fresh start (display welcome message)
 
 ### Step 2: Load State
@@ -189,7 +189,7 @@ Wait for user response before proceeding.
 
 ### Graceful Save
 
-1. Update `.tge/tge-state.md` with current position
+1. Update `.governance/test/tge-state.md` with current position
 2. Mark active stage status appropriately
 3. Update register stats (recount totals)
 4. Update observation log with any events from this session

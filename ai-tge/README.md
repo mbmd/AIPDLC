@@ -93,7 +93,7 @@ It is the first **companion package** in the AI-* Family. Unlike sequential pack
 
 ## What It Produces
 
-All artifacts are generated under `.tge/` in the workspace root:
+All artifacts are generated under `.governance/test/` in the workspace root:
 
 | Artifact | Purpose |
 |----------|---------|
@@ -187,7 +187,7 @@ Not all missing tests are equal. Each is scored on 4 factors (1–5 each):
 
 AI-TGE supports multi-session workflows:
 
-- Progress is saved in `.tge/tge-state.md` after every stage
+- Progress is saved in `.governance/test/tge-state.md` after every stage
 - On new session start, the engine detects existing state and offers to resume
 - You can safely close and return at any time
 - All register entries, coverage data, and risk scores are preserved
@@ -228,7 +228,7 @@ AI-TGE supports multi-session workflows:
 3. The engine activates, detects your input mode, and guides you from there
 4. Review and approve the test strategy and register at gates
 5. During development, invoke observation: "Check test coverage now"
-6. All artifacts are generated in `.tge/`
+6. All artifacts are generated in `.governance/test/`
 
 ---
 
@@ -324,7 +324,7 @@ ai-tge/
 5. **Adaptive.** Work with whatever input exists — never block on missing predecessors.
 6. **Silent when complete.** Only speak when gaps exist.
 7. **Commitment-based.** Measure "did we test what we designed?" — not code coverage percentages.
-8. **Observable.** Everything tracked in `.tge/` — fully auditable.
+8. **Observable.** Everything tracked in `.governance/test/` — fully auditable.
 9. **Agnostic.** No dependency on specific IDE, model, or vendor.
 10. **Professional.** ISTQB-aligned terminology. Quality engineering standards.
 

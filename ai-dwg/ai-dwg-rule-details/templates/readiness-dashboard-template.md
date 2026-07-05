@@ -155,7 +155,7 @@ Based on the generated workspace, a developer joining today needs:
 |---|------|:------:|-------|
 | 1 | Clone repository | ☐ | Standard git clone |
 | 2 | Install dependencies | {✅ Auto / ☐ Manual} | {command or "See README"} |
-| 3 | Read steering files | ✅ Generated | `.kiro/steering/` |
+| 3 | Read steering files | ✅ Generated | `rules/` |
 | 4 | Run first build | {✅ Config ready / ☐ Setup needed} | {command} |
 | 5 | Run first test | {✅ Config ready / ☐ Setup needed} | {command} |
 | 6 | Understand architecture | ✅ Generated | `docs/architecture.md` |
@@ -187,7 +187,7 @@ When AI-DWG generates this dashboard:
 
 | Field | Source |
 |-------|--------|
-| Steering inventory | Scan `.kiro/steering/` after generation |
+| Steering inventory | Scan `rules/` after generation |
 | Hook inventory | Scan `.kiro/hooks/` after generation |
 | Structure | File system scan post-generation |
 | Extensions | `adlc-state.md` / AP extension markers |

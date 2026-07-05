@@ -45,32 +45,27 @@
 
 ## How It Works
 
-Each AI-* package installs **two things** into your workspace, both **family-scoped** to the AI-* PDLC Family (per-package instruction files carry a `pdlc-` filename prefix; rule-details live under a `.pdlc/` folder — so multiple AIFLC families can coexist in one workspace):
+The installer places **one always-loaded file** plus the **package home**, both scoped to the AI-* PDLC Family (multiple AIFLC families can coexist in one workspace):
 
-1. **Core workflow/engine file** — placed as an always-on instruction that VS Code's agent reads automatically
-2. **Rule-details folder** — phase-specific instructions and templates loaded on demand during execution (placed under `.pdlc/`)
-
-VS Code's agent framework supports multiple instruction file formats. The AI-* packages use the most universal approach:
+1. **Session orchestrator** — a single always-on instruction block that VS Code's agent reads automatically at session start (placed in `AGENTS.md` or `.github/copilot-instructions.md`). It is the ONLY always-loaded file. It detects which package you want and `Read`s that package's core on demand — keeping the context window free.
+2. **Package home** — every package's core AND rule-details live together in the uniform, agent-neutral home `.aiflc/pdlc/`. Nothing here auto-loads; the orchestrator reads from it on demand.
 
 ```
 your-workspace/
-├── AGENTS.md                              ← Always loaded (any AI agent in VS Code)
+├── AGENTS.md                              ← The orchestrator block (any AI agent) — OR —
 ├── .github/
-│   ├── copilot-instructions.md            ← Always loaded (Copilot-specific, also read by others)
-│   └── instructions/
-│       ├── pdlc-ai-pilc.instructions.md   ← Per-package instruction files (family-scoped)
-│       ├── pdlc-ai-adlc.instructions.md
-│       └── ...
-├── .pdlc/                                 ← AI-* PDLC Family rule-details (on-demand)
-│   └── ai-pilc-rule-details/
-│       ├── common/
-│       ├── inception/
-│       └── ...
+│   └── copilot-instructions.md            ← The orchestrator block (Copilot, also read by others)
+├── .aiflc/
+│   └── pdlc/                              ← AI-* PDLC Family home (cores + rule-details + fabric)
+│       ├── ai-pilc-rules/core-workflow.md    ← Read on demand by the orchestrator
+│       ├── ai-pilc-rule-details/             ← Read on demand by the core
+│       │   ├── common/  inception/  assessment/  templates/  ...
+│       └── ... one {pkg}-rules/ + {pkg}-rule-details/ per installed package
 ├── pdlc-ws/                               ← All runtime outputs land here (never workspace root)
 └── (your project files)
 ```
 
-> **The Kiro-style split:** core instructions load always-on; rule-details are read on demand (`.pdlc/`); and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root.
+> **The AIFLC model:** one orchestrator loads always-on (`AGENTS.md` or `.github/copilot-instructions.md`); every package core + its rule-details live in the uniform home `.aiflc/pdlc/` and are read on demand; and everything the packages *produce* — projects, portfolio, ideas, generated workspaces — is written under `pdlc-ws/`, never scattered at your workspace root. The `.aiflc/pdlc/` layout is identical on every platform.
 
 ---
 
@@ -88,16 +83,15 @@ VS Code now supports **multiple instruction formats** that all feed into the sam
 
 ### Recommended Approach for AI-* Packages
 
+Under the AIFLC model there is only **one** always-loaded file — the session orchestrator. The only choice is which native slot to place it in. Package cores are never per-package instruction files anymore; they are plain copies under `.aiflc/pdlc/`, read on demand.
+
 **Option A — `AGENTS.md` (simplest, broadest compatibility):**
-A single merged file that any VS Code AI agent reads. Works with Copilot, Claude, and third-party models.
+The orchestrator block in a single `AGENTS.md` that any VS Code AI agent reads. Works with Copilot, Claude, and third-party models.
 
-**Option B — `.github/instructions/` (cleanest multi-package):**
-Each package as a separate `.instructions.md` file with `applyTo: "**"` (always active). Modular, easy to update individually.
+**Option B — `.github/copilot-instructions.md` (Copilot-focused):**
+The same orchestrator block in `.github/copilot-instructions.md`. Best if you primarily use GitHub Copilot (this file is also read by other agents).
 
-**Option C — `.github/copilot-instructions.md` (Copilot-only):**
-Same as the existing Copilot guide. Works if you exclusively use GitHub Copilot.
-
-This guide covers **Options A and B** (the universal approaches).
+This guide covers **both options**. Either way, all 11 package cores live in `.aiflc/pdlc/` — the placement of the orchestrator is the only difference.
 
 ---
 
@@ -125,9 +119,9 @@ cd <path-to-AIPDLC>
 
 ## Method 2: Manual Installation
 
-### Option A: Using AGENTS.md (Universal — Any AI Agent)
+### Option A: Orchestrator in AGENTS.md (Universal — Any AI Agent)
 
-This creates a single `AGENTS.md` file that VS Code loads for ALL AI agents (Copilot, Claude, etc.):
+This places the session orchestrator in a single `AGENTS.md` that VS Code loads for ALL AI agents (Copilot, Claude, etc.), and copies every package core + rule-details into the uniform home `.aiflc/pdlc/`:
 
 **Windows (PowerShell):**
 
@@ -135,41 +129,20 @@ This creates a single `AGENTS.md` file that VS Code loads for ALL AI agents (Cop
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-# Create AGENTS.md with package orchestration
-$header = @"
-# AI-* Family — Workspace Instructions
+# Place the session orchestrator (the ONLY always-loaded file) in AGENTS.md
+Copy-Item "$Source\session-orchestrator.md" "$Target\AGENTS.md"
 
-This workspace uses AIFLC injectable workflow packages.
-Activate a package by saying "Using AI-{PKG}, ..." (e.g., "Using AI-PILC, initiate a project").
-
-Each package loads detail files from its `.ai-{pkg}-rule-details/` folder on demand.
-Only activate one package at a time.
-
----
-
-"@
-$header | Out-File "$Target\AGENTS.md" -Encoding utf8
-
-# Append each package's core workflow
-$packages = @(
-    @{ Name = "ai-pilc"; Core = "core-workflow.md";  Rules = "ai-pilc-rules"; Details = "ai-pilc-rule-details" }
-    @{ Name = "ai-adlc"; Core = "core-workflow.md";  Rules = "ai-adlc-rules"; Details = "ai-adlc-rule-details" }
-    @{ Name = "ai-dwg";  Core = "core-generator.md"; Rules = "ai-dwg-rules";  Details = "ai-dwg-rule-details" }
-)
+# Copy every package core + rule-details into the uniform home .aiflc/pdlc/
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc" | Out-Null
+$packages = @("ai-pilc", "ai-adlc", "ai-dwg")   # example subset
 
 foreach ($pkg in $packages) {
-    $coreSource = Join-Path $Source "$($pkg.Name)\$($pkg.Rules)\$($pkg.Core)"
-    $detailsSource = Join-Path $Source "$($pkg.Name)\$($pkg.Details)"
-    $detailsDest = Join-Path $Target ".pdlc\$($pkg.Details)"
-
-    if (Test-Path $coreSource) {
-        "`n---`n`n## PDLC / $($pkg.Name.ToUpper())`n`n" | Add-Content "$Target\AGENTS.md"
-        Get-Content $coreSource | Add-Content "$Target\AGENTS.md"
-
-        if (Test-Path $detailsSource) {
-            if (Test-Path $detailsDest) { Remove-Item -Recurse -Force $detailsDest }
-            Copy-Item -Recurse $detailsSource $detailsDest
-        }
+    $rulesSource = Join-Path $Source "$pkg\$pkg-rules"
+    $detailsSource = Join-Path $Source "$pkg\$pkg-rule-details"
+    if (Test-Path $rulesSource) {
+        Copy-Item -Recurse $rulesSource "$Target\.aiflc\pdlc\" -Force
+        Copy-Item -Recurse $detailsSource "$Target\.aiflc\pdlc\" -Force
+        Write-Host "Installed $pkg into .aiflc/pdlc/" -ForegroundColor Green
     }
 }
 ```
@@ -180,35 +153,21 @@ foreach ($pkg in $packages) {
 SOURCE=<path-to-AIPDLC>
 TARGET=<your-project-path>
 
-# Create AGENTS.md header
-cat > "$TARGET/AGENTS.md" << 'EOF'
-# AI-* Family — Workspace Instructions
+# Place the session orchestrator (the ONLY always-loaded file) in AGENTS.md
+cp "$SOURCE/session-orchestrator.md" "$TARGET/AGENTS.md"
 
-This workspace uses AIFLC injectable workflow packages.
-Activate a package by saying "Using AI-{PKG}, ..." (e.g., "Using AI-PILC, initiate a project").
-
-Each package loads detail files from its `.ai-{pkg}-rule-details/` folder on demand.
-Only activate one package at a time.
-
----
-EOF
-
-# Append packages (example: ai-pilc + ai-adlc + ai-dwg)
-for pkg in ai-pilc ai-adlc ai-dwg; do
-    core_file="core-workflow.md"
-    [ "$pkg" = "ai-dwg" ] && core_file="core-generator.md"
-    
-    echo -e "\n---\n\n## PDLC / ${pkg^^}\n" >> "$TARGET/AGENTS.md"
-    cat "$SOURCE/$pkg/${pkg}-rules/$core_file" >> "$TARGET/AGENTS.md"
-    
-    mkdir -p "$TARGET/.pdlc/${pkg}-rule-details"
-    cp -R "$SOURCE/$pkg/${pkg}-rule-details/"* "$TARGET/.pdlc/${pkg}-rule-details/"
+# Copy every package core + rule-details into the uniform home .aiflc/pdlc/
+mkdir -p "$TARGET/.aiflc/pdlc"
+for pkg in ai-pilc ai-adlc ai-dwg; do   # example subset
+    cp -R "$SOURCE/$pkg/${pkg}-rules" "$TARGET/.aiflc/pdlc/"
+    cp -R "$SOURCE/$pkg/${pkg}-rule-details" "$TARGET/.aiflc/pdlc/"
+    echo "Installed $pkg into .aiflc/pdlc/"
 done
 ```
 
-### Option B: Using .instructions.md Files (Modular — Per Package)
+### Option B: Orchestrator in .github/copilot-instructions.md (Copilot-focused)
 
-This creates individual instruction files per package — cleaner for large installs:
+This places the same orchestrator in `.github/copilot-instructions.md` instead — the cores still land in `.aiflc/pdlc/`:
 
 **Windows (PowerShell):**
 
@@ -216,41 +175,24 @@ This creates individual instruction files per package — cleaner for large inst
 $Source = "<path-to-AIPDLC>"
 $Target = "<your-project-path>"
 
-# Create instructions directory
-New-Item -ItemType Directory -Force -Path "$Target\.github\instructions" | Out-Null
+# Place the session orchestrator in Copilot's slot (the ONLY always-loaded file)
+New-Item -ItemType Directory -Force -Path "$Target\.github" | Out-Null
+Copy-Item "$Source\session-orchestrator.md" "$Target\.github\copilot-instructions.md"
 
+# Copy every package core + rule-details into the uniform home .aiflc/pdlc/
+New-Item -ItemType Directory -Force -Path "$Target\.aiflc\pdlc" | Out-Null
 $packages = @(
-    @{ Name = "ai-ilc";  Core = "core-workflow.md";  Rules = "ai-ilc-rules";  Details = "ai-ilc-rule-details";  Desc = "AI-ILC: Idea evaluation lifecycle" }
-    @{ Name = "ai-pilc"; Core = "core-workflow.md";  Rules = "ai-pilc-rules"; Details = "ai-pilc-rule-details"; Desc = "AI-PILC: Project initiation lifecycle" }
-    @{ Name = "ai-ppm";  Core = "core-engine.md";    Rules = "ai-ppm-rules";  Details = "ai-ppm-rule-details";  Desc = "AI-PPM: Portfolio management engine" }
-    @{ Name = "ai-flo";  Core = "core-engine.md";    Rules = "ai-flo-rules";  Details = "ai-flo-rule-details";  Desc = "AI-FLO: Package flow router" }
-    @{ Name = "ai-adlc"; Core = "core-workflow.md";  Rules = "ai-adlc-rules"; Details = "ai-adlc-rule-details"; Desc = "AI-ADLC: Architecture design lifecycle" }
-    @{ Name = "ai-uxd";  Core = "core-workflow.md";  Rules = "ai-uxd-rules";  Details = "ai-uxd-rule-details";  Desc = "AI-UXD: UX design lifecycle" }
-    @{ Name = "ai-polc"; Core = "core-workflow.md";  Rules = "ai-polc-rules"; Details = "ai-polc-rule-details"; Desc = "AI-POLC: Product ownership lifecycle" }
-    @{ Name = "ai-dwg";  Core = "core-generator.md"; Rules = "ai-dwg-rules";  Details = "ai-dwg-rule-details";  Desc = "AI-DWG: Workspace generator" }
-    @{ Name = "ai-gce";  Core = "core-generator.md"; Rules = "ai-gce-rules";  Details = "ai-gce-rule-details";  Desc = "AI-GCE: Governance and compliance engine" }
-    @{ Name = "ai-tge";  Core = "core-engine.md";    Rules = "ai-tge-rules";  Details = "ai-tge-rule-details";  Desc = "AI-TGE: Test governance engine" }
-    @{ Name = "ai-dfe";  Core = "core-engine.md";    Rules = "ai-dfe-rules";  Details = "ai-dfe-rule-details";  Desc = "AI-DFE: Data fabric engine" }
+    "ai-ilc", "ai-pilc", "ai-ppm", "ai-flo", "ai-adlc",
+    "ai-uxd", "ai-polc", "ai-dwg", "ai-gce", "ai-tge", "ai-dfe"
 )
 
 foreach ($pkg in $packages) {
-    $coreSource = Join-Path $Source "$($pkg.Name)\$($pkg.Rules)\$($pkg.Core)"
-    $instrDest = Join-Path $Target ".github\instructions\pdlc-$($pkg.Name).instructions.md"
-    $detailsSource = Join-Path $Source "$($pkg.Name)\$($pkg.Details)"
-    $detailsDest = Join-Path $Target ".pdlc\$($pkg.Details)"
-
-    if (Test-Path $coreSource) {
-        # Create .instructions.md with YAML frontmatter
-        $frontmatter = "---`nname: '$($pkg.Desc)'`ndescription: 'AIFLC workflow package — activate with: Using $($pkg.Name.ToUpper()), ...'`napplyTo: '**'`n---`n`n"
-        $frontmatter | Out-File -FilePath $instrDest -Encoding utf8 -NoNewline
-        Get-Content $coreSource -Raw | Add-Content $instrDest -NoNewline
-
-        # Copy rule-details
-        if (Test-Path $detailsSource) {
-            if (Test-Path $detailsDest) { Remove-Item -Recurse -Force $detailsDest }
-            Copy-Item -Recurse $detailsSource $detailsDest
-        }
-        Write-Host "Installed $($pkg.Name)" -ForegroundColor Green
+    $rulesSource = Join-Path $Source "$pkg\$pkg-rules"
+    $detailsSource = Join-Path $Source "$pkg\$pkg-rule-details"
+    if (Test-Path $rulesSource) {
+        Copy-Item -Recurse $rulesSource "$Target\.aiflc\pdlc\" -Force
+        Copy-Item -Recurse $detailsSource "$Target\.aiflc\pdlc\" -Force
+        Write-Host "Installed $pkg into .aiflc/pdlc/" -ForegroundColor Green
     }
 }
 ```
@@ -261,39 +203,16 @@ foreach ($pkg in $packages) {
 SOURCE=<path-to-AIPDLC>
 TARGET=<your-project-path>
 
-mkdir -p "$TARGET/.github/instructions"
+# Place the session orchestrator in Copilot's slot (the ONLY always-loaded file)
+mkdir -p "$TARGET/.github"
+cp "$SOURCE/session-orchestrator.md" "$TARGET/.github/copilot-instructions.md"
 
-declare -A CORES=(
-    ["ai-ilc"]="core-workflow.md"
-    ["ai-pilc"]="core-workflow.md"
-    ["ai-ppm"]="core-engine.md"
-    ["ai-flo"]="core-engine.md"
-    ["ai-adlc"]="core-workflow.md"
-    ["ai-uxd"]="core-workflow.md"
-    ["ai-polc"]="core-workflow.md"
-    ["ai-dwg"]="core-generator.md"
-    ["ai-gce"]="core-generator.md"
-    ["ai-tge"]="core-engine.md"
-)
-
-for pkg in "${!CORES[@]}"; do
-    core="${CORES[$pkg]}"
-    instr_file="$TARGET/.github/instructions/pdlc-${pkg}.instructions.md"
-    
-    cat > "$instr_file" << EOF
----
-name: '${pkg^^} workflow package'
-description: 'AIFLC workflow — activate with: Using ${pkg^^}, ...'
-applyTo: '**'
----
-
-EOF
-    cat "$SOURCE/$pkg/${pkg}-rules/$core" >> "$instr_file"
-    
-    mkdir -p "$TARGET/.pdlc/${pkg}-rule-details"
-    cp -R "$SOURCE/$pkg/${pkg}-rule-details/"* "$TARGET/.pdlc/${pkg}-rule-details/"
-    
-    echo "Installed $pkg"
+# Copy every package core + rule-details into the uniform home .aiflc/pdlc/
+mkdir -p "$TARGET/.aiflc/pdlc"
+for pkg in ai-ilc ai-pilc ai-ppm ai-flo ai-adlc ai-uxd ai-polc ai-dwg ai-gce ai-tge ai-dfe; do
+    cp -R "$SOURCE/$pkg/${pkg}-rules" "$TARGET/.aiflc/pdlc/"
+    cp -R "$SOURCE/$pkg/${pkg}-rule-details" "$TARGET/.aiflc/pdlc/"
+    echo "Installed $pkg into .aiflc/pdlc/"
 done
 ```
 
@@ -303,18 +222,19 @@ done
 
 ### Context Window Considerations
 
-VS Code loads ALL always-on instruction files at session start. With 11 packages:
+VS Code loads only the **session orchestrator** at session start — not the package cores. This means you can install all 11 packages without bloating the always-on context: the orchestrator is a compact router, and each package core is read from `.aiflc/pdlc/` only when you activate it.
 
-- **Option A (AGENTS.md):** Single large file — may hit context limits with some models. Best for 3–5 packages.
-- **Option B (.instructions.md):** Individual files all loaded — same total context but VS Code can manage them independently. Works better for large installs because VS Code shows which instructions were applied.
+- **Only one always-loaded file** regardless of how many packages you install.
+- **Package cores load on demand** — the AI activates exactly one at a time.
+- **Rule-details load per phase** — the core reads them from `.aiflc/pdlc/ai-{pkg}-rule-details/` as needed.
 
 ### Recommended: Install What You Need
 
-| Scenario | Packages | Approach |
-|----------|----------|----------|
-| 1–3 packages | Any subset | Either option works well |
-| 4–6 packages | Selective | Option B preferred (modular) |
-| 7–11 packages | Full chain | Option B required (AGENTS.md gets too large) |
+| Scenario | Packages | Notes |
+|----------|----------|-------|
+| 1–3 packages | Any subset | Minimal footprint |
+| 4–6 packages | Selective | Still just one always-on file |
+| 7–11 packages | Full chain | Fully supported — cores stay dormant in `.aiflc/pdlc/` until invoked |
 
 ---
 
@@ -338,49 +258,53 @@ VS Code loads ALL always-on instruction files at session start. With 11 packages
 
 ## Resulting Workspace Structure
 
-### Option A (AGENTS.md)
+### Option A (orchestrator in AGENTS.md)
 
 ```
 your-project/
-├── AGENTS.md                                ← Single merged file, all AI agents read this
-├── .pdlc/                                   ← AI-* PDLC Family rule-details (on-demand)
-│   ├── ai-pilc-rule-details/
-│   ├── ai-adlc-rule-details/
-│   └── ai-dwg-rule-details/
+├── AGENTS.md                                ← The ONLY always-loaded file (orchestrator; all agents read it)
+├── .aiflc/
+│   └── pdlc/                                ← AI-* PDLC Family home (cores + rule-details, on-demand)
+│       ├── ai-pilc-rules/core-workflow.md
+│       ├── ai-pilc-rule-details/
+│       ├── ai-adlc-rules/core-workflow.md
+│       ├── ai-adlc-rule-details/
+│       ├── ai-dwg-rules/core-generator.md
+│       └── ai-dwg-rule-details/
 ├── pdlc-ws/                                 ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 └── (your project files)
 ```
 
-### Option B (.instructions.md — Recommended for 4+ packages)
+### Option B (orchestrator in .github/copilot-instructions.md — full 11-package install)
 
 ```
 your-project/
 ├── .github/
-│   └── instructions/
-│       ├── pdlc-ai-ilc.instructions.md      ← Always loaded
-│       ├── pdlc-ai-pilc.instructions.md     ← Always loaded
-│       ├── pdlc-ai-ppm.instructions.md      ← Always loaded
-│       ├── pdlc-ai-flo.instructions.md      ← Always loaded
-│       ├── pdlc-ai-adlc.instructions.md     ← Always loaded
-│       ├── pdlc-ai-uxd.instructions.md      ← Always loaded
-│       ├── pdlc-ai-polc.instructions.md     ← Always loaded
-│       ├── pdlc-ai-dwg.instructions.md      ← Always loaded
-│       ├── pdlc-ai-gce.instructions.md      ← Always loaded
-│       ├── pdlc-ai-gce.instructions.md      ← Always loaded
-│       ├── pdlc-ai-tge.instructions.md      ← Always loaded
-│       └── pdlc-ai-dfe.instructions.md      ← Always loaded
-├── .pdlc/                                   ← AI-* PDLC Family rule-details (on-demand)
-│   ├── ai-ilc-rule-details/
-│   ├── ai-pilc-rule-details/
-│   ├── ai-adlc-rule-details/
-│   ├── ai-uxd-rule-details/
-│   ├── ai-polc-rule-details/
-│   ├── ai-ppm-rule-details/
-│   ├── ai-flo-rule-details/
-│   ├── ai-dwg-rule-details/
-│   ├── ai-gce-rule-details/
-│   ├── ai-tge-rule-details/
-│   └── ai-dfe-rule-details/
+│   └── copilot-instructions.md              ← The ONLY always-loaded file (orchestrator)
+├── .aiflc/
+│   └── pdlc/                                ← AI-* PDLC Family home (cores + rule-details, on-demand)
+│       ├── ai-ilc-rules/core-workflow.md
+│       ├── ai-ilc-rule-details/
+│       ├── ai-pilc-rules/core-workflow.md
+│       ├── ai-pilc-rule-details/
+│       ├── ai-ppm-rules/core-engine.md
+│       ├── ai-ppm-rule-details/
+│       ├── ai-flo-rules/core-engine.md
+│       ├── ai-flo-rule-details/
+│       ├── ai-adlc-rules/core-workflow.md
+│       ├── ai-adlc-rule-details/
+│       ├── ai-uxd-rules/core-workflow.md
+│       ├── ai-uxd-rule-details/
+│       ├── ai-polc-rules/core-workflow.md
+│       ├── ai-polc-rule-details/
+│       ├── ai-dwg-rules/core-generator.md
+│       ├── ai-dwg-rule-details/
+│       ├── ai-gce-rules/core-generator.md
+│       ├── ai-gce-rule-details/
+│       ├── ai-tge-rules/core-engine.md
+│       ├── ai-tge-rule-details/
+│       ├── ai-dfe-rules/core-engine.md
+│       └── ai-dfe-rule-details/
 ├── pdlc-ws/                                 ← All runtime outputs (projects, portfolio, ideas, generated workspaces)
 └── (your project files)
 ```
@@ -502,7 +426,7 @@ description: 'Loads AI-PILC phase details when working in PILC output folders'
 applyTo: '**/pdlc-ws/**'
 ---
 
-When working in `pdlc-ws/`, reference the AI-PILC templates in `.pdlc/ai-pilc-rule-details/templates/` for consistent formatting.
+When working in `pdlc-ws/`, reference the AI-PILC templates in `.aiflc/pdlc/ai-pilc-rule-details/templates/` for consistent formatting.
 ```
 
 ### User-Level Instructions (Cross-Project)
@@ -521,15 +445,15 @@ New-Item -ItemType Directory -Force -Path "$HOME\.copilot\instructions"
 
 AI-* packages coexist with all other VS Code AI customizations:
 
-- **Existing `copilot-instructions.md`**: Untouched (unless you use the Copilot installer mode).
-- **Existing `AGENTS.md`**: If using Option A, packages are appended. If using Option B, untouched.
-- **Existing `.instructions.md` files**: Untouched. AI-* packages add their own files.
+- **Existing `copilot-instructions.md`**: If using Option B and a file already exists, back it up first — the orchestrator replaces it (or merge the orchestrator block into your existing file).
+- **Existing `AGENTS.md`**: If using Option A and a file already exists, merge the orchestrator block into it rather than overwriting.
+- **Existing `.instructions.md` files**: Untouched. The family no longer adds per-package instruction files — package cores live under `.aiflc/pdlc/`.
 - **Custom agents**: AI-* packages don't create `.agent.md` files by default (but you can convert them — see below).
 - **Other project files**: Never modified.
 
 ### Converting Packages to Custom Agents (Advanced)
 
-VS Code supports `.github/agents/*.agent.md` files that define specialized personas. You could wrap each AI-* package as a custom agent:
+VS Code supports `.github/agents/*.agent.md` files that define specialized personas. You could wrap each AI-* package as a custom agent that reads its core from the uniform home:
 
 ```markdown
 <!-- .github/agents/pdlc-ai-pilc.agent.md -->
@@ -537,14 +461,14 @@ VS Code supports `.github/agents/*.agent.md` files that define specialized perso
 name: AI-PILC
 description: Project Initiation Life Cycle — guides you from raw requirement to a professional Project Initiation Package
 instructions:
-  - .github/instructions/pdlc-ai-pilc.instructions.md
+  - .aiflc/pdlc/ai-pilc-rules/core-workflow.md
 tools:
   - read_file
   - write_file
   - list_directory
 ---
 
-You are the AI-PILC agent. When invoked, follow the core workflow in your instructions to guide the user through project initiation.
+You are the AI-PILC agent. When invoked, follow the core workflow in `.aiflc/pdlc/ai-pilc-rules/core-workflow.md` to guide the user through project initiation.
 ```
 
 This lets users invoke `@ai-pilc` in chat directly. This is an advanced configuration not yet handled by the installer.
@@ -553,18 +477,20 @@ This lets users invoke `@ai-pilc` in chat directly. This is an advanced configur
 
 ## Uninstalling
 
-### Option A (AGENTS.md)
+### Option A (orchestrator in AGENTS.md)
 
 ```powershell
-Remove-Item "<your-project-path>\AGENTS.md"
-Get-ChildItem "<your-project-path>\.pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
+Remove-Item "<your-project-path>\AGENTS.md" -ErrorAction SilentlyContinue
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rules" -Directory | Remove-Item -Recurse -Force
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
 ```
 
-### Option B (.instructions.md)
+### Option B (orchestrator in .github/copilot-instructions.md)
 
 ```powershell
-Remove-Item "<your-project-path>\.github\instructions\pdlc-ai-*.instructions.md"
-Get-ChildItem "<your-project-path>\.pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
+Remove-Item "<your-project-path>\.github\copilot-instructions.md" -ErrorAction SilentlyContinue
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rules" -Directory | Remove-Item -Recurse -Force
+Get-ChildItem "<your-project-path>\.aiflc\pdlc\ai-*-rule-details" -Directory | Remove-Item -Recurse -Force
 ```
 
 ### Via Installer (Copilot mode)
@@ -579,12 +505,12 @@ Get-ChildItem "<your-project-path>\.pdlc\ai-*-rule-details" -Directory | Remove-
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| Instructions not loading | Setting disabled | Ensure `chat.includeApplyingInstructions` is enabled in settings |
-| AGENTS.md not recognized | Feature disabled | Enable `chat.useAgentsMdFile` in VS Code settings |
-| .instructions.md not applied | Missing `applyTo` | Add `applyTo: '**'` to frontmatter for always-on behavior |
-| "Can't find rule-details" | Path mismatch | Ensure `.pdlc/ai-{pkg}-rule-details/` exists at workspace root |
+| Orchestrator not loading | Setting disabled | Ensure `chat.includeApplyingInstructions` is enabled in settings |
+| AGENTS.md not recognized | Feature disabled | Enable `chat.useAgentsMdFile` in VS Code settings (Option A) |
+| Package core not found | Path mismatch | Verify `.aiflc/pdlc/ai-{pkg}-rules/core-*.md` exists |
+| "Can't find rule-details" | Path mismatch | Core resolves `.aiflc/pdlc/ai-{pkg}-rule-details/` first |
 | Wrong model being used | Model selection | Check your model selection in Chat view dropdown |
-| Instructions too long | Context overflow | Switch from AGENTS.md to individual .instructions.md files |
+| Orchestrator not applied | Wrong slot | Confirm the orchestrator sits in `AGENTS.md` or `.github/copilot-instructions.md` |
 | Instructions applied but not followed | Model limitation | Try a stronger model (Claude or GPT-4o recommended) |
 | Nested instructions not found | Monorepo setting | Enable `chat.useCustomizationsInParentRepositories` |
 
@@ -606,7 +532,7 @@ Right-click in Chat view → **Diagnostics** to see:
 | Deliverable file output | ✅ |
 | State persistence | ✅ |
 | Chain marker detection | ✅ |
-| Multi-package install | ✅ All 11 (via .instructions.md) |
+| Multi-package install | ✅ All 11 (cores in `.aiflc/pdlc/`) |
 | AI-DWG workspace gen | ✅ |
 | AI-GCE rule generation | ✅ |
 | AI-GCE hook enforcement | ⚠️ Partial (VS Code hooks exist, different format) |

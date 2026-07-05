@@ -4,8 +4,8 @@
 ## Purpose
 
 This mapping rule transforms the **Architecture Vision & Principles** document (AP artifact) into two steering files:
-1. `.kiro/steering/workspace-rules.md` — The golden rules governing all development
-2. `.kiro/steering/architecture-principles.md` — Full principles reference
+1. `rules/workspace-rules.md` — The golden rules governing all development
+2. `rules/architecture-principles.md` — Full principles reference
 
 ---
 
@@ -138,9 +138,9 @@ This system does NOT include: {explicitly out-of-scope items from Vision}
 
 ## References
 
-- Architecture Principles (full detail): `.kiro/steering/architecture-principles.md`
-- Technology Stack: `.kiro/steering/tech-stack.md`
-- Module Structure: `.kiro/steering/module-structure.md`
+- Architecture Principles (full detail): `rules/architecture-principles.md`
+- Technology Stack: `rules/tech-stack.md`
+- Module Structure: `rules/module-structure.md`
 ```
 
 ### Transformation Rules

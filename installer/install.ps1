@@ -12,8 +12,9 @@
 .DESCRIPTION
     Installs AI-* packages into a target workspace using the locked family-workspace
     structure:
-      - Package files  -> .kiro/{family}/ (rule-details) + .kiro/steering/{family}/ (core, Kiro)
-      - Family outputs -> {family}-ws/   (ideas/ projects/ portfolio/ data/)
+      - Package files  -> .aiflc/{family}/   (cores + rule-details, uniform on every platform; OI-158)
+      - Orchestrator   -> platform-native auto-load slot (e.g. .kiro/steering/) - sole always-loaded file
+      - Family outputs -> {family}-ws/        (ideas/ projects/ portfolio/ data/)
     The family is auto-derived from this installer's parent folder name (e.g. "pdlc").
 
 .PARAMETER TargetWorkspace
@@ -176,43 +177,18 @@ function Get-PlatformPaths {
     $core = $Pkg.CoreFile
     $name = $Pkg.Name
 
-    $result = @{
+    # OI-158 (unified core placement): cores AND rule-details land in ONE uniform
+    # brand-scoped home on EVERY platform -> .aiflc/{family}/. Only the orchestrator
+    # sits in each platform's native auto-load slot (see Get-OrchestratorDest); it
+    # Reads the relevant core on demand. This collapses the former 6-way
+    # CoreDest/DetailsDest matrix and fixes the rule-details resolution mismatch
+    # (cores now resolve details from the same .aiflc/{family}/ path). [INV-L3-031]
+    return @{
         CoreSource    = Join-Path $PackagesRoot "$name\$rules\$core"
         DetailsSource = Join-Path $PackagesRoot "$name\$details"
-        CoreDest      = ""
-        DetailsDest   = ""
+        CoreDest      = ".aiflc\$Family\$rules\$core"
+        DetailsDest   = ".aiflc\$Family\$details"
     }
-
-    switch ($PlatformName) {
-        "kiro" {
-            # Core -> steering (auto-loaded); rule-details -> .kiro/{family}/ (on-demand)
-            $result.CoreDest    = ".kiro\steering\$Family\$rules\$core"
-            $result.DetailsDest = ".kiro\$Family\$details"
-        }
-        "amazonq" {
-            $result.CoreDest    = ".amazonq\rules\$Family\$rules\$core"
-            $result.DetailsDest = ".amazonq\$Family\$details"
-        }
-        "cursor" {
-            $result.CoreDest    = ".cursor\rules\$Family-$name-workflow.mdc"
-            $result.DetailsDest = ".$Family\$details"
-        }
-        "cline" {
-            $result.CoreDest    = ".clinerules\$Family-$name-core.md"
-            $result.DetailsDest = ".$Family\$details"
-        }
-        "claude-code" {
-            $upperFamily = $Family.ToUpper().Replace('-','_')
-            $upperName = $name.ToUpper().Replace('-','_')
-            $result.CoreDest    = "CLAUDE_${upperFamily}_${upperName}.md"
-            $result.DetailsDest = ".$Family\$details"
-        }
-        "copilot" {
-            $result.CoreDest    = ".github\copilot-instructions-$Family-$name.md"
-            $result.DetailsDest = ".$Family\$details"
-        }
-    }
-    return $result
 }
 
 # -----------------------------------------------------------------------------
@@ -349,15 +325,11 @@ function Install-Package {
     $coreDir = Split-Path -Parent $coreDest
     if (-not (Test-Path $coreDir)) { New-Item -ItemType Directory -Force -Path $coreDir | Out-Null }
 
-    if ($PlatformName -eq "cursor") {
-        $desc = $Package.Description
-        $frontmatter = "---`ndescription: `"$($Package.Name.ToUpper()) ($desc)`"`nalwaysApply: true`n---`n`n"
-        $frontmatter | Out-File -FilePath $coreDest -Encoding utf8 -NoNewline
-        Get-Content $paths.CoreSource -Raw | Add-Content $coreDest -NoNewline
-    }
-    else {
-        Copy-Item $paths.CoreSource -Destination $coreDest -Force
-    }
+    # OI-158: cores are neutral files in .aiflc/{family}/, Read on demand by the
+    # orchestrator - no platform-specific auto-load frontmatter is injected
+    # (the former Cursor .mdc alwaysApply wrapper is gone; cores no longer land
+    # in .cursor/rules/).
+    Copy-Item $paths.CoreSource -Destination $coreDest -Force
 
     if (Test-Path $paths.DetailsSource) {
         if (Test-Path $detailsDest) { Remove-Item -Recurse -Force $detailsDest }
@@ -437,14 +409,11 @@ function Install-Tools {
 # -----------------------------------------------------------------------------
 
 function Get-FamilyRootDest {
-    # The family rule-details root per platform - parent of every package details dir.
-    # For Kiro this is .kiro\{family}\ (D1). Fabric files land here so FLO/DFE resolve them.
+    # The family home root - parent of every package rules/ + rule-details/ dir.
+    # OI-158: uniform .aiflc/{family}/ on every platform. Fabric files land here
+    # (beside cores + details) so FLO/DFE resolve them from the same home.
     param([string]$PlatformName)
-    switch ($PlatformName) {
-        "kiro"    { return ".kiro\$Family" }
-        "amazonq" { return ".amazonq\$Family" }
-        default   { return ".$Family" }   # cursor, cline, claude-code, copilot
-    }
+    return ".aiflc\$Family"
 }
 
 function Install-Fabric {
@@ -578,6 +547,96 @@ function Install-ClaudeEntrypoint {
 }
 
 # -----------------------------------------------------------------------------
+# Claude Code slash-command adapter (OI-158 D5). Claude Code turns any Markdown
+# file in .claude/commands/ into a /command (subfolders namespace it, so
+# .claude/commands/pdlc/pilc.md => /pdlc:pilc). We generate one command per
+# installed package (its activation key) plus its destination agent shortcuts.
+# Rules: additive & Claude-only; DESTINATION triggers ONLY (never internal build
+# triggers SEL__/SEG__/ICG__/...); content is a pointer that Reads the canonical
+# core under .aiflc/{family}/ (zero workflow duplication); namespaced by family.
+# -----------------------------------------------------------------------------
+
+# Destination agent shortcuts per package (rendered only when the package is installed).
+$ClaudeAgentCommands = @{
+    "ai-dfe" = @(
+        @{ cmd = "dat"; desc = "AI-DFE data operations (gather / status / discover) - the DAT__ shortcut"; hint = "[all | status | gather | discover]" }
+        @{ cmd = "dfa"; desc = "AI-DFE data fabric audit (read-only report) - the DFA__ shortcut"; hint = "" }
+        @{ cmd = "dhc"; desc = "AI-DFE data fabric bootstrap readiness check - the DHC__ shortcut"; hint = "" }
+    )
+    "ai-flo" = @(
+        @{ cmd = "fhc"; desc = "AI-FLO health check - the FHC__ shortcut"; hint = "" }
+        @{ cmd = "fia"; desc = "AI-FLO integrity audit - the FIA__ shortcut"; hint = "" }
+    )
+}
+
+function Install-ClaudeCommands {
+    param([array]$InstalledNames, [string]$PlatformName, [string]$Target, [bool]$IsDryRun)
+    if ($PlatformName -ne "claude-code") { return @() }
+
+    $cmdRootRel = ".claude\commands\$Family"
+    $cmdRoot    = Join-Path $Target $cmdRootRel
+    $written    = @()
+
+    foreach ($name in $InstalledNames) {
+        $pkg = $PackageCatalogue | Where-Object { $_.Name -eq $name }
+        if (-not $pkg) { continue }
+        $short = $name -replace '^ai-', ''            # ai-pilc -> pilc  => /pdlc:pilc
+        $key   = "_" + $short.ToUpper() + "_"          # _PILC_
+        $core  = "$($pkg.RulesDir)/$($pkg.CoreFile)"   # ai-pilc-rules/core-workflow.md
+
+        # 1) package activation command
+        $body = @"
+---
+description: "$($name.ToUpper()) - $($pkg.Description)"
+argument-hint: "[raw input or brief]"
+---
+Activate the $($name.ToUpper()) workflow - slash-command equivalent of the ``$key`` key.
+
+1. ``Read`` and obey ``.aiflc/$Family/$core`` as the dispatcher for $($name.ToUpper()) for the rest of this session.
+2. Resolve rule-details on demand from ``.aiflc/$Family/$($pkg.DetailsDir)/``.
+3. Enforce multi-package isolation: if another AI-* package is mid-flow (a non-complete ``*-state.md`` exists), confirm the switch first.
+4. Announce "Active package: $($name.ToUpper())" as the first line, then begin with this input:
+
+`$ARGUMENTS
+"@
+        $written += @{ path = "$cmdRootRel\$short.md"; content = $body }
+
+        # 2) destination agent-shortcut commands for this package (if any)
+        if ($ClaudeAgentCommands.ContainsKey($name)) {
+            foreach ($ac in $ClaudeAgentCommands[$name]) {
+                $hintLine = if ($ac.hint) { "argument-hint: `"$($ac.hint)`"`n" } else { "" }
+                $abody = @"
+---
+description: "$($ac.desc)"
+$hintLine---
+Run the $($name.ToUpper()) operation equivalent to this shortcut.
+
+1. ``Read`` ``.aiflc/$Family/$core``.
+2. Execute the operation named by the argument (default: status/report).
+
+`$ARGUMENTS
+"@
+                $written += @{ path = "$cmdRootRel\$($ac.cmd).md"; content = $abody }
+            }
+        }
+    }
+
+    if ($written.Count -eq 0) { return @() }
+
+    if ($IsDryRun) {
+        Write-Host "    [DRY RUN] Would generate $($written.Count) Claude slash command(s) under $cmdRootRel\ (destination triggers only)" -ForegroundColor Yellow
+        return ($written | ForEach-Object { $_.path })
+    }
+
+    if (-not (Test-Path $cmdRoot)) { New-Item -ItemType Directory -Force -Path $cmdRoot | Out-Null }
+    foreach ($w in $written) {
+        Set-Content -Path (Join-Path $Target $w.path) -Encoding utf8 -Value $w.content
+    }
+    Write-Step "Generated $($written.Count) Claude slash command(s) -> $cmdRootRel\  (/$Family`:<key>)"
+    return ($written | ForEach-Object { $_.path })
+}
+
+# -----------------------------------------------------------------------------
 # Install package agents (Kiro only) - copies runnable agents from each installed
 # package templates/agents/ into .kiro/agents/ (e.g. FLO FHC__ / FIA__). [D4]
 # Other platforms invoke agents via shortcut-rules blocks (per package INSTALL.md).
@@ -661,18 +720,19 @@ function Register-Consumers {
 # -----------------------------------------------------------------------------
 
 function Save-Manifest {
-    param([string]$Target, [string]$PlatformName, [array]$Installed, [array]$Tools, [array]$Fabric, [array]$Agents, [string]$Orchestrator, $ClaudeEntrypoint)
+    param([string]$Target, [string]$PlatformName, [array]$Installed, [array]$Tools, [array]$Fabric, [array]$Agents, [string]$Orchestrator, $ClaudeEntrypoint, [array]$ClaudeCommands)
     $manifest = @{
         installedAt      = (Get-Date -Format "o")
         family           = $Family
         platform         = $PlatformName
-        installerVersion = "2.3.0"
+        installerVersion = "2.4.0"
         packages         = $Installed
         tools            = $Tools
         fabric           = $Fabric
         agents           = $Agents
         orchestrator     = $Orchestrator
         claudeEntrypoint = $ClaudeEntrypoint
+        claudeCommands   = $ClaudeCommands
     }
     $manifestPath = Join-Path $Target "$FamilyWs\$ManifestFileName"
     $manifest | ConvertTo-Json -Depth 4 | Out-File -FilePath $manifestPath -Encoding utf8
@@ -784,6 +844,16 @@ function Invoke-Uninstall {
                 Write-Step "Removed orchestrator import block from existing CLAUDE.md (content preserved)"
             }
         }
+    }
+
+    # Remove generated Claude slash commands (.claude/commands/{family}/)
+    if ($manifest.PSObject.Properties.Name -contains 'claudeCommands' -and $manifest.claudeCommands) {
+        foreach ($rel in $manifest.claudeCommands) {
+            $p = Join-Path $Target $rel
+            if (Test-Path $p) { Remove-Item -Force $p }
+            Remove-EmptyAncestors -LeafPath $p -StopAt $Target
+        }
+        Write-Step "Removed $($manifest.claudeCommands.Count) Claude slash command(s)"
     }
 
     # Offer to remove the family workspace (DESTRUCTIVE - contains project data)
@@ -935,12 +1005,13 @@ Write-Host "  ----------------------------" -ForegroundColor DarkGray
 $installedFabric = Install-Fabric -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
 $installedOrchestrator = Install-Orchestrator -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
 $installedClaudeEntrypoint = Install-ClaudeEntrypoint -PlatformName $Platform -Target $TargetWorkspace -OrchestratorRel $installedOrchestrator -IsDryRun $DryRun
+$installedClaudeCommands = Install-ClaudeCommands -InstalledNames ($installedPackages | ForEach-Object { $_.Name }) -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
 $installedAgents = Install-Agents -InstalledNames ($installedPackages | ForEach-Object { $_.Name }) -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
 
 # Step 7: Manifest
 if (-not $DryRun -and $installedPackages.Count -gt 0) {
     Write-Host ""
-    Save-Manifest -Target $TargetWorkspace -PlatformName $Platform -Installed $installedPackages -Tools $installedTools -Fabric $installedFabric -Agents $installedAgents -Orchestrator $installedOrchestrator -ClaudeEntrypoint $installedClaudeEntrypoint
+    Save-Manifest -Target $TargetWorkspace -PlatformName $Platform -Installed $installedPackages -Tools $installedTools -Fabric $installedFabric -Agents $installedAgents -Orchestrator $installedOrchestrator -ClaudeEntrypoint $installedClaudeEntrypoint -ClaudeCommands $installedClaudeCommands
 }
 
 # Step 7: Summary

@@ -1,11 +1,11 @@
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
-# Mapping: Architecture Package + UXP → technical-environment.md (ADLC CLUSTER)
+# Mapping: Architecture Package + UXP → architecture/technical-environment.md (ADLC CLUSTER)
 
 ## Purpose
 
 Assembles the **Technical Environment Document** that AI-DLC v1 expects as one of its two primary human-authored inputs. This document answers "What tools and constraints define our build environment?" — combining technology decisions from AI-ADLC with frontend patterns from AI-UXD.
 
-**Output:** `{workspace-root}/technical-environment.md`
+**Output:** `{workspace-root}/architecture/technical-environment.md`
 
 **Condition:** Generate IF `adlc-state.md` is present (ADLC peer input detected).
 
@@ -26,7 +26,7 @@ During THIS activity, ALSO adopt the mindset of a **Systems Engineer**. This doe
 - Frontend patterns from UXD are equally authoritative as backend patterns from ADLC
 
 ### Anti-Patterns for This Activity
-- Do NOT include product vision or user stories (that's `vision.md`)
+- Do NOT include product vision or user stories (that's `info/vision.md`)
 - Do NOT be vague about technology choices — specificity is the point
 - Do NOT omit the frontend section when UXD is present — it's a first-class part of the tech environment
 - Do NOT duplicate full token definitions (those live in `design-system.md`) — reference the format and system name
@@ -146,7 +146,7 @@ ownership: hybrid
 | Component Architecture | {from UXP — e.g., Atomic Design: atoms → molecules → organisms} |
 | State Management | {from AP Technology Stack} |
 | Styling Approach | {from AP + UXP — e.g., CSS Modules with design tokens / Tailwind with token overrides} |
-| Design System Reference | See `.kiro/steering/design-system.md` for full token inventory and component rules |
+| Design System Reference | See `rules/design-system.md` for full token inventory and component rules |
 
 ### IF UXD ABSENT:
 | Aspect | Specification |

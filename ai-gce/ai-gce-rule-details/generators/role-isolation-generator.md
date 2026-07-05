@@ -81,7 +81,7 @@ For each CODEOWNERS entry, generate ownership verification rules:
 | CODEOWNERS Entry | Generated Rule |
 |-----------------|---------------|
 | `src/Modules/Finance/** @finance-reviewer` | GOV-ROLE-017: Finance module changes require @finance-reviewer approval |
-| `.kiro/steering/architecture-*.md @architect` | GOV-ROLE-016: Architecture steering changes require @architect approval |
+| `rules/architecture-*.md @architect` | GOV-ROLE-016: Architecture steering changes require @architect approval |
 | `contracts/** @api-reviewer` | GOV-ROLE-019: Contract changes require @api-reviewer + consuming teams |
 
 ### From `TEAM_AGREEMENTS.md`

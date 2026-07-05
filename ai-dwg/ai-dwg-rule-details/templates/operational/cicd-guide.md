@@ -121,10 +121,10 @@ This template is populated by `mapping/infra-to-cicd.md`.
 - Quality Attributes (SLOs that become gate thresholds)
 
 **Cross-references after generation:**
-- Verify pipeline stages match GIT-CI-NN rules in `.kiro/steering/git-workflow.md`
-- Verify secrets section consistent with `.kiro/steering/security-rules.md`
-- Verify quality gate thresholds match `.kiro/steering/testing-strategy.md`
-- Reference from `PROJECT_INSTRUCTIONS.md` and `CONTRIBUTING.md`
+- Verify pipeline stages match GIT-CI-NN rules in `rules/git-workflow.md`
+- Verify secrets section consistent with `rules/security-rules.md`
+- Verify quality gate thresholds match `rules/testing-strategy.md`
+- Reference from `info/PROJECT_INSTRUCTIONS.md` and `info/CONTRIBUTING.md`
 
 **Generation rules:**
 - ALWAYS generate — every project needs CI/CD guidance regardless of complexity

@@ -125,9 +125,9 @@ Log ONE event per check performed.
 | Agent Guide | `.governance/AGENT-GUIDE.md` |
 | Agent Registry | `.governance/AGENT_REGISTRY.md` |
 | Shortcut | `PRC__` |
-| Git workflow rules | `.kiro/steering/git-workflow.md` |
-| Testing strategy | `.kiro/steering/testing-strategy.md` |
-| Naming conventions | `.kiro/steering/naming-conventions.md` |
+| Git workflow rules | `rules/git-workflow.md` |
+| Testing strategy | `rules/testing-strategy.md` |
+| Naming conventions | `rules/naming-conventions.md` |
 
 ---
 

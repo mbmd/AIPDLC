@@ -563,7 +563,7 @@ After generation (if UXD present), include accessibility baseline in the downstr
    Event: accessibility-baseline-available
    Source: AI-UXD Accessibility Baseline (relayed via DWG)
    WCAG Target: {level}
-   Steering file: .kiro/steering/design-system.md (DS-A11Y-* rules)
+   Steering file: rules/design-system.md (DS-A11Y-* rules)
    Action required: Derive accessibility-compliance hooks from DS-A11Y rules
 ```
 
