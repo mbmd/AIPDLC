@@ -2,8 +2,8 @@
 
 **AI-Driven Architecture Design Life Cycle**
 
-**Version:** 1.0.0
-**Author:** Maheri
+**Version:** 1.1.0
+**Author:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Date:** 2026-06-07
 
 ---

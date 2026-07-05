@@ -3,7 +3,7 @@
 **AI-Driven Flow Orchestrator**
 
 **Version:** 1.0.0
-**Author:** Maheri
+**Author:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Date:** 2026-06-13
 
 ---

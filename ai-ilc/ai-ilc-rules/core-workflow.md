@@ -144,7 +144,7 @@ When asking questions at any stage, use the structured `### Q-{nn}` block: Conte
 
 ## MANDATORY: Output Folder Structure
 
-**The output root is ALWAYS `pdlc-ws/ideas/` relative to the workspace root** — a deterministic, non-negotiable path. The user is **NOT** asked where to place output (aligns with `OUTPUT_AND_STATE_CONTRACT.md` §4 and the Always-On Rule). Two principles: **shared artifacts stay flat** (state marker, Idea Register, governance spine — cross-idea, never move, so successors detect them at the fixed root —), and **per-idea artifacts live in a per-idea subfolder** keyed by the idea's stable Register ID (never by status).
+**The output root is ALWAYS `pdlc-ws/ideas/` relative to the workspace root** — a deterministic, non-negotiable path. The user is **NOT** asked where to place output (aligns with `OUTPUT_AND_STATE_CONTRACT.md` §4 and the Always-On Rule). Two principles: **shared artifacts stay flat** (state marker, Idea Register, governance spine — cross-idea, never move, so successors detect them at the fixed root), and **per-idea artifacts live in a per-idea subfolder** keyed by the idea's stable Register ID (never by status).
 
 ```
 pdlc-ws/ideas/                              ← FIXED output root (workspace-root-relative)
@@ -162,7 +162,7 @@ pdlc-ws/ideas/                              ← FIXED output root (workspace-roo
     └── {NNN}-{idea-slug}_Feature_Brief.md            ← IF route = feature
 ```
 
-- `{NNN}` = zero-padded Register ID (`001`, …) — a **stable** domain key; the subfolder is created at Capture and **never renamed** for status changes (status lives in the Register + each artifact's `Status` field, not the folder name —).
+- `{NNN}` = zero-padded Register ID (`001`, …) — a **stable** domain key; the subfolder is created at Capture and **never renamed** for status changes (status lives in the Register + each artifact's `Status` field, not the folder name).
 - **Successor detection is preserved:** successors scan for `ilc-state.md` at `pdlc-ws/ideas/`; the state file's `Brief File` field carries the relative path to the brief, and the Idea Register stores each idea's `Folder` path — consumers resolve the brief from the marker, never guessing the folder.
 - **Brownfield exception:** if AI-ILC output already exists in a non-standard (older flat) location, detect it on first run, inform the user, continue in `pdlc-ws/ideas/`, and never force-move existing files.
 - **Provenance:** per `NAMING_AND_OWNERSHIP.md` §5.2, per-idea artifacts carry front-matter (`generatedBy: AI-ILC`, `ownership: user`) and a `Status` field — classification lives in metadata, not the path.
@@ -187,7 +187,7 @@ AI-ILC is the optional first entry point. It accepts raw ideas in any format —
 - **Guaranteed output** (relative to marker): `ilc-state.md` (✅ always), Idea Register entry (✅ always), Decision Log entry (✅ always), `{NNN}-{slug}/*_GoNoGo_Decision_Record.md` (✅ always). **Conditional briefs:** `*_Approved_Idea_Brief.md` when `Route = new-project`; `*_Change_Request_Brief.md` when `Route = change-request`; `*_Feature_Brief.md` when `Route = feature`. Exactly one brief is produced per approved idea, keyed off the route.
 - **State fields successors read:** `Status` (must be `Routed` for handoff — terminal success), `Route` (`new-project` / `change-request` / `feature` / `portfolio-inform`), `Brief File` (relative path to the brief in the per-idea subfolder), `Depth Level`, `Idea Name`, `Project ID` (if targeting an existing project — for AI-PPM correlation).
 
-### Successor detection (forward-compatible —)
+### Successor detection (forward-compatible)
 - **`new-project`:** AI-FLO dispatches to AI-PILC (if available) → fallback: AI-PILC directly reads `ilc-state.md` and consumes the Approved Idea Brief via Mode E intake.
 - **`change-request`:** AI-PILC consumes the Change Request Brief through its change management registers.
 - **`feature`:** AI-POLC consumes the Feature Brief (if available) → fallback: AI-DLC v1 backlog.
@@ -196,7 +196,7 @@ AI-ILC is the optional first entry point. It accepts raw ideas in any format —
 > **Forward-compatibility:** the `Route` field carries the *intent*; the consuming package resolves the *target* based on what's installed. Routing never breaks if AI-FLO/AI-POLC/AI-PPM are absent — it falls through to the direct successor.
 
 ### Contract Principles
-Detection by marker (not folder name) · fixed output root (`pdlc-ws/ideas/`) · graceful standalone (every successor works without AI-ILC) · **additive to AI-PILC** (the AI-ILC brief is an additional optional intake mode —, OR-input) · **forward-compatible routing** (routes may target packages that don't exist yet; fallback always succeeds —) · single-project context (v1.0) · **AI-ADLC is never a direct target** (architecture rework flows THROUGH AI-PILC change management) · **AI-POLC preferred for features** (AI-DLC v1 is the fallback —  OR-input).
+Detection by marker (not folder name) · fixed output root (`pdlc-ws/ideas/`) · graceful standalone (every successor works without AI-ILC) · **additive to AI-PILC** (the AI-ILC brief is an additional optional intake mode, OR-input) · **forward-compatible routing** (routes may target packages that don't exist yet; fallback always succeeds) · single-project context (v1.0) · **AI-ADLC is never a direct target** (architecture rework flows THROUGH AI-PILC change management) · **AI-POLC preferred for features** (AI-DLC v1 is the fallback OR-input).
 
 ### Portfolio Connector & Downstream Signal
 On `new-project`, AI-ILC may also set `portfolio-inform` so AI-PPM (if present) registers the project; absent AI-PPM, it is a no-op. Multi-project routing is a v1.1+ capability (will consume AI-FLO). **Downstream signal:** none — the brief is a one-time handoff. If the user modifies the idea after the successor starts, they re-initiate from the updated brief.

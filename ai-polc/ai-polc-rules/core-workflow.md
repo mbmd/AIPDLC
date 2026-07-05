@@ -147,7 +147,7 @@ The workflow maintains state via `{outputRoot}/polc-state.md` where `{outputRoot
 At workflow start:
 1. Scan for upstream markers (multi-project layout `pdlc-ws/projects/*/` first, then legacy) and load `polc-state.md` if present.
 2. If `polc-state.md` exists → resume from last completed stage; run the **session-start routine** (scan for new `ilc-state.md` Route=feature, new `PILC-C` spine entries, newer `uxd-state.md`, changed `aidlc-docs/`) and present detected changes.
-3. If no state exists → fresh start at Stage 1; **adopt** the predecessor's Project ID (never re-mint —), or **mint** `PRJ-{ABBREV}-{YYYY}-{NNN}` when POLC originates.
+3. If no state exists → fresh start at Stage 1; **adopt** the predecessor's Project ID (never re-mint), or **mint** `PRJ-{ABBREV}-{YYYY}-{NNN}` when POLC originates.
 
 State tracks: package/version/status, `projectId` (immutable correlation key), `projectHandle`/`projectRoot`/`outputRoot`, `derivedFrom` (idea/feature lineage), current phase/stage, depth, mode (chain/standalone), Tier 2 + active extensions, context factors, backlog summary, upstream-read timestamps, DoR/DoD versions. **CRITICAL: update the state file immediately after EVERY stage completion.** Full spec: `common/session-continuity.md`; field template: `templates/polc-state.md`.
 
@@ -175,7 +175,7 @@ All output nests under the fixed project folder `pdlc-ws/projects/PRJ-{ABBREV}-{
 
 AI-POLC is contract-aware — first package in the Project-layer sequential chain; its PBP feeds AI-UXD and AI-DWG, and it exchanges backlog/acceptance with AI-DLC v1 throughout delivery.
 
-### I Read (Detection by Marker —)
+### I Read (Detection by Marker)
 
 | Source | Marker | What I Extract |
 |--------|--------|---------------|

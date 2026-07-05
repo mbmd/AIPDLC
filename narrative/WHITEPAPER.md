@@ -1,10 +1,10 @@
-# AI-* Family — Whitepaper
+# AIFLC · The AI-* PDLC Family — Whitepaper
 
 **From Raw Requirement to Governed Code: An AI-Driven Software Delivery Chain**
 
-**Version:** 1.0.0
-**Author:** Maheri
-**Date:** 2026-06-07
+**Version:** 0.1.0-beta.1
+**Author:** [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)
+**Date:** 2026-07-06
 
 ---
 
@@ -26,7 +26,9 @@ Enterprise software projects fail the same way, over and over:
 
 ## The Solution
 
-The AI-* Family is a chain of four packages that solve these problems sequentially. Each package trains an AI assistant to perform one discipline of software delivery — with human oversight at every decision point.
+AIFLC (AI Full Life Cycle) delivers the **AI-* PDLC Family** — a chain of injectable workflow packages that solve these problems in sequence. Each package trains an AI assistant to perform one discipline of software delivery — with human oversight at every decision point.
+
+The family spans **ten packages across two layers** — a Portfolio layer that reasons across many projects and a Project layer that executes one — joined by a router on the edge. Two of the ten are continuous engines rather than linear stages: **AI-FLO** (the router/orchestrator) and the quality companions **AI-GCE** and **AI-TGE**. Alongside the chain runs **AI-DFE**, a family-scoped data fabric that turns every package's output into a queryable data surface for dashboards and portfolio roll-ups.
 
 ```
 ╔════════════════ PORTFOLIO LAYER · scope = MANY projects ════════════════╗
@@ -71,6 +73,8 @@ The AI-* Family is a chain of four packages that solve these problems sequential
 > ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
 > ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+
+> **AI-DFE** is a family-scoped **companion**, not a chain row. It gathers each package's markdown output, shapes it into structured JSON, and serves it from one read-point (`REGISTRY.json`) so dashboards and portfolio roll-ups get clean machine-readable data without knowing where the raw files live. Like AI-FLO, it runs alongside the whole family rather than as a linear step.
 
 ---
 
@@ -146,7 +150,7 @@ Traditional approach:
 - 1-2 weeks: Workspace setup, coding standards, CI/CD config
 - Ongoing: Manual compliance reviews, code review enforcement, wiki maintenance
 
-With the AI-* Family:
+With the AI-* PDLC Family:
 - 1-3 days: AI-PILC produces a complete Project Initiation Package
 - 2-5 days: AI-ADLC produces a comprehensive Architecture Package
 - Minutes: AI-DWG generates the entire workspace
@@ -162,10 +166,16 @@ Each package is available independently. Pick the one that matches your starting
 
 | Starting Point | Package to Use |
 |----------------|----------------|
+| "I have an idea to evaluate" | [AI-ILC](../ai-ilc/) |
 | "I have a vague requirement" | [AI-PILC](../ai-pilc/) |
+| "I'm managing multiple projects" | [AI-PPM](../ai-ppm/) |
+| "I need a governed product backlog" | [AI-POLC](../ai-polc/) |
+| "I need UX design that reaches the code" | [AI-UXD](../ai-uxd/) |
 | "I have requirements, need architecture" | [AI-ADLC](../ai-adlc/) |
 | "I have architecture, need a workspace" | [AI-DWG](../ai-dwg/) |
 | "I have a workspace, need compliance" | [AI-GCE](../ai-gce/) |
+| "I need test governance and coverage accountability" | [AI-TGE](../ai-tge/) |
+| "I want my family output as queryable data" | [AI-DFE](../ai-dfe/) |
 
 Each package includes platform-specific installation instructions for Kiro, Amazon Q Developer, Cursor, Cline, Claude Code, and GitHub Copilot.
 
@@ -173,8 +183,15 @@ Each package includes platform-specific installation instructions for Kiro, Amaz
 
 ## License
 
-Apache 2.0 with Attribution Addendum. See [LICENSING_FAQ](../LICENSING_FAQ.md) for full details.
+**Apache License 2.0 with Attribution Addendum.** Free to use for personal, commercial, educational, and organizational purposes. Modify and distribute freely. One requirement:
+
+> Any distributed product substantially based on this work must include:
+> *"Built on AIFLC by Mohammad Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)"*
+
+See [LICENSE](../LICENSE), [NOTICE](../NOTICE), and [LICENSING_FAQ](../LICENSING_FAQ.md) for full details.
+
+**Copyright:** © 2026 Mohammad Maheri
 
 ---
 
-*Created by Maheri — because enterprise software deserves better than chaos.*
+*Created by Mohammad Maheri — because enterprise software deserves better than chaos.*

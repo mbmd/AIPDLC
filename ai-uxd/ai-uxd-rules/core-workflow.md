@@ -145,7 +145,7 @@ At workflow start: (1) scan `pdlc-ws/projects/*/ux/uxd-state.md` + legacy locati
 
 State tracks: project identity (`projectId` — immutable family-wide correlation key, adopted from PIP/AP, never re-minted), `projectHandle`/`projectRoot`/`outputRoot`, input Mode (A/B/C/D), Depth, current phase/stage, completed stages + timestamps, conditional-feature triggers (multi-brand, i18n, service blueprints, empathy maps), and downstream signals (AI-POLC / AI-DWG / AI-GCE). **CRITICAL: update the state file immediately after EVERY stage transition.** Full spec + YAML template + resume logic: `common/session-continuity.md` and `templates/uxd-state.md`.
 
-**Management Framework (shared spine —):** AI-UXD appends to `{project_root}/management_framework/` with the `UXD-` prefix (`UXD-D-NNN` decisions, `UXD-C-NNN` changes, `UXD-I-NNN` issues, `UXD-L-NNN` lessons). Detect the spine marker → append if found, create if absent (template: `templates/management-framework.md`).
+**Management Framework (shared spine):** AI-UXD appends to `{project_root}/management_framework/` with the `UXD-` prefix (`UXD-D-NNN` decisions, `UXD-C-NNN` changes, `UXD-I-NNN` issues, `UXD-L-NNN` lessons). Detect the spine marker → append if found, create if absent (template: `templates/management-framework.md`).
 
 ---
 
@@ -165,7 +165,7 @@ All output nests under the fixed project folder `pdlc-ws/projects/PRJ-{ABBREV}-{
 
 AI-UXD is contract-aware — a Project-layer lifecycle that reads PIP + PBP (+ optional AP) and produces the UXP.
 
-### I Read (Detection by Marker —)
+### I Read (Detection by Marker)
 
 > Scan the default multi-project layout (`pdlc-ws/projects/*/...`) first, then legacy locations. With multiple projects, use the active-project flow (`PROJECTS.md` ★). Adopt the project's `projectId` — never re-mint.
 

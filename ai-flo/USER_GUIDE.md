@@ -258,7 +258,7 @@ AI-FLO is the **Router** — it answers *"Where should this work go next, and is
 
 ## Platform Support
 
-AI-FLO works on: Kiro, Cursor, Windsurf, Claude Code, Cline, Roo Code, and any AI-assisted IDE that supports steering/rules files.
+AI-FLO works on: Kiro, Amazon Q Developer, Cursor, Cline, Claude Code, and GitHub Copilot — plus any AI-assisted IDE that supports steering/rules files via the Universal Setup.
 
 See `setup/INSTALL.md` for detailed platform instructions.
 

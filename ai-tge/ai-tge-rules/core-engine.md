@@ -152,7 +152,7 @@ AI-TGE adapts to what exists. It does NOT require the full chain to have run. Fo
 | **Brownfield** | Existing project with existing tests (no AP) | Assessment mode — map existing tests, identify gaps |
 | **Observation Only** | Active AI-DLC v1 with aidlc-docs, no prior TGE run | Jump to observation — register what should be tested as you go |
 
-**Graceful degradation (— OR-input):** AI-TGE never blocks on a missing predecessor. Each input is additive enrichment — its absence reduces scope but never halts the engine. Detection order, depth calibration (5-factor scoring → Minimal/Standard/Comprehensive), the two-source derivation model (architecture-derived + universal baseline), and the ISTQB taxonomy are specified in `common/process-overview.md`, `common/two-source-model.md`, and `common/test-taxonomy.md` — load them at engine start.
+**Graceful degradation (OR-input):** AI-TGE never blocks on a missing predecessor. Each input is additive enrichment — its absence reduces scope but never halts the engine. Detection order, depth calibration (5-factor scoring → Minimal/Standard/Comprehensive), the two-source derivation model (architecture-derived + universal baseline), and the ISTQB taxonomy are specified in `common/process-overview.md`, `common/two-source-model.md`, and `common/test-taxonomy.md` — load them at engine start.
 
 ---
 

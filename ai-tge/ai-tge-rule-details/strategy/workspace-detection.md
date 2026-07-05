@@ -132,7 +132,7 @@ Based on detected inputs, select the operating mode:
 | aidlc-docs only (no AP, no prior TGE) | **Observation Only** | Jump to observation; register from stories/baseline |
 | Nothing detected | **Ask user** | Cannot auto-detect; request user guidance |
 
-**Graceful degradation (— OR-input):** Each input is additive enrichment. AP alone produces architecture-derived strategy. Existing tests alone produce brownfield assessment. Running AI-DLC v1 alone produces observation-only tracking. The absence of any single input reduces scope but never halts the engine.
+**Graceful degradation (OR-input):** Each input is additive enrichment. AP alone produces architecture-derived strategy. Existing tests alone produce brownfield assessment. Running AI-DLC v1 alone produces observation-only tracking. The absence of any single input reduces scope but never halts the engine.
 
 ---
 

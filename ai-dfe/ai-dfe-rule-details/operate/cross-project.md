@@ -24,5 +24,5 @@ Portfolio-level `{consumer-output}.json` (e.g. `family-status.json`) assembled a
 
 ## Notes
 
-- Keep each project's per-package data local to that project (— never merge state across boundaries). Aggregation reads across projects; it does not rewrite per-project files.
+- Keep each project's per-package data local to that project (never merge state across boundaries). Aggregation reads across projects; it does not rewrite per-project files.
 - `projectId` is the correlation key carried by each package's marker — use it to join across packages within a project.

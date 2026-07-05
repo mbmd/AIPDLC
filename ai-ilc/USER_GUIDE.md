@@ -221,7 +221,7 @@ AI-ILC is the **idea funnel** — it answers *"Should we even start this?"*
 
 ## Platform Support
 
-AI-ILC works on: Kiro, Cursor, Windsurf, Claude Code, Cline, Roo Code, and any AI-assisted IDE that supports steering/rules files.
+AI-ILC works on: Kiro, Amazon Q Developer, Cursor, Cline, Claude Code, and GitHub Copilot — plus any AI-assisted IDE that supports steering/rules files via the Universal Setup.
 
 See `setup/INSTALL.md` for detailed platform instructions.
 

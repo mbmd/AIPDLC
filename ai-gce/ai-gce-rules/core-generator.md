@@ -156,7 +156,7 @@ This role applies to ALL work done while this generator is active. Do not revert
 
 AI-GCE has **zero manual configuration** — it reads the workspace and derives everything. It generates rules from **two sources that combine**: (1) **steering files** (project-specific, read from `rules/` + operational docs) and (2) **built-in baseline** (10 universal AI-DLC v1 methodology rules, always applied). Resolution: steering enriches baseline → steering can override baseline → silent steering means baseline-only → no steering at all still yields the 10-rule floor.
 
-**Graceful degradation (— OR-input):** AI-GCE works on any workspace with `rules/` — not only AI-DWG-generated ones. If steering is absent or sparse, the built-in baseline provides universal governance; AI-GCE never blocks on missing steering.
+**Graceful degradation (OR-input):** AI-GCE works on any workspace with `rules/` — not only AI-DWG-generated ones. If steering is absent or sparse, the built-in baseline provides universal governance; AI-GCE never blocks on missing steering.
 
 **Derivation depth** (Minimal / Standard / Comprehensive) is detected automatically from steering-file count, module count, and conditional signals.
 
@@ -240,7 +240,7 @@ AI-GCE runs as a **continuous compliance companion alongside AI-DLC v1** (the ex
 | `.governance/agents/drift-detect-agent.md` | `DFT__` drift-detection agent (GCE-AG-10) | baseline present |
 | `.governance/hooks/drift-session-end.json` | **Session-end drift check** — `agentStop` (Kiro) / `Stop` (Claude) invokes the `DFT__` agent at session close; **silent when clean**; on advisory platforms it degrades to manual `DFT__` / CI (rendered per `governance-rendering.md`) | baseline present |
 
-> The session-end drift hook is the automation behind the drift agent's "session-end" trigger — it makes drift a routine session-close check, not only a manual `DFT__`. It invokes the existing agent (no new agent —) and produces zero output when there is no new/open drift (Rule 4/silent-when-compliant). This is the **destination** session-end, distinct from the internal build `SEG__`.
+> The session-end drift hook is the automation behind the drift agent's "session-end" trigger — it makes drift a routine session-close check, not only a manual `DFT__`. It invokes the existing agent (no new agent) and produces zero output when there is no new/open drift (Rule 4/silent-when-compliant). This is the **destination** session-end, distinct from the internal build `SEG__`.
 
 ### Contract Principles
 
@@ -254,7 +254,7 @@ AI-GCE runs as a **continuous compliance companion alongside AI-DLC v1** (the ex
 | **Technology-agnostic rules, technology-specific hooks** | Rules are abstract; hooks use actual file globs for THIS stack |
 
 ### Drift Detection Scope — GCE Does NOT Watch Itself
-AI-GCE detects drift **only** against the DWG **baseline** (governed elements sourced from AP/PBP/UXP — architecture/data/infrastructure, ux, product). GCE's OWN governance layer (rules/hooks/agents) is **not** a baseline element — DWG never generates it; GCE *derives* it from the workspace. Therefore a governance rule going stale or hand-edited is **not drift** — it is handled by GCE **re-derivation** (`re-derivation/selective-regeneration.md`, Mode 2, preserving `<!-- custom -->`), never the drift loop. There is **no `governance` drift domain and no self-heal** (a package's own derived output is not drift —).
+AI-GCE detects drift **only** against the DWG **baseline** (governed elements sourced from AP/PBP/UXP — architecture/data/infrastructure, ux, product). GCE's OWN governance layer (rules/hooks/agents) is **not** a baseline element — DWG never generates it; GCE *derives* it from the workspace. Therefore a governance rule going stale or hand-edited is **not drift** — it is handled by GCE **re-derivation** (`re-derivation/selective-regeneration.md`, Mode 2, preserving `<!-- custom -->`), never the drift loop. There is **no `governance` drift domain and no self-heal** (a package's own derived output is not drift).
 
 ---
 

@@ -231,7 +231,7 @@ AI-ADLC is the **Architect's companion** — it answers *"How should this system
 
 ## Platform Support
 
-AI-ADLC works on: Kiro, Cursor, Windsurf, Claude Code, Cline, Roo Code, and any AI-assisted IDE that supports steering/rules files.
+AI-ADLC works on: Kiro, Amazon Q Developer, Cursor, Cline, Claude Code, and GitHub Copilot — plus any AI-assisted IDE that supports steering/rules files via the Universal Setup.
 
 See `setup/INSTALL.md` for detailed platform instructions.
 

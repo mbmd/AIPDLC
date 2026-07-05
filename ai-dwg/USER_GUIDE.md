@@ -206,7 +206,7 @@ AI-DWG is the **Workspace Builder** — it answers *"Given this architecture, wh
 
 ## Platform Support
 
-AI-DWG works on: Kiro, Cursor, Windsurf, Claude Code, Cline, Roo Code, and any AI-assisted IDE that supports steering/rules files.
+AI-DWG works on: Kiro, Amazon Q Developer, Cursor, Cline, Claude Code, and GitHub Copilot — plus any AI-assisted IDE that supports steering/rules files via the Universal Setup.
 
 See `setup/INSTALL.md` for detailed platform instructions.
 
