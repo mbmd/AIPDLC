@@ -7,36 +7,44 @@
 > **Amendment (2026-06-22 — family-workspace prefix + install split):** PART 2 runtime trees now nest all output under the family workspace `pdlc-ws/` (`pdlc-ws/projects/…`, `pdlc-ws/ideas/`, `pdlc-ws/portfolio/`, `pdlc-ws/data/`). See the install-lock design + `OUTPUT_AND_STATE_CONTRACT.md`.
 >
 > **Amendment (OI-158 — unified core placement):** cores + rule-details now install into ONE uniform home `.aiflc/{family}/` on every platform (superseding the earlier Kiro `.kiro/steering/{family}/` + `.kiro/{family}/` split); only the always-loaded orchestrator sits in each platform's native slot. See the "Installed Location" subsection in PART 1.
+>
+> **Amendment (OI-163 — single-copy fabric source):** the fabric engines **AI-FLO** and **AI-DFE** are no longer in-family dev-source folders. They exist as exactly ONE canonical engine copy in the build tree and are **cloned into the family at assemble** (stamped with the free-tier license set — INV-L4-007). PDLC therefore carries **no `ai-flo/` or `ai-dfe/` dev-source folder**; PART 1 now depicts them as cloned-at-assemble fabric, not built-here source. FLO/DFE remain valid family members — their chain contracts (PART 3) and runtime artifacts (PART 2) are unchanged.
 
 ---
 
 ## The AI-* Family
 
+```mermaid
+flowchart LR
+    subgraph PORTFOLIO["PORTFOLIO LAYER · scope = MANY projects"]
+        ILC["AI-ILC<br/>Decide it<br/>(optional)"]
+        PILC["AI-PILC<br/>Initiate it"]
+        PPM["AI-PPM<br/>Govern it<br/>(portfolio of N projects)"]
+        ILC -.-> PILC --> PPM
+    end
+
+    FLO["AI-FLO<br/>Route it — package-to-package<br/>flow on the edge between layers"]
+
+    subgraph PROJECT["PROJECT LAYER · scope = ONE project"]
+        POLC["AI-POLC<br/>Own it"]
+        UXD["AI-UXD<br/>Design UX"]
+        ADLC["AI-ADLC<br/>Design it"]
+        DWG["AI-DWG<br/>Prepare it"]
+        DLC["AI-DLC v1<br/>(build) ¹"]
+        GCE["AI-GCE<br/>Guard it"]
+        TGE["AI-TGE<br/>Test it"]
+
+        POLC --> UXD --> ADLC --> DWG --> DLC
+        POLC <-.->|"back-and-forth"| DLC
+        DLC -.->|"feedback"| UXD
+        DLC -.->|"feedback"| POLC
+        GCE ---|"alongside AI-DLC v1"| DLC
+        TGE ---|"alongside AI-DLC v1"| DLC
+    end
+
+    PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-╔════════════════ PORTFOLIO LAYER · scope = MANY projects ════════════════╗
-
-   (optional)
-    AI-ILC  ⇢  AI-PILC  ⇢  AI-PPM
-    Decide it   Initiate it   Govern it (portfolio of N projects)
-
-╚═════════════════════════════════╤═══════════════════════════════════════╝
-                                   │
-                                AI-FLO   Route it — package-to-package
-                                   │     flow on the edge between layers
-╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
-
-    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
-    Own it      Design UX   Design it   Prepare it       ▲
-                                                         │
-                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
-                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
-
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
-    Guard it   Test it
-
-╚═════════════════════════════════════════════════════════════════════════╝
   ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
-```
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -83,7 +91,7 @@ All file naming and provenance across the family follows one ratified convention
 
 > **These trees are compact by design** — they show each package's folder skeleton and key files, not every file. Each package's own `CONCEPTUAL_MAP.md` (navigation) and `PLAN.md` (rationale) hold the exhaustive, authoritative file list.
 
-**Shared shell (every package).** All 10 packages ship the same outer shell, so it is shown once here and omitted from the per-package trees below:
+**Shared shell (every package).** All **9 domain packages** built in this family's dev tree ship the same outer shell, so it is shown once here and omitted from the per-package trees below. *(The two fabric engines — AI-FLO + AI-DFE — are cloned at assemble, not built here; see the "Fabric Engines" note below.)*
 
 ```
 ai-{pkg}/
@@ -111,6 +119,7 @@ The family root (``) carries family-wide files alongside the package folders:
 ├── FAMILY_INTERFACE.md         ← [Communication Fabric] public seam surface — Tier 1 seam packages + Tier 2 roster
 ├── FAMILY_BINDINGS.md          ← [Communication Fabric] generated topology — internal + external edges (do-not-edit)
 ├── TRIGGER_KEYS_REFERENCE.md                       ← destination-workspace trigger keys
+├── MIGRATION_CATALOGUE.md                          ← output-feature migrations read by the UPG__ family upgrade agent
 └── INSTALL_GUIDE_*.md                              ← per-platform install guides
 ```
 
@@ -124,7 +133,7 @@ The family root (``) carries family-wide files alongside the package folders:
 ├── ai-ilc/                                         ← AI-Driven Idea Life Cycle (optional pre-stage)
 │   ├── ai-ilc-rules/core-workflow.md               ← 6 stages, adaptive depth, intent-based routing (L47)
 │   └── ai-ilc-rule-details/
-│       ├── common/                                 ← process-overview, session-continuity, question-format, content-validation
+│       ├── common/                                 ← process-overview, session-continuity, question-format, content-validation, reference-linking
 │       ├── idea-lifecycle/                         ← capture · shape · evaluate · scope · approve · route-handoff
 │       ├── connectors/                             ← portfolio-connector (AI-PPM funnel)
 │       └── templates/                              ← approved-idea/feature/change-request briefs, idea-entry/register,
@@ -133,7 +142,7 @@ The family root (``) carries family-wide files alongside the package folders:
 ├── ai-pilc/                                        ← AI-Driven Project Initiation Life Cycle
 │   ├── ai-pilc-rules/core-workflow.md              ← 6 phases, mints projectId + derivedFrom
 │   └── ai-pilc-rule-details/
-│       ├── common/                                 ← process-overview, session-continuity, question-format, content-validation, welcome
+│       ├── common/                                 ← process-overview, session-continuity, question-format, content-validation, reference-linking, welcome
 │       ├── inception/ assessment/ justification/   ← Phases 1-3 (workspace-detection → business-case)
 │       ├── authorization/ planning/ mobilization/  ← Phases 4-6 (charter → package-assembly)
 │       └── templates/                              ← intake, feasibility, business-case, charter, registers, RACI,
@@ -150,19 +159,14 @@ The family root (``) carries family-wide files alongside the package folders:
                                                         governance-decision, dispatch-authorization, ppm-state + agent (PGA__)
 ```
 
-### Edge (Router)
+### Fabric Engines (AI-FLO + AI-DFE) — cloned at assemble, not in-family dev source
 
-```
-└── ai-flo/                                         ← AI-Driven Flow / Router (orchestration engine)
-    ├── ai-flo-rules/core-engine.md                 ← 3 phases / 10 stages, 3 topology modes, flag-and-hold conflicts
-    └── ai-flo-rule-details/
-        ├── common/                                 ← process-overview, session-continuity, routing-conventions, question-format, welcome
-        ├── configure/                              ← Phase 1: workspace-detection · routing-table-build · flow-state-init
-        ├── route/                                  ← Phase 2: dispatch-down · fan-out-fan-in · handoff-execution · exceptions-overrides
-        ├── monitor/                                ← Phase 3: position-tracking · roll-up-relay · health-conflicts-alerts
-        └── templates/                              ← flo-state, routing-table, routing-log, dispatch-record, roll-up-report,
-            └── agents/                                 route-map, readiness-check, conflict-alert + flow-integrity-agent (FIA__)
-```
+Per **OI-163 (single-copy fabric source)**, the two fabric engines are **not** built or published as in-family dev-source folders under this family. They exist as exactly ONE canonical engine copy in the build tree and are **cloned into the family at assemble** during `DEV__ promote` (stamped with the free-tier license set — INV-L4-007). PDLC therefore carries **no `ai-flo/` or `ai-dfe/` source folder**; the family's per-package `data-schema/` folders (shared shell above) remain the AI-DFE data interface.
+
+| Fabric engine | Role (cloned form) | Presence in this family |
+|---------------|--------------------|-------------------------|
+| **AI-FLO** | Router / orchestration engine — `ai-flo-rules/core-engine.md` (3 phases / 10 stages, 3 topology modes) + `ai-flo-rule-details/` (configure · route · monitor · templates) + flow-integrity-agent (FIA__) | ⏳ Cloned at assemble |
+| **AI-DFE** | Data fabric engine — `ai-dfe-rules/core-engine.md` + `ai-dfe-rule-details/` | ⏳ Cloned at assemble |
 
 ### Project Layer
 
@@ -189,7 +193,7 @@ The family root (``) carries family-wide files alongside the package folders:
 ├── ai-polc/                                        ← AI-Driven Product Ownership Life Cycle
 │   ├── ai-polc-rules/core-workflow.md              ← 6 phases / 16 stages, Tier 2 story elaboration (user-activated)
 │   └── ai-polc-rule-details/
-│       ├── common/                                 ← process-overview, session-continuity, content-validation
+│       ├── common/                                 ← process-overview, session-continuity, content-validation, reference-linking
 │       ├── foundation/ strategy/ governance/       ← vision/charter → discovery/epics/prioritization/release → DoR-DoD/risk/traceability
 │       ├── stakeholders/ assembly/ operations/     ← stakeholder mgmt/docs → PBP-assembly → backlog-ops/acceptance-feedback/value-metrics
 │       ├── tier2/                                  ← story-elaboration (INVEST, Given/When/Then — off by default in chain mode)
@@ -208,7 +212,7 @@ The family root (``) carries family-wide files alongside the package folders:
 │                                                      planning/, config/, docker-compose/, examples/
 │
 ├── ai-gce/                                         ← AI-Driven Governance & Compliance Engine (adaptive, companion)
-│   ├── ai-gce-rules/core-generator.md              ← 4 modes, tier model, two-source derivation
+│   ├── ai-gce-rules/core-engine.md              ← 4 modes, tier model, two-source derivation
 │   └── ai-gce-rule-details/
 │       ├── common/                                 ← + scoring-model, knowledge-map-guide
 │       ├── generators/                             ← ~23 derivation generators (architectural + non-architectural + hooks-from-steering)
@@ -240,7 +244,7 @@ The package **source** above (`ai-{pkg}-rules/` + `ai-{pkg}-rule-details/`) inst
 │       ├── ai-adlc-rules/core-workflow.md
 │       ├── ai-adlc-rule-details/
 │       ├── … one {pkg}-rules/ + {pkg}-rule-details/ per installed package
-│       └── FAMILY_BINDINGS.md · GATE_PROTOCOL.md · FAMILY_INTERFACE.md · TRIGGER_KEYS_REFERENCE.md  (fabric)
+│       └── FAMILY_BINDINGS.md · GATE_PROTOCOL.md · FAMILY_INTERFACE.md · TRIGGER_KEYS_REFERENCE.md · MIGRATION_CATALOGUE.md  (fabric + upgrade catalogue)
 │
 └──.kiro/steering/session-orchestrator.md      ← the ONLY auto-loaded file (Kiro slot shown)
                                                    routes to.aiflc/pdlc/…/core-*.md on demand

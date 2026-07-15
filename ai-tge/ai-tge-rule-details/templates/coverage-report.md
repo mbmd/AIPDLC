@@ -34,6 +34,20 @@ ownership: generated
 
 ---
 
+## Coverage Traceability (visual)
+
+> The coverage chain at a glance — requirement → test → result. The coverage tables (Views 1–6) and the linked register stay authoritative (DFE-extracted for the quality dashboard); this diagram is the human view of how each architectural commitment or baseline rule traces through a test to a verified result.
+
+```mermaid
+flowchart LR
+    RQ["Requirement<br/>{commitment / baseline rule}"] --> T["Test<br/>{register entry}"]
+    T --> R1["✅ Exists / Pass"]
+    T --> R2["❌ Missing (gap)"]
+    T --> R3["⚠️ Failing"]
+```
+
+---
+
 ## View 1: Coverage by Commitment Category
 
 | Category | Active | Covered | Missing | Failing | Coverage % | Target | Status |

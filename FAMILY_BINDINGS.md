@@ -40,6 +40,7 @@ AI-DFE ◄── (reads all markers + each package's SOURCE_MAP — data-fabric 
 
 ### Internal Edge Table
 
+<!-- BEGIN-GENERATED:internal-edges -->
 | # | From | Emits Type | To | Consumes Type | Via Marker |
 |---|------|-----------|-----|---------------|------------|
 | I-01 | AI-ILC | `idea-decision@1` | AI-PILC | `idea-decision@^1` | `ilc-state.md` |
@@ -56,6 +57,7 @@ AI-DFE ◄── (reads all markers + each package's SOURCE_MAP — data-fabric 
 | I-12 | AI-POLC | `product-backlog@1` | AI-DWG | `product-backlog@^1` | `polc-state.md` |
 | I-13 | AI-DWG | `development-workspace@1` | AI-GCE | `development-workspace@^1` | `dwg-state.md` |
 | I-14 | AI-DWG | `development-workspace@1` | AI-TGE | `development-workspace@^1` | `dwg-state.md` |
+<!-- END-GENERATED:internal-edges -->
 
 > **AI-FLO is a wildcard observer, not a capability edge.** It consumes `"*"` (all types) as routing triggers — it reads every marker to track positions but forms no capability-typed edge. It is excluded from the edge table by design.
 
@@ -84,12 +86,19 @@ AI-DFE ◄── (reads all markers + each package's SOURCE_MAP — data-fabric 
 |------|------|------|------|------------|-----------------|:--------:|
 | FLOW-001 | BVLC · AI-BPLC | PDLC · AI-PILC | `validated-business-case@1` | `bplc-state.md` | `(BVLC) ai-bplc § Gate Contract` | ✅ |
 | FLOW-002 | EAFLC · AI-TRM | PDLC · AI-ILC | `capability-input@1` | `trm-state.md` | `(EAFLC) ai-trm § Gate Contract` | ✅ |
+| FLOW-008 | SXLC · AI-OKR | PDLC · AI-POLC | `enterprise-okr@1` | `okr-state.md` | `(SXLC) ai-okr § Gate Contract` | ✅ |
+| FLOW-009 | SXLC · AI-SIP | PDLC · AI-PPM | `initiative-portfolio@1` | `sip-state.md` | `(SXLC) ai-sip § Gate Contract` | ✅ |
+
+> FLOW-008/009 added 2026-07-13 — both families are built; SXLC's `FAMILY_BINDINGS.md` (E2/E3) asserted these active but PDLC's side was undeclared (gaps G1/G2). Now symmetric.
 
 ### Outbound — Neighbors PDLC Feeds
 
 | Flow | From | To | Type | Via Marker | Gate Controller | Optional |
 |------|------|----|------|------------|-----------------|:--------:|
 | FLOW-003 | PDLC · AI-DWG | RUNFLC · AI-SLO | `development-workspace@1` | `dwg-state.md` | `ai-dwg § Gate Contract` | ✅ |
+| FLOW-010 | PDLC · AI-PPM | SXLC · AI-SPR | `delivery-feedback@1` | `ppm-state.md` | `ai-ppm § Gate Contract` | ✅ |
+
+> FLOW-010 added 2026-07-13 — closes gap G3 (SXLC AI-SPR declared this inbound loop-back; PDLC had no matching outbound declaration).
 
 ---
 
@@ -115,14 +124,17 @@ AI-DFE ◄── (reads all markers + each package's SOURCE_MAP — data-fabric 
 
 ## Generation Metadata
 
+<!-- BEGIN-GENERATED:metadata -->
 | Check | Result |
 |-------|--------|
-| Internal edges derived | 14 (FLO + DFE excluded — wildcard observers) |
-| External inbound flows | 2 (FLOW-001, FLOW-002) |
-| External outbound flows | 1 (FLOW-003) |
+| Internal edges derived | 14 (wildcard observers excluded) |
+| External inbound flows | 2 |
+| External outbound flows | 1 |
 | Cycles detected | 0 |
-| Compatibility issues | 0 (per-type scoping — GATE_PROTOCOL §4.2) |
-| Fan-in gates | 3 (DWG, POLC, PPM) |
+| Generated | 2026-06-27 by generate-family-bindings.ps1 |
+<!-- END-GENERATED:metadata -->
+
+> **Also:** Compatibility issues 0 (per-type scoping — GATE_PROTOCOL §4.2) · Fan-in gates 3 (DWG, POLC, PPM). *(curated — outside the generated region)*
 
 ---
 

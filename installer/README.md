@@ -12,7 +12,7 @@ Interactive installer that installs one or more AI-* packages into your target w
 4. Creates the **family workspace** (`{family}-ws/`) with its locked Level 1 skeleton
 5. Bootstraps the data layer and project registry
 6. Installs **family tools** (visual tools / extensions) into `{family}-ws/tools/`
-7. Deploys the **fabric trio** (`FAMILY_BINDINGS.md`, `GATE_PROTOCOL.md`, `FAMILY_INTERFACE.md`) into the family rule-details root — AI-FLO and AI-DFE read these at runtime to build the routing graph
+7. Deploys the **fabric trio** (`FAMILY_BINDINGS.md`, `GATE_PROTOCOL.md`, `FAMILY_INTERFACE.md`) into the family home (`.aiflc/{family}/`) — AI-FLO and AI-DFE read these at runtime to build the routing graph
 8. Installs **package agents** into `.kiro/agents/` (Kiro) — e.g. FLO's `FHC__` health check and `FIA__` integrity agent
 9. Writes an install manifest inside the family workspace
 
@@ -29,7 +29,7 @@ The **family** is auto-detected from the installer's parent folder name (e.g. `p
 > orchestration workspace (NOT inside an AI-DWG-generated dev workspace). They read the fabric
 > trio at runtime to build the routing graph; without it AI-FLO returns **NOT READY**
 > ("no bindings = no routing"). The installer copies the trio from the family root into the
-> family rule-details root (`.kiro/{family}/` on Kiro). Agents are auto-installed on Kiro;
+> family home (`.aiflc/{family}/`). Agents are auto-installed on Kiro;
 > other platforms use the shortcut-rules blocks documented in each package's INSTALL.md.
 
 ---
@@ -40,16 +40,18 @@ The **family** is auto-detected from the installer's parent folder name (e.g. `p
 your-workspace/
 ├── .kiro/
 │   ├── steering/
-│   │   └── pdlc/                       ← package CORE files (auto-loaded steering)
-│   │       └── ai-pilc-rules/core-workflow.md
-│   └── pdlc/                           ← package RULE-DETAILS (on-demand) + fabric trio
-│       ├── ai-pilc-rule-details/
-│       ├── FAMILY_BINDINGS.md          ← fabric trio (routing graph)
-│       ├── GATE_PROTOCOL.md            ← fabric trio (gate matching)
-│       └── FAMILY_INTERFACE.md         ← fabric trio (discovery anchor)
-│   └── agents/                         ← package agents (Kiro): FHC__, FIA__, …
+│   │   └── session-orchestrator-pdlc.md   ← the ONLY always-loaded file (routes to cores)
+│   └── agents/                            ← package agents (Kiro): FHC__, FIA__, …
 │
-├── pdlc-ws/                            ← FAMILY WORKSPACE (all outputs live here)
+├── .aiflc/
+│   └── pdlc/                              ← AI-* PDLC Family home (read on demand)
+│       ├── ai-pilc-rules/core-workflow.md     ← package CORE (Read by the orchestrator)
+│       ├── ai-pilc-rule-details/              ← package RULE-DETAILS (Read by the core)
+│       ├── FAMILY_BINDINGS.md             ← fabric trio (routing graph)
+│       ├── GATE_PROTOCOL.md               ← fabric trio (gate matching)
+│       └── FAMILY_INTERFACE.md            ← fabric trio (discovery anchor)
+│
+├── pdlc-ws/                               ← FAMILY WORKSPACE (all outputs live here)
 │   ├── .ai-family-manifest.json
 │   ├── ideas/
 │   ├── projects/
@@ -61,15 +63,15 @@ your-workspace/
 │   │   ├── dfe-state.md
 │   │   ├── demands/
 │   │   └── history/
-│   └── tools/                         ← FAMILY TOOLS (visual tools / extensions)
+│   └── tools/                             ← FAMILY TOOLS (visual tools / extensions)
 │       └── extensions/
-│           ├── AIFLC-PDLC-Dashboard/  ← HTML dashboard + .vsix (reads ../../data/)
-│           └── AIFLC-CommandBoard/    ← trigger palette (HTML + .vsix)
+│           ├── AIFLC-PDLC-Dashboard/      ← HTML dashboard + .vsix (reads ../../data/)
+│           └── AIFLC-CommandBoard/        ← trigger palette (HTML + .vsix)
 │
-└── core/                              ← reserved (future shared infrastructure)
+└── (your project files)
 ```
 
-> **Kiro split:** core files go under `.kiro/steering/{family}/` (Kiro auto-loads only from `steering/`); rule-details go under `.kiro/{family}/` (read on-demand by the core file). Other platforms use a `{family}-` naming convention — see the per-platform mapping below.
+> **Uniform home (OI-158):** every package core AND its rule-details live together under `.aiflc/{family}/` on every platform, read on demand. Only the session orchestrator sits in the platform's native auto-load slot (`.kiro/steering/` on Kiro) — see the per-platform mapping below. Nothing but `.aiflc/{family}/` and `{family}-ws/` is placed at your workspace root.
 
 ---
 
@@ -114,16 +116,16 @@ your-workspace/
 
 ## Per-Platform Path Mapping
 
-| Platform | Core file → | Rule-details → |
-|----------|-------------|----------------|
-| **Kiro** | `.kiro/steering/{family}/{pkg}-rules/{core}.md` | `.kiro/{family}/{pkg}-rule-details/` |
-| **Amazon Q** | `.amazonq/rules/{family}/{pkg}-rules/{core}.md` | `.amazonq/{family}/{pkg}-rule-details/` |
-| **Cursor** | `.cursor/rules/{family}-{pkg}-workflow.mdc` | `.{family}/{pkg}-rule-details/` |
-| **Cline** | `.clinerules/{family}-{pkg}-core.md` | `.{family}/{pkg}-rule-details/` |
-| **Claude Code** | `CLAUDE_{FAMILY}_{PKG}.md` | `.{family}/{pkg}-rule-details/` |
-| **Copilot** | `.github/copilot-instructions-{family}-{pkg}.md` | `.{family}/{pkg}-rule-details/` |
+| Platform | Package home (cores + rule-details) | Always-loaded orchestrator slot |
+|----------|-------------------------------------|---------------------------------|
+| **Kiro** | `.aiflc/{family}/` | `.kiro/steering/session-orchestrator-{family}.md` |
+| **Amazon Q** | `.aiflc/{family}/` | `.amazonq/rules/{family}/session-orchestrator.md` |
+| **Cursor** | `.aiflc/{family}/` | `.cursor/rules/{family}-session-orchestrator.mdc` |
+| **Cline** | `.aiflc/{family}/` | `.clinerules/{family}-session-orchestrator.md` |
+| **Claude Code** | `.aiflc/{family}/` | `CLAUDE_{FAMILY}_ORCHESTRATOR.md` (imported via root `CLAUDE.md`) |
+| **Copilot** | `.aiflc/{family}/` | `.github/copilot-instructions-{family}-orchestrator.md` |
 
-Platforms with reliable nested-folder loading (Kiro rule-details, Amazon Q) use folder nesting; the rest use a `{family}-` filename prefix to achieve family scoping.
+Under OI-158 the package home is identical on every platform (`.aiflc/{family}/`, read on demand); only the always-loaded session orchestrator sits in each platform's native slot. Package cores never land at your workspace root.
 
 ---
 
@@ -172,8 +174,8 @@ The manifest lives at `{family}-ws/.ai-family-manifest.json`. Uninstall removes 
 - **`{family}-ws/` is created at the workspace root only** — never nested inside another folder.
 - **Level 1 skeleton is fixed**: `ideas/`, `projects/`, `portfolio/`, `data/`.
 - **`data/` is the Data Fabric (AI-DFE) territory** — bootstrapped empty; DFE writes here at runtime.
-- **The fabric trio is deployed to the family rule-details root** (`.kiro/{family}/` on Kiro) — per-family copies of `FAMILY_BINDINGS.md`, `GATE_PROTOCOL.md`, `FAMILY_INTERFACE.md`; removed on uninstall.
-- **Multiple families coexist**: installing a second family creates its own `{family}-ws/` alongside the first; neither interferes with the other.
+- **The fabric trio is deployed to the family home** (`.aiflc/{family}/`) — per-family copies of `FAMILY_BINDINGS.md`, `GATE_PROTOCOL.md`, `FAMILY_INTERFACE.md`; removed on uninstall.
+- **Multiple families coexist**: installing a second family creates its own `{family}-ws/` alongside the first; neither interferes with the other. The session orchestrator is **family-scoped on every platform** — Kiro deploys `session-orchestrator-{family}.md` (any file in `.kiro/steering/` auto-loads), and Claude Code registers a per-family skill at `.claude/skills/{family}/SKILL.md` — so a second family never overwrites the first family's orchestrator.
 - **Re-running the installer** on an existing family is update-mode — packages are added/updated, the workspace skeleton is preserved.
 
 ---

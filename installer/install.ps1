@@ -73,7 +73,7 @@ $PackageCatalogue = @(
     @{ Name = "ai-uxd";  Layer = "Project"; Type = "Interactive workflow"; Description = "PIP/AP - UX Design Package (personas, flows, design system)"; CoreFile = "core-workflow.md"; RulesDir = "ai-uxd-rules"; DetailsDir = "ai-uxd-rule-details" }
     @{ Name = "ai-polc"; Layer = "Project"; Type = "Interactive workflow"; Description = "PIP/AP - Product Backlog Package (PBP)"; CoreFile = "core-workflow.md"; RulesDir = "ai-polc-rules"; DetailsDir = "ai-polc-rule-details" }
     @{ Name = "ai-dwg";  Layer = "Project"; Type = "One-time generator"; Description = "AP + PBP + UXP - Ready-to-code workspace"; CoreFile = "core-generator.md"; RulesDir = "ai-dwg-rules"; DetailsDir = "ai-dwg-rule-details" }
-    @{ Name = "ai-gce";  Layer = "Project"; Type = "Adaptive engine"; Description = "Workspace - Compliance enforcement layer"; CoreFile = "core-generator.md"; RulesDir = "ai-gce-rules"; DetailsDir = "ai-gce-rule-details" }
+    @{ Name = "ai-gce";  Layer = "Project"; Type = "Adaptive engine"; Description = "Workspace - Compliance enforcement layer"; CoreFile = "core-engine.md"; RulesDir = "ai-gce-rules"; DetailsDir = "ai-gce-rule-details" }
     @{ Name = "ai-tge";  Layer = "Project"; Type = "Test governance engine"; Description = "Workspace - Test strategy, register, coverage"; CoreFile = "core-engine.md"; RulesDir = "ai-tge-rules"; DetailsDir = "ai-tge-rule-details" }
     @{ Name = "ai-dfe";  Layer = "Edge"; Type = "Data fabric engine"; Description = "Gather, shape, and distribute structured data"; CoreFile = "core-engine.md"; RulesDir = "ai-dfe-rules"; DetailsDir = "ai-dfe-rule-details" }
 )
@@ -220,8 +220,7 @@ function New-FamilyWorkspaceSkeleton {
         (Join-Path $wsRoot "portfolio"),
         $dataRoot,
         (Join-Path $dataRoot "demands"),
-        (Join-Path $dataRoot "history"),
-        (Join-Path $Target "core")
+        (Join-Path $dataRoot "history")
     )
 
     if (Test-Path $wsRoot) {
@@ -286,7 +285,7 @@ data-fabric:
 "@
     Set-Content -Path (Join-Path $dataRoot "dfe-state.md") -Value $dfeState -Encoding utf8
 
-    Write-Step "Created family workspace skeleton: $FamilyWs\ (ideas, projects, portfolio, data) + core\"
+    Write-Step "Created family workspace skeleton: $FamilyWs\ (ideas, projects, portfolio, data)"
 }
 
 # -----------------------------------------------------------------------------
@@ -351,7 +350,7 @@ $ToolsExcludeDirs = @("node_modules", "dist", "demo")
 # Fabric trio - family-root routing artifacts read at runtime by AI-FLO and AI-DFE.
 # These live in the FAMILY workspace (planning/orchestration), NOT the DWG-generated
 # dev workspace. Without them FLO returns NOT READY ("no bindings = no routing"). [OI-123]
-$FabricFiles = @("FAMILY_BINDINGS.md", "GATE_PROTOCOL.md", "FAMILY_INTERFACE.md", "TRIGGER_KEYS_REFERENCE.md")
+$FabricFiles = @("FAMILY_BINDINGS.md", "GATE_PROTOCOL.md", "FAMILY_INTERFACE.md", "TRIGGER_KEYS_REFERENCE.md", "MIGRATION_CATALOGUE.md")
 
 # Files inside a package's templates/agents/ that are NOT runnable agents (skip on agent install).
 $AgentExcludePatterns = @("shortcut-rules-block", "-guide", "-section")
@@ -461,8 +460,10 @@ function Get-OrchestratorDest {
     param([string]$PlatformName)
     switch ($PlatformName) {
         # Kiro auto-includes (inclusion: auto) only files directly in .kiro/steering/ -
-        # a nested family subfolder would NOT auto-load, defeating the orchestrator (OI-127).
-        "kiro"        { return ".kiro\steering\session-orchestrator.md" }
+        # a nested family subfolder would NOT auto-load, so we family-SCOPE the filename
+        # instead (session-orchestrator-{family}.md). Every file in steering/ auto-loads,
+        # so multiple families coexist without overwriting each other (OI-127; multi-family fix).
+        "kiro"        { return ".kiro\steering\session-orchestrator-$Family.md" }
         "amazonq"     { return ".amazonq\rules\$Family\session-orchestrator.md" }
         "cursor"      { return ".cursor\rules\$Family-session-orchestrator.mdc" }
         "cline"       { return ".clinerules\$Family-session-orchestrator.md" }
@@ -637,6 +638,60 @@ Run the $($name.ToUpper()) operation equivalent to this shortcut.
 }
 
 # -----------------------------------------------------------------------------
+# Install the Claude Code skill (claude-code only). Claude auto-discovers skills
+# at .claude/skills/{name}/SKILL.md - one folder per skill, so families stay
+# isolated (installing a second family never overwrites the first's skill). We
+# copy the family SKILL.md there and append a marker-guarded pointer to the
+# deployed session orchestrator so the skill routes through the family's
+# orchestrator. Conditional: only if the family ships a SKILL.md at its root.
+# Returns the installed skill path (recorded in the manifest for clean uninstall).
+# -----------------------------------------------------------------------------
+
+function Install-ClaudeSkill {
+    param([string]$PlatformName, [string]$Target, [string]$OrchestratorRel, [bool]$IsDryRun)
+    if ($PlatformName -ne "claude-code") { return "" }
+
+    $src = Join-Path $PackagesRoot "SKILL.md"
+    if (-not (Test-Path $src)) {
+        Write-Info "No SKILL.md in this family - skipping Claude skill registration."
+        return ""
+    }
+
+    $skillRel  = ".claude\skills\$Family\SKILL.md"
+    $skillDest = Join-Path $Target $skillRel
+
+    if ($IsDryRun) {
+        Write-Host "    [DRY RUN] Would install Claude skill: SKILL.md -> $skillRel (+ orchestrator pointer)" -ForegroundColor Yellow
+        return $skillRel
+    }
+
+    $skillDir = Split-Path -Parent $skillDest
+    if (-not (Test-Path $skillDir)) { New-Item -ItemType Directory -Force -Path $skillDir | Out-Null }
+    Copy-Item $src -Destination $skillDest -Force
+
+    # Append a marker-guarded pointer to the deployed orchestrator (idempotent).
+    if ($OrchestratorRel) {
+        $orchLeaf = Split-Path -Leaf $OrchestratorRel
+        $startTag = "<!-- AIFLC:$Family`:orchestrator:start -->"
+        $endTag   = "<!-- AIFLC:$Family`:orchestrator:end -->"
+        $block    = @"
+$startTag
+## Session Orchestrator
+
+When this skill activates, ``Read`` and obey ``$orchLeaf`` - the AI-* $($Family.ToUpper()) Family session orchestrator and routing table - then route to the relevant package core under ``.aiflc/$Family/``.
+$endTag
+"@
+        $existing = Get-Content $skillDest -Raw
+        if ($existing -notmatch [regex]::Escape($startTag)) {
+            Add-Content -Path $skillDest -Value "`n$block`n"
+        }
+    }
+
+    Write-Step "Installed Claude skill -> $skillRel  (routes through the orchestrator)"
+    return $skillRel
+}
+
+# -----------------------------------------------------------------------------
 # Install package agents (Kiro only) - copies runnable agents from each installed
 # package templates/agents/ into .kiro/agents/ (e.g. FLO FHC__ / FIA__). [D4]
 # Other platforms invoke agents via shortcut-rules blocks (per package INSTALL.md).
@@ -720,7 +775,7 @@ function Register-Consumers {
 # -----------------------------------------------------------------------------
 
 function Save-Manifest {
-    param([string]$Target, [string]$PlatformName, [array]$Installed, [array]$Tools, [array]$Fabric, [array]$Agents, [string]$Orchestrator, $ClaudeEntrypoint, [array]$ClaudeCommands)
+    param([string]$Target, [string]$PlatformName, [array]$Installed, [array]$Tools, [array]$Fabric, [array]$Agents, [string]$Orchestrator, $ClaudeEntrypoint, [array]$ClaudeCommands, [string]$ClaudeSkill)
     $manifest = @{
         installedAt      = (Get-Date -Format "o")
         family           = $Family
@@ -733,6 +788,7 @@ function Save-Manifest {
         orchestrator     = $Orchestrator
         claudeEntrypoint = $ClaudeEntrypoint
         claudeCommands   = $ClaudeCommands
+        claudeSkill      = $ClaudeSkill
     }
     $manifestPath = Join-Path $Target "$FamilyWs\$ManifestFileName"
     $manifest | ConvertTo-Json -Depth 4 | Out-File -FilePath $manifestPath -Encoding utf8
@@ -844,6 +900,13 @@ function Invoke-Uninstall {
                 Write-Step "Removed orchestrator import block from existing CLAUDE.md (content preserved)"
             }
         }
+    }
+
+    # Remove the installed Claude skill (.claude/skills/{family}/SKILL.md)
+    if ($manifest.PSObject.Properties.Name -contains 'claudeSkill' -and $manifest.claudeSkill) {
+        $p = Join-Path $Target $manifest.claudeSkill
+        if (Test-Path $p) { Remove-Item -Force $p; Write-Step "Removed Claude skill: $($manifest.claudeSkill)" }
+        Remove-EmptyAncestors -LeafPath $p -StopAt $Target
     }
 
     # Remove generated Claude slash commands (.claude/commands/{family}/)
@@ -1006,12 +1069,13 @@ $installedFabric = Install-Fabric -PlatformName $Platform -Target $TargetWorkspa
 $installedOrchestrator = Install-Orchestrator -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
 $installedClaudeEntrypoint = Install-ClaudeEntrypoint -PlatformName $Platform -Target $TargetWorkspace -OrchestratorRel $installedOrchestrator -IsDryRun $DryRun
 $installedClaudeCommands = Install-ClaudeCommands -InstalledNames ($installedPackages | ForEach-Object { $_.Name }) -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
+$installedClaudeSkill = Install-ClaudeSkill -PlatformName $Platform -Target $TargetWorkspace -OrchestratorRel $installedOrchestrator -IsDryRun $DryRun
 $installedAgents = Install-Agents -InstalledNames ($installedPackages | ForEach-Object { $_.Name }) -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
 
 # Step 7: Manifest
 if (-not $DryRun -and $installedPackages.Count -gt 0) {
     Write-Host ""
-    Save-Manifest -Target $TargetWorkspace -PlatformName $Platform -Installed $installedPackages -Tools $installedTools -Fabric $installedFabric -Agents $installedAgents -Orchestrator $installedOrchestrator -ClaudeEntrypoint $installedClaudeEntrypoint -ClaudeCommands $installedClaudeCommands
+    Save-Manifest -Target $TargetWorkspace -PlatformName $Platform -Installed $installedPackages -Tools $installedTools -Fabric $installedFabric -Agents $installedAgents -Orchestrator $installedOrchestrator -ClaudeEntrypoint $installedClaudeEntrypoint -ClaudeCommands $installedClaudeCommands -ClaudeSkill $installedClaudeSkill
 }
 
 # Step 7: Summary

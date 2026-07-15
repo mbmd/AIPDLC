@@ -11,7 +11,7 @@
 ```yaml
 data-fabric:
   family:
-    code: "{family}"                 # e.g. pdlc
+    code: "{family}"                 # the installed family code
     workspaceRoot: "{AIFLC-workspace-root}"
     dataRoot: "{family}-ws/data"
     projectsRoot: "{family}-ws/projects"

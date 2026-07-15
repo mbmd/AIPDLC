@@ -13,7 +13,7 @@ inclusion: manual
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Purpose:** The runtime courier over the AIFLC Communication Fabric — routes entities through the bindings graph, applies gate matching at every hop, flags conflicts, and maintains awareness of where every entity is across all controlled families.
 
-> **v2.0 — family-agnostic by design:** This engine contains **zero family-specific logic**. It operates on any family's `FAMILY_BINDINGS.md` topology. Family-specific behaviors (PDLC dispatch, project profiles, PPM integration, etc.) are injected **only** via the family overlay file (`pdlc-overlay.md`) — never folded into this core.
+> **v2.0 — family-agnostic by design:** This engine contains **zero family-specific logic**. It operates on any family's `FAMILY_BINDINGS.md` topology. Family-specific behaviors (a family's dispatch/entry model, entity profiles, portfolio integration, etc.) are injected **only** via the family overlay file (`{family}-overlay.md`) — never folded into this core.
 
 > **This file is the always-loaded dispatcher.** It carries the universal routing engine (activation, persona, command dispatch, gate matching, state, gates). Per-stage step bodies live in on-demand detail files under `ai-flo-rule-details/` — load the one for the stage you are running, never all of them.
 

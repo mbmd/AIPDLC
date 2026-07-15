@@ -2,7 +2,7 @@
 
 ## Individual Contributor License Agreement
 
-Thank you for your interest in contributing to AIFLC (AI Full Life Cycle), owned by Mohammad Maheri ("Licensor").
+Thank you for your interest in contributing to AIFLC (AI Full Life Cycle), owned by Mohammad Maheri / Mohammad Maher Management Consultancy Company ("Licensor").
 
 By submitting a contribution (code, documentation, or other materials) to the AIFLC project, you agree to the following terms:
 

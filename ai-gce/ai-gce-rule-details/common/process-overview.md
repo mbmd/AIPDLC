@@ -11,31 +11,37 @@ Unlike AI-PILC and AI-ADLC (interactive lifecycles with stages and gates), AI-GC
 
 ## The AI-* Family
 
+```mermaid
+flowchart LR
+    subgraph PORTFOLIO["PORTFOLIO LAYER · scope = MANY projects"]
+        ILC["AI-ILC<br/>Decide it<br/>(optional)"]
+        PILC["AI-PILC<br/>Initiate it"]
+        PPM["AI-PPM<br/>Govern it<br/>(portfolio of N projects)"]
+        ILC -.-> PILC --> PPM
+    end
+
+    FLO["AI-FLO<br/>Route it — package-to-package<br/>flow on the edge between layers"]
+
+    subgraph PROJECT["PROJECT LAYER · scope = ONE project"]
+        POLC["AI-POLC<br/>Own it"]
+        UXD["AI-UXD<br/>Design UX"]
+        ADLC["AI-ADLC<br/>Design it"]
+        DWG["AI-DWG<br/>Prepare it"]
+        DLC["AI-DLC v1<br/>(build) ¹"]
+        GCE["AI-GCE<br/>Guard it"]
+        TGE["AI-TGE<br/>Test it"]
+
+        POLC --> UXD --> ADLC --> DWG --> DLC
+        POLC <-.->|"back-and-forth"| DLC
+        DLC -.->|"feedback"| UXD
+        DLC -.->|"feedback"| POLC
+        GCE ---|"alongside AI-DLC v1"| DLC
+        TGE ---|"alongside AI-DLC v1"| DLC
+    end
+
+    PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-╔════════════════ PORTFOLIO LAYER · scope = MANY projects ════════════════╗
-
-   (optional)
-    AI-ILC  ⇢  AI-PILC  ⇢  AI-PPM
-    Decide it   Initiate it   Govern it (portfolio of N projects)
-
-╚═════════════════════════════════╤═══════════════════════════════════════╝
-                                   │
-                                AI-FLO   Route it — package-to-package
-                                   │     flow on the edge between layers
-╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
-
-    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
-    Own it      Design UX   Design it   Prepare it       ▲
-                                                         │
-                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
-                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
-
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
-    Guard it   Test it
-
-╚═════════════════════════════════════════════════════════════════════════╝
   ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
-```
 
 AI-GCE sits at the **end of the preparation chain**. It reads what AI-DWG encoded — architecture AND governance — and converts that intent into automated, continuous enforcement. A developer working inside AI-DLC v1 should never manually check project rules. AI-GCE ensures the workspace enforces them automatically.
 
@@ -325,3 +331,18 @@ These 14 numbered principles govern all AI-GCE derivation. They consolidate and 
 13. **Every hook writes to the log.** No exceptions. The compliance log is the audit trail. A hook that fires but doesn't log is invisible to the audit agent, the dashboard, and external auditors.
 
 14. **Respect the context budget.** AI-GCE generates steering files (Step 4b). The total always-inclusion budget is ≤300 lines. If AI-GCE's generated files push over that limit, convert them to fileMatch. The compliance engine must not degrade Kiro's performance.
+
+
+## Stage Flow (visual)
+
+> The stage sequence at a glance. The table above stays authoritative.
+
+```mermaid
+flowchart LR
+    S1["Read Workspace"] --> S2["Determine Mode"]
+    S2 --> S3["Derive Rules"]
+    S3 --> S4["Generate Hooks"]
+    S4 --> S5["Generate Agents"]
+    S5 --> S6["State & Log"]
+    S6 --> S7["Output"]
+```

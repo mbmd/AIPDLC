@@ -12,31 +12,37 @@
 
 AI-PILC is part of **AIFLC** (AI Full Life Cycle) — the AI-* PDLC Family of injectable workflow packages.
 
+```mermaid
+flowchart LR
+    subgraph PORTFOLIO["PORTFOLIO LAYER · scope = MANY projects"]
+        ILC["AI-ILC<br/>Decide it<br/>(optional)"]
+        PILC["AI-PILC<br/>Initiate it"]
+        PPM["AI-PPM<br/>Govern it<br/>(portfolio of N projects)"]
+        ILC -.-> PILC --> PPM
+    end
+
+    FLO["AI-FLO<br/>Route it — package-to-package<br/>flow on the edge between layers"]
+
+    subgraph PROJECT["PROJECT LAYER · scope = ONE project"]
+        POLC["AI-POLC<br/>Own it"]
+        UXD["AI-UXD<br/>Design UX"]
+        ADLC["AI-ADLC<br/>Design it"]
+        DWG["AI-DWG<br/>Prepare it"]
+        DLC["AI-DLC v1<br/>(build) ¹"]
+        GCE["AI-GCE<br/>Guard it"]
+        TGE["AI-TGE<br/>Test it"]
+
+        POLC --> UXD --> ADLC --> DWG --> DLC
+        POLC <-.->|"back-and-forth"| DLC
+        DLC -.->|"feedback"| UXD
+        DLC -.->|"feedback"| POLC
+        GCE ---|"alongside AI-DLC v1"| DLC
+        TGE ---|"alongside AI-DLC v1"| DLC
+    end
+
+    PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-╔════════════════ PORTFOLIO LAYER · scope = MANY projects ════════════════╗
-
-   (optional)
-    AI-ILC  ⇢  AI-PILC  ⇢  AI-PPM
-    Decide it   Initiate it   Govern it (portfolio of N projects)
-
-╚═════════════════════════════════╤═══════════════════════════════════════╝
-                                   │
-                                AI-FLO   Route it — package-to-package
-                                   │     flow on the edge between layers
-╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
-
-    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
-    Own it      Design UX   Design it   Prepare it       ▲
-                                                         │
-                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
-                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
-
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
-    Guard it   Test it
-
-╚═════════════════════════════════════════════════════════════════════════╝
   ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
-```
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -64,7 +70,7 @@ AI-PILC is part of **AIFLC** (AI Full Life Cycle) — the AI-* PDLC Family of in
 
 AI-PILC is an injectable workflow that guides an AI assistant and a human user through the complete process of initiating a project — from receiving a raw requirement to delivering a professional, execution-ready **Project Initiation Package (PIP)**.
 
-It is designed as a general-purpose, reusable framework with zero project-specific content. Drop it into any workspace, point it at a requirement, and it will walk you through 6 phases and 16 stages of structured project initiation — producing PMBOK/PRINCE2-aligned deliverables at every step.
+It is designed as a general-purpose, reusable framework with zero project-specific content. Drop it into any workspace, point it at a requirement, and it will walk you through 6 phases and 16 stages of structured project initiation — producing industry-standard, governance-grade deliverables at every step.
 
 ---
 
@@ -266,17 +272,17 @@ ai-pilc/
 4. **Resumable** — Work across sessions without losing progress.
 5. **Auditable** — Every decision logged with rationale. Full traceability.
 6. **Agnostic** — No dependency on specific IDE, model, or vendor.
-7. **Professional** — PMBOK/PRINCE2-aligned outputs. PMO-ready quality.
+7. **Professional** — Industry-standard governance outputs. PMO-ready quality.
 
 ---
 
 ## Methodology Alignment
 
-AI-PILC draws from:
+AI-PILC draws from established project-governance discipline:
 
-- **PMBOK 7th Edition** — Principles, performance domains, and process groups
-- **PRINCE2** — Business case-driven, stage-gated, governance-focused
-- **ITIL** — Service management context where applicable
+- **Principles, performance domains, and process groups** — the standard vocabulary of modern project management
+- **Business case-driven, stage-gated governance** — investment justification before authorization, staged delivery with management by exception
+- **Service management context** — where applicable, for service-oriented initiatives
 
 ---
 

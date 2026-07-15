@@ -31,6 +31,25 @@ Score Thresholds:
   🟢 Low (1-5):         Accepted; monitor only
 ```
 
+### Risk Matrix (visual)
+
+> Risk exposure at a glance — probability (y) against impact (x). The scoring matrix above and the Risk Register table below stay authoritative (DFE-extracted for the dashboard); this diagram is the human view. Plot each risk by its assessed impact and probability.
+
+```mermaid
+quadrantChart
+    title Risk Likelihood / Impact
+    x-axis Low Impact --> High Impact
+    y-axis Low Probability --> High Probability
+    quadrant-1 Critical — escalate
+    quadrant-2 Mitigate — monitor closely
+    quadrant-3 Accept — monitor only
+    quadrant-4 Contingency plan
+    "{R-001}": [0.85, 0.80]
+    "{R-002}": [0.30, 0.75]
+    "{R-003}": [0.80, 0.25]
+    "{R-004}": [0.20, 0.20]
+```
+
 ---
 
 ## 2. Risk Register

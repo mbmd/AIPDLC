@@ -185,6 +185,6 @@ The successor is not bound by predecessor depth — but uses it as a starting ca
 | AI-PILC core workflow (depth section) | `ai-pilc/ai-pilc-rules/core-workflow.md` |
 | AI-ADLC core workflow (depth section) | `ai-adlc/ai-adlc-rules/core-workflow.md` |
 | AI-DWG depth levels | `ai-dwg/ai-dwg-rules/core-generator.md` (Depth Levels table) |
-| AI-GCE depth levels | `ai-gce/ai-gce-rules/core-generator.md` (Depth Levels table) |
+| AI-GCE depth levels | `ai-gce/ai-gce-rules/core-engine.md` (Depth Levels table) |
 
 *Knowledge Document | Created: 2026-06-11 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

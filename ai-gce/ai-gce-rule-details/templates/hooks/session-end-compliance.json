@@ -1,7 +1,7 @@
 {
   "generatedBy": "AI-GCE",
   "generatedVersion": "{version}",
-  "source": "ai-gce-rules/core-generator.md",
+  "source": "ai-gce-rules/core-engine.md",
   "name": "Session-End Compliance Sweep",
   "version": "1.0.0",
   "description": "Tier B (agentStop): Fires the session-end-compliance-agent (SEC__) after every agent session. Consolidates all advisory checks into one pass. Disable this hook to switch to manual-only invocation via SEC__.",

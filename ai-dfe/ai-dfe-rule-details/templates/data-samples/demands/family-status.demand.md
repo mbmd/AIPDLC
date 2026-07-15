@@ -13,7 +13,7 @@
 
 | Field path (in output `data`) | Type | Source domain | Description |
 |--------------------------------|------|---------------|-------------|
-| `family` | string | (constant) | Family code (e.g. `pdlc`) |
+| `family` | string | (constant) | Family code (the installed family) |
 | `counts.ideas` | integer | `ilc-data.counts.total` | Ideas in the funnel |
 | `counts.projects` | integer | `ppm-data.summary.totalProjects` | Total projects |
 | `counts.activeProjects` | integer | `ppm-data.summary.active` | Active projects |

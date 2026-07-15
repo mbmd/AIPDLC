@@ -8,7 +8,7 @@
 
 ## What is AI-PILC?
 
-AI-PILC is an injectable workflow that guides you through the complete process of initiating a project — from receiving a raw requirement to delivering a professional, execution-ready Project Initiation Package (PIP). It reasons and writes as a senior PMO professional, producing PMBOK/PRINCE2-aligned deliverables at every step.
+AI-PILC is an injectable workflow that guides you through the complete process of initiating a project — from receiving a raw requirement to delivering a professional, execution-ready Project Initiation Package (PIP). It reasons and writes as a senior PMO professional, producing industry-standard, governance-grade deliverables at every step.
 
 **In one sentence:** AI-PILC turns a raw requirement into a governed, execution-ready Project Initiation Package — the foundation everything else builds on.
 

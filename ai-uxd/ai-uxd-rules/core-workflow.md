@@ -84,6 +84,7 @@ All detail-file references below are relative to the resolved directory. Only ON
 - `common/question-format-guide.md` — full question-format rules
 - `common/content-validation.md` — content validation requirements
 - `common/design-standards.md` — design + accessibility standards reference
+- `common/reference-linking.md` — emit codes defined in another generated file as clickable relative links (Tier 1: object files; Tier 2: register-row `<a id>` anchors); older output retrofit via `UPG__`
 
 ---
 

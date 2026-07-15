@@ -91,6 +91,7 @@ All subsequent rule detail file references are relative to whichever rule detail
 - `common/process-overview.md` — generation overview, three modes, adaptive depth, per-cluster output inventory, extension-aware generation, key principles, what AI-DWG does NOT do
 - `common/ap-reading-guide.md` — how to locate and parse the peer inputs (AP / PBP / UXP)
 - `common/validation-rules.md` — output cross-check requirements (V1–V7)
+- `common/reference-linking.md` — emit codes defined in another generated file as clickable relative links (Tier 1: object files; Tier 2: register-row `<a id>` anchors); older output retrofit via `UPG__`
 
 Load the per-mode and per-category detail files (`flows/*`, `mapping/*`, `reconciliation/*`, `rendering/*`, `baseline/*`, `templates/*`) on demand as each mode and cluster is reached.
 

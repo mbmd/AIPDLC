@@ -80,6 +80,21 @@ Options:
 
 ---
 
+## Dependency Graph (visual)
+
+> Inter-project dependencies at a glance. The dependency table (Step 4.E3.1) and the ASCII graph (Step 4.E3.2) stay authoritative (DFE-extracted for the portfolio dashboard); this diagram is the human view. Solid arrows = finish-to-start / data delivery; dotted = shared-resource contention; unconnected nodes are independent.
+
+```mermaid
+flowchart LR
+    A["{Project A}"] -->|"delivers API"| B["{Project B}"]
+    B -->|"delivers data model"| C["{Project C}"]
+    A -.->|"shares {resource}"| B
+    D["{Project D}<br/>(independent)"]
+    E["{Project E}<br/>(independent)"]
+```
+
+---
+
 ## Additional Steps for Stage 7 (after Step 7.4)
 
 ### Step 7.E3.1: Check Dependency Satisfaction

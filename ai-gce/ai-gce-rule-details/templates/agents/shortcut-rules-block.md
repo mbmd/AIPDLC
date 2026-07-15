@@ -2,7 +2,7 @@
 ---
 generatedBy: AI-GCE
 generatedVersion: "{version}"
-source: ai-gce-rules/core-generator.md
+source: ai-gce-rules/core-engine.md
 generatedOn: "{ISO-date}"
 ownership: generated
 purpose: Appended verbatim to destination workspace's rules/workspace-rules.md

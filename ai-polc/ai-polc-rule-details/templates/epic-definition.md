@@ -42,6 +42,23 @@ ownership: hybrid
 
 ---
 
+## Story Map (visual)
+
+> Epic → feature → story decomposition at a glance. The epic description, acceptance criteria, and dependency table above stay authoritative (DFE-extracted for the backlog dashboard); this diagram is the human view. Add one branch per feature and its child stories.
+
+```mermaid
+flowchart TB
+    E["EPIC-{NNN}<br/>{Epic Name}"]
+    E --> F1["Feature {A}"]
+    E --> F2["Feature {B}"]
+    F1 --> S1["Story {A1}"]
+    F1 --> S2["Story {A2}"]
+    F2 --> S3["Story {B1}"]
+    F2 --> S4["Story {B2}"]
+```
+
+---
+
 ## Size Estimate
 
 - **Complexity:** {S | M | L | XL}

@@ -37,7 +37,7 @@
 | **An AI provider** | GitHub Copilot subscription, Anthropic API key, OpenAI key, or other |
 | **A workspace folder** | Any project directory where you want AI-assisted delivery |
 | **PowerShell 5.1+** (Windows) or **Bash** (macOS/Linux) | For the automated installer |
-| **The AIFLC package source** | Clone the [AIPDLC repository](https://github.com/mbmd/AIPDLC) |
+| **The AIFLC package source** | Clone [AIPDLC](https://github.com/mbmd/AIPDLC) into a temporary `.aiflc-src/AIPDLC/` folder (Method 1 shows the command). Delete it after install — `Remove-Item -Recurse -Force .aiflc-src` (Windows) or `rm -rf .aiflc-src` (macOS/Linux) — so nothing but `.aiflc/pdlc/` and `pdlc-ws/` remains at your root. |
 
 > You do NOT need: Node.js, Python, Docker, or any runtime. Packages are pure Markdown — no compilation, no dependencies.
 
@@ -102,8 +102,9 @@ The interactive installer supports VS Code via the `copilot` platform flag. For 
 ### Using the Installer (Copilot mode)
 
 ```powershell
-cd "<path-to-AIPDLC>"
-.\installer\install.ps1 -TargetWorkspace "<your-project-path>" -Platform copilot -Packages "ai-pilc,ai-adlc,ai-dwg"
+git clone https://github.com/mbmd/AIPDLC.git .aiflc-src/AIPDLC
+.\.aiflc-src\AIPDLC\installer\install.ps1 -TargetWorkspace . -Platform copilot -Packages "ai-pilc,ai-adlc,ai-dwg"
+Remove-Item -Recurse -Force .aiflc-src   # remove the temporary source
 ```
 
 > **Note:** The installer's `copilot` mode creates `.github/copilot-instructions.md`. For the `AGENTS.md` or `.instructions.md` approach, use Method 2 below.
@@ -111,8 +112,9 @@ cd "<path-to-AIPDLC>"
 ### macOS / Linux
 
 ```bash
-cd <path-to-AIPDLC>
-./installer/install.sh --target <your-project-path> --platform copilot --packages ai-pilc,ai-adlc,ai-dwg
+git clone https://github.com/mbmd/AIPDLC.git .aiflc-src/AIPDLC
+./.aiflc-src/AIPDLC/installer/install.sh --target . --platform copilot --packages ai-pilc,ai-adlc,ai-dwg
+rm -rf .aiflc-src   # remove the temporary source
 ```
 
 ---
@@ -299,7 +301,7 @@ your-project/
 │       ├── ai-polc-rule-details/
 │       ├── ai-dwg-rules/core-generator.md
 │       ├── ai-dwg-rule-details/
-│       ├── ai-gce-rules/core-generator.md
+│       ├── ai-gce-rules/core-engine.md
 │       ├── ai-gce-rule-details/
 │       ├── ai-tge-rules/core-engine.md
 │       ├── ai-tge-rule-details/

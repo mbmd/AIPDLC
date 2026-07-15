@@ -9,31 +9,37 @@ AI-ADLC (AI-Driven Architecture Design Life Cycle) is a structured, interactive 
 
 ## The AI-* Family
 
+```mermaid
+flowchart LR
+    subgraph PORTFOLIO["PORTFOLIO LAYER · scope = MANY projects"]
+        ILC["AI-ILC<br/>Decide it<br/>(optional)"]
+        PILC["AI-PILC<br/>Initiate it"]
+        PPM["AI-PPM<br/>Govern it<br/>(portfolio of N projects)"]
+        ILC -.-> PILC --> PPM
+    end
+
+    FLO["AI-FLO<br/>Route it — package-to-package<br/>flow on the edge between layers"]
+
+    subgraph PROJECT["PROJECT LAYER · scope = ONE project"]
+        POLC["AI-POLC<br/>Own it"]
+        UXD["AI-UXD<br/>Design UX"]
+        ADLC["AI-ADLC<br/>Design it"]
+        DWG["AI-DWG<br/>Prepare it"]
+        DLC["AI-DLC v1<br/>(build) ¹"]
+        GCE["AI-GCE<br/>Guard it"]
+        TGE["AI-TGE<br/>Test it"]
+
+        POLC --> UXD --> ADLC --> DWG --> DLC
+        POLC <-.->|"back-and-forth"| DLC
+        DLC -.->|"feedback"| UXD
+        DLC -.->|"feedback"| POLC
+        GCE ---|"alongside AI-DLC v1"| DLC
+        TGE ---|"alongside AI-DLC v1"| DLC
+    end
+
+    PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-╔════════════════ PORTFOLIO LAYER · scope = MANY projects ════════════════╗
-
-   (optional)
-    AI-ILC  ⇢  AI-PILC  ⇢  AI-PPM
-    Decide it   Initiate it   Govern it (portfolio of N projects)
-
-╚═════════════════════════════════╤═══════════════════════════════════════╝
-                                   │
-                                AI-FLO   Route it — package-to-package
-                                   │     flow on the edge between layers
-╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
-
-    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
-    Own it      Design UX   Design it   Prepare it       ▲
-                                                         │
-                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
-                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
-
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
-    Guard it   Test it
-
-╚═════════════════════════════════════════════════════════════════════════╝
   ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
-```
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -214,3 +220,24 @@ AI-ADLC supports multi-session work:
 - ❌ Recommend technologies it can't justify with evidence
 - ❌ Ignore stated constraints because a "better" option exists outside them
 - ❌ Design in isolation — always references requirements as the source of truth
+
+
+## Stage Flow (visual)
+
+> The stage sequence at a glance. The table above stays authoritative.
+
+```mermaid
+flowchart TB
+    S1["Stage 1<br/>Workspace & Context"] --> S2["Stage 2<br/>Requirements Ingestion"]
+    S2 --> S3["Stage 3<br/>Vision & Principles"]
+    S3 --> S4["Stage 4<br/>System Context (C4 L1)"]
+    S4 --> S5["Stage 5<br/>Container Design (C4 L2)"]
+    S5 --> S6["Stage 6<br/>Tech Stack Selection"]
+    S6 --> S7["Stage 7<br/>Multi-Tenancy"]
+    S7 --> S8["Stage 8<br/>Security & Identity"]
+    S8 --> S9["Stage 9<br/>Data Architecture"]
+    S9 --> S10["Stage 10<br/>API Architecture"]
+    S10 --> S11["Stage 11<br/>Integration & Infra"]
+    S11 --> S12["Stage 12<br/>Component Design (C4 L3)"]
+    S12 --> S13["Stage 13<br/>Package Assembly"]
+```

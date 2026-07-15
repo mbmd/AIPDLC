@@ -12,7 +12,7 @@
 
 | consumer | home | demandFile | outputFile | registeredOn |
 |----------|------|------------|------------|--------------|
-| {consumer-name} | {consumer's folder, e.g. tools/extensions/AIFLC-PDLC-Dashboard} | {home}/data-demand/{name}.demand.md | {family}-ws/data/{name}.json | {ISO-8601} |
+| {consumer-name} | {consumer's folder, e.g. tools/extensions/{dashboard-extension}} | {home}/data-demand/{name}.demand.md | {family}-ws/data/{name}.json | {ISO-8601} |
 
 ## Field Notes
 

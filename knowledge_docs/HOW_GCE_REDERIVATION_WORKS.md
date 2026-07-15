@@ -200,7 +200,7 @@ The core guarantee of re-derivation: team additions survive.
 | Change detection logic | `ai-gce/ai-gce-rule-details/re-derivation/change-detection.md` |
 | Selective regeneration | `ai-gce/ai-gce-rule-details/re-derivation/selective-regeneration.md` |
 | Upstream signaling | `ai-gce/ai-gce-rule-details/re-derivation/upstream-signaling.md` |
-| Core generator (Mode 2) | `ai-gce/ai-gce-rules/core-generator.md` |
+| Core generator (Mode 2) | `ai-gce/ai-gce-rules/core-engine.md` |
 | AI-DWG reconciliation (signal source) | `ai-dwg/ai-dwg-rules/core-generator.md` (Mode 2) |
 
 *Knowledge Document | Created: 2026-06-11 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

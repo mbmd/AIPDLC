@@ -3,7 +3,7 @@
 
 ## Purpose
 
-Coordinate sequential routing handoffs and join validation (confirming all predecessor outputs exist before a successor starts). In the sequential PDLC model (POLC→UXD→ADLC→DWG), fan-out is limited to specific multi-target scenarios; the primary Project-layer flow is a linear chain.
+Coordinate sequential routing handoffs and join validation (confirming all predecessor outputs exist before a successor starts). In a sequential family model (a linear chain such as A→B→C→D), fan-out is limited to specific multi-target scenarios; the primary flow is a linear chain.
 
 ---
 

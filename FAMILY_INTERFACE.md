@@ -24,13 +24,20 @@ description: "Idea → governed code: the full product development journey from 
 |---------|---------------|---------------|
 | **AI-ILC** | `capability-input@^1` | `ai-ilc/ai-ilc-rules/core-workflow.md § Gate Contract` |
 | **AI-PILC** | `validated-business-case@^1` | `ai-pilc/ai-pilc-rules/core-workflow.md § Gate Contract` |
+| **AI-POLC** | `enterprise-okr@^1` | `ai-polc/ai-polc-rules/core-workflow.md § Gate Contract` |
+| **AI-PPM** | `initiative-portfolio@^1` | `ai-ppm/ai-ppm-rules/core-engine.md § Gate Contract` |
+
+> AI-POLC/AI-PPM seam-in added 2026-07-13 — closes gaps G1/G2 (SXLC AI-OKR → PDLC AI-POLC, SXLC AI-SIP → PDLC AI-PPM were asserted by SXLC's `FAMILY_BINDINGS.md` but had no matching PDLC-side declaration).
 
 ### Seam-Out (what this family can SEND to other families)
 
 | Package | Emits Type | Marker | Gate Contract |
 |---------|-----------|--------|---------------|
 | **AI-DWG** | `development-workspace@1` | `dwg-state.md` | `ai-dwg/ai-dwg-rules/core-workflow.md § Gate Contract` |
-| **AI-PPM** | `portfolio-state@1` | `ppm-state.md` | `ai-ppm/ai-ppm-rules/core-workflow.md § Gate Contract` |
+| **AI-PPM** | `portfolio-state@1` | `ppm-state.md` | `ai-ppm/ai-ppm-rules/core-engine.md § Gate Contract` |
+| **AI-PPM** | `delivery-feedback@1` | `ppm-state.md` | `ai-ppm/ai-ppm-rules/core-engine.md § Gate Contract` |
+
+> `delivery-feedback@1` seam-out added 2026-07-13 — closes gap G3 (SXLC AI-SPR declared this as an inbound loop-back but PDLC never declared the matching outbound seam).
 
 ---
 
@@ -42,11 +49,11 @@ description: "Idea → governed code: the full product development journey from 
 | AI-PILC | Initiate it | Interactive workflow (lifecycle) | internal (+ external seam-in) |
 | AI-ADLC | Design it | Interactive workflow (lifecycle) | internal |
 | AI-UXD | Design UX | Interactive workflow (lifecycle) | internal |
-| AI-POLC | Own it | Interactive workflow (lifecycle) | internal |
+| AI-POLC | Own it | Interactive workflow (lifecycle) | internal (+ external seam-in) |
 | AI-DWG | Prepare it | One-time generator | internal (+ external seam-out) |
 | AI-GCE | Guard it | Adaptive governance engine | internal |
 | AI-TGE | Test it | Test governance engine | internal |
-| AI-PPM | Govern it | Adaptive portfolio engine | internal (+ external seam-out) |
+| AI-PPM | Govern it | Adaptive portfolio engine | internal (+ external seam-in + seam-out) |
 | AI-FLO | Route it | Active orchestration engine | internal |
 
 ---

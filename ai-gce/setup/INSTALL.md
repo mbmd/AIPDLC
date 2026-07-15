@@ -27,7 +27,7 @@ your-workspace/
 │       └── session-orchestrator.md           ← the ONLY always-loaded file (routes to cores)
 ├── .aiflc/
 │   └── pdlc/
-│       ├── ai-gce-rules/core-generator.md   ← core, read on demand by the orchestrator
+│       ├── ai-gce-rules/core-engine.md   ← core, read on demand by the orchestrator
 │       └── ai-gce-rule-details/             ← rule details, read on demand by the core
 └── pdlc-ws/                                  ← AI-GCE OUTPUT lands here (created by installer)
 ```
@@ -38,7 +38,7 @@ your-workspace/
 
 ## Manual Install (Per Platform)
 
-If you prefer manual install, copy the package core to `.aiflc/pdlc/ai-gce-rules/core-generator.md` and the rule-details to `.aiflc/pdlc/ai-gce-rule-details/` (identical on every platform), then place the **session orchestrator** — the only always-loaded file — in your platform's native slot:
+If you prefer manual install, copy the package core to `.aiflc/pdlc/ai-gce-rules/core-engine.md` and the rule-details to `.aiflc/pdlc/ai-gce-rule-details/` (identical on every platform), then place the **session orchestrator** — the only always-loaded file — in your platform's native slot:
 
 | Platform | Session orchestrator (always-loaded) → |
 |----------|----------------------------------------|
@@ -50,7 +50,7 @@ If you prefer manual install, copy the package core to `.aiflc/pdlc/ai-gce-rules
 | Copilot | `.github/copilot-instructions.md` (orchestrator block) |
 | Codex | `AGENTS.md` (orchestrator block) |
 
-The core (`core-generator.md`) and `ai-gce-rule-details/` are plain copies under `.aiflc/pdlc/` on every platform — there are no per-package `.mdc`, `.instructions.md`, or `CLAUDE_PDLC_AI_*` files anymore.
+The core (`core-engine.md`) and `ai-gce-rule-details/` are plain copies under `.aiflc/pdlc/` on every platform — there are no per-package `.mdc`, `.instructions.md`, or `CLAUDE_PDLC_AI_*` files anymore.
 
 ---
 

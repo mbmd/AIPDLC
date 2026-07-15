@@ -62,7 +62,7 @@ In brownfield workspaces, teams may have code in non-standard paths. The preambl
 
 ## Integration with Hook Generation
 
-When generating or re-deriving hooks (Step 4 of core-generator.md):
+When generating or re-deriving hooks (Step 4 of core-engine.md):
 
 1. Load this file (`common/hook-preamble.md`)
 2. For each hook that qualifies (see table above), prepend the preamble text to the beginning of `then.prompt`

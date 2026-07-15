@@ -39,6 +39,27 @@
 
 ---
 
+## Idea Scoring Matrix (visual)
+
+> The idea funnel at a glance — value (y) against effort (x). The funnel tables above stay authoritative (DFE-extracted for the portfolio dashboard); this diagram is the human view. Plot each evaluated idea by value and effort (or swap the axes for desirability × feasibility) to see fast-track, park, and reject zones.
+
+```mermaid
+quadrantChart
+    title Idea Value / Effort
+    x-axis Low Effort --> High Effort
+    y-axis Low Value --> High Value
+    quadrant-1 Strategic bets — shape &amp; scope
+    quadrant-2 Quick wins — fast-track
+    quadrant-3 Low priority — park
+    quadrant-4 Reconsider — likely reject
+    "{Idea 1}": [0.25, 0.85]
+    "{Idea 2}": [0.80, 0.80]
+    "{Idea 3}": [0.30, 0.25]
+    "{Idea 4}": [0.85, 0.30]
+```
+
+---
+
 ## Status Definitions
 
 | Status | Meaning |

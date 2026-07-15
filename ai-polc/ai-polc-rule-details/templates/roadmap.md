@@ -50,6 +50,28 @@ For {target users} who {need}, {product} provides {value} unlike {alternatives}.
 
 ---
 
+## Release Roadmap (visual)
+
+> Now / Next / Later horizons at a glance. The Now/Next/Later tables above stay authoritative (DFE-extracted for the backlog dashboard); this diagram is the human view. `flowchart` is used as the portable fallback for the roadmap (date-driven `gantt`/`timeline` renderers vary across platforms; Now/Next/Later are confidence horizons, not fixed dates).
+
+```mermaid
+flowchart LR
+    subgraph NOW["NOW — 80–100%"]
+        N1["{Theme A}: {capability} → G1"]
+        N2["{Theme B}: {capability} → G3"]
+    end
+    subgraph NEXT["NEXT — 50–80%"]
+        X1["{Theme B}: {capability} → G3"]
+        X2["{Theme C}: {capability} → G4"]
+    end
+    subgraph LATER["LATER — 20–50%"]
+        L1["{Theme C}: {explore} → G5"]
+    end
+    NOW --> NEXT --> LATER
+```
+
+---
+
 ## Roadmap Governance
 
 | Aspect | Rule |

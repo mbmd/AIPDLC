@@ -217,7 +217,7 @@ As long as the marker file can be found, the chain works. The user provides the 
 | AI-PILC chain contract | `ai-pilc/ai-pilc-rules/core-workflow.md` (§ Chain Contract) |
 | AI-ADLC chain contract | `ai-adlc/ai-adlc-rules/core-workflow.md` (§ Chain Contract) |
 | AI-DWG chain contract | `ai-dwg/ai-dwg-rules/core-generator.md` (§ Chain Contract) |
-| AI-GCE chain contract | `ai-gce/ai-gce-rules/core-generator.md` (§ Chain Contract) |
+| AI-GCE chain contract | `ai-gce/ai-gce-rules/core-engine.md` (§ Chain Contract) |
 | Family Structure | `FAMILY_STRUCTURE.md` |
 | Naming & Ownership | `contracts/NAMING_AND_OWNERSHIP.md` |
 

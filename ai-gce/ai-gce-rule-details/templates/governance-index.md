@@ -19,6 +19,21 @@ Defines `.governance/GOVERNANCE_INDEX.md` — the **AI's entry point to discover
 
 ---
 
+## Enforcement Flow (visual)
+
+> How a governance rule reaches a gate — rule → check → gate. The machinery tables in the template below stay authoritative (engines, rules, hooks, drift, gates — DFE-extracted for the governance dashboard); this diagram is the human view of the derive-check-enforce pipeline every generated rule follows.
+
+```mermaid
+flowchart LR
+    R["Rule<br/>{steering-derived MUST / NEVER}"] --> C["Check<br/>{hook / agent}"]
+    C -->|pass| P["✅ Proceed<br/>(silent when compliant)"]
+    C -->|fail| G{"Gate<br/>{phase / PR / CI-CD}"}
+    G -->|block| B["⛔ Blocked<br/>logged to compliance-log"]
+    G -->|waive| W["⚠️ Waiver<br/>logged with rationale"]
+```
+
+---
+
 ## Template
 
 ```markdown

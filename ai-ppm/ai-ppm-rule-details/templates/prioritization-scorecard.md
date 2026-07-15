@@ -41,6 +41,25 @@ ownership: hybrid
 
 > **Delta** = gap from the project ranked above. Large gaps indicate natural cut lines.
 
+## Value / Risk Matrix (visual)
+
+> Portfolio positioning at a glance — business value (y) against risk (x). The scored Results table above stays authoritative (DFE-extracted for the portfolio dashboard); this diagram is the human view. Plot each project by its value and risk dimensions (risk is the inverse of the risk-reduction/feasibility scores).
+
+```mermaid
+quadrantChart
+    title Portfolio Value / Risk
+    x-axis Low Risk --> High Risk
+    y-axis Low Value --> High Value
+    quadrant-1 Big bets — govern closely
+    quadrant-2 Prioritize — admit first
+    quadrant-3 Low priority — defer
+    quadrant-4 Avoid — retire / decline
+    "{Project A}": [0.30, 0.85]
+    "{Project B}": [0.80, 0.80]
+    "{Project C}": [0.25, 0.30]
+    "{Project D}": [0.80, 0.25]
+```
+
 ---
 
 ## Key Observations

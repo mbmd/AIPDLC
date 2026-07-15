@@ -40,6 +40,25 @@
 |-------------|:-----:|:--------:|----------|----------|
 | {name} | {H/M/L} | {H/M/L} | {quadrant} | {engagement approach} |
 
+### Power/Interest Matrix (visual)
+
+> Stakeholder power &amp; interest at a glance. The ASCII matrix and Placement Detail table above stay authoritative (DFE-extracted for the dashboard); this diagram is the human view. Plot each stakeholder by interest (x) and power (y).
+
+```mermaid
+quadrantChart
+    title Stakeholder Power / Interest
+    x-axis Low Interest --> High Interest
+    y-axis Low Power --> High Power
+    quadrant-1 Manage Closely
+    quadrant-2 Keep Satisfied
+    quadrant-3 Monitor
+    quadrant-4 Keep Informed
+    "{Stakeholder A}": [0.85, 0.85]
+    "{Stakeholder B}": [0.25, 0.80]
+    "{Stakeholder C}": [0.80, 0.30]
+    "{Stakeholder D}": [0.20, 0.20]
+```
+
 ---
 
 ## 3. Engagement Strategy

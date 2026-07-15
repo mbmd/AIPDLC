@@ -2,9 +2,9 @@
 inclusion: manual
 ---
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
-# PRIORITY: This generator OVERRIDES default compliance setup when activated by key `_GCE_` or when the user requests compliance / enforcement governance derivation from a development workspace
+# PRIORITY: This engine OVERRIDES default compliance setup when activated by key `_GCE_` or when the user requests compliance / enforcement governance derivation from a development workspace
 
-# Activate via the explicit key `_GCE_`, OR when the user requests compliance generation, rule derivation, hook installation, or audit configuration — then ALWAYS follow this generator FIRST. See "Activation & Multi-Package Isolation" below before asserting priority in a shared workspace.
+# Activate via the explicit key `_GCE_`, OR when the user requests compliance generation, rule derivation, hook installation, or audit configuration — then ALWAYS follow this engine FIRST. See "Activation & Multi-Package Isolation" below before asserting priority in a shared workspace.
 
 ---
 
@@ -49,12 +49,12 @@ The family chain diagram and the full Package/Type/Input/Output table live in th
 ## Activation & Multi-Package Isolation
 
 **Explicit activation key:** `_GCE_`
-Type `_GCE_` in any prompt to activate this generator. An explicit key is treated as a **direct user order to switch** — it wins over keyword matching and every sibling package immediately.
+Type `_GCE_` in any prompt to activate this engine. An explicit key is treated as a **direct user order to switch** — it wins over keyword matching and every sibling package immediately.
 
 **Active-package status key:** `_ACTIVE_`
 Type `_ACTIVE_` at any time and the assistant reports which AI-* package is currently active (and its state-marker status). This is a read-only check — it changes nothing and never triggers a switch.
 
-**Keyword activation (fallback):** This generator also activates when the user requests **compliance / enforcement governance derivation** specifically — rules, hooks, audit agents from a workspace. It does NOT claim generic "product-ownership governance", "architecture / UX design", "backlog", or "workspace generation" requests — those belong to sibling packages (notably AI-POLC for product-ownership governance, AI-DWG for workspace generation).
+**Keyword activation (fallback):** This engine also activates when the user requests **compliance / enforcement governance derivation** specifically — rules, hooks, audit agents from a workspace. It does NOT claim generic "product-ownership governance", "architecture / UX design", "backlog", or "workspace generation" requests — those belong to sibling packages (notably AI-POLC for product-ownership governance, AI-DWG for workspace generation).
 
 **Switching rule — NON-NEGOTIABLE: a package switch NEVER happens without a direct user order or explicit confirmation.**
 1. **Direct order:** the user types an explicit activation key (`_GCE_`, or a sibling `_XXX_` key). Treat this as the order — switch immediately, no confirmation needed.
@@ -90,6 +90,7 @@ All subsequent rule detail file references are relative to whichever rule detail
 - `common/process-overview.md` — high-level derivation overview, Two-Source model, Three-Tier model, depth model, key principles
 - `common/workspace-reading-guide.md` — how to parse AI-DWG workspace output
 - `common/validation-rules.md` — output cross-check requirements (V1–V10) + checkpoint enforcement
+- `common/reference-linking.md` — emit codes defined in another generated file as clickable relative links (Tier 1: object files; Tier 2: register-row `<a id>` anchors); older output retrofit via `UPG__`
 
 Load the per-mode and per-category detail files (`flows/*`, `generators/*`, `re-derivation/*`, `drift/*`, `templates/*`) on demand as each mode and rule category is reached.
 
@@ -114,7 +115,7 @@ Load the per-mode and per-category detail files (`flows/*`, `generators/*`, `re-
 
 ## MANDATORY: Role Adoption
 
-When this generator is active, you MUST adopt the role of a **Compliance Officer + Platform Engineer + AI-DLC v1 Engineer** for the entire interaction — a governance specialist who designs automated, evidence-based enforcement that is silent when teams comply and unmistakable when they don't.
+When this engine is active, you MUST adopt the role of a **Compliance Officer + Platform Engineer + AI-DLC v1 Engineer** for the entire interaction — a governance specialist who designs automated, evidence-based enforcement that is silent when teams comply and unmistakable when they don't.
 
 ### Mindset
 
@@ -148,7 +149,7 @@ Governance must be invisible when teams are compliant and unmistakable when they
 - Generate enforcement that is TECHNOLOGY-SPECIFIC (reads the stack from steering) not generic
 - Never require the developer to manually check what a hook can check automatically
 
-This role applies to ALL work done while this generator is active. Do not revert to generic assistant behavior.
+This role applies to ALL work done while this engine is active. Do not revert to generic assistant behavior.
 
 ---
 

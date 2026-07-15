@@ -1,7 +1,8 @@
 # GATE_PROTOCOL.md — Universal Gate & Seam Protocol
 
-**protocolVersion:** 1.3.0
+**protocolVersion:** 1.4.0
 **Date:** 2026-06-18
+**Last Updated:** 2026-07-10
 **Author:** Maheri
 **Authored under:** `#persona-process-designer` (lead) + `#persona-cto-architect` (contracts)
 **Status:** ACTIVE
@@ -304,10 +305,10 @@ For each capability type:
 
 ### 9.2 Governance Rules
 
-1. New types are allocated at **build-time** by the package builder
-2. The vocabulary is canonical in this file's `§ Appendix A` and propagated with the protocol
+1. New types are allocated at **build-time** and recorded in the **emitting family's** `FAMILY_INTERFACE.md` "Capability Types" table
+2. Each family's vocabulary is canonical in its own `FAMILY_INTERFACE.md` (this protocol is family-agnostic — it governs the vocabulary but does not enumerate it; see Appendix A)
 3. A type name, once allocated, is never reused for a different meaning (deprecate instead)
-4. Version bumps require a justification note in the vocabulary entry
+4. Version bumps require a justification note in the owning family's `FAMILY_INTERFACE.md` / change log
 5. FLO warns on **mandatory field mismatch** (consumer requires what producer doesn't guarantee) — NOT on version number alone
 
 ### 9.3 Compatibility Assessment (build-time)
@@ -407,7 +408,7 @@ The gate's role is **validation** (are the guaranteed fields present and compati
 
 ### 15.2 Deprecation Process
 
-1. **Declare deprecation** — add `status: deprecated` + `supersededBy: {new-type}@{version}` + `sunsetDate: {ISO date}` to the vocabulary entry in Appendix A
+1. **Declare deprecation** — add `status: deprecated` + `supersededBy: {new-type}@{version}` + `sunsetDate: {ISO date}` to the type's entry in the owning family's `FAMILY_INTERFACE.md`
 2. **Migration window** — consumers have until `sunsetDate` to update their `consumes` entries to the replacement type
 3. **Build-time warning** — `assess-fabric-compatibility.ps1` flags any flow using a deprecated type
 4. **Runtime advisory** — FLO logs a warning when routing through a deprecated edge but does NOT block
@@ -428,7 +429,7 @@ Seams (cross-family flows in `CROSS_FAMILY_FLOWS.md`) follow the same lifecycle:
 
 - A type CANNOT be sunset without a `supersededBy` replacement declared
 - The migration window MUST be at least 90 days from deprecation to sunset
-- Sunset types are never deleted from Appendix A — they remain with `status: sunset` for audit
+- Sunset types are never deleted from the owning family's `FAMILY_INTERFACE.md` — they remain with `status: sunset` for audit
 
 ---
 
@@ -502,7 +503,7 @@ Before running the 5-step matching stack, FLO performs a **marker integrity pre-
 |-------|-------------------|--------|
 | Required fields present | `family`, `emits-type`, `status`, `entityId` — any missing | Quarantine + alert |
 | `status` value valid | Not one of: `complete`, `in-progress`, `blocked` | Quarantine + alert |
-| `emits-type` in vocabulary | Type name not found in GATE_PROTOCOL Appendix A | Warn (may be a newer type from an updated family) |
+| `emits-type` in vocabulary | Type name not declared in any family's `FAMILY_INTERFACE.md` "Capability Types" table | Warn (may be a newer type from an updated family) |
 | `entityId` non-empty | Field present but blank | Quarantine + alert |
 | `family` matches context | Marker claims family X but found in family Y's folder | Warn (may be a cross-family output placed locally) |
 
@@ -562,37 +563,27 @@ A marker can pass integrity but fail gate matching (valid but incompatible). A m
 ---
 
 
-## Appendix A — Capability-Type Vocabulary (Global)
+## Appendix A — Capability-Type Vocabulary (Governance, not enumeration)
 
-> Canonical registry of ALL capability types across ALL families. New types are allocated here at build-time. Field definitions live in each package's gate contract (never duplicated here). This appendix is global — when copied to a family root it carries the full vocabulary so any family can resolve any type it encounters.
->
-> **Visibility is NOT a property of the type** — it is declared per gate contract. The same type can be emitted with `internal` visibility (for intra-family consumers) AND `external` visibility (for cross-family seams). The "Seam-Capable" column flags types that at least one package exposes externally.
+> This protocol is **family-agnostic** — it is copied verbatim to every family root and must be identical everywhere. Therefore it defines only **how** the capability-type vocabulary is governed; it does **not** enumerate any family's types. Enumerating them here would couple every family through the shared protocol (each new type would edit and re-sync this doc to all families), violating family self-containment (P5).
 
-| # | Type Name | Version | Description | Emitted by | Family | Seam-Capable |
-|---|-----------|:-------:|-------------|-----------|:------:|:------------:|
-| CT-01 | `idea-decision` | @1 | A validated idea with a go/no-go decision and lifecycle disposition | AI-ILC | PDLC | — |
-| CT-02 | `project-initiation` | @1 | A fully initiated project with charter, scope, risk register, and governance structure | AI-PILC | PDLC | — |
-| CT-03 | `architecture-design` | @1 | A complete architecture package (C4, ADRs, NFRs, component decomposition) | AI-ADLC | PDLC | — |
-| CT-04 | `product-backlog` | @1 | A prioritized, governance-ready product backlog with acceptance criteria | AI-POLC | PDLC | — |
-| CT-05 | `ux-design` | @1 | UX research findings, flows, wireframes, and design specifications | AI-UXD | PDLC | — |
-| CT-06 | `development-workspace` | @1 | A scaffolded workspace with CI/CD, steering, hooks, and project structure | AI-DWG | PDLC | ✅ external |
-| CT-07 | `governance-engine` | @1 | Governance hooks, compliance checks, audit scoring, and drift detection rules | AI-GCE | PDLC | — |
-| CT-08 | `test-strategy` | @1 | Test strategy, coverage matrix, test cases, and quality gates | AI-TGE | PDLC | — |
-| CT-09 | `portfolio-state` | @1 | Adaptive portfolio positions, health scores, and intervention recommendations | AI-PPM | PDLC | ✅ external |
-| CT-10 | `orchestration-state` | @1 | Routing positions, conflict flags, readiness assessments, and handoff coordination | AI-FLO | (shared infra) | — |
-| CT-11 | `data-surface` | @1 | Structured per-package + demand-shaped JSON data surface (`{family}-ws/data/`) with registry, schemas, and history — the family's machine-readable data layer | AI-DFE | PDLC | — |
-| CT-E01 | `validated-business-case` | @1 | A validated business case with financial model and market sizing | AI-BPLC | BVLC | ✅ external |
-| CT-E02 | `capability-input` | @1 | Enterprise capability context (roadmap, capability map) that enriches idea shaping | AI-TRM | EAFLC | ✅ external |
+### Where the vocabulary lives
 
-> **Seam-Capable** = at least one producing package declares this type with `visibility: external` in its gate contract, making it eligible for cross-family flows (`CROSS_FAMILY_FLOWS.md`). A type without a seam-capable flag is intra-family only. `CT-E*` prefixes mark types whose producing family is not yet built (BVLC, EAFLC) — they are registered ahead of the family so PDLC's seam-in contracts can reference them.
+- **A package's `§ Gate Contract` is the source of truth for every type it emits** (the `emits-type` + its `guarantees` field set). A type *exists* because some package emits it — that is its definition. Field definitions are never duplicated anywhere else.
+- **A family's `FAMILY_INTERFACE.md` additionally lists its cross-family seam types** (Tier 1 seam-in / seam-out) for discovery, plus any *pending* external types it consumes from a producer family that isn't built yet. Internal-only types are not re-listed there — they live solely in their emitting package's gate contract.
+- **A consumer resolves a foreign type** by reading the producer family's `FAMILY_INTERFACE.md` at discovery time (§7), not from a central list.
+- **The build-time compatibility assessment** derives its known-type set as the **union of every package's emitted types (gate contracts)** plus the **seam / pending types declared in each `FAMILY_INTERFACE.md`**. There is no hand-maintained master list, and this protocol carries no per-family enumeration.
 
-> **Allocation rules:** (1) One package may emit multiple types (e.g., AI-DWG with internal + external visibility). (2) A type name, once allocated, is never reused. (3) Version bumps require a justification note below. (4) Types with `external` visibility may appear in `FAMILY_INTERFACE.md` Tier 1 and be bound cross-family.
+### Allocation & governance rules
 
-### Version History
+1. A type is allocated at build-time and recorded in the **emitting family's** `FAMILY_INTERFACE.md`.
+2. A type name, once allocated, is **never reused** for a different meaning (deprecate instead — §15).
+3. **Visibility is per gate contract, not per type** — the same type may be emitted `internal` (intra-family auto-bind) and/or `external` (cross-family seam). A type is *seam-capable* when at least one package emits it with `visibility: external`.
+4. One package may emit multiple types.
+5. Version bumps (semantic axis, §8.2) require a justification note in the owning family's interface/change log.
+6. Package & family codes are kept globally unique at build-time; families mint entity IDs internally and the seam links them (§11).
 
-| Type | Version | Date | Justification |
-|------|:-------:|------|---------------|
-| _(none yet — all types seeded at @1)_ | | | |
+> **Types whose producing family is not yet built** are declared as `external` seam-in references (marked pending) in the **consuming** family's `FAMILY_INTERFACE.md`, so a seam-in contract can name a type before its producer ships. They become ordinary owned entries when that family lands. This keeps forward references in the family that needs them — not in the shared protocol.
 
 ---
 
@@ -605,6 +596,7 @@ A marker can pass integrity but fail gate matching (valid but incompatible). A m
 | 1.2.0 | 2026-06-18 | **Per-type scoped gate-in (§4.2 rework).** Gate-in requirements now scope mandatory/optional fields UNDER each consumed type (`consumes: - type / mandatory / optional`), replacing the flat `consumes-types` + global `mandatory`/`optional` lists. Fixes fan-in consumers incorrectly requiring fields from feeds that don't provide them (e.g. AI-DWG asking POLC/UXD for architecture fields). Universal floor (status==complete + entityId) moved to marker integrity (§18). Unified Appendix A vocabulary into one global table with a Seam-Capable flag (visibility is per-contract, not per-type). All 10 PDLC gate contracts + assessment/generator parsers updated. Assessment: PASS, 0 issues. |
 | 1.3.0 | 2026-06-18 | **Minor gap resolutions (Phase 6, CFA-25): added §20** giving an explicit stance for G-K (trust boundary — untrusted foreign input + integrity check), G-L (one-to-many lineage — N markers via derivedFrom), G-M (glossary = §2), G-N (standalone-package — gate contract self-sufficient), G-O (fabric testing — deferred to family #2), G-P (protocolVersion interop — structural compatibility via §5 Step 1). |
 | 1.3.1 | 2026-06-27 | **Vocabulary addition (no protocol-mechanic change): +CT-11 `data-surface@1`** (AI-DFE, PDLC, internal visibility — not seam-capable). Registered for the AI-DFE build (Phase E fabric registration). Like CT-10 (`orchestration-state`/AI-FLO), AI-DFE is a wildcard observer that consumes `"*"` and forms no capability edge; `data-surface` is its emitted type, consumed by internal tools/dashboards via `REGISTRY.json`, not by sibling packages. Packages may keep pinning protocolVersion 1.2.0 (additive change, §5 Step 1 / G-P tolerance). |
+| 1.4.0 | 2026-07-10 | **Family-agnostic vocabulary (Appendix A de-enumerated).** Removed the hand-maintained global capability-type enumeration from Appendix A — it coupled every family through the shared, verbatim-synced protocol (each new type edited + re-synced this doc to all families), violating family self-containment (P5). Appendix A now defines only vocabulary **governance** (ownership, allocation, visibility, deprecation); **each family owns its types in its own `FAMILY_INTERFACE.md`**. Body refs updated (§9.2, §15.1/15.4, §18.1) to point at family interfaces. The build-time compatibility assessment now aggregates the known-type set from all families' `FAMILY_INTERFACE.md` tables instead of this doc. No matching-mechanic change — families pinning ≤1.3.1 remain valid (structural/doc change only). Prompted by SFLC/SXLC onboarding: their types live in their own interfaces, not here. |
 
 ---
 

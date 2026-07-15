@@ -46,9 +46,8 @@
 | **Action Items** | Tracked follow-up tasks: description, owner, due date, status (Open/Done), source (which meeting/stage generated it). |
 | **Assumptions & Dependencies** | Register of project assumptions (things believed true but not proven) and dependencies (things needed from external parties): type (A/D), impact if invalid, validation status. |
 | **Lessons Learned** | Insights captured during project execution about what worked, what didn't, and what to do differently. Shared across phases for continuous improvement. |
-| **PMBOK (Project Management Body of Knowledge)** | PMI's standard methodology framework. AI-PILC aligns terminology and process structure with PMBOK 7th Edition principles. |
-| **PRINCE2 (Projects IN Controlled Environments)** | Process-based project management methodology emphasizing business justification, defined organization, staged delivery, and management by exception. |
-| **ITIL (IT Infrastructure Library)** | Framework of best practices for IT service management — referenced for service-oriented project governance. |
+| **Business Justification** | Process-based project governance emphasizing a clear investment case, a defined organizational structure, staged delivery, and management by exception. AI-PILC aligns terminology and process structure with this established discipline. |
+| **Service Management Context** | Best-practice principles for service-oriented project governance — referenced where a project's outcome is an operated service. |
 | **Steering Committee** | Executive governance body that reviews progress, resolves escalations, and provides formal sign-off at →Phase Gates. |
 | **Adaptive Depth** | Three-tier workflow calibration applied across all AI-* packages: **Minimal** (clear/small scope), **Standard** (normal complexity), **Comprehensive** (high complexity, many unknowns). Each stage behaves differently per level. |
 | **Project ID** | Immutable family-wide correlation key (format: `PRJ-{ABBREV}-{YYYY}-{NNN}`). Minted at AI-PILC Stage 1, carried through every downstream package for traceability and portfolio roll-up. |

@@ -116,7 +116,7 @@ Multiple AI-* packages can coexist in the same workspace:
 | AI-PILC | `core-workflow.md` | 18 files | 14 templates |
 | AI-ADLC | `core-workflow.md` | 25+ files | 13 templates |
 | AI-DWG | `core-generator.md` | 30+ files | 48 templates |
-| AI-GCE | `core-generator.md` | 20+ files | 12 templates |
+| AI-GCE | `core-engine.md` | 20+ files | 12 templates |
 | AI-TGE | `core-engine.md` | 18 files | 6 templates |
 | AI-POLC | `core-workflow.md` | 15+ files | 10 templates |
 | AI-UXD | `core-workflow.md` | 15+ files | 10 templates |

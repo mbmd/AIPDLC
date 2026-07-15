@@ -33,7 +33,7 @@
 | **GitHub Copilot** | Active subscription + VS Code/JetBrains extension installed |
 | **A workspace folder** | Any project directory where you want AI-assisted delivery |
 | **PowerShell 5.1+** (Windows) or **Bash** (macOS/Linux) | For the automated installer |
-| **The AIFLC package source** | Clone the [AIPDLC repository](https://github.com/mbmd/AIPDLC) |
+| **The AIFLC package source** | Clone [AIPDLC](https://github.com/mbmd/AIPDLC) into a temporary `.aiflc-src/AIPDLC/` folder (Method 1 shows the command). Delete it after install — `Remove-Item -Recurse -Force .aiflc-src` (Windows) or `rm -rf .aiflc-src` (macOS/Linux) — so nothing but `.aiflc/pdlc/` and `pdlc-ws/` remains at your root. |
 
 > You do NOT need: Node.js, Python, Docker, or any runtime. Packages are pure Markdown — no compilation, no dependencies.
 
@@ -71,8 +71,9 @@ your-workspace/
 ### Windows (PowerShell)
 
 ```powershell
-# Navigate to the AIFLC package source
-cd "<path-to-AIPDLC>"
+# Clone the source into a temporary nested folder (removed after install), then enter it
+git clone https://github.com/mbmd/AIPDLC.git .aiflc-src/AIPDLC
+cd .aiflc-src\AIPDLC
 
 # Option A: Fully interactive
 .\installer\install.ps1
@@ -87,8 +88,9 @@ cd "<path-to-AIPDLC>"
 ### macOS / Linux (Bash)
 
 ```bash
-# Navigate to the AIFLC package source
-cd <path-to-AIPDLC>
+# Clone the source into a temporary nested folder (removed after install), then enter it
+git clone https://github.com/mbmd/AIPDLC.git .aiflc-src/AIPDLC
+cd .aiflc-src/AIPDLC
 
 # Option A: Fully interactive
 ./installer/install.sh

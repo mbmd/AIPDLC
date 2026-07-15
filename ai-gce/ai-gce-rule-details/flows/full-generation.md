@@ -5,7 +5,7 @@
 
 This file holds the orchestration scaffolding for **Mode 1 (Full Generation)** that does not live in a per-category generator: the phase/role-aware steering generation logic (Step 4b), the literal `.compliance-state.json` initialization template (Step 6), and the success-summary output block (Step 12).
 
-The full 12-step index lives in `core-generator.md` (the always-loaded dispatcher). The per-category derivation work for Steps 1–11 lives in:
+The full 12-step index lives in `core-engine.md` (the always-loaded dispatcher). The per-category derivation work for Steps 1–11 lives in:
 - `common/workspace-reading-guide.md` (Step 1)
 - `generators/hooks-from-steering.md`, `generators/cicd-gates-generator.md`, `generators/compliance-log-gov-gen.md` (Steps 2–4)
 - `generators/*` (24 per-category rule files — Step 3)

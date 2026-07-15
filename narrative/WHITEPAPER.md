@@ -30,31 +30,37 @@ AIFLC (AI Full Life Cycle) delivers the **AI-* PDLC Family** — a chain of inje
 
 The family spans **ten packages across two layers** — a Portfolio layer that reasons across many projects and a Project layer that executes one — joined by a router on the edge. Two of the ten are continuous engines rather than linear stages: **AI-FLO** (the router/orchestrator) and the quality companions **AI-GCE** and **AI-TGE**. Alongside the chain runs **AI-DFE**, a family-scoped data fabric that turns every package's output into a queryable data surface for dashboards and portfolio roll-ups.
 
+```mermaid
+flowchart LR
+    subgraph PORTFOLIO["PORTFOLIO LAYER · scope = MANY projects"]
+        ILC["AI-ILC<br/>Decide it<br/>(optional)"]
+        PILC["AI-PILC<br/>Initiate it"]
+        PPM["AI-PPM<br/>Govern it<br/>(portfolio of N projects)"]
+        ILC -.-> PILC --> PPM
+    end
+
+    FLO["AI-FLO<br/>Route it — package-to-package<br/>flow on the edge between layers"]
+
+    subgraph PROJECT["PROJECT LAYER · scope = ONE project"]
+        POLC["AI-POLC<br/>Own it"]
+        UXD["AI-UXD<br/>Design UX"]
+        ADLC["AI-ADLC<br/>Design it"]
+        DWG["AI-DWG<br/>Prepare it"]
+        DLC["AI-DLC v1<br/>(build) ¹"]
+        GCE["AI-GCE<br/>Guard it"]
+        TGE["AI-TGE<br/>Test it"]
+
+        POLC --> UXD --> ADLC --> DWG --> DLC
+        POLC <-.->|"back-and-forth"| DLC
+        DLC -.->|"feedback"| UXD
+        DLC -.->|"feedback"| POLC
+        GCE ---|"alongside AI-DLC v1"| DLC
+        TGE ---|"alongside AI-DLC v1"| DLC
+    end
+
+    PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-╔════════════════ PORTFOLIO LAYER · scope = MANY projects ════════════════╗
-
-   (optional)
-    AI-ILC  ⇢  AI-PILC  ⇢  AI-PPM
-    Decide it   Initiate it   Govern it (portfolio of N projects)
-
-╚═════════════════════════════════╤═══════════════════════════════════════╝
-                                   │
-                                AI-FLO   Route it — package-to-package
-                                   │     flow on the edge between layers
-╔════════════════ PROJECT LAYER · scope = ONE project ════════════════════╗
-
-    AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build) ¹
-    Own it      Design UX   Design it   Prepare it       ▲
-                                                         │
-                        AI-POLC ⇄ AI-DLC v1 (back-and-forth)┘
-                AI-DLC v1 ⇢ AI-UXD+AI-POLC (feedback)
-
-    AI-GCE  +  AI-TGE  ──── alongside AI-DLC v1 (continuous quality) ────►
-    Guard it   Test it
-
-╚═════════════════════════════════════════════════════════════════════════╝
   ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
-```
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -105,7 +111,7 @@ The chain is the optimal path. But each link stands alone.
 
 ### 1. Methodology, Not Magic
 
-Each package embeds proven methodology — PMBOK/PRINCE2 for initiation, C4/ADR for architecture, prescriptive governance for compliance. The AI doesn't invent process; it executes established process consistently.
+Each package embeds proven methodology — industry-standard project-governance discipline for initiation, C4/ADR for architecture, prescriptive governance for compliance. The AI doesn't invent process; it executes established process consistently.
 
 ### 2. Injectable
 

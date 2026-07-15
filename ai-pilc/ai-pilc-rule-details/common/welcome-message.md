@@ -54,7 +54,7 @@ Project Initiation Package ready for execution.
    • I recommend; you decide — I never proceed without your approval
    • I reference your source document — I never invent scope
    • Every decision is logged with rationale — full audit trail
-   • Professional PMO quality — PMBOK/PRINCE2 aligned
+   • Professional PMO quality — industry-standard governance alignment
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

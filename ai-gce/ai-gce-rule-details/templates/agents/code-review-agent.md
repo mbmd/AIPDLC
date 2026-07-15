@@ -6,7 +6,7 @@ description: >
   per-layer review focus, and review evidence completeness before PR approval.
 generatedBy: AI-GCE
 generatedVersion: "{version}"
-source: ai-gce-rules/core-generator.md
+source: ai-gce-rules/core-engine.md
 generatedOn: "{ISO-date}"
 ownership: generated
 tools: ["read", "shell"]

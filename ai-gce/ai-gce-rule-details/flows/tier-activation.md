@@ -5,7 +5,7 @@
 
 This file holds the complete **Mode 4 (Tier Activation)** flow: when triggered, the interaction model, the tier-specific questions, and the 9-step activation flow. The tier model and readiness criteria themselves live in `common/process-overview.md` ("Three-Tier Progressive Compliance" + "Tier Readiness Criteria"); the activation FLOW lives here.
 
-The Mode 4 entry (purpose + trigger) lives in `core-generator.md` (the always-loaded dispatcher). Load this file when Mode 4 is detected.
+The Mode 4 entry (purpose + trigger) lives in `core-engine.md` (the always-loaded dispatcher). Load this file when Mode 4 is detected.
 
 ---
 

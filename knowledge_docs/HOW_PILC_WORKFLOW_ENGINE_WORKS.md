@@ -185,7 +185,7 @@ AI-PILC is the **first required package** in the AI-* Family chain:
 |----------|-----------|
 | Phase-gate (not stage-gate) for simple projects | Reduces friction — simple projects don't need 16 approval points |
 | PMO Professional persona (15-year veteran) | Output must read as if a senior PMO advisor wrote it |
-| PMBOK 7th Edition + PRINCE2 alignment | Recognized frameworks ensure terminology consistency |
+| Industry-standard project-governance alignment | Recognized professional practice ensures terminology consistency |
 | Real-time register entries (not batched) | Governance discipline — nothing falls through cracks |
 | No downstream signaling | PIP is a one-time handoff; AI-PILC doesn't reconcile |
 

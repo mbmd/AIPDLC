@@ -39,6 +39,25 @@ ownership: hybrid
 | 2 | EPIC-{NNN}: {name} | {N} | {N} | {N} | {N} | {X.X} | {Rationale} | R{N} |
 | 3 | EPIC-{NNN}: {name} | {N} | {N} | {N} | {N} | {X.X} | {Rationale} | R{N} |
 
+### Value / Effort Matrix (visual)
+
+> Prioritization at a glance — business value (y) against effort/job-duration (x). The ranked backlog table above stays authoritative (DFE-extracted for the backlog dashboard); this diagram is the human view. Plot each epic by value and effort (MoSCoW or WSJF positioning maps naturally onto these quadrants).
+
+```mermaid
+quadrantChart
+    title Value / Effort
+    x-axis Low Effort --> High Effort
+    y-axis Low Value --> High Value
+    quadrant-1 Major bets — plan &amp; sequence
+    quadrant-2 Quick wins — do first
+    quadrant-3 Fill-ins — maybe later
+    quadrant-4 Thankless — avoid / defer
+    "{EPIC-A}": [0.80, 0.85]
+    "{EPIC-B}": [0.25, 0.80]
+    "{EPIC-C}": [0.30, 0.25]
+    "{EPIC-D}": [0.85, 0.25]
+```
+
 ---
 
 ## Re-Prioritization Triggers

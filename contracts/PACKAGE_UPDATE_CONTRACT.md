@@ -71,7 +71,7 @@ installedOn: 2026-06-13T10:00:00Z
 lastChecked: 2026-06-13T10:00:00Z
 source: github.com/maheri/ai-gce
 files:
-  - path: ai-gce-rules/core-generator.md
+  - path: ai-gce-rules/core-engine.md
     installedHash: abc123
     currentHash: abc123        # same = unmodified
     status: clean
@@ -130,7 +130,7 @@ When a new version of a package is available and the user triggers an update:
 Present per-file:
 
 ```markdown
-### ⚠️ Conflict: ai-gce-rules/core-generator.md
+### ⚠️ Conflict: ai-gce-rules/core-engine.md
 
 You modified this file since installation. The update includes changes too.
 

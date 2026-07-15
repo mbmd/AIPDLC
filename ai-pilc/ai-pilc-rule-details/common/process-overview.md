@@ -149,7 +149,7 @@ The workflow supports multi-session execution:
 
 All deliverables produced by the workflow:
 
-- Follow professional PMO/PPM formatting (PMBOK/PRINCE2 aligned)
+- Follow professional PMO/PPM formatting (industry-standard governance alignment)
 - Use consistent document structure (headers, tables, sections)
 - Include version, date, status, and ownership metadata
 - Reference source documents (traceability)
@@ -201,3 +201,27 @@ All deliverables produced by the workflow:
 - Log every significant user input with timestamp in state file
 - Capture decisions verbatim — never paraphrase user's choice
 - Use ISO 8601 timestamps (YYYY-MM-DDTHH:MM:SSZ)
+
+
+## Stage Flow (visual)
+
+> The stage sequence at a glance. The table above stays authoritative.
+
+```mermaid
+flowchart TB
+    S1["Stage 1<br/>Workspace Detection"] --> S2["Stage 2<br/>Source Ingestion"]
+    S2 --> S3["Stage 3<br/>Requirement Structuring"]
+    S3 --> S4["Stage 4<br/>Requirements Analysis"]
+    S4 --> S5["Stage 5<br/>Clarification Cycle"]
+    S5 --> S6["Stage 6<br/>Feasibility"]
+    S6 --> S7["Stage 7<br/>Prioritization"]
+    S7 --> S8["Stage 8<br/>Business Case"]
+    S8 --> S9["Stage 9<br/>Project Charter"]
+    S9 --> S10["Stage 10<br/>Stakeholder Mgmt"]
+    S10 --> S11["Stage 11<br/>Scope Definition"]
+    S11 --> S12["Stage 12<br/>Resource & Budget"]
+    S12 --> S13["Stage 13<br/>Risk Management"]
+    S13 --> S14["Stage 14<br/>Governance & Comms"]
+    S14 --> S15["Stage 15<br/>Kickoff Prep"]
+    S15 --> S16["Stage 16<br/>Package Assembly"]
+```

@@ -27,7 +27,7 @@
 ## Consumers
 
 - Family-status demand (are projects flowing or stuck?).
-- AIFLC-PDLC-Dashboard (chain visualization + per-project position).
+- A family dashboard (chain visualization + per-entity position).
 - AI-PPM (portfolio health — which projects are stalled?).
 - `DFA__` freshness checks.
 

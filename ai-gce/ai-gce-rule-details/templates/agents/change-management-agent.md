@@ -6,7 +6,7 @@ description: >
   UAT traceability, stakeholder sign-off, rollback criteria, and training completion.
 generatedBy: AI-GCE
 generatedVersion: "{version}"
-source: ai-gce-rules/core-generator.md
+source: ai-gce-rules/core-engine.md
 generatedOn: "{ISO-date}"
 ownership: generated
 tools: ["read", "shell"]

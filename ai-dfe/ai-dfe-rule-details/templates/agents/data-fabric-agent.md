@@ -114,13 +114,13 @@ It **assesses and reports** — it never produces or mutates data. (`DAT__` chan
   File: pilc-data.json
   Field: data.risks[0].score (expected number, got "high")
   → Data does not conform to pilc-data.schema.json.
-  → Fix: DAT__ discover  then  DAT__ pdlc/pilc
+  → Fix: DAT__ discover  then  DAT__ {family}/{pkg}
 
 ⚠️ FR-1: Staleness WARNING
   File: adlc-data.json
   Source architecture/adlc-state.md changed 2026-06-22T14:10Z
   $generatedOn = 2026-06-22T09:00Z (stale by ~5h)
-  → Fix: DAT__ pdlc/adlc  (or DAT__ all)
+  → Fix: DAT__ {family}/{pkg}  (or DAT__ all)
 
 ❌ RG-1: Phantom Entry FAILED
   REGISTRY.json lists uxd-data.json but no file exists at pdlc-ws/data/uxd-data.json

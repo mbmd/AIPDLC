@@ -79,6 +79,18 @@ Force-activate a family package's workflow, unambiguously, regardless of other i
 | `FHC__` | flo-health-check (FLO-AG-02) | Audit | AI-FLO | Bootstrap readiness — "is this workspace ready for FLO?". Validates fabric trio, discovery, routing graph. `FHC__ fix` attempts simple resolutions. Run first in a new workspace. |
 | `FIA__` | flow-integrity-agent (FLO-AG-01) | Audit | AI-FLO | Operational integrity — "is FLO's state correct?". Validates routing graph consistency, entity positions, marker freshness during active operation. |
 
+## Governance Spine Trigger (Management Framework)
+
+| Key | Does |
+|-----|------|
+| `LRN__` | **Log a lesson learned** into the project governance spine (`management_framework/Lessons_Learned.md`). Type `LRN__` (optionally followed by the lesson text) any time; also offered once at session end. Report-and-confirm — resolves the active project's spine (creates it if absent), appends a scope-qualified entry `{PHASE}-{ABBREV}-L-{N}`, never edits another phase's rows. See `MANAGEMENT_FRAMEWORK_CONTRACT.md`. |
+
+## Family Upgrade Trigger
+
+| Key | Agent | Type | Does |
+|-----|-------|------|------|
+| `UPG__` | family-upgrade-agent (PDLC-UPG-01) | Migration | Retrofits new output-feature improvements (clickable reference links, table+diagram visual pairing, and future ones) into an EXISTING `pdlc-ws/` workspace. Detects installed packages → reports pending improvements per package → **Apply / Skip per package** → previews every change → writes nothing without confirmation. Idempotent, AI-agnostic, non-destructive. Installed once per workspace (create-if-absent) by whichever PDLC package the user installs first. See `MIGRATION_CATALOGUE.md`. |
+
 ## Future Triggers (Planned)
 
 | Key | Agent | Type | Owner | What It Does |

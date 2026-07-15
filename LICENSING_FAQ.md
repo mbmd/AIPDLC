@@ -14,7 +14,7 @@
 
 ### Q: Which packages are covered?
 
-**A:** AI-ILC, AI-PILC, AI-PPM, AI-FLO, AI-ADLC, AI-UXD, AI-POLC, AI-DWG, AI-GCE, AI-TGE, and AI-DFE. Together these eleven packages form the **PDLC family** of AIFLC — the family published in this repository. AI-DLC v1 is **not** part of AIFLC — it is an AWS product (awslabs/aidlc-workflows) licensed separately under MIT-0.
+**A:** AI-ILC, AI-PILC, AI-PPM, AI-FLO, AI-ADLC, AI-UXD, AI-POLC, AI-DWG, AI-GCE, AI-TGE, and AI-DFE. Together these eleven packages form the **PDLC family** of AIFLC — the family published in this repository. AI-DLC is **not** part of AIFLC — it is an AWS product (awslabs/aidlc-workflows) licensed separately under MIT-0.
 
 This License governs the PDLC family only. AIFLC is licensed **per family**: other AIFLC families are published as separate repositories that may carry their own license terms.
 

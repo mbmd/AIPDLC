@@ -137,7 +137,7 @@ CRITICAL: When performing any stage, you MUST read and use relevant content from
 
 All subsequent rule detail file references are relative to whichever rule details directory was resolved above.
 
-**Common rules — ALWAYS load at engine start:** `common/process-overview.md` (engine map, stages, trigger events, session patterns, cadence, family table), `common/session-continuity.md` (resume + full `ppm-state.md` schema), `common/question-format-guide.md` (question formatting), `common/content-validation.md` (content validation). Reference these throughout execution.
+**Common rules — ALWAYS load at engine start:** `common/process-overview.md` (engine map, stages, trigger events, session patterns, cadence, family table), `common/session-continuity.md` (resume + full `ppm-state.md` schema), `common/question-format-guide.md` (question formatting), `common/content-validation.md` (content validation), `common/reference-linking.md` (emit codes defined in another generated file as clickable relative links; older output retrofit via `UPG__`). Reference these throughout execution.
 
 ---
 
@@ -247,6 +247,7 @@ AI-PPM ships one process-governance agent: the **portfolio-governance-agent** (`
 2. **Register shortcut** → append `templates/agents/portfolio-governance-shortcut.md` (between its `<!-- BEGIN/END AI-PPM AGENT SHORTCUTS -->` markers) into `.kiro/steering/workspace-rules.md` — registers `PGA__`.
 3. **Update `.governance/AGENT_REGISTRY.md`** → append PPM-AG-01 using its reserved AG-ID.
 4. **Update `.governance/AGENT-GUIDE.md`** → append PPM's section (`templates/agents/portfolio-governance-guide.md` — when to call `PGA__`, consequences, recovery).
+5. **Install family upgrade agent (create-if-absent)** → if no `family-upgrade-agent.md` exists in the platform agent slot, copy `templates/agents/family-upgrade-agent.md` there; if `.kiro/steering/workspace-rules.md` has no `<!-- BEGIN PDLC UPGRADE SHORTCUT -->` marker, append `templates/agents/upgrade-shortcut-block.md`; append `PDLC-UPG-01` row to `AGENT_REGISTRY.md` if absent. This is the family-level `UPG__` upgrade agent — shared by all PDLC packages, installed once.
 
 `PGA__` is report-only — it assesses portfolio governance currency/completeness/decision-quality/health and never mutates portfolio artifacts.
 
@@ -305,6 +306,17 @@ guarantees:
   - status == complete
   - portfolioRegister
   - healthScores
+
+# EXTERNAL SEAM — added 2026-07-13, closes gap G3
+emits-type: delivery-feedback@1
+visibility: external
+marker: ppm-state.md
+payloadRoot: management_framework/
+guarantees:
+  - status == complete
+  - portfolioRegister
+  - healthScores
+  - deliveryVelocity
 ```
 
 ### Gate-In — What AI-PPM REQUIRES to Start
@@ -315,6 +327,8 @@ consumes:
     optional:  [charter, scope, riskRegister]
   - type: idea-decision@^1           # satisfiable internally (AI-ILC) — registers ideas
     optional:  [decisionOutcome, ideaBrief]
+  - type: initiative-portfolio@^1    # satisfiable externally (SXLC AI-SIP) — added 2026-07-13, closes gap G2
+    optional:  [prioritizedInitiatives, entities]
 on-missing-all: standalone     # can initialize empty portfolio register (P4)
 strictness-default: warn
 ```
@@ -322,6 +336,9 @@ strictness-default: warn
 > No type-specific mandatory payload — AI-PPM registers whatever entities exist (projects and/or ideas). Universal floor (status==complete + projectId|ideaId) enforced by marker integrity (GATE_PROTOCOL §18).
 
 ### Visibility Note
+
+- `initiative-portfolio` is the **external seam-in** from SXLC AI-SIP — declared in `FAMILY_INTERFACE.md` Tier 1 (strategic-initiative → project cascade).
+- `delivery-feedback` is the **external seam-out** to SXLC AI-SPR — declared in `FAMILY_INTERFACE.md` Tier 1 (delivery reality feeds strategy performance review, async loop-back).
 
 - `portfolio-state` is both `internal` (consumed by other PDLC packages for portfolio awareness) AND `external` (seam-out available to other families for portfolio integration).
 - Declared in `FAMILY_INTERFACE.md` Tier 1 as seam-out.

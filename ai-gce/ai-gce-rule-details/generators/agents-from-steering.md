@@ -2,7 +2,7 @@
 ---
 generatedBy: AI-GCE
 generatedVersion: 1.0.0
-source: ai-gce-rules/core-generator.md
+source: ai-gce-rules/core-engine.md
 generatedOn: 2026-06-11
 ownership: generated
 ---
@@ -87,7 +87,7 @@ Replace `{placeholder}` values with project-specific content:
 
 | Placeholder | Source |
 |-------------|--------|
-| `{version}` | AI-GCE version from core-generator |
+| `{version}` | AI-GCE version from core-engine |
 | `{ISO-date}` | Current date |
 | `{project_name}` | From `PROJECT_INSTRUCTIONS.md` or workspace root folder name |
 

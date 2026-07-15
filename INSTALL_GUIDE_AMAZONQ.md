@@ -34,7 +34,7 @@
 | **Amazon Q Developer** | VS Code extension or JetBrains plugin installed |
 | **A workspace folder** | Any project directory where you want AI-assisted delivery |
 | **PowerShell 5.1+** (Windows) or **Bash** (macOS/Linux) | For the automated installer |
-| **The AIFLC package source** | Clone the [AIPDLC repository](https://github.com/mbmd/AIPDLC) |
+| **The AIFLC package source** | Clone [AIPDLC](https://github.com/mbmd/AIPDLC) into a temporary `.aiflc-src/AIPDLC/` folder (Method 1 shows the command). Delete it after install — `Remove-Item -Recurse -Force .aiflc-src` (Windows) or `rm -rf .aiflc-src` (macOS/Linux) — so nothing but `.aiflc/pdlc/` and `pdlc-ws/` remains at your root. |
 
 > You do NOT need: Node.js, Python, Docker, or any runtime. Packages are pure Markdown — no compilation, no dependencies.
 
@@ -74,8 +74,9 @@ Amazon Q auto-loads only `session-orchestrator.md` from `.amazonq/rules/pdlc/`. 
 ### Windows (PowerShell)
 
 ```powershell
-# Navigate to the AIFLC package source
-cd "<path-to-AIPDLC>"
+# Clone the source into a temporary nested folder (removed after install), then enter it
+git clone https://github.com/mbmd/AIPDLC.git .aiflc-src/AIPDLC
+cd .aiflc-src\AIPDLC
 
 # Option A: Fully interactive
 .\installer\install.ps1
@@ -90,8 +91,9 @@ cd "<path-to-AIPDLC>"
 ### macOS / Linux (Bash)
 
 ```bash
-# Navigate to the AIFLC package source
-cd <path-to-AIPDLC>
+# Clone the source into a temporary nested folder (removed after install), then enter it
+git clone https://github.com/mbmd/AIPDLC.git .aiflc-src/AIPDLC
+cd .aiflc-src/AIPDLC
 
 # Option A: Fully interactive
 ./installer/install.sh
@@ -163,7 +165,7 @@ Cores and rule-details both live in the uniform home `.aiflc/pdlc/` (read on dem
 | AI-UXD | `.aiflc/pdlc/ai-uxd-rules/core-workflow.md` | `.aiflc/pdlc/ai-uxd-rule-details/` |
 | AI-POLC | `.aiflc/pdlc/ai-polc-rules/core-workflow.md` | `.aiflc/pdlc/ai-polc-rule-details/` |
 | AI-DWG | `.aiflc/pdlc/ai-dwg-rules/core-generator.md` | `.aiflc/pdlc/ai-dwg-rule-details/` |
-| AI-GCE | `.aiflc/pdlc/ai-gce-rules/core-generator.md` | `.aiflc/pdlc/ai-gce-rule-details/` |
+| AI-GCE | `.aiflc/pdlc/ai-gce-rules/core-engine.md` | `.aiflc/pdlc/ai-gce-rule-details/` |
 | AI-TGE | `.aiflc/pdlc/ai-tge-rules/core-engine.md` | `.aiflc/pdlc/ai-tge-rule-details/` |
 | AI-PPM | `.aiflc/pdlc/ai-ppm-rules/core-engine.md` | `.aiflc/pdlc/ai-ppm-rule-details/` |
 | AI-FLO | `.aiflc/pdlc/ai-flo-rules/core-engine.md` | `.aiflc/pdlc/ai-flo-rule-details/` |
@@ -269,7 +271,7 @@ your-project/
 │       ├── ai-polc-rule-details/
 │       ├── ai-dwg-rules/core-generator.md
 │       ├── ai-dwg-rule-details/
-│       ├── ai-gce-rules/core-generator.md
+│       ├── ai-gce-rules/core-engine.md
 │       ├── ai-gce-rule-details/
 │       ├── ai-tge-rules/core-engine.md
 │       ├── ai-tge-rule-details/

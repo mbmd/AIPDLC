@@ -90,6 +90,7 @@ All detail-file references below are relative to the resolved directory. **Befor
 - `common/session-continuity.md` — state spec, session resumption, incremental file output, output conventions
 - `common/question-format-guide.md` — full question-format rules
 - `common/content-validation.md` — content validation + provenance front-matter requirements
+- `common/reference-linking.md` — emit codes defined in another generated file as clickable relative links (Tier 1: object files; Tier 2: register-row `<a id>` anchors); older output retrofit via `UPG__`
 
 ---
 
@@ -281,6 +282,8 @@ consumes:
     optional:  [systemContext, nfrCoverage]
   - type: ux-design@^1               # satisfiable internally (AI-UXD) — personas/journeys feed stories
     optional:  [personas, userJourneys]
+  - type: enterprise-okr@^1          # satisfiable externally (SXLC AI-OKR) — added 2026-07-13, closes gap G1
+    optional:  [okrCascade, guardrails]
 on-missing-all: standalone     # accepts raw requirements directly (P4)
 strictness-default: warn
 ```
@@ -290,7 +293,7 @@ strictness-default: warn
 ### Visibility Note
 
 - `product-backlog` is `internal` — consumed by AI-DWG within PDLC.
-- Gate-in consumes only `internal` types; no external seam-in for AI-POLC.
+- `enterprise-okr` is the **external seam-in** from SXLC AI-OKR — declared in `FAMILY_INTERFACE.md` Tier 1 (product-OKR cascade).
 
 ---
 

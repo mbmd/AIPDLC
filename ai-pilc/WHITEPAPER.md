@@ -20,7 +20,7 @@ Even teams that DO follow structured initiation spend 2-4 weeks producing govern
 
 ## The Solution
 
-AI-PILC is an injectable workflow that trains an AI assistant to act as a disciplined PMO analyst. It walks you through 6 phases and 16 stages of structured project initiation — producing PMBOK/PRINCE2-aligned deliverables at each stage while you focus on making decisions.
+AI-PILC is an injectable workflow that trains an AI assistant to act as a disciplined PMO analyst. It walks you through 6 phases and 16 stages of structured project initiation — producing industry-standard, governance-grade deliverables at each stage while you focus on making decisions.
 
 **You decide. The AI produces.**
 
@@ -65,7 +65,7 @@ Every stage has a gate. No auto-progression. You approve before the workflow mov
 
 ### 1. Methodology-Backed, Not AI-Improvised
 
-AI-PILC embeds PMBOK 7th Edition and PRINCE2 methodology. The AI doesn't invent governance process — it executes established process consistently. Every template, every question, every deliverable structure follows recognized frameworks.
+AI-PILC embeds established project-governance methodology — proven principles, performance domains, and process groups drawn from decades of professional project management practice. The AI doesn't invent governance process — it executes established process consistently. Every template, every question, every deliverable structure follows recognized professional practice.
 
 ### 2. Adaptive Depth
 

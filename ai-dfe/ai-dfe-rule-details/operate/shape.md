@@ -28,7 +28,7 @@ One `{consumer-output}.json` per DEMAND, staged for distribution (2.3).
 
 Layer 2 NEVER re-reads raw sources. If a needed value isn't in any `{pkg}-data.json`, it is `null` — DFE does not reach back into the source files to "fix" it. This guarantees exactly one extraction point per fact (Layer 1).
 
-## Dashboard pane assembly (the AIFLC-PDLC-Dashboard demand)
+## Dashboard pane assembly (a family dashboard demand, where one is shipped)
 
 The dashboard output (`dashboard-data.json`) is assembled entirely from Layer-1 `{pkg}-data.json` files per the demand's field map:
 

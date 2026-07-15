@@ -136,3 +136,27 @@ Available at any point during the workflow:
 ---
 
 *Part of AI-UXD v1.0.0 | Reference: core-workflow.md for full orchestration logic*
+
+
+## Stage Flow (visual)
+
+> The stage sequence at a glance. The table above stays authoritative.
+
+```mermaid
+flowchart TB
+    S1["Stage 1<br/>Workspace Detection"] --> S2["Stage 2<br/>Research Planning"]
+    S2 --> S3["Stage 3<br/>Personas"]
+    S3 --> S4["Stage 4<br/>Journey Mapping"]
+    S4 --> S5["Stage 5<br/>Info Architecture"]
+    S5 --> S6["Stage 6<br/>User Flows"]
+    S6 --> S7["Stage 7<br/>Wireframes"]
+    S7 --> S8["Stage 8<br/>Design System"]
+    S8 --> S9["Stage 9<br/>Components"]
+    S9 --> S10["Stage 10<br/>Theming [C]"]
+    S10 --> S11["Stage 11<br/>Accessibility"]
+    S11 --> S12["Stage 12<br/>Usability Plan"]
+    S12 --> S13["Stage 13<br/>Design QA"]
+    S13 --> S14["Stage 14<br/>POLC Handoff"]
+    S14 --> S15["Stage 15<br/>DWG/GCE Handoff"]
+    S15 --> S16["Stage 16<br/>Package Assembly"]
+```

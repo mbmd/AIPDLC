@@ -5,7 +5,7 @@
 
 This file holds the complete **Mode 3 (Brownfield Incremental Adoption)** flow: what brownfield means, the interaction model, and the 8-step overlay flow. Output skeletons live in `templates/compliance-log/brownfield-baseline.md` and `templates/compliance-log/incremental-adoption-plan.md`; the flow logic lives here.
 
-The Mode 3 entry (purpose + trigger) lives in `core-generator.md` (the always-loaded dispatcher). Load this file when Mode 3 is detected.
+The Mode 3 entry (purpose + trigger) lives in `core-engine.md` (the always-loaded dispatcher). Load this file when Mode 3 is detected.
 
 ---
 

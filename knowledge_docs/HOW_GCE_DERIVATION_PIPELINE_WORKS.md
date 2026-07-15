@@ -218,7 +218,7 @@ When steering files are updated (e.g., after AI-DWG reconciliation):
 
 | Document | Location |
 |----------|----------|
-| Core generator | `ai-gce/ai-gce-rules/core-generator.md` |
+| Core generator | `ai-gce/ai-gce-rules/core-engine.md` |
 | Workspace reading guide | `ai-gce/ai-gce-rule-details/common/workspace-reading-guide.md` |
 | Generator files (23) | `ai-gce/ai-gce-rule-details/generators/` |
 | Re-derivation logic | `ai-gce/ai-gce-rule-details/re-derivation/` |

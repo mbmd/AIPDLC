@@ -114,21 +114,28 @@ Works with 6+ AI coding platforms:
 
 ## Installation
 
-After installing this skill, clone the full package set:
+After installing this skill, clone the package set into a temporary nested folder, run the installer against your workspace root, then delete the source. This keeps your workspace root clean — the installer only leaves `.aiflc/pdlc/` (the package home) and `pdlc-ws/` (your outputs) behind.
 
 ```bash
-git clone https://github.com/mbmd/AIPDLC.git
+# 1. Clone into a temporary folder — NOT your workspace root
+git clone https://github.com/mbmd/AIPDLC.git .aiflc-src/AIPDLC
+
+# 2. Install into your workspace root (add --platform / --bundle to skip prompts)
+./.aiflc-src/AIPDLC/installer/install.sh --target .
+
+# 3. Remove the source — nothing unnecessary is left in your root
+rm -rf .aiflc-src
 ```
 
-Then follow each package's `setup/INSTALL.md` for your specific platform — or use the interactive installer:
+On Windows (PowerShell):
 
 ```powershell
-# Windows
-.\installer\install.ps1
-
-# macOS / Linux
-./installer/install.sh
+git clone https://github.com/mbmd/AIPDLC.git .aiflc-src/AIPDLC
+.\.aiflc-src\AIPDLC\installer\install.ps1 -TargetWorkspace .
+Remove-Item -Recurse -Force .aiflc-src
 ```
+
+The installer copies each package into `.aiflc/pdlc/` and creates `pdlc-ws/` for your outputs. For platform-specific detail, see each package's `setup/INSTALL.md`.
 
 ## Learn More
 

@@ -1,9 +1,11 @@
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Diagram Standards
 
+> **Base standard:** `ai-packagebuilder/process/DIAGRAM_STANDARDS.md` (builder-level). This file is the **AI-ADLC C4/architecture addendum** — it extends the base with C4-specific templates, relationship-label rules, container naming, cross-level consistency, and supplementary diagram types (sequence, state, ERD). All universal conventions (additive principle, type-selection, DFE contract, escaping, quality checklist) live in the base; this file adds domain detail.
+
 ## Purpose
 
-AI-ADLC produces architectural diagrams at every decomposition level. This document defines the conventions, notation, quality rules, and format requirements for all diagrams produced during the workflow.
+AI-ADLC produces architectural diagrams at every decomposition level. This document defines the C4-specific conventions, notation, quality rules, and format requirements for all diagrams produced during the workflow.
 
 ---
 

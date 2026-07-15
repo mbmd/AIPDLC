@@ -65,6 +65,17 @@
 |-----------|:-----------:|---------------|
 | M1: {name} | {date} | {gate} |
 
+### Milestone Roadmap (visual)
+
+> Milestone sequence and gate decisions at a glance. The milestone table above stays authoritative (DFE-extracted for the dashboard); this diagram is the human view. `flowchart` is used as the portable fallback for the roadmap (date-driven `gantt`/`timeline` renderers vary across platforms and placeholder dates do not parse).
+
+```mermaid
+flowchart LR
+    M1["M1: {name}<br/>{date}"] --> G1{"{gate}"}
+    G1 --> M2["M2: {name}<br/>{date}"] --> G2{"{gate}"}
+    G2 --> M3["M3: {name}<br/>{date}"] --> G3{"{gate}"}
+```
+
 ---
 
 ## 7. Budget Summary

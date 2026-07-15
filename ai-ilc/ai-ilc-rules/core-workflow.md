@@ -68,6 +68,7 @@ All detail-file references below are relative to the resolved directory. **Befor
 - `common/session-continuity.md` — state spec, session resumption guidance
 - `common/question-format-guide.md` — full question-format rules
 - `common/content-validation.md` — content validation requirements
+- `common/reference-linking.md` — emit codes defined in another generated file as clickable relative links (Tier 1: object files; Tier 2: register-row `<a id>` anchors); older output retrofit via `UPG__`
 
 ---
 

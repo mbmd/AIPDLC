@@ -95,7 +95,7 @@ CRITICAL: When performing any stage, you MUST read and use relevant content from
 
 All subsequent rule detail file references are relative to whichever rule details directory was resolved above. Detail roots: `common/` (cross-cutting), `strategy/` (Phase 1 stage details), `observation/` (Phase 2 stage details), `templates/` (output + agent templates).
 
-**Common rules — ALWAYS load at engine start:** `common/process-overview.md` (engine map, two phases, four input modes, depth calibration, family table, user commands, boundary) and `common/test-taxonomy.md` (ISTQB classification). Load `common/two-source-model.md` before requirement derivation (Stage 3) and `common/session-continuity.md` on resume.
+**Common rules — ALWAYS load at engine start:** `common/process-overview.md` (engine map, two phases, four input modes, depth calibration, family table, user commands, boundary) and `common/test-taxonomy.md` (ISTQB classification). Load `common/two-source-model.md` before requirement derivation (Stage 3) and `common/session-continuity.md` on resume. Load `common/reference-linking.md` at engine start — emit codes defined in another generated file as clickable relative links; older output retrofit via `UPG__`.
 
 ---
 
