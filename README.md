@@ -57,15 +57,15 @@ flowchart LR
 
 | Layer | Package | Type | What It Does |
 |-------|---------|------|--------------|
-| Portfolio | [AI-ILC](./ai-ilc/) | Interactive workflow | Evaluate raw ideas → Approved Idea Brief |
-| Portfolio | [AI-PILC](./ai-pilc/) | Interactive workflow | Raw requirement → Project Initiation Package (PIP) |
-| Portfolio | [AI-PPM](./ai-ppm/) | Adaptive portfolio engine | Multiple PIPs → Portfolio governance & prioritization |
-| Project | [AI-ADLC](./ai-adlc/) | Interactive workflow | Requirements → Architecture Package (AP) |
-| Project | [AI-UXD](./ai-uxd/) | Interactive workflow | PIP/AP → UX Design Package (personas, flows, design system) |
-| Project | [AI-POLC](./ai-polc/) | Interactive workflow | PIP/AP → Product Backlog Package (PBP) |
-| Project | [AI-DWG](./ai-dwg/) | One-time generator | AP + PBP + UXP → Ready-to-code workspace |
-| Project | [AI-GCE](./ai-gce/) | Adaptive governance engine | Workspace → Compliance enforcement layer |
-| Project | [AI-TGE](./ai-tge/) | Test governance engine | Workspace → Test strategy, register, coverage tracking |
+| Portfolio | [AI-ILC](./pdlc-packages/ai-ilc/) | Interactive workflow | Evaluate raw ideas → Approved Idea Brief |
+| Portfolio | [AI-PILC](./pdlc-packages/ai-pilc/) | Interactive workflow | Raw requirement → Project Initiation Package (PIP) |
+| Portfolio | [AI-PPM](./pdlc-packages/ai-ppm/) | Adaptive portfolio engine | Multiple PIPs → Portfolio governance & prioritization |
+| Project | [AI-ADLC](./pdlc-packages/ai-adlc/) | Interactive workflow | Requirements → Architecture Package (AP) |
+| Project | [AI-UXD](./pdlc-packages/ai-uxd/) | Interactive workflow | PIP/AP → UX Design Package (personas, flows, design system) |
+| Project | [AI-POLC](./pdlc-packages/ai-polc/) | Interactive workflow | PIP/AP → Product Backlog Package (PBP) |
+| Project | [AI-DWG](./pdlc-packages/ai-dwg/) | One-time generator | AP + PBP + UXP → Ready-to-code workspace |
+| Project | [AI-GCE](./pdlc-packages/ai-gce/) | Adaptive governance engine | Workspace → Compliance enforcement layer |
+| Project | [AI-TGE](./pdlc-packages/ai-tge/) | Test governance engine | Workspace → Test strategy, register, coverage tracking |
 
 > **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT part of this suite — it's Amazon's open-source build lifecycle. Our chain produces the workspace AI-DLC v1 consumes.
 >
@@ -77,22 +77,22 @@ flowchart LR
 
 ### 1. Pick a starting point
 
-- **New project from scratch?** Start with [AI-PILC](./ai-pilc/) (project initiation)
-- **Have requirements, need architecture?** Start with [AI-ADLC](./ai-adlc/)
-- **Have architecture, need a workspace?** Start with [AI-DWG](./ai-dwg/)
-- **Have an idea to evaluate?** Start with [AI-ILC](./ai-ilc/)
-- **Managing multiple projects?** Start with [AI-PPM](./ai-ppm/)
+- **New project from scratch?** Start with [AI-PILC](./pdlc-packages/ai-pilc/) (project initiation)
+- **Have requirements, need architecture?** Start with [AI-ADLC](./pdlc-packages/ai-adlc/)
+- **Have architecture, need a workspace?** Start with [AI-DWG](./pdlc-packages/ai-dwg/)
+- **Have an idea to evaluate?** Start with [AI-ILC](./pdlc-packages/ai-ilc/)
+- **Managing multiple projects?** Start with [AI-PPM](./pdlc-packages/ai-ppm/)
 
 ### 2. Install only what you need
 
 **Use the interactive installer** to pick packages and have them placed in the right location for your platform:
 
 ```powershell
-# Windows
-.\installer\install.ps1
+# Windows (from repo root)
+.\pdlc-packages\installer\install.ps1
 
-# macOS / Linux
-./installer/install.sh
+# macOS / Linux (from repo root)
+./pdlc-packages/installer/install.sh
 ```
 
 Or install manually — packages are **independently installable**. You decide how many to run:
@@ -156,30 +156,33 @@ See [LICENSE](./LICENSE) and [NOTICE](./NOTICE) for full liability and warranty 
 ## Repository Structure
 
 ```
-ai-family/
+AIPDLC/
 ├── README.md              ← You are here
 ├── LICENSE                ← Apache 2.0
 ├── NOTICE                 ← Attribution requirement
 ├── CONTRIBUTING.md        ← How to contribute
 ├── SECURITY.md            ← Vulnerability reporting
 │
-├── ai-ilc/                ← Idea evaluation workflow
-├── ai-pilc/               ← Project initiation workflow
-├── ai-adlc/               ← Architecture design workflow
-├── ai-uxd/                ← UX design workflow
-├── ai-polc/               ← Product ownership workflow
-├── ai-dwg/                ← Workspace generator
-├── ai-ppm/                ← Portfolio management engine
-├── ai-flo/                ← Flow router engine
-├── ai-gce/                ← Governance compliance engine
-├── ai-tge/                ← Test governance engine
-├── ai-dfe/                ← Data fabric engine (family-scoped companion)
-│
-├── installer/             ← Interactive package installer (PowerShell + Bash)
-├── contracts/             ← Cross-package conventions & contracts
-├── narrative/             ← Whitepapers and HOW documents
-└── knowledge_docs/        ← Design patterns and reference material
+└── pdlc-packages/         ← All packages + installer (one level down to keep root clean)
+    ├── ai-ilc/            ← Idea evaluation workflow
+    ├── ai-pilc/           ← Project initiation workflow
+    ├── ai-adlc/           ← Architecture design workflow
+    ├── ai-uxd/            ← UX design workflow
+    ├── ai-polc/           ← Product ownership workflow
+    ├── ai-dwg/            ← Workspace generator
+    ├── ai-ppm/            ← Portfolio management engine
+    ├── ai-flo/            ← Flow router engine
+    ├── ai-gce/            ← Governance compliance engine
+    ├── ai-tge/            ← Test governance engine
+    ├── ai-dfe/            ← Data fabric engine
+    │
+    ├── installer/         ← Interactive package installer (PowerShell + Bash)
+    ├── contracts/         ← Cross-package conventions & contracts
+    ├── narrative/         ← Whitepapers and HOW documents
+    └── knowledge_docs/    ← Design patterns and reference material
 ```
+
+> **Why the subfolder?** To keep your workspace root clean. Cloning this repo only places a handful of files (README, LICENSE, etc.) at the top level — all operational content lives inside `pdlc-packages/`. The installer reads from this subfolder automatically.
 
 ---
 
