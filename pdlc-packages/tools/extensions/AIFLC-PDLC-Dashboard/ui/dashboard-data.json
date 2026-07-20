@@ -1,7 +1,2115 @@
 {
-  "generated": null,
-  "projects": [],
-  "ideas": [],
-  "ppm": {"totalProjects": 0, "dispatched": 0, "pending": 0, "strategicFit": 0, "topPriority": ""},
-  "health": {"totalBlockers": 0, "stalledProjects": 0, "overallProgress": 0}
+  "$schemaVersion": "1.0.0",
+  "$generatedBy": "AI-DFE",
+  "$generatedOn": "2026-06-22T22:32:53.412Z",
+  "$family": "pdlc",
+  "$package": "AI-DFE",
+  "data": {
+    "generated": "2026-06-22T22:32:53.412Z",
+    "projects": [
+      {
+        "id": "PRJ-ADRC-2026-001",
+        "name": "Alzheimer's Daily Routine & Wellbeing Companion",
+        "status": "active",
+        "progress": 18,
+        "lastActivity": "2026-06-22",
+        "packages": [
+          {
+            "code": "ai-ilc",
+            "status": "complete",
+            "phase": {
+              "c": 6,
+              "t": 6,
+              "name": "Route & Handoff"
+            },
+            "progress": {
+              "pct": 100,
+              "done": 6,
+              "total": 6
+            },
+            "stage": {
+              "name": "Complete"
+            },
+            "blockers": [],
+            "artifacts": [
+              {
+                "name": "Approved Idea Brief",
+                "path": "pdlc-ws/ideas/001-alzheimers-routine-wellbeing-companion/001-alzheimers-routine-wellbeing-companion_Approved_Idea_Brief.md",
+                "status": "produced"
+              },
+              {
+                "name": "GoNoGo Decision Record",
+                "path": "pdlc-ws/ideas/001-alzheimers-routine-wellbeing-companion/001-alzheimers-routine-wellbeing-companion_GoNoGo_Decision_Record.md",
+                "status": "produced"
+              },
+              {
+                "name": "Idea Statement",
+                "path": "pdlc-ws/ideas/001-alzheimers-routine-wellbeing-companion/Idea_Statement.md",
+                "status": "produced"
+              }
+            ]
+          },
+          {
+            "code": "ai-pilc",
+            "status": "complete",
+            "phase": {
+              "c": 16,
+              "t": 16,
+              "name": "Mobilization"
+            },
+            "progress": {
+              "pct": 100,
+              "done": 16,
+              "total": 16
+            },
+            "stage": {
+              "name": "Package Assembly"
+            },
+            "blockers": [],
+            "artifacts": [
+              {
+                "name": "Requirement Intake Form",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/pip/01_Requirement_Submission/Requirement_Intake_Form.md",
+                "status": "produced"
+              },
+              {
+                "name": "Requirements Analysis Report",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/pip/02_Screening_Prioritization/Requirements_Analysis_Report.md",
+                "status": "produced"
+              },
+              {
+                "name": "Clarification Questionnaire",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/pip/02_Screening_Prioritization/Clarification_Questionnaire.md",
+                "status": "produced"
+              },
+              {
+                "name": "Feasibility Assessment",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/pip/02_Screening_Prioritization/Feasibility_Assessment.md",
+                "status": "produced"
+              },
+              {
+                "name": "Business Case",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/pip/03_Business_Case/Business_Case.md",
+                "status": "produced"
+              },
+              {
+                "name": "Project Charter",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/pip/04_Project_Charter/Project_Charter.md",
+                "status": "produced"
+              },
+              {
+                "name": "Stakeholder Register",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/pip/05_Stakeholder_Management/Stakeholder_Register.md",
+                "status": "produced"
+              },
+              {
+                "name": "Scope Statement",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/pip/06_Scope_Planning/Scope_Statement.md",
+                "status": "produced"
+              },
+              {
+                "name": "Resource Plan",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/pip/07_Resource_Budget/Resource_Plan.md",
+                "status": "produced"
+              },
+              {
+                "name": "Risk Register",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/pip/08_Risk_Management/Risk_Register.md",
+                "status": "produced"
+              },
+              {
+                "name": "RACI Matrix",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/pip/09_Governance_Communication/RACI_Matrix.md",
+                "status": "produced"
+              },
+              {
+                "name": "Kickoff Agenda",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/pip/10_Project_Kickoff/Kickoff_Agenda.md",
+                "status": "produced"
+              }
+            ]
+          },
+          {
+            "code": "ai-polc",
+            "status": "in-progress",
+            "phase": {
+              "c": 11,
+              "t": 16,
+              "name": "Stakeholders & Communication"
+            },
+            "progress": {
+              "pct": 69,
+              "done": 11,
+              "total": 16
+            },
+            "stage": {
+              "name": "Stakeholder Management"
+            },
+            "blockers": [
+              "Funding blocker (PILC-ADRC-A-2)",
+              "Jurisdiction blocker (PILC-ADRC-A-3)"
+            ],
+            "artifacts": [
+              {
+                "name": "Product Vision",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/product-vision.md",
+                "status": "produced"
+              },
+              {
+                "name": "PO Charter & Authority",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/po-charter.md",
+                "status": "produced"
+              },
+              {
+                "name": "Product Roadmap",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/roadmap.md",
+                "status": "produced"
+              },
+              {
+                "name": "Prioritization Register",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/prioritization-register.md",
+                "status": "produced"
+              },
+              {
+                "name": "Release Plan",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/release-plan.md",
+                "status": "produced"
+              },
+              {
+                "name": "Definition of Ready",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/definition-of-ready.md",
+                "status": "produced"
+              },
+              {
+                "name": "Definition of Done",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/definition-of-done.md",
+                "status": "produced"
+              },
+              {
+                "name": "Product Risk Register",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/product-risk-register.md",
+                "status": "produced"
+              },
+              {
+                "name": "Stakeholder Map",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/stakeholder-map.md",
+                "status": "produced"
+              },
+              {
+                "name": "Traceability Matrix",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/traceability-matrix.md",
+                "status": "produced"
+              },
+              {
+                "name": "Release Notes Governance",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/release-notes-governance.md",
+                "status": "produced"
+              },
+              {
+                "name": "Epics (10)",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/epics/",
+                "status": "produced",
+                "files": [
+                  {
+                    "name": "EPIC-001: Establish Routine Reminder Engine",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/epics/EPIC-001_establish-routine-reminder-engine.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "EPIC-002: Implement Adaptive Scheduling",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/epics/EPIC-002_implement-adaptive-scheduling.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "EPIC-003: Build On-Device Person-Recognition",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/epics/EPIC-003_build-on-device-person-recognition.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "EPIC-004: Enforce Never-Assert-Wrong Safety Gate",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/epics/EPIC-004_enforce-never-assert-wrong-safety-gate.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "EPIC-005: Create Familiar-People Album",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/epics/EPIC-005_create-familiar-people-album.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "EPIC-006: Build Caregiver Companion View",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/epics/EPIC-006_build-caregiver-companion-view.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "EPIC-007: Implement Critical-Only Alert System",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/epics/EPIC-007_implement-critical-only-alert-system.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "EPIC-008: Architect On-Device Data Layer",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/epics/EPIC-008_architect-on-device-data-layer.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "EPIC-009: Implement Person-Owned Account Model",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/epics/EPIC-009_implement-person-owned-account-model.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "EPIC-010: Establish GDPR+HIPAA Privacy Framework",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/epics/EPIC-010_establish-gdpr-hipaa-privacy-framework.md",
+                    "status": "produced"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "code": "ai-uxd",
+            "status": "in-progress",
+            "phase": {
+              "c": 9,
+              "t": 16,
+              "name": "Design"
+            },
+            "progress": {
+              "pct": 56,
+              "done": 9,
+              "total": 16
+            },
+            "stage": {
+              "name": "Component Library"
+            },
+            "blockers": [],
+            "artifacts": [
+              {
+                "name": "Research Synthesis",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/01_Research_Synthesis.md",
+                "status": "produced"
+              },
+              {
+                "name": "Personas (6)",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/",
+                "status": "produced",
+                "files": [
+                  {
+                    "name": "Persona 01: Margaret",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_01_Margaret.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Persona 02: David",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_02_David.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Persona 03: David (Setup)",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_03_David_Setup.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Persona 04: Rachel",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_04_Rachel.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Persona 05: Nurse Adele",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_05_Nurse_Adele.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Persona 06: Harold (Inclusion)",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_06_Inclusion_Harold.md",
+                    "status": "produced"
+                  }
+                ]
+              },
+              {
+                "name": "Journey Maps (7)",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/",
+                "status": "produced",
+                "files": [
+                  {
+                    "name": "Journey 01: Margaret Daily Routine",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_01_Margaret_Daily_Routine.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Journey 02: Margaret Reconnection",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_02_Margaret_Reconnection.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Journey 03: Margaret Emergency",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_03_Margaret_Emergency.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Journey 04: David Monitoring",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_04_David_Monitoring.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Journey 05: David Onboarding",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_05_David_Onboarding.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Journey 06: David Routine Update",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_06_David_Routine_Update.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Journey 07: Rachel Emergency Response",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_07_Rachel_Emergency_Response.md",
+                    "status": "produced"
+                  }
+                ]
+              },
+              {
+                "name": "Information Architecture",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/04_Information_Architecture.md",
+                "status": "produced"
+              },
+              {
+                "name": "User Flows (10)",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/",
+                "status": "produced",
+                "files": [
+                  {
+                    "name": "Flow 01: Routine Reminder",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_01_Routine_Reminder.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Flow 02: Recognition Assist",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_02_Recognition_Assist.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Flow 03: Help Button",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_03_Help_Button.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Flow 04: Album Browsing",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_04_Album_Browsing.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Flow 05: Caregiver Dashboard",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_05_Caregiver_Dashboard.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Flow 06: Critical Alert Response",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_06_Critical_Alert_Response.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Flow 07: Onboarding Wizard",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_07_Onboarding_Wizard.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Flow 08: Consent Management",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_08_Consent_Management.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Flow 09: Routine Edit",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_09_Routine_Edit.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Flow-Screen Mapping",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_Screen_Mapping.md",
+                    "status": "produced"
+                  }
+                ]
+              },
+              {
+                "name": "Screen Inventory (Wireframes)",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/06_Wireframe_Specifications/Screen_Inventory.md",
+                "status": "produced"
+              },
+              {
+                "name": "Design System (7)",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/",
+                "status": "produced",
+                "files": [
+                  {
+                    "name": "Design Principles",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Design_Principles.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Color System",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Color_System.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Typography",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Typography.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Spatial System",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Spatial_System.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Iconography",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Iconography.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Voice & Tone Guidelines",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Voice_Tone_Guidelines.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "Design Tokens",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Design_Tokens.md",
+                    "status": "produced"
+                  }
+                ]
+              },
+              {
+                "name": "Component Inventory",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/08_Component_Library/Component_Inventory.md",
+                "status": "produced"
+              }
+            ]
+          },
+          {
+            "code": "ai-adlc",
+            "status": "complete",
+            "phase": {
+              "c": 13,
+              "t": 13,
+              "name": "Assembly"
+            },
+            "progress": {
+              "pct": 100,
+              "done": 13,
+              "total": 13
+            },
+            "stage": {
+              "name": "Complete"
+            },
+            "blockers": [],
+            "artifacts": [
+              {
+                "name": "Architecture Vision",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/01_Architecture_Vision.md",
+                "status": "produced"
+              },
+              {
+                "name": "System Context (C4 L1)",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/02_System_Context_C4L1.md",
+                "status": "produced"
+              },
+              {
+                "name": "Container Diagram (C4 L2)",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/03_Container_Diagram_C4L2.md",
+                "status": "produced"
+              },
+              {
+                "name": "Technology Stack",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/04_Technology_Stack.md",
+                "status": "produced"
+              },
+              {
+                "name": "Security & Identity Architecture",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/05_Security_Identity_Architecture.md",
+                "status": "produced"
+              },
+              {
+                "name": "Data Architecture",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/06_Data_Architecture.md",
+                "status": "produced"
+              },
+              {
+                "name": "API Architecture",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/07_API_Architecture.md",
+                "status": "produced"
+              },
+              {
+                "name": "Integration & Infrastructure",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/08_Integration_Infrastructure.md",
+                "status": "produced"
+              },
+              {
+                "name": "Component Design (C4 L3)",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/09_Component_Design_C4L3.md",
+                "status": "produced"
+              },
+              {
+                "name": "Architecture Workbook",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/Architecture_Workbook.md",
+                "status": "produced"
+              },
+              {
+                "name": "Package README",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ARCHITECTURE_PACKAGE_README.md",
+                "status": "produced"
+              },
+              {
+                "name": "ADRs (7)",
+                "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/",
+                "status": "produced",
+                "files": [
+                  {
+                    "name": "ADR-001: Modular Monolith + Relay",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-001_Modular_Monolith_Plus_Stateless_Relay.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "ADR-002: Flutter",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-002_Cross_Platform_Framework_Flutter.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "ADR-003: SQLite + SQLCipher",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-003_Database_SQLite_SQLCipher.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "ADR-004: ML Kit + TFLite",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-004_ML_Framework_MLKit_Plus_TFLite.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "ADR-005: AWS Serverless Relay",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-005_Cloud_Relay_Serverless_AWS.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "ADR-006: libsodium E2E",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-006_E2E_Encryption_Libsodium.md",
+                    "status": "produced"
+                  },
+                  {
+                    "name": "ADR-007: Device-Local Auth",
+                    "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-007_Device_Local_Authentication.md",
+                    "status": "produced"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "code": "ai-dwg",
+            "status": "not-started",
+            "phase": {
+              "c": 0,
+              "t": 1,
+              "name": null
+            },
+            "progress": {
+              "pct": 0,
+              "done": 0,
+              "total": 1
+            },
+            "stage": {
+              "name": null
+            },
+            "blockers": [],
+            "artifacts": []
+          },
+          {
+            "code": "ai-gce",
+            "status": "not-started",
+            "phase": {
+              "c": 0,
+              "t": 1,
+              "name": null
+            },
+            "progress": {
+              "pct": 0,
+              "done": 0,
+              "total": 1
+            },
+            "stage": {
+              "name": null
+            },
+            "blockers": [],
+            "artifacts": []
+          },
+          {
+            "code": "ai-tge",
+            "status": "not-started",
+            "phase": {
+              "c": 0,
+              "t": 1,
+              "name": null
+            },
+            "progress": {
+              "pct": 0,
+              "done": 0,
+              "total": 1
+            },
+            "stage": {
+              "name": null
+            },
+            "blockers": [],
+            "artifacts": []
+          }
+        ],
+        "edges": [
+          {
+            "from": "ai-ilc",
+            "to": "ai-pilc",
+            "type": "sequential",
+            "label": "Idea Brief"
+          },
+          {
+            "from": "ai-pilc",
+            "to": "ai-polc",
+            "type": "sequential",
+            "label": "PIP"
+          },
+          {
+            "from": "ai-pilc",
+            "to": "ai-uxd",
+            "type": "sequential",
+            "label": "PIP"
+          },
+          {
+            "from": "ai-pilc",
+            "to": "ai-adlc",
+            "type": "sequential",
+            "label": "PIP"
+          },
+          {
+            "from": "ai-polc",
+            "to": "ai-dwg",
+            "type": "fan-in",
+            "label": "PBP"
+          },
+          {
+            "from": "ai-uxd",
+            "to": "ai-dwg",
+            "type": "fan-in",
+            "label": "UXP"
+          },
+          {
+            "from": "ai-adlc",
+            "to": "ai-dwg",
+            "type": "fan-in",
+            "label": "AP"
+          },
+          {
+            "from": "ai-dwg",
+            "to": "ai-gce",
+            "type": "sequential",
+            "label": "DW"
+          },
+          {
+            "from": "ai-dwg",
+            "to": "ai-tge",
+            "type": "sequential",
+            "label": "DW"
+          }
+        ],
+        "mgmt": {
+          "decisions": 12,
+          "risks": 1,
+          "changes": 1,
+          "actions": 6,
+          "issues": 1,
+          "lessons": 0
+        },
+        "mgmtDetail": {
+          "decisions": [
+            {
+              "id": "PILC-ADRC-D-1",
+              "title": "Source accepted; depth = Comprehensive",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-22",
+              "description": "Source = AI-ILC Approved Idea Brief (Mode E, chain). Type = Greenfield; complexity = High (accessibility + privacy/regulatory). Comprehensive depth selected for full governance treatment."
+            },
+            {
+              "id": "PILC-ADRC-D-3",
+              "title": "Multi-region v1: build to stricter of GDPR + HIPAA",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-22",
+              "description": "Target market = multi-region from v1. Engineer to stricter of GDPR + HIPAA-style; per-jurisdiction consent and data residency. Raises compliance scope/cost; satisfies ILC approval condition."
+            },
+            {
+              "id": "PILC-ADRC-D-4",
+              "title": "Platform = cross-platform iOS + Android",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-22",
+              "description": "One codebase covers both at ~single build cost for Phase 1. Sets tech approach and team skills requirement."
+            },
+            {
+              "id": "PILC-ADRC-D-5",
+              "title": "Core reminders fully offline",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-22",
+              "description": "Reminders are safety-relevant; must fire without connectivity. Rest degrades gracefully. Drives local-store + scheduler architecture."
+            },
+            {
+              "id": "PILC-ADRC-D-6",
+              "title": "Identity = person-owned; caregiver invited w/ consent",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-22",
+              "description": "Strengthens dignity and 'not surveillance' positioning. Person controls access; single caregiver in v1. Defines auth and data model."
+            },
+            {
+              "id": "PILC-ADRC-D-8",
+              "title": "Proceed with conditions (feasibility challenging)",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-22",
+              "description": "Feasibility score 55/100 (Challenging). Product merit strong and already phased. Blockers are funding/resourcing (addressable), not merit. 4 conditions set."
+            },
+            {
+              "id": "PILC-ADRC-D-10",
+              "title": "Mobile-AI = hybrid; light on-device in P1",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-22",
+              "description": "On-device for sensitive inference (faces, mood) preserves privacy/dignity and offline. Cloud LLM (Claude) only for non-sensitive conversation. P1 = on-device person-recognition assist; rest P2."
+            },
+            {
+              "id": "PILC-ADRC-D-11",
+              "title": "Business Case approved (revised for CR-1)",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-22",
+              "description": "Strong merit, phased, privacy-defensible. ROM - (P1). Funding is the blocking condition."
+            },
+            {
+              "id": "PILC-ADRC-D-12",
+              "title": "Project Charter approved as-is",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-22",
+              "description": "Charter captures purpose, scope, milestones, governance, and proceed-with-conditions posture. 3 governance roles (PM, PO, Privacy/Compliance) remain TBD."
+            },
+            {
+              "id": "POLC-ADRC-D-1",
+              "title": "Product Vision & Goals approved",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-23",
+              "description": "7 goals (G1-G7) across 4 themes (T1-T4). Pilot-baselined metrics. Hard gates on safety (G3) and privacy (G6). No contradictions with Charter scope."
+            },
+            {
+              "id": "POLC-ADRC-D-2",
+              "title": "PO Charter & Authority defined",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-23",
+              "description": "PO = Mahe (acting); delegation clause for future hire. Strategic-only escalation avoids bottleneck. Shared safety/privacy stop-authority (PO + Privacy/Compliance, Sponsor tiebreak). RACI covers 14 activities."
+            },
+            {
+              "id": "POLC-ADRC-D-3",
+              "title": "Product roadmap established (4 themes, 3 horizons)",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-23",
+              "description": "Now: 11 capabilities (Phase-1 build). Next: 7 (pilot to launch). Later: 11 (Phase-2 directional). Value proposition: dignity + reconnection wedge. Outcome-based, not date-based."
+            }
+          ],
+          "risks": [
+            {
+              "id": "R-1",
+              "title": "Funding not secured (blocking)",
+              "status": "Open",
+              "owner": "Sponsor",
+              "dueDate": "Before kickoff",
+              "description": "No confirmed budget envelope. ROM - for Phase 1. Without funding, project cannot proceed past initiation. Mitigation: articulate in Business Case; explore grants, angel, bootstrapping."
+            }
+          ],
+          "changes": [
+            {
+              "id": "PILC-ADRC-C-1",
+              "title": "Add mobile AI (4 capabilities; hybrid; light AI in Phase 1)",
+              "status": "Approved",
+              "owner": "User (Mahe)",
+              "dueDate": "2026-06-22",
+              "description": "Added 4 AI capabilities: person recognition assist, mood inference, conversational companion, predictive routine adjustment. Architecture = hybrid (on-device sensitive + cloud non-sensitive). P1 scope = light on-device only. Impact: +- cost, +4-6 weeks, new ML skill needed."
+            }
+          ],
+          "actions": [
+            {
+              "id": "PILC-ADRC-A-1",
+              "title": "Define measurable accessibility acceptance criteria",
+              "status": "Open",
+              "owner": "Product Owner / UX",
+              "dueDate": "Before UX/build",
+              "description": "Need WCAG level + task-completion targets with representative users (people with cognitive impairment). Deferred from requirements analysis (FIND-005)."
+            },
+            {
+              "id": "PILC-ADRC-A-2",
+              "title": "Identify funding source / budget envelope (blocking)",
+              "status": "Open",
+              "owner": "Sponsor",
+              "dueDate": "Before Business Case sign-off",
+              "description": "Feasibility condition 1. No funding source confirmed. ROM - Phase 1. Options: grants, angel, bootstrapping, employer sponsorship."
+            },
+            {
+              "id": "PILC-ADRC-A-3",
+              "title": "Confirm jurisdiction list + data-residency approach (blocking)",
+              "status": "Open",
+              "owner": "PM / Legal",
+              "dueDate": "Before architecture",
+              "description": "Feasibility condition 2. Multi-region (D-3) requires specific jurisdiction list and data-residency strategy before architecture can be designed."
+            },
+            {
+              "id": "PILC-ADRC-A-4",
+              "title": "Assemble team (dev, accessibility/UX, privacy/compliance)",
+              "status": "Open",
+              "owner": "Sponsor",
+              "dueDate": "Before Planning/kickoff",
+              "description": "Feasibility condition 4. Need: cross-platform developer(s), accessibility/UX specialist, privacy/compliance advisor. Solo founder currently."
+            },
+            {
+              "id": "PILC-ADRC-A-5",
+              "title": "Secure AI/ML capability (on-device ML + Claude)",
+              "status": "Open",
+              "owner": "Sponsor",
+              "dueDate": "Before AI build",
+              "description": "CR-1 requirement. Need on-device ML for face/mood (TFLite/CoreML) + Claude API integration for cloud conversation. Skill gap identified."
+            },
+            {
+              "id": "PILC-ADRC-A-6",
+              "title": "Validate person-recognition accuracy + dignity-safe failure",
+              "status": "Open",
+              "owner": "Product / UX / ML",
+              "dueDate": "Before P1 AI release",
+              "description": "CR-1 risk mitigation. System must never assert wrong identity. Needs confidence thresholds and graceful degradation ('I think this might be...' vs definitive claim)."
+            }
+          ],
+          "issues": [
+            {
+              "id": "PILC-ADRC-I-1",
+              "title": "Multi-region compliance complexity (GDPR+HIPAA, residency)",
+              "status": "Open",
+              "owner": "PM / Legal",
+              "dueDate": "Architecture",
+              "description": "Multi-region launch (D-3) greatly increases compliance complexity. Need: multi-jurisdiction consent frameworks, lawful basis per region, data residency solution. Resolution: engineer to stricter standard; confirm jurisdiction list at architecture phase."
+            }
+          ],
+          "lessons": []
+        },
+        "po": {
+          "status": "in-progress",
+          "phase": "Foundation",
+          "stage": "Product Vision & Goals",
+          "pendingGate": "Gate 2 (vision approval)",
+          "vision": {
+            "status": "draft",
+            "statement": "Empower people living with Alzheimer's to maintain daily routines independently and with dignity, while giving caregivers peace of mind through a companion app that is simple, safe, and respectful."
+          },
+          "roadmap": {
+            "now": [
+              {
+                "epic": "EPIC-008: Architect On-Device Data Layer",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              },
+              {
+                "epic": "EPIC-009: Implement Person-Owned Account Model",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              },
+              {
+                "epic": "EPIC-010: Establish GDPR+HIPAA Privacy Framework",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              },
+              {
+                "epic": "EPIC-012: Accessibility Co-Design",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              },
+              {
+                "epic": "EPIC-001: Establish Routine Reminder Engine",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              },
+              {
+                "epic": "EPIC-011: Build Accessibility Foundation",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              }
+            ],
+            "next": [
+              {
+                "epic": "EPIC-005: Create Familiar-People Album",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              },
+              {
+                "epic": "EPIC-003: Build On-Device Person-Recognition",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              },
+              {
+                "epic": "EPIC-004: Enforce Never-Assert-Wrong Safety Gate",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              },
+              {
+                "epic": "EPIC-006: Build Caregiver Companion View",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              },
+              {
+                "epic": "EPIC-007: Implement Critical-Only Alert System",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              },
+              {
+                "epic": "EPIC-002: Implement Adaptive Scheduling",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              },
+              {
+                "epic": "EPIC-013: Build Compliance Audit Trail",
+                "stories": 0,
+                "done": 0,
+                "status": "planned",
+                "items": []
+              }
+            ],
+            "later": [
+              {
+                "epic": "Adaptive AI-Learned Reminders",
+                "stories": 0,
+                "done": 0,
+                "status": "directional",
+                "items": []
+              },
+              {
+                "epic": "Conversational Voice Assistance",
+                "stories": 0,
+                "done": 0,
+                "status": "directional",
+                "items": []
+              },
+              {
+                "epic": "Multi-Caregiver Roles",
+                "stories": 0,
+                "done": 0,
+                "status": "directional",
+                "items": []
+              },
+              {
+                "epic": "Memory Story Curation",
+                "stories": 0,
+                "done": 0,
+                "status": "directional",
+                "items": []
+              },
+              {
+                "epic": "Jurisdiction-Specific Consent Flows",
+                "stories": 0,
+                "done": 0,
+                "status": "directional",
+                "items": []
+              }
+            ]
+          },
+          "releases": [
+            {
+              "name": "Increment 1 (MVP Core)",
+              "date": "TBD",
+              "status": "planned",
+              "stories": 0,
+              "done": 0,
+              "scope": [
+                {
+                  "name": "On-Device Data Layer",
+                  "stories": 0,
+                  "done": 0,
+                  "status": "planned"
+                },
+                {
+                  "name": "Person-Owned Account",
+                  "stories": 0,
+                  "done": 0,
+                  "status": "planned"
+                },
+                {
+                  "name": "GDPR+HIPAA Privacy",
+                  "stories": 0,
+                  "done": 0,
+                  "status": "planned"
+                },
+                {
+                  "name": "Routine Reminders",
+                  "stories": 0,
+                  "done": 0,
+                  "status": "planned"
+                },
+                {
+                  "name": "Accessibility Co-Design",
+                  "stories": 0,
+                  "done": 0,
+                  "status": "planned"
+                }
+              ]
+            },
+            {
+              "name": "Increment 2 (Wedge + Caregiver)",
+              "date": "TBD",
+              "status": "planned",
+              "stories": 0,
+              "done": 0,
+              "scope": [
+                {
+                  "name": "Person-Recognition",
+                  "stories": 0,
+                  "done": 0,
+                  "status": "planned"
+                },
+                {
+                  "name": "Familiar-People Album",
+                  "stories": 0,
+                  "done": 0,
+                  "status": "planned"
+                },
+                {
+                  "name": "Safety Gate",
+                  "stories": 0,
+                  "done": 0,
+                  "status": "planned"
+                },
+                {
+                  "name": "Caregiver View + Alerts",
+                  "stories": 0,
+                  "done": 0,
+                  "status": "planned"
+                },
+                {
+                  "name": "Adaptive Scheduling",
+                  "stories": 0,
+                  "done": 0,
+                  "status": "planned"
+                },
+                {
+                  "name": "Audit Trail",
+                  "stories": 0,
+                  "done": 0,
+                  "status": "planned"
+                }
+              ]
+            }
+          ],
+          "backlog": {
+            "totalEpics": 13,
+            "totalStories": 0,
+            "prioritised": 0,
+            "inReleasePlan": 0,
+            "dorReady": true,
+            "dodReady": true,
+            "priorityModel": null,
+            "dorPath": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/definition-of-ready.md",
+            "dodPath": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/backlog/definition-of-done.md"
+          },
+          "acceptance": {
+            "totalCriteria": 0,
+            "validated": 0
+          },
+          "velocity": {
+            "trend": "stable"
+          },
+          "stakeholders": []
+        },
+        "arch": {
+          "status": "complete",
+          "phase": "Assembly",
+          "stage": "Package Assembly",
+          "stageNum": 13,
+          "depth": "Comprehensive",
+          "c4Progress": {
+            "context": "complete",
+            "container": "complete",
+            "component": "complete",
+            "code": "pending"
+          },
+          "nfrs": {
+            "privacy": {
+              "defined": true,
+              "target": "0 sensitive-data egress findings",
+              "priority": "Critical"
+            },
+            "offlineReliability": {
+              "defined": true,
+              "target": "Core reminders 100% with airplane mode",
+              "priority": "Critical"
+            },
+            "safety": {
+              "defined": true,
+              "target": "0 wrong-identity assertions",
+              "priority": "Critical"
+            },
+            "compliance": {
+              "defined": true,
+              "target": "Pass GDPR + HIPAA audit before launch",
+              "priority": "High"
+            },
+            "accessibility": {
+              "defined": true,
+              "target": "WCAG 2.2 AA + selective AAA",
+              "priority": "High"
+            },
+            "maintainability": {
+              "defined": true,
+              "target": "4-5 FTE can evolve for 5+ years",
+              "priority": "High"
+            },
+            "performance": {
+              "defined": true,
+              "target": "Smooth UI on 3-year-old smartphones",
+              "priority": "Medium"
+            },
+            "extensibility": {
+              "defined": true,
+              "target": "Phase 2 addable without rearchitecture",
+              "priority": "Medium"
+            },
+            "scalability": {
+              "defined": false,
+              "target": "Pilot-scale only; revisit at scale",
+              "priority": "Low"
+            }
+          },
+          "integrations": [
+            {
+              "name": "FCM/APNs (Push)",
+              "type": "Managed Service",
+              "direction": "outbound",
+              "status": "contracted"
+            },
+            {
+              "name": "Claude API (Phase 2)",
+              "type": "REST API",
+              "direction": "outbound",
+              "status": "planned"
+            }
+          ],
+          "adrs": [
+            {
+              "id": "ADR-001",
+              "title": "Modular Monolith + Stateless Cloud Relay",
+              "status": "Accepted",
+              "date": "2026-06-23",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-001_Modular_Monolith_Plus_Stateless_Relay.md"
+            },
+            {
+              "id": "ADR-002",
+              "title": "Cross-Platform Framework — Flutter",
+              "status": "Accepted",
+              "date": "2026-06-23",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-002_Cross_Platform_Framework_Flutter.md"
+            },
+            {
+              "id": "ADR-003",
+              "title": "On-Device Database — SQLite + SQLCipher",
+              "status": "Accepted",
+              "date": "2026-06-23",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-003_Database_SQLite_SQLCipher.md"
+            },
+            {
+              "id": "ADR-004",
+              "title": "On-Device ML — ML Kit + TFLite",
+              "status": "Accepted",
+              "date": "2026-06-23",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-004_ML_Framework_MLKit_Plus_TFLite.md"
+            },
+            {
+              "id": "ADR-005",
+              "title": "Cloud Relay — AWS Lambda + API Gateway + SQS",
+              "status": "Accepted",
+              "date": "2026-06-23",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-005_Cloud_Relay_Serverless_AWS.md"
+            },
+            {
+              "id": "ADR-006",
+              "title": "E2E Encryption — libsodium",
+              "status": "Accepted",
+              "date": "2026-06-23",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-006_E2E_Encryption_Libsodium.md"
+            },
+            {
+              "id": "ADR-007",
+              "title": "Device-Local Auth (No Cloud Accounts)",
+              "status": "Accepted",
+              "date": "2026-06-23",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/ADR/ADR-007_Device_Local_Authentication.md"
+            }
+          ],
+          "containers": [
+            {
+              "name": "Person App (Flutter)",
+              "type": "Mobile App",
+              "tech": "Flutter/Dart"
+            },
+            {
+              "name": "Caregiver App (Flutter)",
+              "type": "Mobile App",
+              "tech": "Flutter/Dart"
+            },
+            {
+              "name": "On-Device Data Layer",
+              "type": "Local DB",
+              "tech": "SQLite + SQLCipher"
+            },
+            {
+              "name": "ML Inference Engine",
+              "type": "Local Service",
+              "tech": "ML Kit + TFLite"
+            },
+            {
+              "name": "Cloud Relay",
+              "type": "Serverless",
+              "tech": "AWS Lambda + API GW"
+            },
+            {
+              "name": "Push Notification Service",
+              "type": "Managed",
+              "tech": "FCM/APNs"
+            }
+          ],
+          "principles": [
+            {
+              "id": "P1",
+              "name": "Privacy Is Architecture, Not Policy",
+              "summary": "Sensitive data architecturally prevented from leaving device — no code path can transmit it"
+            },
+            {
+              "id": "P2",
+              "name": "Offline-First, Online-Enhanced",
+              "summary": "Person-facing experience complete without network. Online enhances, never enables core"
+            },
+            {
+              "id": "P3",
+              "name": "Two Experiences, One Data Layer",
+              "summary": "Separate UI architectures (person + caregiver) sharing encrypted local data layer"
+            },
+            {
+              "id": "P4",
+              "name": "Silence Over Wrong",
+              "summary": "When uncertain, stay silent. A wrong suggestion causes more harm than a missed one"
+            },
+            {
+              "id": "P5",
+              "name": "Consent Is Structural, Not Declarative",
+              "summary": "Caregiver access enforced at data layer — no consent token = no data flow"
+            },
+            {
+              "id": "P6",
+              "name": "Minimal Cloud Surface",
+              "summary": "Cloud only for: push notifications, Phase-2 LLM, app distribution. No sensitive data transits cloud"
+            },
+            {
+              "id": "P7",
+              "name": "Graceful Degradation by Design",
+              "summary": "Every layer has a defined degradation path. Nothing is catastrophic"
+            },
+            {
+              "id": "P8",
+              "name": "Compliance by Construction",
+              "summary": "GDPR/HIPAA achieved through architectural patterns, not bolt-on compliance layer"
+            },
+            {
+              "id": "P9",
+              "name": "Small Team, Modular Architecture",
+              "summary": "~4-5 FTE. Modular monolith over microservices. Clear boundaries, single deployment"
+            },
+            {
+              "id": "P10",
+              "name": "Accessibility Is a Foundation, Not a Feature",
+              "summary": "WCAG 2.2 AA+ structurally supported from component architecture to data model"
+            }
+          ],
+          "techStack": {
+            "languages": [
+              "Dart",
+              "Swift (platform channels)",
+              "Kotlin (platform channels)"
+            ],
+            "frameworks": [
+              "Flutter 3.x",
+              "google_ml_kit",
+              "tflite_flutter",
+              "workmanager"
+            ],
+            "databases": [
+              "SQLite",
+              "SQLCipher (encrypted)"
+            ],
+            "infrastructure": [
+              "AWS Lambda",
+              "API Gateway",
+              "SQS",
+              "Modular Monolith + Stateless Relay"
+            ],
+            "messaging": [
+              "APNs",
+              "FCM",
+              "SQS"
+            ],
+            "observability": [
+              "Firebase Crashlytics"
+            ]
+          },
+          "vision": {
+            "statement": "A privacy-sovereign, offline-first mobile system delivering two architecturally distinct experiences — a zero-navigation push-based companion for the person with Alzheimer's, and a consent-gated oversight view for their caregiver — unified by an encrypted on-device data layer.",
+            "optimisesFor": [
+              "Privacy sovereignty",
+              "Offline reliability",
+              "Dignity-safe AI",
+              "Regulatory compliance (GDPR + HIPAA)"
+            ],
+            "status": "draft",
+            "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/01_Architecture_Vision.md"
+          },
+          "constraints": [
+            {
+              "id": "C1",
+              "text": "Cross-platform iOS + Android; single codebase",
+              "impact": "Eliminates native-per-platform. Must use RN/Flutter/KMP"
+            },
+            {
+              "id": "C2",
+              "text": "Sensitive data never leaves device",
+              "impact": "No cloud DB for user data. On-device encryption. Status-only sync"
+            },
+            {
+              "id": "C3",
+              "text": "Multi-region compliance (GDPR + HIPAA)",
+              "impact": "Consent management, audit trail, data minimization, right-to-erasure"
+            },
+            {
+              "id": "C4",
+              "text": "Not a medical device",
+              "impact": "No diagnostic claims. Avoids FDA/CE classification"
+            },
+            {
+              "id": "C5",
+              "text": "Person-owned account model",
+              "impact": "Person is primary. Caregiver access delegated"
+            },
+            {
+              "id": "C6",
+              "text": "Core reminders fully offline",
+              "impact": "Local scheduler. No server-side dependency"
+            },
+            {
+              "id": "C7",
+              "text": "On-device ML for person-recognition (P1)",
+              "impact": "CoreML/TFLite. Must run on consumer phones"
+            },
+            {
+              "id": "C8",
+              "text": "Cloud LLM (Claude) non-sensitive only (P2)",
+              "impact": "Strict content filtering. No PII in prompts"
+            },
+            {
+              "id": "C9",
+              "text": "Single caregiver per person (v1)",
+              "impact": "Simple access model. Multi-caregiver not precluded"
+            },
+            {
+              "id": "C10",
+              "text": "Budget: Phase 1 ROM pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture185K-pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture305K",
+              "impact": "Minimal infra. Managed services. ~5 FTE"
+            },
+            {
+              "id": "C11",
+              "text": "English-only v1",
+              "impact": "i18n deferred but not precluded"
+            },
+            {
+              "id": "C12",
+              "text": "Zero wrong-identity assertions",
+              "impact": "Hard safety gate in ML pipeline. Not configurable"
+            }
+          ],
+          "c4Diagrams": {
+            "l1": {
+              "mermaid": "C4Context\r\n    title Alzheimer's Daily Routine & Wellbeing Companion — System Context (C4 Level 1)\r\n\r\n    Person(person, \"Person with Alzheimer's\", \"Primary user — receives reminders, views familiar people, requests help\")\r\n    Person(caregiver, \"Family Caregiver\", \"Configures routines, curates album, views status, manages consent\")\r\n    Person(emergency, \"Emergency Contact\", \"Receives 'I need help' alerts\")\r\n\r\n    System(companion, \"Alzheimer's Companion\", \"Privacy-sovereign mobile companion: offline reminders, person-recognition, consent-gated caregiver view\")\r\n\r\n    System_Ext(apns, \"APNs / FCM\", \"Push notification delivery\")\r\n    System_Ext(claude, \"Claude LLM API\", \"Non-sensitive conversational AI (Phase 2)\")\r\n    System_Ext(appstore, \"App Stores\", \"iOS App Store + Google Play\")\r\n    System_Ext(mlframework, \"Core ML / TFLite\", \"On-device ML inference frameworks\")\r\n    System_Ext(os, \"Mobile OS Services\", \"Notifications, camera, biometrics, file system\")\r\n\r\n    Rel(person, companion, \"Receives reminders, acknowledges, browses people, requests help\", \"Mobile UI\")\r\n    Rel(caregiver, companion, \"Configures routines, curates album, views status\", \"Mobile UI\")\r\n    Rel(companion, apns, \"Sends alert-type notifications\", \"HTTPS\")\r\n    Rel(apns, emergency, \"Delivers help alert\", \"Push\")\r\n    Rel(apns, caregiver, \"Delivers critical-miss alerts\", \"Push\")\r\n    Rel(companion, claude, \"Sends anonymized prompts (Phase 2)\", \"HTTPS REST\")\r\n    Rel(companion, appstore, \"Publishes updates\", \"Store APIs\")\r\n    Rel(companion, mlframework, \"Invokes recognition inference\", \"Framework API\")\r\n    Rel(companion, os, \"Schedules notifications, accesses camera\", \"Native APIs\")",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/02_System_Context_C4L1.md",
+              "status": "produced"
+            },
+            "l2": {
+              "mermaid": "C4Container\r\n    title Alzheimer's Companion — Container Diagram (C4 Level 2)\r\n\r\n    Person(person, \"Person with Alzheimer's\", \"Receives reminders, views people, requests help\")\r\n    Person(caregiver, \"Family Caregiver\", \"Configures routines, views status, manages consent\")\r\n    Person(emergency, \"Emergency Contact\", \"Receives help alerts\")\r\n\r\n    System_Boundary(sys, \"Alzheimer's Daily Routine & Wellbeing Companion\") {\r\n        Container(personApp, \"Person Mobile App\", \"Cross-platform\", \"Push-based companion: reminders, people album, recognition assist, help button\")\r\n        Container(caregiverApp, \"Caregiver Mobile App\", \"Cross-platform\", \"Routine config, album curation, status dashboard, consent management\")\r\n        ContainerDb(localDb, \"On-Device Data Store\", \"Encrypted SQLite\", \"All sensitive data: routines, people, embeddings, consent, audit\")\r\n        Container(mlEngine, \"ML Inference Engine\", \"Core ML / TFLite\", \"Person-recognition, confidence scoring, safety gate\")\r\n        Container(scheduler, \"Local Reminder Scheduler\", \"OS Background Task\", \"Offline reminder firing, grace periods, escalation\")\r\n        Container(syncRelay, \"Sync Relay Service\", \"Cloud (stateless)\", \"Encrypted payload relay, sync coordination, no user data at rest\")\r\n        Container(pushGw, \"Push Notification Gateway\", \"Cloud (stateless)\", \"APNs/FCM abstraction, alert-type token delivery\")\r\n    }\r\n\r\n    System_Ext(apns, \"APNs / FCM\", \"Push delivery\")\r\n    System_Ext(claude, \"Claude LLM API\", \"Non-sensitive AI (Phase 2)\")\r\n    System_Ext(mlFw, \"Core ML / TFLite\", \"On-device ML frameworks\")\r\n    System_Ext(os, \"Mobile OS Services\", \"Notifications, camera, biometrics\")\r\n\r\n    Rel(person, personApp, \"Uses\", \"Touch UI\")\r\n    Rel(caregiver, caregiverApp, \"Uses\", \"Touch UI\")\r\n    Rel(personApp, localDb, \"Reads/Writes\", \"In-process\")\r\n    Rel(personApp, mlEngine, \"Invokes inference\", \"In-process\")\r\n    Rel(personApp, scheduler, \"Schedules/receives\", \"OS API\")\r\n    Rel(personApp, syncRelay, \"Sends status, pulls configs\", \"HTTPS (encrypted)\")\r\n    Rel(caregiverApp, syncRelay, \"Sends configs, pulls status\", \"HTTPS (encrypted)\")\r\n    Rel(syncRelay, pushGw, \"Triggers alerts\", \"Internal\")\r\n    Rel(pushGw, apns, \"Delivers tokens\", \"HTTPS\")\r\n    Rel(apns, caregiver, \"Push alerts\", \"Push\")\r\n    Rel(apns, emergency, \"Help alerts\", \"Push\")\r\n    Rel(personApp, claude, \"Anonymized prompts (P2)\", \"HTTPS\")\r\n    Rel(mlEngine, mlFw, \"Runs models\", \"Framework API\")\r\n    Rel(personApp, os, \"Local notifications, camera\", \"Native\")",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/03_Container_Diagram_C4L2.md",
+              "status": "produced"
+            },
+            "l3": {
+              "mermaid": "graph TB\n  subgraph PersonApp[\"Person App (Flutter)\"]\n    Pres_P[Presentation Layer]\n    App_P[Application Layer]\n    Dom_P[Domain Layer]\n    Infra_P[Infrastructure Layer]\n  end\n  subgraph CaregiverApp[\"Caregiver App (Flutter)\"]\n    Pres_C[Presentation Layer]\n    App_C[Application Layer]\n    Dom_C[Domain Layer]\n    Infra_C[Infrastructure Layer]\n  end\n  subgraph DataLayer[\"On-Device Data Layer\"]\n    SQLCipher[(SQLCipher DB)]\n    CryptoAdapter[Crypto Adapter]\n    ConsentEngine[Consent Engine]\n  end\n  subgraph MLEngine[\"ML Inference\"]\n    MLBridge[ML Bridge]\n    FaceDetect[Face Detection]\n    Embedding[Embedding Model]\n  end\n  Pres_P --> App_P --> Dom_P --> Infra_P\n  Pres_C --> App_C --> Dom_C --> Infra_C\n  Infra_P --> SQLCipher\n  Infra_P --> MLBridge\n  Infra_C --> SQLCipher\n  ConsentEngine --> SQLCipher\n  MLBridge --> FaceDetect\n  MLBridge --> Embedding",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/09_Component_Design_C4L3.md",
+              "status": "produced"
+            }
+          },
+          "diagrams": {
+            "security": {
+              "mermaid": "graph LR\n  subgraph Device[\"On-Device (Trusted Zone)\"]\n    Biometric[Biometric/PIN Auth]\n    KeyStore[Device Keystore]\n    SQLCipher[(SQLCipher)]\n    ConsentMgr[Consent Manager]\n    AuditLog[Local Audit Log]\n  end\n  subgraph Cloud[\"Cloud Relay (Untrusted)\"]\n    APIGW[API Gateway]\n    Lambda[Lambda Functions]\n    SQS[SQS Queue]\n    FCM[FCM/APNs]\n  end\n  Biometric -->|unlock| KeyStore\n  KeyStore -->|decrypt| SQLCipher\n  ConsentMgr -->|gate| SQLCipher\n  SQLCipher -->|status only| APIGW\n  APIGW -->|E2E encrypted| Lambda\n  Lambda --> SQS --> FCM\n  AuditLog -->|append-only| SQLCipher",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/05_Security_Identity_Architecture.md",
+              "label": "Security Architecture"
+            },
+            "data": {
+              "mermaid": "graph TB\n  subgraph OnDevice[\"On-Device Storage\"]\n    Routines[(Routines)]\n    People[(Familiar People)]\n    Embeddings[(Face Embeddings)]\n    Consent[(Consent Grants)]\n    Audit[(Audit Trail)]\n    Prefs[(Preferences)]\n  end\n  subgraph Classification[\"Data Classification\"]\n    Sensitive[Sensitive - NEVER leaves device]\n    NonSensitive[Non-Sensitive - sync allowed]\n  end\n  Routines --> Sensitive\n  People --> Sensitive\n  Embeddings --> Sensitive\n  Consent --> Sensitive\n  Audit --> NonSensitive\n  Prefs --> NonSensitive",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/06_Data_Architecture.md",
+              "label": "Data Architecture"
+            },
+            "api": {
+              "mermaid": "graph TB\n  subgraph PersonDevice[\"Person Device\"]\n    PersonApp[Person App]\n    LocalModules[\"Internal Module Interfaces<br/>(Dart, in-process)\"]\n  end\n  subgraph CaregiverDevice[\"Caregiver Device\"]\n    CaregiverApp[Caregiver App]\n  end\n  subgraph Relay[\"Sync Relay API (AWS Lambda + API Gateway)\"]\n    Auth[\"Auth: device-pair-token\"]\n    EP1[\"POST /v1/sync — push encrypted blob\"]\n    EP2[\"GET /v1/sync — pull encrypted blob\"]\n    EP3[\"POST /v1/alert — trigger push\"]\n  end\n  subgraph External[\"External\"]\n    Claude[\"Claude LLM API<br/>(Phase 2, PII-stripped)\"]\n  end\n  PersonApp --> LocalModules\n  PersonApp -->|Bearer token, HTTPS| Auth\n  CaregiverApp -->|Bearer token, HTTPS| Auth\n  Auth --> EP1\n  Auth --> EP2\n  Auth --> EP3\n  PersonApp -.->|anonymized prompts| Claude",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/07_API_Architecture.md",
+              "label": "API Architecture"
+            },
+            "infrastructure": {
+              "mermaid": "graph TB\n  subgraph PersonDevice[\"Person's Device\"]\n    PersonApp[Person App]\n    LocalDB[(SQLCipher)]\n    MLEngine[ML Engine]\n    Scheduler[Local Scheduler]\n  end\n  subgraph CaregiverDevice[\"Caregiver's Device\"]\n    CaregiverApp[Caregiver App]\n  end\n  subgraph AWS[\"AWS Cloud (Minimal)\"]\n    APIGW[API Gateway]\n    Lambda[Lambda]\n    SQS[SQS]\n  end\n  subgraph External[\"External Services\"]\n    FCM[FCM/APNs]\n    Claude[Claude API - Phase 2]\n  end\n  PersonApp --> LocalDB\n  PersonApp --> MLEngine\n  Scheduler --> PersonApp\n  PersonApp -->|status-only, E2E| APIGW\n  APIGW --> Lambda --> SQS\n  SQS --> FCM -->|push| CaregiverApp\n  PersonApp -.->|Phase 2, stripped| Claude",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/architecture/08_Integration_Infrastructure.md",
+              "label": "Integration & Infrastructure"
+            }
+          },
+          "nfrCompact": true,
+          "risks": []
+        },
+        "ux": {
+          "status": "in-progress",
+          "phase": "Discover",
+          "stage": "Persona Definition",
+          "stageNum": 3,
+          "depth": "Comprehensive",
+          "personas": [
+            {
+              "name": "Margaret",
+              "status": "validated",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_01_Margaret.md"
+            },
+            {
+              "name": "David",
+              "status": "validated",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_02_David.md"
+            },
+            {
+              "name": "David (Setup)",
+              "status": "validated",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_03_David_Setup.md"
+            },
+            {
+              "name": "Rachel",
+              "status": "validated",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_04_Rachel.md"
+            },
+            {
+              "name": "Nurse Adele",
+              "status": "validated",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_05_Nurse_Adele.md"
+            },
+            {
+              "name": "Harold (Inclusion)",
+              "status": "validated",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_06_Inclusion_Harold.md"
+            }
+          ],
+          "journeys": [
+            {
+              "name": "Margaret Daily Routine",
+              "status": "mapped",
+              "persona": "Margaret",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_01_Margaret_Daily_Routine.md",
+              "steps": 6,
+              "goal": "Complete critical daily tasks (medication, meals, hygiene) without shame or confusion",
+              "trigger": "Time-based: the app determines it's time for the next routine item",
+              "endStateSuccess": "Margaret completes the task, feels capable, card dismissed",
+              "endStateFailure": "Margaret doesn't respond; after grace period, caregiver is alerted (invisible to Margaret)",
+              "duration": "1-3 minutes per reminder interaction (recurring throughout the day)",
+              "frequency": "Daily — 6-10 interactions per day across medication, meals, hygiene"
+            },
+            {
+              "name": "Margaret Reconnection",
+              "status": "mapped",
+              "persona": "Margaret",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_02_Margaret_Reconnection.md",
+              "steps": 5,
+              "goal": "Recognize a familiar person and feel connected rather than panicked",
+              "trigger": "Margaret browses the familiar-people album OR on-device recognition suggests a match",
+              "endStateSuccess": "Margaret confidently recognizes the person, feels warmth and connection",
+              "endStateFailure": "Recognition uncertain; system remains silent (no wrong assertion); Margaret may feel unsure",
+              "duration": "10-60 seconds (recognition assist) or 2-5 minutes (album browsing)",
+              "frequency": "Multiple times daily (album); situational (recognition assist)"
+            },
+            {
+              "name": "Margaret Emergency",
+              "status": "mapped",
+              "persona": "Margaret",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_03_Margaret_Emergency.md",
+              "steps": 5,
+              "goal": "Reach a trusted person immediately when scared, confused, or in danger",
+              "trigger": "Margaret feels frightened, confused, or unsafe — instinctive reach for help",
+              "endStateSuccess": "Margaret is connected to someone who can help; she feels safer",
+              "endStateFailure": "Margaret can't find or operate the help button; nobody responds",
+              "duration": "5-30 seconds (tap to alert); 1-5 minutes (until human response)",
+              "frequency": "Rare (0-2 times per week; hopefully less)"
+            },
+            {
+              "name": "David Monitoring",
+              "status": "mapped",
+              "persona": "David",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_04_David_Monitoring.md",
+              "steps": 3,
+              "goal": "Know Mum is okay without actively checking; alerted instantly for critical events only",
+              "trigger": "Passive: absence of alerts = fine; OR Active: David opens app to glance",
+              "endStateSuccess": "David feels reassured (passive) or sees calm 'all fine' summary (active)",
+              "endStateFailure": "David receives a critical alert and must take action",
+              "duration": "Passive: 0s. Active: 10-30s. Alert: 2-10 min",
+              "frequency": "Passive: continuous. Active: 1-3/day. Alert: rare (0-2/week)"
+            },
+            {
+              "name": "David Onboarding",
+              "status": "mapped",
+              "persona": "David",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_05_David_Onboarding.md",
+              "steps": 8,
+              "goal": "Configure app for Margaret in one session: routines, album, consent — then leave knowing it works",
+              "trigger": "David downloads the app and decides 'today I'll set this up for Mum'",
+              "endStateSuccess": "App fully configured; Margaret consented; test reminder fires successfully",
+              "endStateFailure": "Setup abandoned mid-way (too long, too confusing, consent conversation went badly)",
+              "duration": "30-60 minutes (one sitting)",
+              "frequency": "Once (onboarding); minor updates ongoing"
+            },
+            {
+              "name": "David Routine Update",
+              "status": "mapped",
+              "persona": "David",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_06_David_Routine_Update.md",
+              "steps": 5,
+              "goal": "Update Margaret's routines when schedule or medication changes",
+              "trigger": "Doctor changes medication time; season changes meal patterns; new appointment",
+              "endStateSuccess": "Updated routine is live on Margaret's phone; David confirms it took effect",
+              "endStateFailure": "Update doesn't sync; Margaret gets reminders at wrong times",
+              "duration": "2-5 minutes",
+              "frequency": "Weekly to monthly (infrequent but important)"
+            },
+            {
+              "name": "Rachel Emergency Response",
+              "status": "mapped",
+              "persona": "Rachel",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/03_Journey_Maps/Journey_07_Rachel_Emergency_Response.md",
+              "steps": 5,
+              "goal": "Receive help alert, understand situation, coordinate appropriate response",
+              "trigger": "Margaret presses 'I need help'; system dispatches alert to all contacts",
+              "endStateSuccess": "Rachel confirms Margaret is safe (directly or via David); alert resolved",
+              "endStateFailure": "Rachel doesn't see the alert; nobody responds; Margaret alone in distress",
+              "duration": "2-10 minutes (alert to resolution)",
+              "frequency": "Rare (0-2 times per month; hopefully less)"
+            }
+          ],
+          "userFlows": {
+            "total": 9,
+            "mapped": 9
+          },
+          "wireframes": {
+            "total": 31,
+            "approved": 31,
+            "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/06_Wireframe_Specifications/Screen_Inventory.md",
+            "experiences": [
+              {
+                "name": "Margaret (Person)",
+                "screens": 10,
+                "templates": [
+                  "Single Card",
+                  "Photo Grid",
+                  "Full-Screen State",
+                  "Overlay"
+                ]
+              },
+              {
+                "name": "David (Caregiver)",
+                "screens": 11,
+                "templates": [
+                  "Tab Dashboard",
+                  "Segmented List",
+                  "Form",
+                  "Modal"
+                ]
+              },
+              {
+                "name": "Setup (One-time)",
+                "screens": 7,
+                "templates": [
+                  "Wizard Step"
+                ]
+              },
+              {
+                "name": "Rachel (Emergency)",
+                "screens": 3,
+                "templates": [
+                  "Push Notification"
+                ]
+              }
+            ],
+            "screens": [
+              {
+                "id": "M1",
+                "name": "Idle Screen",
+                "persona": "Margaret",
+                "template": "Full-Screen State",
+                "flows": [
+                  "F01",
+                  "F04"
+                ]
+              },
+              {
+                "id": "M2",
+                "name": "Reminder Card",
+                "persona": "Margaret",
+                "template": "Single Card",
+                "flows": [
+                  "F01"
+                ]
+              },
+              {
+                "id": "M4",
+                "name": "Album Grid (My People)",
+                "persona": "Margaret",
+                "template": "Photo Grid",
+                "flows": [
+                  "F04",
+                  "F02"
+                ]
+              },
+              {
+                "id": "M8",
+                "name": "Reassurance Screen (Post-Help)",
+                "persona": "Margaret",
+                "template": "Full-Screen State",
+                "flows": [
+                  "F03"
+                ]
+              },
+              {
+                "id": "D1",
+                "name": "Caregiver Dashboard",
+                "persona": "David",
+                "template": "Tab Dashboard",
+                "flows": [
+                  "F05"
+                ]
+              },
+              {
+                "id": "D3",
+                "name": "Routine Edit",
+                "persona": "David",
+                "template": "Form",
+                "flows": [
+                  "F09"
+                ]
+              },
+              {
+                "id": "D6",
+                "name": "Alert Detail",
+                "persona": "David",
+                "template": "Modal",
+                "flows": [
+                  "F06"
+                ]
+              }
+            ],
+            "inReview": 0,
+            "pending": 0
+          },
+          "designSystem": {
+            "tokens": {
+              "total": 7,
+              "defined": 7
+            },
+            "components": {
+              "total": 30,
+              "specified": 30
+            }
+          },
+          "accessibility": {
+            "target": "WCAG 2.2",
+            "wcagLevel": "AA",
+            "criteria": 0,
+            "met": 0,
+            "baselineDefined": false
+          },
+          "artifacts": [
+            {
+              "name": "Research Synthesis",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/01_Research_Synthesis.md",
+              "status": "produced"
+            },
+            {
+              "name": "Persona: Margaret (in progress)",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/02_Personas/Persona_01_Margaret.md",
+              "status": "in-progress"
+            }
+          ],
+          "informationArchitecture": {
+            "status": "pending",
+            "pages": 0
+          },
+          "flows": [
+            {
+              "name": "Routine Reminder",
+              "status": "produced",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_01_Routine_Reminder.md",
+              "persona": "Margaret",
+              "journey": "Daily Routine",
+              "mermaid": "flowchart TD\r\n    A[Scheduler: reminder due] --> B[Play chime + wake screen]\r\n    B --> C[Display reminder card]\r\n    C --> D{Margaret responds?}\r\n    D -->|Taps 'Done'| E[Log completion locally]\r\n    D -->|Taps 'Later'| F[Dismiss card + set defer timer]\r\n    D -->|No response| G[Wait grace period]\r\n    E --> H[Show ✓ animation + return to idle]\r\n    F --> I[Defer timer expires]\r\n    I --> B\r\n    G --> J{Grace period expired?}\r\n    J -->|No| G\r\n    J -->|Yes| K[Silent caregiver alert]\r\n    K --> L[Margaret's screen: unchanged / idle]\r\n    H --> M[Idle state: 'You're all set' or next card]"
+            },
+            {
+              "name": "Recognition Assist",
+              "status": "produced",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_02_Recognition_Assist.md",
+              "persona": "Margaret",
+              "journey": "Reconnection",
+              "mermaid": "flowchart TD\r\n    A[Face detected in image/camera] --> B[On-device ML processes face]\r\n    B --> C{Confidence ≥ threshold?}\r\n    C -->|Yes| D[Display suggestion card]\r\n    C -->|No| E[Do nothing - silence]\r\n    D --> F{Margaret responds?}\r\n    F -->|Taps 'Yes' / smiles| G[Log positive match]\r\n    F -->|Taps 'Not sure'| H[Dismiss suggestion gently]\r\n    F -->|No response - 30s| I[Auto-fade suggestion]\r\n    G --> J[Card fades with warm animation]\r\n    H --> J\r\n    I --> J\r\n    J --> K[Return to previous state]\r\n    E --> K"
+            },
+            {
+              "name": "Help Button",
+              "status": "produced",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_03_Help_Button.md",
+              "persona": "Margaret",
+              "journey": "Emergency",
+              "mermaid": "flowchart TD\r\n    A[Margaret taps 'I need help'] --> B[Alert dispatched immediately - NO confirmation]\r\n    B --> C[Margaret's screen: 'Help is coming. David knows.']\r\n    B --> D[Push to David + Rachel simultaneously]\r\n    C --> E[Optional: auto-dial primary contact after 10s]\r\n    D --> F{Any contact responds?}\r\n    F -->|Yes within 5 min| G[Update Margaret's screen: 'David is calling you']\r\n    F -->|No within 5 min| H[Auto-retry + escalate to secondary]\r\n    H --> I{Secondary responds?}\r\n    I -->|Yes| G\r\n    I -->|No within 10 min| J[Dial emergency services if configured]\r\n    G --> K[Human contact made - flow complete]"
+            },
+            {
+              "name": "Album Browsing",
+              "status": "produced",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_04_Album_Browsing.md",
+              "persona": "Margaret",
+              "journey": "Reconnection",
+              "mermaid": "flowchart TD\r\n    A[Margaret taps 'My People'] --> B{Album has people?}\r\n    B -->|Yes| C[Display photo grid - large cards]\r\n    B -->|No| D[Warm empty state: 'David will add your people soon']\r\n    C --> E[Margaret browses / scrolls]\r\n    E --> F[Taps a person's card]\r\n    F --> G[Enlarged photo + name + relationship]\r\n    G --> H[Margaret looks, recognizes, feels warm]\r\n    H --> I{Done browsing?}\r\n    I -->|Taps back / swipe| C\r\n    I -->|Presses home / idle timeout| J[Return to idle]\r\n    D --> J"
+            },
+            {
+              "name": "Caregiver Dashboard",
+              "status": "produced",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_05_Caregiver_Dashboard.md",
+              "persona": "David",
+              "journey": "Monitoring",
+              "mermaid": null
+            },
+            {
+              "name": "Critical Alert Response",
+              "status": "produced",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_06_Critical_Alert_Response.md",
+              "persona": "David",
+              "journey": "Monitoring",
+              "mermaid": "flowchart TD\r\n    A[Grace period expires on Margaret's device] --> B[System classifies: critical?]\r\n    B -->|Critical| C[Push notification to David]\r\n    B -->|Non-critical| D[Log only - no alert]\r\n    C --> E[David sees notification]\r\n    E --> F{David taps notification?}\r\n    F -->|Yes| G[Alert detail screen]\r\n    F -->|No response 5 min| H[Push to Rachel + escalation]\r\n    G --> I{David's action?}\r\n    I -->|Call Margaret| J[One-tap call]\r\n    I -->|Snooze 15 min| K[Delay re-alert]\r\n    I -->|Mark resolved| L[Close alert]\r\n    J --> M[Call connected - David assesses]\r\n    M --> L\r\n    K --> N[15 min later: re-alert if still unresolved]\r\n    N --> G\r\n    L --> O[Alert status: Resolved by David at HH:MM]\r\n    O --> P[Rachel notified: 'Resolved']\r\n    H --> Q[Rachel receives alert + context]"
+            },
+            {
+              "name": "Onboarding Wizard",
+              "status": "produced",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_07_Onboarding_Wizard.md",
+              "persona": "David",
+              "journey": "Onboarding",
+              "mermaid": "flowchart TD\r\n    A[David opens app on Margaret's phone] --> B[Welcome screen: '30 minutes to set up']\r\n    B --> C[Step 1: Create Margaret's profile - name + photo]\r\n    C --> D[Step 2: Set up routines]\r\n    D --> D1[Morning routines]\r\n    D1 --> D2[Afternoon routines]\r\n    D2 --> D3[Evening routines]\r\n    D3 --> E[Step 3: Add familiar people]\r\n    E --> E1[Import photos + add names/relationships]\r\n    E1 --> F[Step 4: Consent]\r\n    F --> F1[Margaret's phone shows visual consent card]\r\n    F1 --> F2{Margaret taps Yes?}\r\n    F2 -->|Yes| G[Consent recorded]\r\n    F2 -->|No / Confused| H[Person-only mode - no caregiver link]\r\n    G --> I[Step 5: Pair David's phone]\r\n    I --> I1[QR code or 4-digit code]\r\n    I1 --> J[Step 6: Test reminder]\r\n    J --> J1[Fire test reminder on Margaret's phone]\r\n    J1 --> J2[David sees completion on his phone]\r\n    J2 --> K[Setup complete - summary screen]\r\n    H --> L[Setup complete in person-only mode]\r\n    L --> M[David can re-request consent later]"
+            },
+            {
+              "name": "Consent Management",
+              "status": "produced",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_08_Consent_Management.md",
+              "persona": "David",
+              "journey": "Onboarding",
+              "mermaid": null
+            },
+            {
+              "name": "Routine Edit",
+              "status": "produced",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/05_User_Flows/Flow_09_Routine_Edit.md",
+              "persona": "David",
+              "journey": "Routine Update",
+              "mermaid": null
+            }
+          ],
+          "designSystemFiles": [
+            {
+              "name": "Design Principles",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Design_Principles.md",
+              "status": "produced",
+              "description": "4-6 guiding principles for all design decisions"
+            },
+            {
+              "name": "Color System",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Color_System.md",
+              "status": "produced",
+              "description": "Palette, semantic colors, roles, contrast ratios"
+            },
+            {
+              "name": "Typography",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Typography.md",
+              "status": "produced",
+              "description": "Type ramp, font families, line heights, responsive scaling"
+            },
+            {
+              "name": "Spatial System",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Spatial_System.md",
+              "status": "produced",
+              "description": "Grid, breakpoints, responsive reflow rules"
+            },
+            {
+              "name": "Iconography",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Iconography.md",
+              "status": "produced",
+              "description": "Icon grid, style rules, sizing scale, naming convention"
+            },
+            {
+              "name": "Voice & Tone Guidelines",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Voice_Tone_Guidelines.md",
+              "status": "produced",
+              "description": "Microcopy, error/empty/success patterns, terminology"
+            },
+            {
+              "name": "Design Tokens",
+              "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/07_Design_System/Design_Tokens.md",
+              "status": "produced",
+              "description": "W3C-aligned: Global → Alias → Component tokens"
+            }
+          ],
+          "componentLibrary": {
+            "path": "pdlc-ws/projects/PRJ-ADRC-alzheimers-routine-wellbeing-companion/ux/08_Component_Library/Component_Inventory.md",
+            "total": 30,
+            "atoms": 12,
+            "molecules": 10,
+            "organisms": 8,
+            "components": [
+              {
+                "name": "PrimaryButton (Margaret)",
+                "type": "Atom",
+                "id": "A1"
+              },
+              {
+                "name": "HelpButton",
+                "type": "Atom",
+                "id": "A2"
+              },
+              {
+                "name": "SecondaryLink (Margaret)",
+                "type": "Atom",
+                "id": "A3"
+              },
+              {
+                "name": "PrimaryButton (David)",
+                "type": "Atom",
+                "id": "A4"
+              },
+              {
+                "name": "Avatar",
+                "type": "Atom",
+                "id": "A5"
+              },
+              {
+                "name": "StatusIndicator",
+                "type": "Atom",
+                "id": "A6"
+              },
+              {
+                "name": "CheckAnimation",
+                "type": "Atom",
+                "id": "A7"
+              },
+              {
+                "name": "SyncIndicator",
+                "type": "Atom",
+                "id": "A8"
+              },
+              {
+                "name": "FormField",
+                "type": "Atom",
+                "id": "A9"
+              },
+              {
+                "name": "TimePicker",
+                "type": "Atom",
+                "id": "A10"
+              },
+              {
+                "name": "SelectDropdown",
+                "type": "Atom",
+                "id": "A11"
+              },
+              {
+                "name": "RadioGroup",
+                "type": "Atom",
+                "id": "A12"
+              },
+              {
+                "name": "ReminderCard",
+                "type": "Molecule",
+                "id": "M1"
+              },
+              {
+                "name": "SuggestionCard",
+                "type": "Molecule",
+                "id": "M2"
+              },
+              {
+                "name": "DashboardStatusItem",
+                "type": "Molecule",
+                "id": "M3"
+              },
+              {
+                "name": "AlertBanner",
+                "type": "Molecule",
+                "id": "M4"
+              },
+              {
+                "name": "ConsentCard",
+                "type": "Molecule",
+                "id": "M5"
+              },
+              {
+                "name": "RoutineCard",
+                "type": "Molecule",
+                "id": "M6"
+              },
+              {
+                "name": "PersonCard",
+                "type": "Molecule",
+                "id": "M7"
+              },
+              {
+                "name": "NotificationTemplate",
+                "type": "Molecule",
+                "id": "M8"
+              },
+              {
+                "name": "WizardProgress",
+                "type": "Molecule",
+                "id": "M9"
+              },
+              {
+                "name": "TabBar",
+                "type": "Molecule",
+                "id": "M10"
+              },
+              {
+                "name": "Idle Screen",
+                "type": "Organism",
+                "id": "O1"
+              },
+              {
+                "name": "Album Grid",
+                "type": "Organism",
+                "id": "O2"
+              },
+              {
+                "name": "Dashboard",
+                "type": "Organism",
+                "id": "O3"
+              },
+              {
+                "name": "Routine List",
+                "type": "Organism",
+                "id": "O4"
+              },
+              {
+                "name": "Alert Detail",
+                "type": "Organism",
+                "id": "O5"
+              },
+              {
+                "name": "Onboarding Wizard",
+                "type": "Organism",
+                "id": "O6"
+              },
+              {
+                "name": "Reassurance Screen",
+                "type": "Organism",
+                "id": "O7"
+              },
+              {
+                "name": "Consent Status",
+                "type": "Organism",
+                "id": "O8"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "ideas": [
+      {
+        "id": "001",
+        "name": "Alzheimer's Daily Routine & Wellbeing Companion",
+        "stage": "routed",
+        "score": 27,
+        "scoreMax": 35,
+        "decision": "Approved",
+        "route": "new-project",
+        "routeTarget": "PRJ-ADRC-2026-001",
+        "domain": "general (healthcare / wellbeing)",
+        "depth": "Comprehensive",
+        "brief": "Standalone mobile app to help people with Alzheimer's manage daily routines and wellbeing — dignity-first interface, routine reminders, caregiver companion, familiar people recognition, safety net.",
+        "created": "2026-06-22",
+        "lastUpdated": "2026-06-22",
+        "portfolioInform": true,
+        "reason": null,
+        "files": [
+          {
+            "name": "Approved Idea Brief",
+            "path": "pdlc-ws/ideas/001-alzheimers-routine-wellbeing-companion/001-alzheimers-routine-wellbeing-companion_Approved_Idea_Brief.md",
+            "status": "produced"
+          },
+          {
+            "name": "GoNoGo Decision Record",
+            "path": "pdlc-ws/ideas/001-alzheimers-routine-wellbeing-companion/001-alzheimers-routine-wellbeing-companion_GoNoGo_Decision_Record.md",
+            "status": "produced"
+          },
+          {
+            "name": "Idea Statement",
+            "path": "pdlc-ws/ideas/001-alzheimers-routine-wellbeing-companion/Idea_Statement.md",
+            "status": "produced"
+          }
+        ]
+      }
+    ],
+    "ppm": {
+      "totalProjects": 1,
+      "dispatched": 0,
+      "pending": 1,
+      "strategicFit": null,
+      "topPriority": null
+    },
+    "health": {
+      "totalBlockers": 3,
+      "stalledProjects": 0,
+      "overallProgress": 18
+    }
+  }
 }

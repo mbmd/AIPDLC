@@ -129,7 +129,7 @@ A complete **Compliance Enforcement Layer** containing:
 
 AI-GCE is a Project-layer governance engine in the AI-* PDLC Family. It derives its compliance layer from a Development Workspace (from AI-DWG), then runs as a **continuous companion alongside AI-DLC v1** (Amazon's open-source AIDLC) — enforcing governance throughout delivery rather than as a one-time sequential stage. It works standalone too — if you have any workspace with `rules/` files, AI-GCE can derive a compliance layer from it regardless of how those files were created.
 
-Learn more: [AI-* Family Whitepaper](../narrative/WHITEPAPER.md)
+Learn more: [AI-* Family Whitepaper](../../narrative/WHITEPAPER.md)
 
 ---
 

@@ -120,7 +120,7 @@ The family root (``) carries family-wide files alongside the package folders:
 ├── FAMILY_BINDINGS.md          ← [Communication Fabric] generated topology — internal + external edges (do-not-edit)
 ├── TRIGGER_KEYS_REFERENCE.md                       ← destination-workspace trigger keys
 ├── MIGRATION_CATALOGUE.md                          ← output-feature migrations read by the UPG__ family upgrade agent
-└── INSTALL_GUIDE_*.md                              ← per-platform install guides
+└── INSTALL_GUIDE.md                                ← unified install guide (at family root)
 ```
 
 > **Communication Fabric (the three new root files).** Every package declares a `§ Gate Contract` in its core file (capability types it emits/consumes + per-type field requirements). `GATE_PROTOCOL.md` defines the universal matching behavior; `FAMILY_INTERFACE.md` is the family's discoverable seam surface; `FAMILY_BINDINGS.md` is the generated routing graph (internal edges auto-derived from gate contracts + external cross-family edges). See `knowledge_docs/HOW_COMMUNICATION_FABRIC_WORKS.md`.

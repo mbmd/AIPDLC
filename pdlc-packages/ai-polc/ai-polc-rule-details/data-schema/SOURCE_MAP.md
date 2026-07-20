@@ -28,7 +28,7 @@
 | 7 | `projects/PRJ-{ABBREV}-{slug}/backlog/release-plan.md` | release table (release → goal → epics → value) (→ `po.releases`) |
 | 8 | `projects/PRJ-{ABBREV}-{slug}/backlog/stakeholder-map.md` | Stakeholder Register table (→ `po.stakeholders`) |
 | 9 | `projects/PRJ-{ABBREV}-{slug}/backlog/definition-of-ready.md` · `…/definition-of-done.md` | existence + path (→ `po.backlog.dorReady/dodReady/dorPath/dodPath`) |
-| 10 | `projects/PRJ-{ABBREV}-{slug}/backlog/epics/` | per-epic files — folder scan for `po.backlog.totalEpics` |
+| 10 | `projects/PRJ-{ABBREV}-{slug}/backlog/epics/` | per-epic files — folder scan for `po.backlog.totalEpics` + per-epic story table extraction (→ `po.roadmap.{horizon}[].storyDetails[]`) |
 
 ## Field Extraction
 
@@ -56,6 +56,7 @@
 | `po.vision.status` | 1, 5 | `dashboard-summary` block `vision.status` if present; else `approved` when `product-vision.md` exists and stage ≥ Strategy, else `draft` |
 | `po.vision.statement` | 5 | First vision/goal statement line in `product-vision.md` (heading or "Vision:" line) |
 | `po.roadmap.{now,next,later}[]` | 6 | Parse the Now/Next/Later horizon table → one `{ epic, stories, done, status, items[] }` per row, bucketed by horizon column. **Horizons come from the table — never inferred from which epic files exist** (ISS-012/015) |
+| `po.roadmap.{now,next,later}[].storyDetails[]` | 10 | For each epic in the roadmap, find its matching file in `backlog/epics/` (by epic ID or name match). Parse the **User Stories table** inside the epic file → one `{ id, title, points, status, team, acceptanceCriteria }` per row. If the epic file has no story table or the file doesn't exist → `storyDetails` = `null` (graceful). `status` normalise: Done/Complete → `done`, In Progress/Active → `in-progress`, else → `todo`. `points` = story points (integer or null). `team` = assigned team/squad (string or null). |
 | `po.releases[]` | 7 | Release table → one `{ name, date, status, stories, done, scope[] }` per release row |
 | `po.backlog.totalEpics` | 10, 1 | Count of files in `backlog/epics/` (fallback: Backlog Summary `Total Epics`) |
 | `po.backlog.totalStories` / `prioritised` / `inReleasePlan` | 2, 1 | From prioritization-register row count + Backlog Summary fields |
@@ -76,3 +77,4 @@
 - POLC is per-project scoped: one `polc-data.json` per project (keyed by `projectId`).
 - Uses the shared `management_framework/` spine (sibling of `backlog/`); DFE attributes rows by `POLC-{ABBREV}-*` prefix.
 - **Rich `po` pane (dashboard PO tab):** DFE extracts the **structured sub-sections** of the PBP artifacts — the roadmap horizon table, release table, stakeholder register table, DoR/DoD file existence, and the `epics/` folder scan. It does NOT parse free-form prose. For the few genuinely free-form facts (vision status/statement, velocity trend, acceptance counts), AI-POLC emits a small machine-readable **`dashboard-summary`** block in `polc-state.md` (Hybrid emit); DFE reads that block when present and falls back to safe defaults otherwise. (Supersedes the earlier "narrative docs not machine-extracted" stance — scoped to structured sub-sections per the Dashboard Data-Fidelity Plan.)
+- **Per-epic story extraction (dashboard PO drill-down):** Each epic file in `backlog/epics/` MAY contain a User Stories table (markdown table under a "## User Stories" or "## Stories" heading) listing individual stories with ID, title, points, status, and team. DFE extracts this as `storyDetails[]` on the matching roadmap epic, enabling the dashboard to show expandable story lists per epic. If an epic file has no such table, `storyDetails` is `null` — the dashboard falls back to showing aggregate counts only (stories/done). This is a structured sub-section extraction, not free-form prose parsing.

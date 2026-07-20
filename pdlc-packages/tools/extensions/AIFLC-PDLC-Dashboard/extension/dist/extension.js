@@ -56,7 +56,7 @@ function activate(context) {
         });
         refreshPanel(context);
         panel.onDidDispose(() => { panel = undefined; });
-        // Handle messages from webview — open a referenced file in the editor
+        // Handle messages from webview
         panel.webview.onDidReceiveMessage((message) => {
             if (message.type === 'openFile' && message.path) {
                 const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
@@ -75,9 +75,8 @@ function activate(context) {
             refreshPanel(context);
         }
     });
-    // File watcher: auto-refresh when the AI-DFE data surface changes.
-    // Option B — the dashboard reads ONLY the data fabric, never *-state.md directly.
-    const watcher = vscode.workspace.createFileSystemWatcher('**/data/{REGISTRY.json,dashboard-data.json}');
+    // File watcher: auto-refresh when any state file changes
+    const watcher = vscode.workspace.createFileSystemWatcher('**/*-state.md');
     watcher.onDidChange(() => { if (panel) {
         refreshPanel(context);
     } });
@@ -88,13 +87,13 @@ function activate(context) {
 }
 /**
  * Build the webview HTML — loads CSS + JS from the sibling ui/ folder,
- * injects the dashboard payload produced by AI-DFE.
+ * injects live data from workspace state files.
  */
 async function refreshPanel(context) {
     if (!panel)
         return;
-    const result = await loadDashboardData();
-    const dataJSON = JSON.stringify(result.data);
+    const data = await buildDashboardData();
+    const dataJSON = JSON.stringify(data);
     // Find UI files from extension-relative paths
     let cssContent = '';
     let jsContent = '';
@@ -102,6 +101,7 @@ async function refreshPanel(context) {
         path.join(context.extensionPath, '..', 'ui'),
         path.join(context.extensionPath, 'ui')
     ];
+    // Dynamically search workspace for the extension's UI files
     if (vscode.workspace.workspaceFolders) {
         for (const folder of vscode.workspace.workspaceFolders) {
             const root = folder.uri.fsPath;
@@ -128,10 +128,6 @@ async function refreshPanel(context) {
     if (!jsContent) {
         jsContent = 'document.body.innerHTML="<p>Dashboard UI files not found.</p>";';
     }
-    // Notice banner when the data fabric hasn't produced data yet.
-    const notice = result.found ? '' : `<div class="notice" style="padding:10px 16px;background:#5a3a00;color:#ffd479;font-size:13px;">
-      No data fabric output found. ${escapeHtml(result.message)} Run <code>DAT__ all</code> (AI-DFE) to populate <code>${escapeHtml(result.expectedPath)}</code>.
-    </div>`;
     panel.webview.html = `<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
@@ -146,7 +142,6 @@ async function refreshPanel(context) {
   <span class="badge" id="overall-badge">0%</span>
   <button class="theme-toggle" onclick="toggleTheme()">\u2600/\uD83C\uDF19</button>
 </div>
-${notice}
 <div class="main">
   <div class="panel-left">
     <div class="tabs" id="left-tabs">
@@ -178,71 +173,60 @@ ${notice}
     <div class="tab-content" id="tc-stats-right"></div>
   </div>
 </div>
-<div class="footer">AIFLC PDLC Dashboard v0.4.0 <span id="footer-date"></span></div>
+<div class="footer">AIFLC PDLC Dashboard v0.1.0 <span id="footer-date"></span></div>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>var D = ${dataJSON};</script>
 <script>${jsContent}</script>
 </body>
 </html>`;
 }
-/**
- * Load the dashboard payload from the AI-DFE data surface.
- *
- * Resolution (per the consumer contract — Decision §4.4):
- *   1. Locate REGISTRY.json under a data folder in the workspace.
- *   2. Read the registry, find the `dashboard-data.json` entry, resolve its path.
- *   3. Read that file and return its `data` payload (the envelope body).
- *
- * The dashboard NEVER parses `*-state.md` files directly and NEVER hardcodes a
- * data-file path — everything resolves through REGISTRY.json.
- */
-async function loadDashboardData() {
-    const expectedPath = '{family}-ws/data/REGISTRY.json';
-    const folders = vscode.workspace.workspaceFolders;
-    if (!folders) {
-        return { found: false, data: emptyData(), message: 'No workspace open.', expectedPath };
+// ─── Data Building ──────────────────────────────────────────────────────────
+async function buildDashboardData() {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (!workspaceFolders)
+        return emptyData();
+    const stateFiles = await vscode.workspace.findFiles('**/*-state.md', '{**/node_modules/**,**/templates/**,**/rule-details/**}');
+    if (stateFiles.length === 0)
+        return emptyData();
+    const packages = [];
+    for (const file of stateFiles) {
+        const bytes = await vscode.workspace.fs.readFile(file);
+        const content = Buffer.from(bytes).toString('utf-8');
+        const pkg = parseStateFile(content, vscode.workspace.asRelativePath(file));
+        if (pkg)
+            packages.push(pkg);
     }
-    // 1. Find REGISTRY.json under any */data/ folder (e.g. pdlc-ws/data/REGISTRY.json).
-    const registryFiles = await vscode.workspace.findFiles('**/data/REGISTRY.json', '{**/node_modules/**,**/templates/**,**/rule-details/**}', 5);
-    if (registryFiles.length === 0) {
-        return { found: false, data: emptyData(), message: 'REGISTRY.json not found.', expectedPath };
-    }
-    const registryUri = registryFiles[0];
-    const dataRoot = path.dirname(registryUri.fsPath);
-    let registry;
-    try {
-        const bytes = await vscode.workspace.fs.readFile(registryUri);
-        registry = JSON.parse(Buffer.from(bytes).toString('utf-8'));
-    }
-    catch {
-        return { found: false, data: emptyData(), message: 'REGISTRY.json could not be parsed.', expectedPath };
-    }
-    // 2. Find the dashboard-data.json entry in the registry.
-    const entry = registry?.files?.['dashboard-data.json'];
-    if (!entry) {
-        return { found: false, data: emptyData(), message: 'No dashboard-data.json registered.', expectedPath: path.join(dataRoot, 'dashboard-data.json') };
-    }
-    // Resolve the data-file path: prefer registry path relative to workspace root,
-    // fall back to the sibling of REGISTRY.json.
-    const wsRoot = folders[0].uri.fsPath;
-    const candidatePaths = [
-        entry.path ? path.join(wsRoot, entry.path) : null,
-        path.join(dataRoot, 'dashboard-data.json')
-    ].filter(Boolean);
-    for (const candidate of candidatePaths) {
-        if (fs.existsSync(candidate)) {
-            try {
-                const parsed = JSON.parse(fs.readFileSync(candidate, 'utf-8'));
-                // DFE wraps payloads in a metadata envelope; the UI consumes `.data`.
-                const payload = (parsed && typeof parsed === 'object' && parsed.data) ? parsed.data : parsed;
-                return { found: true, data: payload, message: '', expectedPath: candidate };
-            }
-            catch {
-                return { found: false, data: emptyData(), message: 'dashboard-data.json could not be parsed.', expectedPath: candidate };
-            }
-        }
-    }
-    return { found: false, data: emptyData(), message: 'dashboard-data.json not yet produced.', expectedPath: candidatePaths[0] };
+    if (packages.length === 0)
+        return emptyData();
+    const total = packages.length;
+    const overallProgress = total > 0
+        ? Math.round(packages.reduce((sum, p) => sum + p.progress.pct, 0) / total)
+        : 0;
+    const projectName = path.basename(workspaceFolders[0].uri.fsPath);
+    const allBlockers = [];
+    packages.forEach(p => { if (p.blockers)
+        allBlockers.push(...p.blockers); });
+    return {
+        generated: new Date().toISOString(),
+        projects: [{
+                id: 'PRJ-LIVE-001',
+                name: projectName,
+                status: packages.some(p => p.status === 'blocked') ? 'blocked' : 'active',
+                priority: 1,
+                progress: overallProgress,
+                lastActivity: new Date().toISOString().split('T')[0],
+                packages: packages,
+                edges: inferEdges(packages),
+                mgmt: { decisions: 0, risks: 0, changes: 0, actions: 0, issues: 0, lessons: 0 },
+                mgmtDetail: { decisions: [], risks: [], changes: [], actions: [], issues: [], lessons: [] },
+                po: null,
+                arch: null,
+                ux: null
+            }],
+        ideas: [],
+        ppm: { totalProjects: 1, dispatched: 1, pending: 0, strategicFit: 0, topPriority: 'PRJ-LIVE-001' },
+        health: { totalBlockers: allBlockers.length, stalledProjects: 0, overallProgress: overallProgress }
+    };
 }
 function emptyData() {
     return {
@@ -253,8 +237,96 @@ function emptyData() {
         health: { totalBlockers: 0, stalledProjects: 0, overallProgress: 0 }
     };
 }
-function escapeHtml(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// ─── State File Parsing ─────────────────────────────────────────────────────
+function parseStateFile(content, relativePath) {
+    const filename = path.basename(relativePath);
+    const codeMatch = filename.match(/^(\w[\w-]*)-state\.md$/);
+    if (!codeMatch)
+        return null;
+    const shortCode = codeMatch[1].toUpperCase().replace(/-/g, '-');
+    const code = shortCode.startsWith('AI-') ? shortCode : `AI-${shortCode}`;
+    const frontMatter = extractFrontMatter(content);
+    const statusRaw = frontMatter['status'] || extractField(content, 'Status') || 'active';
+    const { completed, total } = countStages(content);
+    const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const status = normalizeStatus(statusRaw, pct);
+    const currentPhase = extractField(content, 'Current Phase') || extractField(content, 'Phase') || '0';
+    const totalPhases = extractField(content, 'Total Phases') || '0';
+    const phaseName = extractField(content, 'Phase Name') || '';
+    const stageName = extractField(content, 'Current Stage') || extractField(content, 'Last Stage Completed') || '';
+    const blockers = extractBlockers(content);
+    return {
+        code,
+        status,
+        phase: { c: parseInt(currentPhase) || 0, t: parseInt(totalPhases) || total, name: phaseName },
+        progress: { pct, done: completed, total },
+        stage: { name: stageName },
+        blockers,
+        artifacts: []
+    };
+}
+function extractFrontMatter(content) {
+    const match = content.match(/^---\n([\s\S]*?)\n---/);
+    if (!match)
+        return {};
+    const result = {};
+    match[1].split('\n').forEach(line => {
+        const kv = line.match(/^([\w-]+):\s*"?([^"]*)"?\s*$/);
+        if (kv)
+            result[kv[1]] = kv[2].trim();
+    });
+    return result;
+}
+function extractField(content, fieldName) {
+    const re = new RegExp(`\\|\\s*\\*?\\*?${fieldName}\\*?\\*?\\s*\\|\\s*(.+?)\\s*\\|`, 'i');
+    const match = content.match(re);
+    if (match)
+        return match[1].replace(/[{}]/g, '').trim();
+    const re2 = new RegExp(`^-\\s*${fieldName}:\\s*(.+)$`, 'im');
+    const match2 = content.match(re2);
+    return match2 ? match2[1].trim() : '';
+}
+function countStages(content) {
+    const tableMatch = content.match(/## Completed Stages[\s\S]*?\n(\|[\s\S]*?)(?=\n##|\n---|\n$)/);
+    if (!tableMatch)
+        return { completed: 0, total: 0 };
+    const rows = tableMatch[1].split('\n').filter(r => r.startsWith('|') && !r.includes('---'));
+    const dataRows = rows.slice(1);
+    const total = dataRows.length;
+    const completed = dataRows.filter(row => /\d{4}-\d{2}-\d{2}/.test(row)).length;
+    return { completed, total };
+}
+function extractBlockers(content) {
+    const section = content.match(/## Blockers?\n([\s\S]*?)(?=\n##|$)/);
+    if (!section)
+        return [];
+    return section[1].split('\n')
+        .filter(l => l.startsWith('- '))
+        .map(l => l.replace(/^-\s*/, '').trim())
+        .filter(l => l.toLowerCase() !== 'none' && !l.startsWith('{'));
+}
+function normalizeStatus(raw, percent) {
+    const lower = raw.toLowerCase().replace(/["{} ]/g, '');
+    if (lower.includes('complete') || percent >= 100)
+        return 'complete';
+    if (lower.includes('block'))
+        return 'blocked';
+    if (lower.includes('skip'))
+        return 'skipped';
+    if (lower.includes('pending') || percent === 0)
+        return 'pending';
+    return 'active';
+}
+function inferEdges(packages) {
+    const chainOrder = ['AI-ILC', 'AI-PILC', 'AI-POLC', 'AI-UXD', 'AI-ADLC', 'AI-DWG', 'AI-GCE', 'AI-TGE'];
+    const present = new Set(packages.map((p) => p.code));
+    const edges = [];
+    for (let i = 0; i < chainOrder.length - 1; i++) {
+        if (present.has(chainOrder[i]) && present.has(chainOrder[i + 1])) {
+            edges.push({ from: chainOrder[i], to: chainOrder[i + 1], type: 'handoff', label: '' });
+        }
+    }
+    return edges;
 }
 /**
  * Recursively find directories matching a target name up to maxDepth levels.

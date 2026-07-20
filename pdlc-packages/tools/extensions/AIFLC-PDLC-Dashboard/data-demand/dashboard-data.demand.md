@@ -25,9 +25,9 @@ The dashboard consumes the rich shape below (inside the envelope's `data`). One 
 | `projects[].edges[]` | array | `flo-data.routes` (or canonical chain) | Chain edges `{ from, to, type, label }` |
 | `projects[].mgmt` | object | `pilc-data`/`adlc-data`/`polc-data` register counts | `{ decisions, risks, changes, actions, issues, lessons }` |
 | `projects[].mgmtDetail` | object | management_framework registers | Detail arrays per register type |
-| `projects[].po` | object\|null | `polc-data.po` | **Full Product-Ownership pane** (§2.1.3): vision, roadmap{now,next,later}, releases[], backlog{…,dorReady,dodReady}, acceptance, velocity, stakeholders[]. `null` only if AI-POLC absent/unrun |
-| `projects[].arch` | object\|null | `adlc-data.arch` | **Full Architecture pane** (§2.1.4): c4Progress, vision, principles[], constraints[], nfrs{}, integrations[], adrs[], risks[], techStack{}, containers[], c4Diagrams{l1,l2,l3}, diagrams{}. `null` only if AI-ADLC absent/unrun |
-| `projects[].ux` | object\|null | `uxd-data.ux` | **Full UX pane** (§2.1.5): personas[], journeys[], flows[], userFlows, wireframes{}, designSystem{}, designSystemFiles[], componentLibrary{}, informationArchitecture, accessibility. `null` only if AI-UXD absent/unrun |
+| `projects[].po` | object\|null | `polc-data` | Product-ownership pane (vision, velocity, roadmap, releases) or null |
+| `projects[].arch` | object\|null | `adlc-data` | Architecture pane (containers, ADRs) or null |
+| `projects[].ux` | object\|null | `uxd-data` | UX pane (metrics, a11y) or null |
 | `ideas[]` | array | `ilc-data.ideas` | Idea funnel items |
 | `ppm` | object | `ppm-data` | Portfolio metrics `{ totalProjects, dispatched, pending, strategicFit, topPriority }` |
 | `health` | object | aggregate | `{ totalBlockers, stalledProjects, overallProgress }` |
@@ -37,10 +37,6 @@ The dashboard consumes the rich shape below (inside the envelope's `data`). One 
 - `packages[]` maps each per-package data file into the dashboard's package shape. `phase`/`progress`/`stage` are derived from each package's state-derived fields (e.g. `currentPhase`, `currentStage`, `progress[]`).
 - `po`/`arch`/`ux` panes are populated from `polc-data`/`adlc-data`/`uxd-data` when present, else `null`.
 - `edges` come from `flo-data` routes when FLO is present; otherwise the canonical chain order.
-
-## Full-Mode Coverage
-
-When the **complete PDLC package set** is installed and run, every pane fills from your own data: AI-POLC→`po`, AI-UXD→`ux`, AI-ADLC→`arch`, AI-ILC→`ideas`, plus PM/Chain/MF from the per-package data. Run **`DAT__ full`** to assemble the complete contract and get a readiness report naming any package/pane still missing or `not-run` (vs `DAT__ all`, which silently degrades absent producers to `null`). Each rich pane is a 1:1 copy of the producing package's data — the renderer safely guards any pane that is still `null`.
 
 ## How This Consumer Reads Its Data (HARD RULE — Obligation 2)
 

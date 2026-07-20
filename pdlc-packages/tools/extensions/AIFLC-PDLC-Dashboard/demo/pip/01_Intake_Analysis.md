@@ -4,41 +4,41 @@
 
 | Field | Value |
 |-------|-------|
-| **Project Name** | Sample Web Platform |
-| **Requestor** | {Sponsor Role} |
+| **Project Name** | ITSM Platform Modernisation |
+| **Requestor** | VP Engineering |
 | **Date Submitted** | 2026-04-28 |
 | **Priority** | High |
 
 ## Problem Statement
 
-The current solution is a legacy monolith with poor scalability, limited automation, and a fragmented user experience. Teams spend significant time context-switching between disconnected tools.
+The current ITSM platform is a legacy monolith with poor scalability, limited automation, and fragmented user experience. L1 agents spend 35% of time context-switching between systems.
 
 ## Business Drivers
 
-- Reduce task completion time by 60%
-- Improve service-level compliance from 78% to 95%
-- Enable proactive monitoring and alerting
+- Reduce L1 ticket resolution time by 60%
+- Improve SLA compliance from 78% to 95%
+- Enable proactive incident management
 - Consolidate 4 fragmented tools into 1 platform
 
 ## Stakeholders Identified
 
-- Sponsor (Executive owner)
-- Operations Lead (Champion)
-- Security Officer (Security oversight)
-- End-User Team (Primary users)
-- External Integration Vendor (Integration partner)
+- VP Engineering (Sponsor)
+- Head of IT Operations (Champion)
+- CISO (Security oversight)
+- L1 Support Team (End users)
+- External CMDB vendor (Integration partner)
 
 ## Initial Scope Boundaries
 
 **In Scope:**
-- Core workflow engine
+- Core ticketing engine
 - Self-service portal
-- Activity monitoring
-- Integration with an external system of record
+- SLA monitoring
+- Integration with ServiceNow CMDB
 
 **Out of Scope:**
 - Mobile app (deferred to Phase 2)
-- Conversational assistant (requires separate evaluation)
+- AI chatbot (requires separate evaluation)
 - Legacy data archival
 
 ## Recommendation

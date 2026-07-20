@@ -1525,7 +1525,7 @@ function renderUX() {
   // === Wireframes — collapsible, compact chips grouped by experience ===
   if (ux.wireframes && ux.wireframes.screens) {
     var wf = ux.wireframes;
-    var expColors = {'Primary User':'#9c27b0','Admin User':'#2196f3','Setup':'#ff9800','Reviewer':'#f44336'};
+    var expColors = {'Margaret':'#9c27b0','David':'#2196f3','Setup':'#ff9800','Rachel':'#f44336'};
     html += '<div class="mf-group" id="ux-grp-wireframes"><div class="mf-group-hdr" onclick="document.getElementById(\'ux-grp-wireframes\').classList.toggle(\'collapsed\')" style="border-left-color:#e91e63;"><span class="mf-grp-arrow">\u25BC</span><span class="mf-grp-icon">\uD83D\uDCF1</span><span class="mf-grp-label">Wireframes</span><span class="mf-grp-status-pills"><span class="mf-grp-spill" style="color:var(--text-secondary);">' + wf.total + ' screens \u00B7 ' + (wf.experiences||[]).length + ' experiences</span></span><span class="mf-grp-count">' + wf.total + '</span></div><div class="mf-group-body">';
     (wf.experiences||[]).forEach(function(exp) {
       var ec = expColors[exp.name.split(' ')[0]] || '#888';

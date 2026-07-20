@@ -113,7 +113,7 @@ All in structured markdown. All traceable. All ready for governance review.
 
 AI-PILC is the first node in the AI-* PDLC Family chain. Its output (PIP) feeds directly into AI-ADLC for architecture design. But it works perfectly standalone — if you just need structured initiation without the downstream chain, AI-PILC delivers that independently.
 
-Learn more: [AI-* Family Whitepaper](../narrative/WHITEPAPER.md)
+Learn more: [AI-* Family Whitepaper](../../narrative/WHITEPAPER.md)
 
 ---
 

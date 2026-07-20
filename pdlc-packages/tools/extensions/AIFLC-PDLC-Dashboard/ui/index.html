@@ -57,7 +57,7 @@
 </div>
 
 <!-- FOOTER -->
-<div class="footer"><span>AIFLC PDLC Dashboard v0.4.0 · AI-* PDLC Family</span><span id="footer-date"></span><span>Built on AIFLC by <a href="https://www.linkedin.com/in/mohammad-maheri-8399565b" target="_blank" style="color:var(--color-accent);text-decoration:none;">Mohammad Maheri</a></span></div>
+<div class="footer"><span>AIFLC PDLC Dashboard v0.1.0 · AI-* PDLC Family</span><span id="footer-date"></span><span>Built on AIFLC by <a href="https://www.linkedin.com/in/mohammad-maheri-8399565b" target="_blank" style="color:var(--color-accent);text-decoration:none;">Mohammad Maheri</a></span></div>
 
 <!-- MERMAID CDN -->
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
@@ -111,20 +111,14 @@ window.__dashboardPick = function (evt) {
     .then(function (r) { if (!r.ok) throw new Error('REGISTRY.json ' + r.status); return r.json(); })
     .then(function (reg) {
       var entry = reg && reg.files && reg.files[DASHBOARD_OUTPUT];
-      if (!entry) throw new Error('no entry in REGISTRY for ' + DASHBOARD_OUTPUT);
+      if (!entry) { empty('No data surface yet — <code>REGISTRY.json</code> has no <code>' + DASHBOARD_OUTPUT + '</code> entry. Reinstall the dashboard or run <code>DAT__ aggregate</code>.'); return; }
       var out = dataRoot + '/' + (entry.path ? entry.path.split('/').pop() : DASHBOARD_OUTPUT);
       return fetch(out)
         .then(function (r) { if (!r.ok) throw new Error('data ' + r.status + ' @ ' + out); return r.json(); })
         .then(function (parsed) { D = (parsed && parsed.data) ? parsed.data : parsed; if (typeof init === 'function') init(); });
     })
-    .catch(function () {
-      // Fallback: try loading dashboard-data.json directly from same directory
-      fetch(dataRoot + '/' + DASHBOARD_OUTPUT)
-        .then(function (r) { if (!r.ok) throw new Error(DASHBOARD_OUTPUT + ' ' + r.status); return r.json(); })
-        .then(function (parsed) { D = (parsed && parsed.data) ? parsed.data : parsed; if (typeof init === 'function') init(); })
-        .catch(function () {
-          empty('No data loaded. <b>Standalone:</b> place <code>' + DASHBOARD_OUTPUT + '</code> alongside <code>index.html</code>, or use <code>?data=&lt;path-to-data-folder&gt;</code>.<br><b>In VS Code:</b> run <code>DAT__ all</code> to populate the data surface.');
-        });
+    .catch(function (err) {
+      empty('No data surface yet (' + ((err && err.message) || 'fetch failed') + '). Run <code>DAT__ all</code> (AI-DFE) to populate it.');
     });
 })();
 </script>

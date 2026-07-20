@@ -209,7 +209,7 @@ Each package produces a named output that feeds downstream:
 |----------|----------------|
 | `TRIGGER_KEYS_REFERENCE.md` | Full trigger specification + rules |
 | `FAMILY_STRUCTURE.md` | Package structure + output trees |
-| `INSTALL_GUIDE_KIRO.md` | How to install the PDLC family |
+| `INSTALL_GUIDE.md` (family root) | How to install the PDLC family |
 | `contracts/AGENT_GOVERNANCE_CONTRACT.md` | Agent lifecycle, escalation, naming |
 | `contracts/OUTPUT_AND_STATE_CONTRACT.md` | Multi-project layout + state markers |
 

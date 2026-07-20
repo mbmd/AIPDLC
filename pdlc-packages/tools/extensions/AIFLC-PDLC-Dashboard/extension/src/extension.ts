@@ -156,7 +156,7 @@ ${notice}
     <div class="tab-content" id="tc-stats-right"></div>
   </div>
 </div>
-<div class="footer">AIFLC PDLC Dashboard v0.4.0 <span id="footer-date"></span></div>
+<div class="footer">AIFLC PDLC Dashboard v0.2.0 <span id="footer-date"></span></div>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>var D = ${dataJSON};</script>
 <script>${jsContent}</script>

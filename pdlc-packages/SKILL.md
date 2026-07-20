@@ -121,7 +121,7 @@ After installing this skill, clone the package set into a temporary nested folde
 git clone https://github.com/mbmd/AIPDLC.git .aiflc-src/AIPDLC
 
 # 2. Install into your workspace root (add --platform / --bundle to skip prompts)
-./.aiflc-src/AIPDLC/pdlc-packages/installer/install.sh --target .
+./.aiflc-src/AIPDLC/installer/install.sh --target .
 
 # 3. Remove the source — nothing unnecessary is left in your root
 rm -rf .aiflc-src
@@ -131,7 +131,7 @@ On Windows (PowerShell):
 
 ```powershell
 git clone https://github.com/mbmd/AIPDLC.git .aiflc-src/AIPDLC
-.\.aiflc-src\AIPDLC\pdlc-packages\installer\install.ps1 -TargetWorkspace .
+.\.aiflc-src\AIPDLC\installer\install.ps1 -TargetWorkspace .
 Remove-Item -Recurse -Force .aiflc-src
 ```
 

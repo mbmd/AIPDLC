@@ -119,7 +119,7 @@ Typically 30-40 files in one generation pass. Every file ready for immediate use
 
 AI-DWG is the third node in the AI-* PDLC Family chain. It consumes an Architecture Package from AI-ADLC and produces the Development Workspace that AI-GCE uses for compliance derivation. But it works standalone — if you have architecture documentation from any source (even hand-written), AI-DWG can transform it into a governed workspace.
 
-Learn more: [AI-* Family Whitepaper](../narrative/WHITEPAPER.md)
+Learn more: [AI-* Family Whitepaper](../../narrative/WHITEPAPER.md)
 
 ---
 

@@ -89,10 +89,10 @@ flowchart LR
 
 ```powershell
 # Windows (from repo root)
-.\pdlc-packages\installer\install.ps1
+.\installer\install.ps1
 
 # macOS / Linux (from repo root)
-./pdlc-packages/installer/install.sh
+./installer/install.sh
 ```
 
 Or install manually — packages are **independently installable**. You decide how many to run:
@@ -162,8 +162,11 @@ AIPDLC/
 ├── NOTICE                 ← Attribution requirement
 ├── CONTRIBUTING.md        ← How to contribute
 ├── SECURITY.md            ← Vulnerability reporting
+├── INSTALL_GUIDE.md       ← Unified installation guide (all platforms)
+├── installer/             ← Interactive package installer (PowerShell + Bash)
+├── narrative/             ← Whitepapers and HOW documents
 │
-└── pdlc-packages/         ← All packages + installer (one level down to keep root clean)
+└── pdlc-packages/         ← All packages (one level down to keep root clean)
     ├── ai-ilc/            ← Idea evaluation workflow
     ├── ai-pilc/           ← Project initiation workflow
     ├── ai-adlc/           ← Architecture design workflow
@@ -176,9 +179,7 @@ AIPDLC/
     ├── ai-tge/            ← Test governance engine
     ├── ai-dfe/            ← Data fabric engine
     │
-    ├── installer/         ← Interactive package installer (PowerShell + Bash)
     ├── contracts/         ← Cross-package conventions & contracts
-    ├── narrative/         ← Whitepapers and HOW documents
     └── knowledge_docs/    ← Design patterns and reference material
 ```
 
@@ -205,15 +206,16 @@ When used in the chain, each package detects its predecessor's output markers an
 
 | Platform | Supported | Install Guide |
 |----------|:---------:|:-------------:|
-| Kiro | ✅ | Each package's `setup/INSTALL.md` |
-| Amazon Q Developer | ✅ | Each package's `setup/INSTALL.md` |
-| Cursor | ✅ | Each package's `setup/INSTALL.md` |
-| Cline | ✅ | Each package's `setup/INSTALL.md` |
-| Claude Code | ✅ | Each package's `setup/INSTALL.md` |
-| GitHub Copilot | ⚠️ Partial | Each package's `setup/INSTALL.md` (workspace-level instructions only) |
-| Any other platform | ✅ | Universal Setup section in each `INSTALL.md` |
+| Kiro | ✅ | [INSTALL_GUIDE.md](./INSTALL_GUIDE.md#kiro) |
+| Amazon Q Developer | ✅ | [INSTALL_GUIDE.md](./INSTALL_GUIDE.md#amazon-q-developer) |
+| Cursor | ✅ | [INSTALL_GUIDE.md](./INSTALL_GUIDE.md#cursor) |
+| Cline | ✅ | [INSTALL_GUIDE.md](./INSTALL_GUIDE.md#cline) |
+| Claude Code | ✅ | [INSTALL_GUIDE.md](./INSTALL_GUIDE.md#claude-code) |
+| OpenAI Codex | ✅ | [INSTALL_GUIDE.md](./INSTALL_GUIDE.md#openai-codex) |
+| GitHub Copilot | ⚠️ Partial | [INSTALL_GUIDE.md](./INSTALL_GUIDE.md#github-copilot) |
+| VS Code Agent | ✅ | [INSTALL_GUIDE.md](./INSTALL_GUIDE.md#vs-code-agent-framework) |
 
-> Compatibility is per package — every package ships the same platform coverage. For unlisted IDEs, follow the **Universal Setup** steps: place `core-workflow.md` where your AI reads always-loaded steering and `*-rule-details/` where the workflow can resolve it.
+> Compatibility is per package — every package ships the same platform coverage. See [INSTALL_GUIDE.md](./INSTALL_GUIDE.md) for the unified multi-platform installation guide.
 
 ---
 
