@@ -208,6 +208,78 @@ If conflict found → flag to user and propose resolution.
 
 ---
 
+### Step 7b: Polyglot Technology Matrix (Conditional)
+
+**Activation:** Include this step when the **microservices extension is active** OR the Technology Stack Summary (Step 7) shows **≥2 distinct backend runtimes/languages** across containers. Skip for single-stack systems.
+
+**Purpose:** Provide a per-service technology breakdown that makes heterogeneous stack decisions explicit, traceable, and governable. The unified summary (Step 7) remains the canonical reference — the Polyglot Matrix adds the per-service lens.
+
+**CTO Mindset:** "Polyglot is powerful but expensive. Every additional language/runtime multiplies hiring, tooling, CI/CD, and on-call complexity. I need the per-service view to confirm each divergence earns its keep."
+
+#### Depth Adaptation
+
+| Depth | Polyglot Matrix Behavior |
+|-------|------------------------|
+| **Minimal** | Matrix table only (no governance sub-table). Divergence rationale column is mandatory. |
+| **Standard** | Full matrix + governance decisions table. ADR if ≥3 distinct runtimes. |
+| **Comprehensive** | Full matrix + governance decisions + per-divergence cost/benefit analysis. ADR for the polyglot strategy itself + per-divergence ADRs if novel (e.g., WASM, Rust in a Node-dominant org). |
+
+#### Produce the Polyglot Technology Matrix
+
+```markdown
+## Polyglot Technology Matrix
+
+<!-- Conditional: Included when microservices extension is active OR ≥2 containers use different backend runtimes -->
+
+| Service / Container | Language | Runtime + Version | Framework | Primary Data Store | Cache | Async Consumer | Protocol (Inbound) | Divergence Rationale |
+|---------------------|----------|-------------------|-----------|-------------------|-------|:--------------:|-------------------|---------------------|
+| {service_1} | {lang} | {runtime ver} | {framework} | {db + ver} | {cache or —} | {Yes/No} | {REST / gRPC / GraphQL / Event} | {Why this service uses a different stack — 1 line} |
+| {service_2} | {lang} | {runtime ver} | {framework} | {db + ver} | {cache or —} | {Yes/No} | {protocol} | {rationale} |
+| {service_n} | {lang} | {runtime ver} | {framework} | {db + ver} | {cache or —} | {Yes/No} | {protocol} | {rationale} |
+
+### Stack Diversity Summary
+
+- **Distinct languages:** {n} ({list})
+- **Distinct runtimes:** {n} ({list})
+- **Distinct primary data stores:** {n} ({list})
+- **Diversity classification:** {Focused Polyglot (2 langs) / Broad Polyglot (3+) / Mono-language with heterogeneous data}
+
+### Polyglot Governance Decisions
+
+| Concern | Decision | Justification |
+|---------|----------|---------------|
+| **Operational overhead** | {Acceptable / Mitigated by {mechanism}} | {Why the team can handle multiple stacks — reference team size from Stage 2} |
+| **Hiring & skills** | {Team covers all / Training plan / Contractor augmentation} | {How skills gap is addressed per language} |
+| **Shared libraries / contracts** | {Proto/IDL contracts / Per-language SDK / OpenAPI generation / None needed} | {Cross-service code sharing strategy} |
+| **CI/CD complexity** | {Per-service pipelines / Mono-repo with language-specific jobs / Hybrid} | {Build strategy that handles multiple toolchains} |
+| **Observability uniformity** | {OpenTelemetry (language-agnostic) / Vendor SDK per language / Mesh-level (sidecar)} | {How tracing/metrics stay consistent across different runtimes} |
+| **Local development** | {Docker Compose (all services) / Dev containers per language / Partial — mock non-local} | {Developer experience when stacks differ} |
+| **Dependency management** | {Per-service lockfiles / Centralized vulnerability scanning across ecosystems} | {Security patching across multiple package ecosystems} |
+
+→ _If any governance concern is rated "Unacceptable" or cannot be mitigated → reconsider stack diversity. Produce ADR documenting why polyglot was accepted or rejected._
+
+### Divergence Justification Rules
+
+A service MAY diverge from the dominant stack ONLY when at least one of these holds:
+1. **Performance requirement** — the dominant language cannot meet the service's latency/throughput target (benchmark evidence required at Comprehensive depth)
+2. **Ecosystem gap** — a critical library/capability exists only in the alternative language (name the library)
+3. **Team expertise** — a specialist team owns the service and is materially more productive in the alternative (>30% velocity difference)
+4. **Regulatory/compliance** — a constraint mandates a specific runtime or certified library
+5. **Acquisition/legacy** — the service is inherited and rewrite cost exceeds maintenance cost over the planning horizon
+
+If NONE of these apply → the divergence is unjustified. Recommend converging to the dominant stack.
+```
+
+**ADR Trigger:** Produce an ADR (`ADR-{nnn}_Polyglot_Stack_Strategy.md`) when:
+- The system uses ≥3 distinct backend languages, OR
+- Any single divergence is rated "high operational risk," OR
+- Depth is Comprehensive (always produce)
+
+**Interaction:** Present the matrix to the user for review. If any divergence lacks a clear justification, challenge it:
+> "Service {X} uses {language} while the rest of the system uses {dominant}. What drives this choice? If there's no strong reason, converging simplifies operations."
+
+---
+
 ### Step 8: Update Container Diagram
 
 Now that technologies are selected, update the C4 L2 diagram with actual technology labels (replacing "TBD"):

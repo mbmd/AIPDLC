@@ -112,6 +112,15 @@ Compatibility is **per package, not suite-wide**. Every package ships its own `s
 - **Cursor**
 - **Claude Code**
 - **Cline** (VS Code extension)
+- **OpenAI Codex** (CLI agent)
+- **VS Code Agent** (VS Code agent framework)
+- **Windsurf** (Codeium IDE)
+- **Augment Code**
+- **Tabnine Chat**
+- **JetBrains AI Assistant**
+- **Sourcegraph Cody**
+- **Continue** (VS Code / JetBrains extension)
+- **Aider** (CLI agent)
 - **GitHub Copilot** (⚠️ partial — workspace-level instructions only)
 
 Each INSTALL.md documents the exact destination paths for that platform. The general pattern is the same everywhere: place the package's `*-rules/core-workflow.md` where your AI reads always-loaded steering, and place the `*-rule-details/` folder where the workflow can resolve it on demand. See the [Compatibility](#compatibility) table below for the full matrix.
