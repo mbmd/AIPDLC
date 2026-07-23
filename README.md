@@ -107,13 +107,19 @@ Install each package one at a time — adding a package never requires reinstall
 
 Compatibility is **per package, not suite-wide**. Every package ships its own `setup/INSTALL.md` with platform-specific setup, so you can run different packages on different assistants in the same workspace if you want. Supported targets per package:
 
-- **Kiro** (VS Code-based)
+**Supported — install instructions provided:**
+
+- **Kiro** (VS Code-based) — primary platform, full feature support
 - **Amazon Q Developer**
 - **Cursor**
 - **Claude Code**
 - **Cline** (VS Code extension)
 - **OpenAI Codex** (CLI agent)
 - **VS Code Agent** (VS Code agent framework)
+- **GitHub Copilot** (⚠️ partial — workspace-level instructions only)
+
+**Under test — compatibility expected, not yet validated (no dedicated install steps yet):**
+
 - **Windsurf** (Codeium IDE)
 - **Augment Code**
 - **Tabnine Chat**
@@ -121,9 +127,8 @@ Compatibility is **per package, not suite-wide**. Every package ships its own `s
 - **Sourcegraph Cody**
 - **Continue** (VS Code / JetBrains extension)
 - **Aider** (CLI agent)
-- **GitHub Copilot** (⚠️ partial — workspace-level instructions only)
 
-Each INSTALL.md documents the exact destination paths for that platform. The general pattern is the same everywhere: place the package's `*-rules/core-workflow.md` where your AI reads always-loaded steering, and place the `*-rule-details/` folder where the workflow can resolve it on demand. See the [Compatibility](#compatibility) table below for the full matrix.
+Each supported platform's INSTALL.md documents the exact destination paths. The general pattern is the same everywhere: place the package's `*-rules/core-workflow.md` where your AI reads always-loaded steering, and place the `*-rule-details/` folder where the workflow can resolve it on demand. See [INSTALL_GUIDE.md](./INSTALL_GUIDE.md) for the full platform matrix and setup steps.
 
 ### 4. Use
 
