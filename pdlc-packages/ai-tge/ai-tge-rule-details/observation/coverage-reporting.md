@@ -260,6 +260,17 @@ Save to `.governance/test/coverage-report.md` (overwrites previous — each repo
 
 ---
 
+### Visualization Pack (depth-gated)
+
+| Depth | Diagram | Mermaid type | Source |
+|-------|---------|:------------:|--------|
+| Standard | Coverage dashboard (component × coverage %) | `xychart-beta` | Coverage data |
+| Comprehensive | Coverage trend over time | `xychart-beta` | Historical data |
+
+Emit from coverage data. No new content introduced.
+
+---
+
 ## Gate
 
 **Soft gate.** Coverage reporting presents results for review. The user CAN acknowledge and continue without action. But if coverage is below target and Critical gaps exist, highlight this clearly.

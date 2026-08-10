@@ -72,3 +72,26 @@
 - UXD is per-project scoped: one `uxd-data.json` per project (keyed by `projectId`).
 - Uses the shared `management_framework/` spine (sibling of `ux/`).
 - **Rich `ux` pane (dashboard UX tab):** DFE scans the numbered `ux/` deliverable folders and extracts the **structured sub-sections** — persona/journey/flow files (metadata tables + fenced ```mermaid), `Screen_Inventory.md`, design-system files, component inventory, IA sitemap, and the accessibility SC table. It does NOT parse free-form prose. The few free-form roll-ups (overall ux status phrasing, design-token/component totals when not tabulated) come from a small `dashboard-summary` block in `uxd-state.md` (Hybrid emit). (Supersedes the earlier "counts only / not machine-extracted" stance — scoped to structured sub-sections per the Dashboard Data-Fidelity Plan.)
+
+---
+
+## AI-LENS Fields (AI_LENS_PROTOCOL §6.2)
+
+> Present when UXP artifacts carry `aiFeature` tags (AI interaction patterns designed for tagged features).
+
+| Field path (in `data`) | Source | Extraction rule |
+|------------------------|--------|-----------------|
+| `aiLens.aiFeatures[]` | UXP artifact files with `aiFeature: true` front-matter | For each tagged artifact, extract: `{ aiFeatureId, aiInteractionModel, aiDisclosureType, aiHitlLevel }`. Values come from the artifact's AI interaction design section or front-matter fields. Empty array `[]` if no AI features designed. |
+
+> **Source:** UXP per-feature design artifacts in the project's `ux/` folder carrying `aiFeature` front-matter.
+
+
+## Automation-LENS Fields (AUTOMATION_LENS_PROTOCOL §6.2)
+
+> Present when UXP artifacts carry `automationFeature` tags (set when the lens facet designs control/monitoring UX for automated features).
+
+| Field path (in `data`) | Source (#) | Extraction rule |
+|------------------------|------------|-----------------|
+| `automationLens.automationFeatures[]` | UXP design files with `automationFeature: true` front-matter | For each tagged artifact, extract: `{ automationFeatureId, automationConfigModel, automationMonitoringModel, automationApprovalModel, automationOverrideControl }`. Values from the automation UX design section. Empty array `[]` if no automation features designed. |
+
+> **Source:** UXP design artifacts in the project's UX output folder carrying `automationFeature` front-matter (produced by the Automation-LENS UXD facet).

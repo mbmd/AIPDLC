@@ -51,7 +51,7 @@ Based on welcome message selection OR automatic scanning. Scan the **default mul
 | A (PIP + PBP) | Scan for `pdlc-ws/projects/*/pip/pilc-state.md` AND `pdlc-ws/projects/*/backlog/polc-state.md` (same project) — the normal chain flow (PILC → POLC → UXD) |
 | B (PIP only) | `pdlc-ws/projects/*/pip/pilc-state.md` without a `backlog/polc-state.md` sibling (POLC skipped or not yet run) |
 | C (Standalone) | No markers found; user provides brief |
-| D (Brownfield) | User indicates existing design system; scan for design artifacts |
+| D (Brownfield) | User indicates existing design system; scan for design artifacts (incl. a Figma / Tokens Studio export in `integrations/figma/in/` — ingested as an input) |
 
 **Detection strategy:** scan `pdlc-ws/projects/*/` → legacy paths (`./`, `./pip/`, `./architecture/`) → user-provided path → ask user.
 
@@ -76,8 +76,11 @@ Based on welcome message selection OR automatic scanning. Scan the **default mul
 
 **Mode D (Brownfield):**
 - Scan for existing design artifacts: style guides, component libraries, token files, brand guidelines
+- **Tool-exported tokens:** if a Tokens Studio JSON or Figma Variables export is present in `{project_root}/integrations/figma/in/`, ingest it as an **input source** (schema-validate first — it is untrusted external input). Map its tokens into the three-tier model; unrecognized entries are flagged, not silently adopted.
 - Inventory what exists vs. what's missing
 - Identify governance gaps (what exists but is ungoverned)
+
+> **Input, not drift (design C-3).** A Figma / Tokens Studio export dropped in `integrations/figma/in/` is treated as **another input source** — the same family as brownfield design artifacts — NOT as governance drift. It does not use the `drift-intake@1.0` back-flow (that stays for AI-GCE / AI-FLO). Governed reconciliation of a tool export against an existing canonical is the reverse leg (roadmap extension); at intake it is simply an input to the token model.
 
 **Architecture constraint loop — AI-ADLC (adaptive, if `adlc-state.md` appears):**
 

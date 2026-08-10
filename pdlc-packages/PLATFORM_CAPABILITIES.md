@@ -25,10 +25,14 @@ However, some features depend on **platform-specific infrastructure** that not a
 | Session continuity (cold resume) | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Chain marker detection | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Depth adaptation (Min/Std/Comp) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Design-tool token bridge (DTCG export → `integrations/figma/out/`) ⁶ | ✅ | ✅ | ❌² | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Figma design-to-code (Dev Mode MCP / Code Connect) ⁷ | ✅ | ⚠️⁷ | ❌ | ⚠️⁷ | ⚠️⁷ | ⚠️⁷ | ⚠️⁷ | ⚠️⁷ |
 
 > ¹ Requires pasting `core-workflow.md` content as system prompt or into Projects knowledge.
 > ² claude.ai has no file system access. All stage-detail files must be pasted manually into the conversation or pre-loaded as Project knowledge.
 > ³ The AI will produce template content in conversation but cannot write files to disk.
+> ⁶ AI-UXD-specific. UXD emits a portable DTCG `design-tokens.json`; any file-access platform can produce it. claude.ai cannot (no file system).
+> ⁷ AI-UXD-specific (design-to-code, not token export). Kiro wraps the Figma Dev Mode MCP via its built-in Figma power. Other MCP-capable platforms (Claude Code, Cursor, Cline, Amazon Q, Copilot, Codex) work IF configured with the Figma Dev Mode MCP server; claude.ai cannot (no MCP / file access).
 
 **Bottom line:** If your platform has workspace file access, workflow packages work at 100%.
 
@@ -260,4 +264,4 @@ Codex runs in a sandboxed environment. Default (`workspace-write`) allows readin
 
 ---
 
-*Document Version: 1.1.0 | Updated: 2026-06-19 | Author: Maheri*
+*Document Version: 1.2.0 | Updated: 2026-07-30 | Author: Maheri*

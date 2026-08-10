@@ -74,15 +74,16 @@ HOW the block is enforced depends on the platform (from `manifest.platformTarget
 
 ---
 
-## Build-Profile Gate Behavior (Parked)
+## Build-Profile Gate Behavior (Active)
 
-The drift design (§9.3) varies gate strictness by `buildProfile` (freestyle = advisory-only). **`buildProfile` is PARKED.** When absent, GCE uses the **standard** gate behavior: HARD drift BLOCKS, advisory INFORMS. (The freestyle "nothing blocks" mode activates only when the build-profile axis is unparked.)
+GCE reads `buildProfile` from the manifest to select **gate strictness**. **Backward-compatible default:** when `buildProfile` is **absent** (manual / AI-assisted), GCE uses its default **Standard** gate behavior — HARD drift BLOCKS, advisory INFORMS (unchanged from prior behavior). `aidlc` and `spec-driven` behave identically (HARD blocks). Only `freestyle` lightens the gate to advisory-only, and it is set upstream **only on explicit opt-in** (never auto-derived from the delivery method) — so enforcement never weakens silently.
 
 | Build Profile | Hard Drift Gate | Advisory Gate |
 |---------------|:---------------:|:-------------:|
-| (parked/absent — default) | BLOCK | INFO |
-| spec-driven *(when unparked)* | BLOCK | INFO |
-| freestyle *(when unparked)* | INFO only | INFO |
+| (absent — manual / AI-assisted — default) | BLOCK | INFO |
+| `aidlc` | BLOCK | INFO |
+| `spec-driven` | BLOCK | INFO |
+| `freestyle` *(explicit opt-in only)* | INFO only | INFO |
 
 ---
 
@@ -127,5 +128,5 @@ Prefer reading a recent register over re-scanning at the gate; re-scan only if t
 - [ ] Unresolved HARD (status == OPEN) blocks; advisory informs
 - [ ] Enforcement mechanism selected per `platformTargets`
 - [ ] Non-blocking platforms disclose CI/CD-level enforcement in `PLATFORM_NOTES.md`
-- [ ] Standard gate behavior used when `buildProfile` absent (parked)
+- [ ] Gate strictness selected by `buildProfile` (BLOCK when absent — backward-compatible; `freestyle`=advisory requires explicit opt-in)
 - [ ] C10 conflict emitted for FLO hold

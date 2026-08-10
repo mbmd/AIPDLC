@@ -30,6 +30,21 @@ A good output from this activity sounds like:
 
 ---
 
+## Pre-Gate Structural Lint
+
+Before delivering generated Markdown artifacts (steering files, docs) to the user, run this mechanical 6-point check on each `.md` file and silently fix the auto-fixable issues. These are formatting/structure checks — they run alongside the validation categories below.
+
+1. **Monotonic headings** — sections stay in order (no §5.6 after §7). *(flag)*
+2. **Single footer** — exactly one closing footer; remove duplicates. *(auto-fix)*
+3. **Status consistency** — status strings agree with the current state. *(auto-fix)*
+4. **List blank-line** — every list has a blank line before its first item. *(auto-fix)*
+5. **xychart axis range** — the y-axis spans the actual data values. *(auto-fix)*
+6. **Heading-level sanity** — no level jumps (H2 → H4) and only one H1. *(flag)*
+
+Record a one-line result — "Pre-gate lint: {N} passed, {M} auto-fixed, {K} flagged." — and flag the non-auto-fixable issues (checks 1, 6) with the artifact.
+
+---
+
 ## Validation Categories
 
 ```

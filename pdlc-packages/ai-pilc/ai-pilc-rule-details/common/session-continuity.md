@@ -36,6 +36,8 @@ In the standard multi-project layout, `{output_root}` = `{project_root}/pip/` wh
 | Last Updated | {ISO 8601 timestamp} |
 | Producer Version | AI-PILC v1.0.0 |
 | Workflow Depth | {Minimal / Standard / Comprehensive} |
+| Delivery Method | {manual / ai-assisted / ai-driven / hybrid / unknown}  (optional; how code is built — flows to AI-POLC velocity model) |
+| AI Tool | {tool name / n/a}  (when an AI delivery method is set) |
 | Output Structure | numbered |
 | Output Root | {path}  (= {project_root}/pip/) |
 | Source Document | {path or "inline"} |

@@ -49,6 +49,10 @@ If the code is a **row inside a shared register** (a table), emit an HTML anchor
 - Use `<a id="…"></a>` — honored by every renderer. **Never** use `{#custom-id}`.
 - The anchor id is the code lowercased, hyphens preserved.
 
+### HTML-export anchor preservation (`HTM__` / AIFLC-HtmlExport)
+
+When the workspace is published to HTML (the `HTM__` trigger / `AIFLC-HtmlExport` tool), the exporter **preserves these `<a id>` anchors verbatim** and rewrites every internal `.md` reference to the published page **with its `#anchor` fragment intact** — so a `[CODE-042](register.md#code-042)` link still lands on the right row in the browsable site. Where a link targets a heading rather than an explicit `<a id>`, the exporter falls back to the **GitHub-style heading slug** (lowercased, spaces to hyphens, punctuation stripped). Authoring impact: **none** — keep emitting `<a id>` anchors exactly as above; the exporter handles the projection. The HTML is a read-only shadow (SSOT-Shadow, INV-L4-011) and never modifies the source `.md`.
+
 ## How the link is built (deterministic)
 
 The generator always knows the file it is writing and the target's location (fixed by the `pdlc-ws/` layout in `OUTPUT_AND_STATE_CONTRACT.md`). The relative path is computed from those — never guessed.

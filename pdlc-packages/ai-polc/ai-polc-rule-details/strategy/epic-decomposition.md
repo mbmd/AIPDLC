@@ -29,11 +29,11 @@ Every epic must pass: "Can a development team read this and understand WHAT to d
 
 ## Depth Adaptation
 
-| Depth | Behavior |
-|-------|----------|
-| **Minimal** | 3-8 epics. One-line AC per epic. Minimal dependency mapping. |
-| **Standard** | 5-15 epics. 3-5 AC per epic. Dependency matrix. Size estimation (S/M/L/XL). |
-| **Comprehensive** | 10-30 epics. Detailed AC. Full dependency graph. Risk per epic. Cross-team coordination epics identified. |
+| Depth | Behavior | Classification axes (Step 5.2) |
+|-------|----------|--------------------------------|
+| **Minimal** | 3-8 epics. One-line AC per epic. Minimal dependency mapping. | Epic Intent only |
+| **Standard** | 5-15 epics. 3-5 AC per epic. Dependency matrix. Size estimation (S/M/L/XL). | + Value Type, Persona/Segment |
+| **Comprehensive** | 10-30 epics. Detailed AC. Full dependency graph. Risk per epic. Cross-team coordination epics identified. | + Kano, Journey Stage, Business Capability |
 
 ---
 
@@ -42,6 +42,8 @@ Every epic must pass: "Can a development team read this and understand WHAT to d
 ### Step 5.1: Identify Epics From Goals and Roadmap
 
 For each product goal and roadmap "Now" item, ask: "What capabilities must exist for this goal to be achieved?"
+
+> **Discovery input — big-picture event storming (optional).** If the team has run a big-picture EventStorming session (or any domain-event / process-flow discovery), use its **business-level** outputs — candidate domain events, pivotal events, and process flows — as a source for identifying capabilities and epics here. Event storming is a *discovery method that feeds* decomposition; its design-level vocabulary (aggregates, commands, policies, read models) is **not** tagged on epics — that model lives in AI-ADLC. Keep only the WHAT (the business capability an event implies), never the HOW (the domain model).
 
 ```
 Goal: "Reduce payment processing time to <2s"
@@ -81,6 +83,15 @@ ownership: hybrid
 - Theme: {Strategic theme}
 - Roadmap Horizon: {Now | Next | Later}
 
+## Classification
+<!-- WHAT-level tags only. Depth-gated: Intent = all depths; Value Type + Persona = Standard+; Kano + Journey + Capability = Comprehensive. -->
+- Epic Intent: {Business | Enabler:Architectural | Enabler:Infrastructure | Enabler:Exploration | Enabler:Compliance}   <!-- ALL depths -->
+- Value Type: {Revenue | Cost-saving | Risk-reduction | Acquisition | Retention | Experience}   <!-- Standard+ -->
+- Persona / Segment: {reference to AI-UXD persona, or segment name, or n/a}   <!-- Standard+ -->
+- Kano Category: {Basic | Performance | Delighter}   <!-- Comprehensive — feeds Stage 6 prioritization -->
+- Journey Stage: {Acquisition | Onboarding | Activation | Core-use | Retention | Expansion | Offboarding}   <!-- Comprehensive -->
+- Business Capability: {capability-map node — a business function, not a technical component}   <!-- Comprehensive -->
+
 ## Description
 {2-3 sentences: what this epic delivers, why it matters, who benefits}
 
@@ -101,6 +112,8 @@ ownership: hybrid
 ## Context-Aware Notes
 {Any notes from context factors — e.g., "DDD architecture means this epic maps to the Payment bounded context"}
 ```
+
+> **Work-complexity class (for delivery-method timing).** Beyond the size estimate, each epic carries an implicit work-complexity class — **Generic / Standard / Complex** — consumed by the velocity multiplier (`strategy/delivery-method-timing.md`). It is **derived, not elicited**: from the AI-ADLC Effort Band's **Technical Risk** flag when an AP is present (🟢 → Generic · 🟡 → Standard · 🔴 → Complex), else from the domain class in `domain-topology-map.md` (Generic/Platform → Generic · Supporting → Standard · Core → Complex). No new question and no new epic field required unless the team wants it explicit.
 
 ### Step 5.3: Map Dependencies
 
@@ -134,6 +147,9 @@ Check the complete epic set against:
 - [ ] No duplicate/overlapping epics
 - [ ] Dependencies are acyclic
 - [ ] Size distribution is reasonable (not all XL; not all S)
+- [ ] Every epic has an **Epic Intent** (Business, or an Enabler subtype)
+- [ ] Business-to-Enabler ratio is healthy — enablers support, not dominate, delivered value (flag if enablers outnumber business epics)
+- [ ] At Standard+ every epic has a **Value Type**; at Comprehensive every epic also has Kano, Journey Stage, and Business Capability set
 
 ### Step 5.6: Tier 2 Integration Point
 
@@ -186,6 +202,7 @@ Present to user:
 Epic decomposition complete:
 • Total epics: {N}
 • By theme: {Theme A: N, Theme B: N, ...}
+• By intent: {Business: N, Enabler: N}
 • Dependencies: {N} inter-epic dependencies identified
 • Size distribution: {S: N, M: N, L: N, XL: N}
 • Coverage: All {N} goals have serving epics ✅
@@ -199,12 +216,40 @@ User must confirm before proceeding.
 
 ---
 
+### Step 5.8: Derive Team-Domain Planning Artifacts (Post-Gate)
+
+**Condition:** depth >= Standard AND user has approved Gate 5.
+
+After gate approval, load `strategy/team-domain-planning.md` and derive the following artifacts:
+
+1. **`team-epic-distribution.md`** — team load & ownership map
+   - Scan all `epics/EPIC-NNN_*.md` files for team assignment, SP, release, shared ownership
+   - Build the overview table, per-team detail, and load balance analysis
+   - Generate Mermaid pie chart (team load) + ownership graph (shared epics)
+
+2. **`domain-topology-map.md`** — bounded context & integration topology
+   - Extract BC names from all epic files (`Bounded Context` field)
+   - If Tier 2 is ON: extract full DDD Alignment (domain type, integration events, producers/consumers) → full event-flow topology
+   - If Tier 2 is OFF: produce basic BC-to-team ownership map only (no event topology)
+   - Generate Mermaid cluster graph (+ event-flow diagram if Tier 2 ON)
+
+**Write:** Both files to `{outputRoot}/` immediately. Update `polc-state.md` → Planning Artifacts section (set both to `generated`, record timestamp).
+
+**Skip conditions:**
+- depth = Minimal → skip entirely (no planning artifacts at this stage)
+- Fewer than 2 teams → skip `team-epic-distribution.md` (single-team product has no distribution to show)
+- No BC fields populated in any epic → skip `domain-topology-map.md`
+
+> **Q-5T enrichment (informed consent):** The Tier 2 offer (Step 5.7) should include the planning-artifact impact — with Tier 2 OFF the domain topology is basic (BC-to-team map only); with Tier 2 ON it includes full event-flow analysis, integration seams, and coupling assessment. Add this note to Q-5T's context block.
+
+---
+
 ## Governance Spine Entry
 
 Log in Decision Log:
 ```
 POLC-D-004: Epic decomposition complete. {N} epics defined across {N} themes.
-Size distribution: {summary}. Dependencies: {N} identified.
+Intent split: {Business: N, Enabler: N}. Size distribution: {summary}. Dependencies: {N} identified.
 All product goals covered.
 ```
 

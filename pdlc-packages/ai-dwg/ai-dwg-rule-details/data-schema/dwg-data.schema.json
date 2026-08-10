@@ -24,7 +24,19 @@
         "primaryTechnology":{"type":["string","null"]},
         "deploymentModel":{"type":["string","null"]},
         "productName":{"type":["string","null"]},
-        "workspaceGenerated":{"type":["boolean","null"]}
+        "workspaceGenerated":{"type":["boolean","null"]},
+        "aiLens":{"type":["object","null"],"description":"AI-LENS fields (AI_LENS_PROTOCOL §6.2 — AI-DWG contract). Present when the workspace was generated for a project with AI features.","properties":{
+          "aiFeaturesCouriered":{"type":["integer","null"],"description":"Count of AI features couriered into this workspace"},
+          "aiFeatureIds":{"type":"array","items":{"type":"string"},"description":"List of aiFeatureId values couriered (AIF-{NNN})"},
+          "aiScaffoldingGenerated":{"type":["boolean","null"],"description":"Whether AI-specific scaffolding (deps, config, eval harness) was generated"},
+          "aiContextCouriered":{"type":["boolean","null"],"description":"Whether the full AI-feature context (AC, architecture, EU-AI-Act) was couriered for AIG__/AIQ__"}
+        }},
+        "automationLens":{"type":["object","null"],"description":"Automation-LENS fields (AUTOMATION_LENS_PROTOCOL §6.2 — AI-DWG contract). Present when the workspace was generated for a project with automated features.","properties":{
+          "automationFeaturesCouriered":{"type":["integer","null"],"description":"Count of automation features couriered into this workspace"},
+          "automationFeatureIds":{"type":"array","items":{"type":"string"},"description":"List of automationFeatureId values couriered (AUTO-{NNN})"},
+          "automationScaffoldingGenerated":{"type":["boolean","null"],"description":"Whether automation-specific scaffolding (engine config, scheduler, queue, connector stubs) was generated"},
+          "automationContextCouriered":{"type":["boolean","null"],"description":"Whether the full automation-feature context (AC, architecture, control-class) was couriered for ATG__/ATQ__"}
+        }}
       }
     }
   }

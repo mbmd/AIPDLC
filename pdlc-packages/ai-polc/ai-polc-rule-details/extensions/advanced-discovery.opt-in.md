@@ -1,7 +1,7 @@
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Extension: Advanced Discovery (Opt-In Prompt)
 
-**Trigger:** User mentions "OKRs", "jobs to be done", "JTBD", "hypothesis testing", "opportunity scoring"
+**Trigger:** User mentions "OKRs", "jobs to be done", "JTBD", "hypothesis testing", "opportunity scoring", "impact mapping"
 **Stage:** 4 (Product Discovery & Roadmap)
 
 ---
@@ -23,6 +23,7 @@ This adds to Stage 4:
 • Jobs-to-be-Done framing (job stories for each user segment)
 • Opportunity scoring (reach × impact × confidence × effort)
 • Hypothesis backlog (assumptions to validate before building)
+• Impact mapping (goal → actors → impacts → deliverables; cut scope by contribution)
 
 This is useful for data-driven teams, new products with high uncertainty,
 or organizations using OKR-based planning.

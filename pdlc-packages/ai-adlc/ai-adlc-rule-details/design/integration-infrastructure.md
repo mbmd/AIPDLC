@@ -324,6 +324,46 @@ For each legacy system interaction (from the Brownfield Strategy ADR's "Integrat
 
 ---
 
+### Step 5c: Define Cross-Service Consistency Strategy (Saga Loop)
+
+**Execute IF:** the confirmed architecture has **more than one** independently deployable service (from Stage 5) AND ≥1 business operation writes state across more than one of them.
+**Skip IF:** single-service / modular-monolith system, OR no cross-service write operations — a fast no-op: note "single-service consistency only" and move on.
+
+This mirrors the per-external-system loop (Step 2), but the unit is a **cross-service business operation**, not an API endpoint — a saga spans services by definition. An endpoint that *orchestrates* such an operation is tagged `spansServices: true` in Stage 10 and is picked up here. Distributed transactions (2PC/XA) across services are prohibited (**MS-05**); the decision is *how* to keep the operation consistent, not *whether*.
+
+**For EACH consistency-sensitive business operation** — sourced from the `adlc-state.md` **Design Backlog** (populated at the Stage 5 consistency checkpoint) plus any Stage 10 API operation tagged `spansServices: true` — decide the consistency strategy:
+
+```markdown
+## Cross-Service Operation: {operation name}
+
+| Aspect | Design |
+|--------|--------|
+| **Spans (services/aggregates)** | {list — MUST exist in the Stage 5 container set} |
+| **Consistency strategy** | {Single-service (redesigned) / Saga — choreography / Saga — orchestration / Process manager (event-sourced)} |
+| **Rationale** | {why — coupling, visibility, step count, latency budget} |
+| **Compensation** | {per-step compensating actions defined? pivot (non-compensatable) step identified?} |
+| **Artifact** | {Saga Design Card ref / Cross-Service Consistency ADR ref} |
+```
+
+**Strategy options:**
+- **Single-service** → the operation was (or can be) reshaped to stay inside one service boundary → no saga. Note why. (The cheapest saga is the one you don't need.)
+- **Saga — choreography** → services react to each other's events; no central coordinator → produce a **Saga Design Card** + trigger the choreography-vs-orchestration ADR.
+- **Saga — orchestration** → a coordinator drives the steps + compensations → produce a **Saga Design Card** + trigger the ADR. *(Default recommendation unless service decoupling is a hard requirement — orchestration's visibility is usually worth the coupling.)*
+- **Process manager (event-sourced systems)** → model as a process manager per **ES-11** (reacts to events, issues commands, event-sourced when long-lived).
+
+**Artifact rule (depth-aware):**
+- **Microservices or Event-Sourcing extension active** → a full **Saga Design Card** is **mandatory** per operation (per-step service/action/compensating-action table, failure handling, timeout, idempotency — see `extensions/microservices/microservices.md`).
+- **No extension active but the system is multi-service** → at minimum record a **Cross-Service Consistency ADR** (`templates/adr-saga-pattern.md`) naming the chosen strategy and its compensation approach — so the decision is recorded, never silently skipped.
+- **Automation Lens active** (`Lens_Status.md` Automation = `Automated`) → this is the same decision the lens raises in `automation-lens/architecture/reliability.md` §3. Produce **one** ADR (`templates/adr-saga-pattern.md`) that satisfies both — do not double-record.
+
+**Depth adaptation:** **Minimal** → one system-level Cross-Service Consistency ADR (no per-operation cards). **Standard** → the full per-operation loop; a Saga Design Card per operation when an extension is active, plus an ADR per non-obvious choice. **Comprehensive** → add a per-saga Mermaid sequence diagram (happy + compensation path, per `common/diagram-standards.md`) and an explicit compensation-order / timeout / idempotency matrix.
+
+**ADR trigger:** choreography vs. orchestration is a material architectural decision → `templates/adr-saga-pattern.md`.
+
+**Cross-reference integrity (Rule 12):** every service named in a Saga Design Card or consistency ADR MUST exist in the Stage 5 container set. A saga referencing a non-existent service is a build error.
+
+---
+
 ## Part B: Infrastructure & Deployment Architecture
 
 ### Step 6: Define Deployment Topology
@@ -579,6 +619,7 @@ Contents:
 - Patterns used: {sync REST: n, async: n, event-driven: n, polling: n}
 - Adapter architecture: {approach}
 - Internal events: {n} key events defined
+- Cross-service consistency: {n} multi-service operations → sagas {n} (orchestration/choreography), single-service {n}; artifacts: {Saga Design Cards / consistency ADRs}
 
 **Infrastructure:**
 - Deployment: {model — e.g., "Docker Compose, 10-12 containers"}
@@ -637,6 +678,7 @@ Save to:
 | Check | Pass Criteria |
 |-------|---------------|
 | All externals covered | Every system from C4 L1 has an integration pattern defined |
+| Cross-service consistency covered | Every consistency-sensitive multi-service operation has a saga strategy — a Saga Design Card (extension active) or a Cross-Service Consistency ADR; every named service exists in the Stage 5 container set (Rule 12) |
 | Failure handling | Every integration has retry/circuit breaker/fallback defined |
 | Tenant-aware | Per-tenant credentials and configuration supported (if multi-tenant) |
 | No SPOF | All critical components have redundancy or risk-accepted justification |

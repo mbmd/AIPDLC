@@ -116,6 +116,11 @@ Update affected files:
 - `epics/` (if epics were split, added, or removed)
 - `traceability-matrix.md` (if goal/epic links changed)
 - `polc-state.md` (Backlog Summary numbers)
+- **Planning artifacts re-derivation (conditional):** If `team-epic-distribution.md` or `capacity-planning-matrix.md` exist (i.e., previously generated at Standard+ depth) AND any of the above files changed, re-derive stale planning artifacts by loading `strategy/team-domain-planning.md` and running the cascade:
+  - Epic added/removed/re-estimated or team reassigned → re-derive `team-epic-distribution.md` + `domain-topology-map.md`
+  - Release composition changed → re-derive `release-relevance-grouping.md`
+  - Any SP/velocity/release change → re-derive `capacity-planning-matrix.md` (only if Velocity Model present)
+  - Update `polc-state.md` → Planning Artifacts section (refresh `Last Derived` timestamp; clear `stale` flags)
 
 ---
 

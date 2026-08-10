@@ -320,6 +320,17 @@ I've produced the Test Strategy based on your register ({N} test requirements) a
 
 ---
 
+### Visualization Pack (depth-gated)
+
+| Depth | Diagram | Mermaid type | Source |
+|-------|---------|:------------:|--------|
+| Standard | Test pyramid (unit / integration / e2e proportions) | `flowchart` | Strategy decisions |
+| Comprehensive | Risk-based coverage allocation (risk × test-effort) | `quadrantChart` | Risk scoring |
+
+Emit from the test strategy. No new content introduced.
+
+---
+
 ## Gate
 
 **This stage has a GATE.** The test strategy defines HOW the team approaches testing. If the team disagrees with tool choices, coverage targets, or entry/exit criteria, that must be resolved before risk scoring — otherwise debt priorities will be misaligned.

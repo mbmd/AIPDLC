@@ -15,6 +15,7 @@
 |---|---|---|---|
 | `AIFLC-PDLC-Dashboard` | PDLC Family Dashboard | Yes | Core dashboard for the PDLC family — renders project/portfolio/package status |
 | `AIFLC-CommandBoard` | Command Board | Yes | Trigger key quick-reference UI |
+| `AIFLC-HtmlExport` | HTML Export | Yes | Workspace→HTML publishing (HTM__ trigger) — renders .md artifacts as a browsable site with Mermaid viewer + grouped landing page |
 
 ## Inclusion Rules
 
@@ -39,3 +40,4 @@ At `DEV__ promote pdlc`:
 | Date | Change |
 |------|--------|
 | 2026-07-20 | Created — PDLC ships both AIFLC-PDLC-Dashboard and AIFLC-CommandBoard |
+| 2026-07-26 | Added AIFLC-HtmlExport (workspace→HTML publishing, OI-197) |

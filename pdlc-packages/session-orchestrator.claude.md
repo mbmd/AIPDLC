@@ -48,6 +48,10 @@ Prevent context overload. Instead of loading all package workflows into every se
 | `FHC__` | AI-FLO | FLO health check — "is this workspace FLO-ready?" |
 | `FIA__` | AI-FLO | FLO integrity audit — "is FLO's state correct?" |
 
+<!-- AIFLC-COMPANION-NOTE:start -->
+> **Layer-3 companions staged inert.** AI-GCE (`_GCE_`) and AI-TGE (`_TGE_`) are **not active in this design workspace** — they are staged here only as a provisioning source. AI-DWG (`_DWG_`) places them into the generated project (Layer-3) workspace, where they activate. Do not route to them here. [OI-204]
+<!-- AIFLC-COMPANION-NOTE:end -->
+
 ---
 
 ## Path Map (uniform home `.aiflc/pdlc/`)
@@ -93,8 +97,11 @@ When the user starts a session WITHOUT an explicit activation key, determine int
 | "data" / "gather" / "DAT__" / "DFA__" / "freshness" | `.aiflc/pdlc/ai-dfe-rules/core-engine.md` |
 | "FHC__" / "FLO health" / "is workspace ready for FLO" | `.aiflc/pdlc/ai-flo-rules/core-engine.md` → run FLO Health Check agent |
 | "FIA__" / "FLO integrity" / "routing state" | `.aiflc/pdlc/ai-flo-rules/core-engine.md` → run Flow Integrity agent |
+| "enable test mode" / "test mode" / "load test mode" / "log feedback" / "report a bug" | The active package's `.aiflc/pdlc/ai-<pkg>-rule-details/common/test-mode.md` (read on demand — it self-detects the active package). Opt-in feedback layer; never auto-loaded. See the Test Mode note below. |
 | "resume" / "continue" / "where was I" | Check `*-state.md` files for in-progress package → `Read` that one's core from `.aiflc/pdlc/` |
 | Ambiguous / general question | Ask: "Which AI-* package are you working with?" and list the keys |
+
+> **Test Mode (opt-in feedback layer).** Test mode is never auto-loaded. When the user asks to "enable test mode" (or "log feedback" / "report a bug"), `Read` the active package's `.aiflc/pdlc/ai-<pkg>-rule-details/common/test-mode.md` on demand and follow it — the file self-detects the active package, adds end-of-phase feedback checkpoints, and writes findings to a local `test-feedback-outbox/`. It layers on top of the running package (no functionality changes) and stays active for the rest of the session. If no package is active yet, note that it will apply to the next package activated. This is the activation route for the `.aiflc/pdlc/` test-mode files — there is no context-key auto-load.
 
 ---
 

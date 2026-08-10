@@ -53,6 +53,28 @@
           "containers":{"type":"array","items":{"type":"object","properties":{"name":{"type":"string"},"type":{"type":["string","null"]},"tech":{"type":["string","null"]}}}},
           "c4Diagrams":{"type":["object","null"],"description":"l1/l2/l3 → {mermaid,path,status}","properties":{"l1":{"type":["object","null"]},"l2":{"type":["object","null"]},"l3":{"type":["object","null"]}}},
           "diagrams":{"type":["object","null"],"description":"security/data/api/infrastructure → {mermaid,path,label}","properties":{"security":{"type":["object","null"]},"data":{"type":["object","null"]},"api":{"type":["object","null"]},"infrastructure":{"type":["object","null"]}}}
+        }},
+        "aiLens":{"type":["object","null"],"description":"AI-LENS fields (AI_LENS_PROTOCOL §6.2 — AI-ADLC contract). Present per aiFeature with architecture decisions.","properties":{
+          "aiFeatures":{"type":"array","description":"AI features with architecture design decisions (model, data, MLOps, RAI, cost, security).","items":{"type":"object","properties":{
+            "aiFeatureId":{"type":"string","description":"Stable thread identifier (AIF-{NNN})"},
+            "aiModelStrategy":{"type":["string","null"],"description":"Model serving approach: managed-api | self-hosted | fine-tuned | hybrid"},
+            "aiDataStrategy":{"type":["string","null"],"description":"Data/RAG approach: vector-db | feature-store | knowledge-graph | direct-context"},
+            "aiMlOpsStrategy":{"type":["string","null"],"description":"MLOps/LLMOps: version-controlled-prompts | model-registry | a-b-testing | canary"},
+            "aiRaiPosture":{"type":["string","null"],"description":"Responsible-AI posture: guardrails-only | bias-mitigation | full-rai-framework"},
+            "aiCostEstimate":{"type":["string","null"],"description":"AI cost model summary (free-text or structured)"},
+            "aiSecurityControls":{"type":"array","items":{"type":"string"},"description":"AI-specific security controls applied (e.g. pii-redaction, prompt-injection-mitigation, output-filtering)"}
+          }}}
+        }},
+        "automationLens":{"type":["object","null"],"description":"Automation-LENS fields (AUTOMATION_LENS_PROTOCOL §6.2 — AI-ADLC contract). Present per automationFeature with architecture decisions.","properties":{
+          "automationFeatures":{"type":"array","description":"Automated features with architecture design decisions (orchestration, idempotency, retry, audit, security).","items":{"type":"object","properties":{
+            "automationFeatureId":{"type":"string","description":"Stable thread identifier (AUTO-{NNN})"},
+            "automationEngineStrategy":{"type":["string","null"],"description":"Orchestration engine approach: workflow-engine | scheduler | event-consumer | queue-worker | hybrid"},
+            "idempotencyStrategy":{"type":["string","null"],"description":"Idempotency approach: natural-key | idempotency-key-header | deduplication-store | exactly-once-delivery"},
+            "retryCompensationStrategy":{"type":["string","null"],"description":"Retry/compensation: retry-with-backoff | saga-orchestrated | saga-choreographed | dead-letter-reprocess"},
+            "automationActorIdentity":{"type":["string","null"],"description":"The automation actor's identity model: service-account | managed-identity | api-key | delegated-user"},
+            "auditStrategy":{"type":["string","null"],"description":"Audit logging approach: event-sourced | append-log | structured-jsonl | external-siem"},
+            "loopGuardStrategy":{"type":["string","null"],"description":"Loop prevention: causedBy-filter | hop-budget-ttl | circuit-breaker | kill-switch | combined"}
+          }}}
         }}
       }
     }

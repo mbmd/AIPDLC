@@ -263,4 +263,4 @@ See `setup/INSTALL.md` for detailed platform instructions.
 
 ---
 
-*AI-TGE v1.0.0-beta.1 | Part of [AIFLC](../README.md) — the AI-* PDLC Family*
+*AI-TGE v1.0.0-beta.1 | Part of [AIFLC](../../README.md) — the AI-* PDLC Family*

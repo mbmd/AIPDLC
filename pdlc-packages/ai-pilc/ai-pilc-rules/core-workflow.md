@@ -69,6 +69,7 @@ All detail-file references below are relative to the resolved directory. **Befor
 - `common/question-format-guide.md` — full question-format rules
 - `common/content-validation.md` — content validation requirements
 - `common/reference-linking.md` — emit codes defined in another generated file as clickable relative links (Tier 1: object files; Tier 2: register-row `<a id>` anchors); older output retrofit via `UPG__`
+- `common/contextual-prose-accompaniment.md` — ensure explanatory prose around cross-reference keys is self-sufficient at a glance (5 patterns, depth-scaled); complements reference-linking
 
 ---
 
@@ -152,6 +153,19 @@ When asking questions, use the structured `### Q-{nn}` block: Context → Option
 ## MANDATORY: Output Structure
 
 All output nests under the fixed project folder `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/` (always-on multi-project layout — `OUTPUT_AND_STATE_CONTRACT.md` §3). The path is deterministic — **do NOT ask the user where to place output**. PILC's deliverables go in `pip/` using a **numbered** sub-structure (`pip/01_*`, `pip/02_*`, …) — always; do NOT offer numbered/flat/custom choice. Record `Output Structure: numbered` in state. The shared spine sits at the project root. Brownfield/legacy flat layouts are detected and the user informed; new work always targets the standard numbered path.
+
+---
+
+## Lens Seam
+
+At each **stage boundary** (before loading the stage's detail file), check for active cross-cutting lenses:
+
+1. **Read** `management_framework/Lens_Status.md` (the live current-mode SSOT; may not exist yet).
+2. **For each lens row with Mode ON** (`ai-lens` = `AI-Powered` · `automation-lens` = `Automated` · any future lens) → `Read` this package's facet for that lens (`ai-pilc-rule-details/{lens-id}/facet.md`) and apply it alongside the stage detail. *(AI-PILC is where the mode is first promoted into the spine — on set/change, dual-write: append a `Decision_Log` row AND upsert the `Lens_Status.md` row.)*
+3. **Intersection facets (co-active lenses):** if two or more lens rows are ON, also evaluate the registry's `intersection-facets` entries whose `activateWhen` holds → `Read` the entry's facet (`ai-pilc-rule-details/{id}/facet.md`) and apply it. Today: when `ai-lens = AI-Powered` **AND** `automation-lens = Automated`, load the **agentic** facet — at AI-PILC it adds agent feasibility (tool-integration, loop-cost realism) + an EU-AI-Act note (action-taking agents often trend higher-risk), folded into the existing feasibility sections. A composed facet, **not** a lens (no mode row of its own).
+4. **No file, no row, or Mode OFF** (`No-AI` / `Manual`), and no intersection predicate holds → **no-op**; proceed normally with zero extra load.
+
+The canonical registry — **lenses + `intersection-facets`**, activation values, facet paths, agents — is `contracts/LENS_REGISTRY.md`. A future lens plugs in as a new registry row (zero core edits); the agentic intersection facet is wired above. Token discipline: facets load on demand only; an inactive lens (or an unmet intersection predicate) costs nothing beyond the one-line status read.
 
 ---
 

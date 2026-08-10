@@ -137,7 +137,7 @@ CRITICAL: When performing any stage, you MUST read and use relevant content from
 
 All subsequent rule detail file references are relative to whichever rule details directory was resolved above.
 
-**Common rules — ALWAYS load at engine start:** `common/process-overview.md` (engine map, stages, trigger events, session patterns, cadence, family table), `common/session-continuity.md` (resume + full `ppm-state.md` schema), `common/question-format-guide.md` (question formatting), `common/content-validation.md` (content validation), `common/reference-linking.md` (emit codes defined in another generated file as clickable relative links; older output retrofit via `UPG__`). Reference these throughout execution.
+**Common rules — ALWAYS load at engine start:** `common/process-overview.md` (engine map, stages, trigger events, session patterns, cadence, family table), `common/session-continuity.md` (resume + full `ppm-state.md` schema), `common/question-format-guide.md` (question formatting), `common/content-validation.md` (content validation), `common/reference-linking.md` (emit codes defined in another generated file as clickable relative links; older output retrofit via `UPG__`), `common/contextual-prose-accompaniment.md` (ensure explanatory prose around cross-reference keys is self-sufficient at a glance; 5 patterns, depth-scaled; complements reference-linking). Reference these throughout execution.
 
 ---
 

@@ -1,6 +1,6 @@
 # Rollback & Incident Response Plan
 
-**Version:** 0.1.0-beta.1
+**Version:** 0.1.0-beta.2
 **Scope:** AI-* Family published repository
 
 ---

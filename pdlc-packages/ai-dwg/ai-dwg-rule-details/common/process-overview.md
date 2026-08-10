@@ -461,7 +461,7 @@ Each present peer input maps to specific workspace artifacts through its cluster
 | Per-document version stamp + obsolescence | Approach C stamp on every file; `obsolete/` soft-delete | `baseline/document-stamping.md` |
 | Re-baseline on delta | version bump, stamp refresh, obsolescence | `reconciliation/re-baseline.md` |
 
-> **DWG is the sole baseline writer.** The `workspace-manifest.yaml` is the decoupling contract — GCE/TGE/FLO read paths by semantic role, never hardcode. `buildProfile` is PARKED (build-method-agnostic); `storyStyle` + `platformTargets` are active.
+> **DWG is the sole baseline writer.** The `workspace-manifest.yaml` is the decoupling contract — GCE/TGE/FLO read paths by semantic role, never hardcode. `storyStyle` + `platformTargets` + `buildProfile` are active — `buildProfile` (`spec-driven`/`aidlc`/`freestyle`; omitted for manual/AI-assisted → GCE Standard mode) is a *derived* downstream-governance signal AI-GCE reads for drift/gate cadence; DWG generation stays build-method-agnostic.
 
 ---
 

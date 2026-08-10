@@ -85,6 +85,7 @@ All detail-file references below are relative to the resolved directory. Only ON
 - `common/content-validation.md` — content validation requirements
 - `common/design-standards.md` — design + accessibility standards reference
 - `common/reference-linking.md` — emit codes defined in another generated file as clickable relative links (Tier 1: object files; Tier 2: register-row `<a id>` anchors); older output retrofit via `UPG__`
+- `common/contextual-prose-accompaniment.md` — ensure explanatory prose around cross-reference keys is self-sufficient at a glance (5 patterns, depth-scaled); complements reference-linking
 
 ---
 
@@ -159,6 +160,19 @@ When asking questions, use the structured `### Q-{nn}` block: Context → Option
 ## MANDATORY: Output Structure
 
 All output nests under the fixed project folder `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/`, with UXD deliverables in `ux/` using a numbered sub-structure (`ux/01_*`, `ux/02_*`, …). The path is deterministic — **do NOT ask the user where to place output**. The shared governance spine sits at the project root. Brownfield/legacy flat layouts are detected and the user informed; new work always targets the standard numbered path. Full runtime layout: `assemble/package-assembly.md`.
+
+---
+
+## Lens Seam
+
+At each **stage boundary** (before loading the stage's detail file), check for active cross-cutting lenses:
+
+1. **Read** `management_framework/Lens_Status.md` (the live current-mode SSOT; may not exist yet).
+2. **For each lens row with Mode ON** (`ai-lens` = `AI-Powered` · `automation-lens` = `Automated` · any future lens) → `Read` this package's facet for that lens (`ai-uxd-rule-details/{lens-id}/facet.md`) and apply it to the tagged features alongside the stage detail.
+3. **Intersection facets (co-active lenses):** if two or more lens rows are ON, also evaluate the registry's `intersection-facets` entries whose `activateWhen` holds → `Read` the entry's facet (`ai-uxd-rule-details/{id}/facet.md`) and apply it to the tagged features. Today: when `ai-lens = AI-Powered` **AND** `automation-lens = Automated`, load the **agentic** facet — at AI-UXD it adds agent-interaction transparency (reasoning/tool-use visibility, agent "working" states, interruptibility), reusing the AI HITL + automation approval/monitoring/override UX. A composed facet, **not** a lens (no mode row of its own).
+4. **No file, no row, or Mode OFF** (`No-AI` / `Manual`), and no intersection predicate holds → **no-op**; proceed normally with zero extra load.
+
+The canonical registry — **lenses + `intersection-facets`**, activation values, facet paths, agents — is `contracts/LENS_REGISTRY.md`. A future lens plugs in as a new registry row (zero core edits); the agentic intersection facet is wired above. Token discipline: facets load on demand only; an inactive lens (or an unmet intersection predicate) costs nothing beyond the one-line status read.
 
 ---
 
@@ -263,6 +277,8 @@ consumes:
     optional:  [charter, scope, valueGoals]
   - type: architecture-design@^1     # satisfiable internally (AI-ADLC) — optional constraint input
     optional:  [systemContext, nfrCoverage]
+  - type: product-backlog@^1         # satisfiable internally (AI-POLC) — strategy exchange; value goals focus research
+    optional:  [valueGoals]
 on-missing-all: standalone     # accepts raw brief directly (P4)
 strictness-default: warn
 ```

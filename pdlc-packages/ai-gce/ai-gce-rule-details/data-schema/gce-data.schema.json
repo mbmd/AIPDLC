@@ -25,7 +25,23 @@
         "activeAgentCount":{"type":["integer","null"]},
         "agents":{"type":"array","items":{"type":"object","properties":{"id":{"type":"string"},"agent":{"type":"string"},"type":{"type":["string","null"]},"trigger":{"type":["string","null"]},"tier":{"type":["integer","null"]},"status":{"type":["string","null"]}}}},
         "lastAuditScore":{"type":["number","null"]},
-        "lastAuditRating":{"type":["string","null"]}
+        "lastAuditRating":{"type":["string","null"]},
+        "aiLens":{"type":["object","null"],"description":"AI-LENS fields (AI_LENS_PROTOCOL §6.2 — AI-GCE contract). Present when AIG__ agent has produced governance results.","properties":{
+          "aiFeatures":{"type":"array","description":"Per-feature AI governance results from the AIG__ agent.","items":{"type":"object","properties":{
+            "aiFeatureId":{"type":"string","description":"Stable thread identifier (AIF-{NNN})"},
+            "aigResult":{"type":["string","null"],"description":"Overall governance result: pass | warning | fail"},
+            "aigObligations":{"type":"array","items":{"type":"string"},"description":"EU AI Act and RAI obligations identified"},
+            "aigFindings":{"type":"array","items":{"type":"object","properties":{"rule":{"type":"string"},"severity":{"type":"string"},"detail":{"type":"string"}}},"description":"Individual governance findings"}
+          }}}
+        }},
+        "automationLens":{"type":["object","null"],"description":"Automation-LENS fields (AUTOMATION_LENS_PROTOCOL §6.2 — AI-GCE contract). Present when ATG__ agent has produced governance results.","properties":{
+          "automationFeatures":{"type":"array","description":"Per-feature automation governance results from the ATG__ agent.","items":{"type":"object","properties":{
+            "automationFeatureId":{"type":"string","description":"Stable thread identifier (AUTO-{NNN})"},
+            "atgResult":{"type":["string","null"],"description":"Overall governance result: pass | warning | fail"},
+            "atgObligations":{"type":"array","items":{"type":"string"},"description":"Audit, SoD, kill-switch, fail-safe, and control-class obligations identified"},
+            "atgFindings":{"type":"array","items":{"type":"object","properties":{"rule":{"type":"string"},"severity":{"type":"string"},"detail":{"type":"string"}}},"description":"Individual automation governance findings"}
+          }}}
+        }}
       }
     }
   }

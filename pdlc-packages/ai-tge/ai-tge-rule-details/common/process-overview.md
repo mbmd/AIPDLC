@@ -5,6 +5,8 @@
 
 AI-TGE (AI-Driven Test Governance Engine) is a hybrid package that derives test governance from architecture decisions and continuously observes the build process to maintain test accountability. Acting as a Senior QA Engineer / Test Architect, it reads everything the architecture promised — API contracts, security decisions, integration maps, component designs — and builds a register of tests that MUST exist to verify those promises were kept. Then it watches the build, tracking what gets tested and what doesn't, scoring the risk of every gap.
 
+> **Delivery-method invariance.** AI-TGE's test scope is **architecture/commitment-derived** (Rules 2 + 7 — *did we test what we designed?*), so it does **not** vary with the project's delivery method. The number of required tests is a function of architectural commitments, not code volume — AI generating more code does not change *what must be verified*. Delivery method (manual / AI-assisted / AI-driven) affects how fast code and tests are produced, which is a velocity concern AI-POLC owns; TGE's observation cadence already follows AI-DLC v1 unit completion. TGE therefore needs no delivery-method field.
+
 ---
 
 ## The AI-* Family

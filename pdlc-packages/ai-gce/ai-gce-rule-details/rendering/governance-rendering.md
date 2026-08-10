@@ -3,7 +3,7 @@
 
 ## Purpose
 
-Defines how AI-GCE renders its OWN governance layer (compliance rules, hooks, agents, drift infra) into platform-native form based on `manifest.platformTargets`. GCE is **build-method-agnostic AND platform-agnostic** — it produces **canonical governance** once, then wires it per selected platform. Mirrors AI-DWG's renderer model (`rendering/renderer-model.md`), applied to governance output.
+Defines how AI-GCE renders its OWN governance layer (compliance rules, hooks, agents, drift infra) into platform-native form based on `manifest.platformTargets`. GCE is **platform-agnostic** — it produces **canonical governance** once, then wires it per selected platform. Its governance *content* is **build-method-agnostic**; only its drift-detection depth and gate *cadence* adapt to `buildProfile` (defaulting to **Standard mode** when `buildProfile` is absent — see `drift/drift-detection-engine.md` + `drift/gate-integration.md`). Mirrors AI-DWG's renderer model (`rendering/renderer-model.md`), applied to governance output.
 
 **Grounding:** Layout design Part 3E principle P2 (GCE output is AI-agnostic). Companion to DWG's renderer.
 

@@ -1,0 +1,40 @@
+# AIFLC HTML Export — per-family publish config
+# Installed to: {workspace-root}/.publish/{family}.config.yaml
+#
+# Markdown is the single source of truth; this file only shapes the derived HTML
+# shadow. The tool never writes back to .md, and nothing reads the HTML as data.
+
+enabled: true            # master switch. false = HTM__ and all refreshes do nothing.
+autoRefresh: true        # regenerate after every gate/stage completion + on-demand HTM__ (uniform on all AIs)
+
+landing:
+  title: null            # landing-page heading (null → "{FAMILY} Workspace")
+  subtitle: ""           # optional sub-heading, e.g. the engagement name
+  hideFromLanding: [data]    # groups to publish but omit from the landing page (still directly linkable)
+
+scope:
+  # glob patterns to skip. Matched against the basename, the workspace-relative
+  # path, and any folder name (so a bare "flo" excludes that folder at any depth).
+  exclude:
+    - "*-state.md"       # state markers
+    - "*_state.md"       # state markers (underscore variant)
+    - "flo-*.md"         # routing artifacts (basename)
+    - "flo"              # a folder named "flo" (some families)
+    - "flow"             # a folder named "flow" (SFLC and others use this name for FLO routing)
+
+taxonomy:
+  source: FAMILY_STRUCTURE   # folder→stage grouping is derived from the family's structure; overrides below win
+  order: []                  # explicit group order, e.g. [environment, diagnosis, vision, choices, articulation]
+  groups: {}                 # per-folder overrides: { <folder>: { label: "...", colour: "#hex", order: N, description: "..." } }
+
+mermaid:
+  offline: false         # true = vendor mermaid into the export so diagrams render with no internet
+
+deck:
+  enabled: false         # curated executive-presentation deck (HTM__ deck)
+
+readerHeader:
+  fields: [stage, status, snapshotId, generatedOn]   # front-matter fields surfaced as a reader header + index badge
+
+git:
+  commitShadow: false    # false = .gitignore the shadow (default); true = commit it (e.g. for GitHub Pages)

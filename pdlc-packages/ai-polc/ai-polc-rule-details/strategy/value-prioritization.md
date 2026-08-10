@@ -146,6 +146,17 @@ Write `prioritization-register.md` with:
 
 ---
 
+### Visualization Pack (depth-gated)
+
+| Depth | Diagram | Mermaid type | Source |
+|-------|---------|:------------:|--------|
+| Standard | Value × effort prioritization matrix (MoSCoW / WSJF) | `quadrantChart` | Prioritized backlog |
+| Comprehensive | Epic dependency map | `flowchart` | Dependency analysis |
+
+Emit from the prioritized backlog. No new content introduced.
+
+---
+
 ## Gate
 
 **Gate 6 — Prioritization Confirmed:**

@@ -62,11 +62,11 @@ UXP ADDS:
 - Component composition rules (atoms → molecules → organisms hierarchy)
 - Accessibility coding patterns (ARIA, focus management, live regions)
 
-### New File: `design-tokens.json` (or equivalent)
-Machine-readable token export:
-- All tiers (global, semantic, component)
-- W3C Design Tokens Format aligned
-- Ready for Style Dictionary / Tokens Studio consumption
+### Consumes: `design-tokens.json` (canonical DTCG — emitted by AI-UXD)
+AI-UXD emits the **canonical, machine-readable** token set at `07_Design_System/design-tokens.json` (W3C DTCG, all tiers global → semantic → component). **AI-DWG consumes it directly — it does NOT generate or regenerate it:**
+- Reads the canonical to seed `design-system.md` + token rules in `frontend-standards.md`
+- Ready for Style Dictionary / Tokens Studio consumption downstream
+- The canonical is the single source of truth; AI-DWG never writes back to it
 ```
 
 ### Step 2: Package for AI-GCE
@@ -123,7 +123,7 @@ Produce two handoff packages:
 
 ### Files I Produce That You Consume:
 1. `07_Design_System/*.md` → generates `design-system.md` steering
-2. `07_Design_System/Design_Tokens.md` → generates `design-tokens.json`
+2. `07_Design_System/design-tokens.json` (canonical DTCG, emitted by AI-UXD) → AI-DWG consumes directly (does NOT regenerate it)
 3. `08_Component_Library/Component_Inventory.md` → enriches `frontend-standards.md`
 4. Responsive/Grid spec → enriches `frontend-standards.md`
 
@@ -141,7 +141,7 @@ If not found: generate `frontend-standards.md` from AP only (current behavior un
 
 ### Files I Produce That You Consume:
 1. `10_Accessibility_Baseline.md` → derives `accessibility-compliance` rules
-2. `07_Design_System/Design_Tokens.md` → derives `design-system-compliance` rules
+2. `07_Design_System/design-tokens.json` (canonical DTCG) → derives `design-system-compliance` rules
 3. `08_Component_Library/Component_Inventory.md` → derives component state enforcement
 
 ### Detection:

@@ -7,8 +7,8 @@
 ---
 
 ```yaml
-generatedAt: 2026-06-27
-generatorVersion: 1.0.0
+generatedAt: 2026-08-10
+generatorVersion: 1.1.0
 family: PDLC
 familyRepo: AIPDLC
 protocolVersion: 1.2.0
@@ -41,22 +41,25 @@ AI-DFE ◄── (reads all markers + each package's SOURCE_MAP — data-fabric 
 ### Internal Edge Table
 
 <!-- BEGIN-GENERATED:internal-edges -->
-| # | From | Emits Type | To | Consumes Type | Via Marker |
-|---|------|-----------|-----|---------------|------------|
-| I-01 | AI-ILC | `idea-decision@1` | AI-PILC | `idea-decision@^1` | `ilc-state.md` |
-| I-02 | AI-ILC | `idea-decision@1` | AI-PPM | `idea-decision@^1` | `ilc-state.md` |
-| I-03 | AI-PILC | `project-initiation@1` | AI-ADLC | `project-initiation@^1` | `pilc-state.md` |
-| I-04 | AI-PILC | `project-initiation@1` | AI-UXD | `project-initiation@^1` | `pilc-state.md` |
-| I-05 | AI-PILC | `project-initiation@1` | AI-POLC | `project-initiation@^1` | `pilc-state.md` |
-| I-06 | AI-PILC | `project-initiation@1` | AI-PPM | `project-initiation@^1` | `pilc-state.md` |
-| I-07 | AI-ADLC | `architecture-design@1` | AI-UXD | `architecture-design@^1` | `adlc-state.md` |
-| I-08 | AI-ADLC | `architecture-design@1` | AI-POLC | `architecture-design@^1` | `adlc-state.md` |
-| I-09 | AI-ADLC | `architecture-design@1` | AI-DWG | `architecture-design@^1` | `adlc-state.md` |
-| I-10 | AI-UXD | `ux-design@1` | AI-POLC | `ux-design@^1` | `uxd-state.md` |
-| I-11 | AI-UXD | `ux-design@1` | AI-DWG | `ux-design@^1` | `uxd-state.md` |
-| I-12 | AI-POLC | `product-backlog@1` | AI-DWG | `product-backlog@^1` | `polc-state.md` |
-| I-13 | AI-DWG | `development-workspace@1` | AI-GCE | `development-workspace@^1` | `dwg-state.md` |
-| I-14 | AI-DWG | `development-workspace@1` | AI-TGE | `development-workspace@^1` | `dwg-state.md` |
+| # | From | Emits Type | To | Consumes Type | Kind | Via Marker |
+|---|------|-----------|-----|---------------|------|------------|
+| I-01 | AI-ILC | `idea-decision@1` | AI-PILC | `idea-decision@^1` | forward | `ilc-state.md` |
+| I-02 | AI-ILC | `idea-decision@1` | AI-PPM | `idea-decision@^1` | forward | `ilc-state.md` |
+| I-03 | AI-PILC | `project-initiation@1` | AI-POLC | `project-initiation@^1` | forward | `pilc-state.md` |
+| I-04 | AI-PILC | `project-initiation@1` | AI-PPM | `project-initiation@^1` | forward | `pilc-state.md` |
+| I-05 | AI-PILC | `project-initiation@1` | AI-UXD | `project-initiation@^1` | forward | `pilc-state.md` |
+| I-06 | AI-PILC | `project-initiation@1` | AI-ADLC | `project-initiation@^1` | forward | `pilc-state.md` |
+| I-07 | AI-POLC | `product-backlog@1` | AI-UXD | `product-backlog@^1` | forward | `polc-state.md` |
+| I-08 | AI-POLC | `product-backlog@1` | AI-ADLC | `product-backlog@^1` | forward | `polc-state.md` |
+| I-09 | AI-POLC | `product-backlog@1` | AI-DWG | `product-backlog@^1` | forward | `polc-state.md` |
+| I-10 | AI-UXD | `ux-design@1` | AI-POLC | `ux-design@^1` | feedback | `uxd-state.md` |
+| I-11 | AI-UXD | `ux-design@1` | AI-ADLC | `ux-design@^1` | forward | `uxd-state.md` |
+| I-12 | AI-UXD | `ux-design@1` | AI-DWG | `ux-design@^1` | forward | `uxd-state.md` |
+| I-13 | AI-ADLC | `architecture-design@1` | AI-POLC | `architecture-design@^1` | feedback | `adlc-state.md` |
+| I-14 | AI-ADLC | `architecture-design@1` | AI-UXD | `architecture-design@^1` | feedback | `adlc-state.md` |
+| I-15 | AI-ADLC | `architecture-design@1` | AI-DWG | `architecture-design@^1` | forward | `adlc-state.md` |
+| I-16 | AI-DWG | `development-workspace@1` | AI-GCE | `development-workspace@^1` | forward | `dwg-state.md` |
+| I-17 | AI-DWG | `development-workspace@1` | AI-TGE | `development-workspace@^1` | forward | `dwg-state.md` |
 <!-- END-GENERATED:internal-edges -->
 
 > **AI-FLO is a wildcard observer, not a capability edge.** It consumes `"*"` (all types) as routing triggers — it reads every marker to track positions but forms no capability-typed edge. It is excluded from the edge table by design.
@@ -72,7 +75,7 @@ AI-DFE ◄── (reads all markers + each package's SOURCE_MAP — data-fabric 
 | AI-ADLC | AI-UXD | Sequential: waits for UXP complete before starting |
 | AI-PPM | AI-ILC + AI-PILC | Accept any (registers both ideas and projects) |
 
-> **Note on edge table vs. routing policy:** The internal edge table (above) shows all capability-type matches — these represent *potential* data flows. Some edges are **forward** (chain sequence: I-05→I-10→I-07→I-09), some are **feedback/enrichment** (I-03, I-04, I-07→AI-UXD, I-08→AI-POLC). The routing policy (sequential POLC→UXD→ADLC→DWG) determines the *order*; the edges determine what data flows where.
+> **Note on edge table vs. routing policy:** The internal edge table (above) shows all capability-type matches — these represent *potential* data flows. The **Kind** column marks each edge **forward** (producer precedes consumer in the declared `intraFamilyChain` — see `FAMILY_INTERFACE.md`) or **feedback/enrichment** (producer follows consumer — e.g. AI-ADLC → AI-UXD and AI-ADLC / AI-UXD → AI-POLC, where later-stage output enriches an earlier stage). Only forward edges are cycle-checked; feedback edges are expected back-flows, not cycles. The routing policy (sequential POLC→UXD→ADLC→DWG) determines the *order*; the edges determine what data flows where.
 
 ---
 
@@ -127,15 +130,17 @@ AI-DFE ◄── (reads all markers + each package's SOURCE_MAP — data-fabric 
 <!-- BEGIN-GENERATED:metadata -->
 | Check | Result |
 |-------|--------|
-| Internal edges derived | 14 (wildcard observers excluded) |
-| External inbound flows | 2 |
-| External outbound flows | 1 |
-| Cycles detected | 0 |
-| Generated | 2026-06-27 by generate-family-bindings.ps1 |
+| Internal edges derived | 17 (wildcard observers excluded) |
+| &nbsp;&nbsp;— forward (chain sequence) | 14 |
+| &nbsp;&nbsp;— feedback / enrichment | 3 |
+| External inbound flows | 4 |
+| External outbound flows | 2 |
+| Forward cycles detected | 0 |
+| Generated | 2026-08-10 by generate-family-bindings.ps1 |
 <!-- END-GENERATED:metadata -->
 
 > **Also:** Compatibility issues 0 (per-type scoping — GATE_PROTOCOL §4.2) · Fan-in gates 3 (DWG, POLC, PPM). *(curated — outside the generated region)*
 
 ---
 
-*Generated 2026-06-18 (regenerated 2026-06-27 to register AI-DFE) · Source: gate contracts (11 packages) + CROSS_FAMILY_FLOWS.md (3 flows) · Generator v1.0.0 · Part of the AIFLC Communication Fabric*
+*Generated 2026-06-18 (regenerated 2026-08-10 with forward/feedback edge classification) · Source: gate contracts (9 dev-tree packages; AI-FLO + AI-DFE cloned at assemble) + CROSS_FAMILY_FLOWS.md (6 PDLC flows: 4 in / 2 out) · Generator v1.1.0 · Part of the AIFLC Communication Fabric*

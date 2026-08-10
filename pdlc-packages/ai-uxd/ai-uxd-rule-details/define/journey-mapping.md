@@ -118,6 +118,17 @@ Present all journey maps to the user:
 
 ---
 
+### Visualization Pack (depth-gated)
+
+| Depth | Diagram | Mermaid type | Source |
+|-------|---------|:------------:|--------|
+| Standard | User journey map (stages × emotions × touchpoints) | `flowchart` | Journey analysis |
+| Comprehensive | Pain-point heatmap (stage × severity) | `quadrantChart` | Pain-point register |
+
+Emit from the journey analysis. No new content introduced.
+
+---
+
 ## Gate
 
 **Approval required before proceeding to Stage 5.**

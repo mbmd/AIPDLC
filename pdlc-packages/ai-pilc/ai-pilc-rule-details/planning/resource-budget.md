@@ -207,6 +207,8 @@ Map roles to project phases showing allocation:
 
 ---
 
+> **Delivery-method dual estimate (when set).** When `pilc-state.md` records an AI delivery method, present effort / FTE / duration / cost for **both** the manual baseline and the chosen method — the AI track scales effort and duration by the velocity multiplier (same scope, fewer FTE-months or shorter duration). Show the baseline alongside so the funding decision stays transparent. Coarse at initiation; AI-POLC refines it with the per-work-class multiplier.
+
 ### Step 6: CapEx vs. OpEx Split (if relevant)
 
 ```markdown

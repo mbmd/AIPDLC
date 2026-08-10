@@ -41,6 +41,8 @@ Every release must pass: "Can I articulate in one sentence what value this relea
 
 ### Step 7.1: Define MVP Scope (For New Products)
 
+> **Story-map input (if the User Story Mapping extension ran at Stage 4):** a `story-map.md` exists with release slices. Use its **walking-skeleton slice** as the MVP candidate directly — it is already the thinnest end-to-end path across the whole journey (USM-04 / USM-06). Reconcile it against the MVP criteria below rather than re-deriving the MVP from a flat ranked list.
+
 If Product Maturity = New (0→1), MVP definition is critical:
 
 **MVP Criteria:**
@@ -64,6 +66,8 @@ Rank 5: EPIC-007 — Referral Program        → MVP? NO (growth, not viability)
 For mature products, define **MMP** (Minimum Marketable Product) for the next version instead.
 
 ### Step 7.2: Group Epics Into Releases
+
+> **Story-map input:** if a `story-map.md` exists, its horizontal release slices already group stories across the journey — carry those slices in as the starting release grouping (USM-08), then adjust for dependencies and capacity below.
 
 Based on priority order, dependencies, and capacity:
 
@@ -126,6 +130,18 @@ Write `release-plan.md` with:
 - Ship/Iterate/Pivot framework
 - Release cadence (derived from delivery methodology context factor)
 - Dependencies between releases
+- Dual-track timeline + cadence when an AI delivery method is set (manual baseline vs chosen method + compression), per `strategy/delivery-method-timing.md`; manual-only shows a single track
+
+---
+
+### Visualization Pack (depth-gated)
+
+| Depth | Diagram | Mermaid type | Source |
+|-------|---------|:------------:|--------|
+| Standard | Release roadmap (features by release cadence) | `gantt` | Release plan |
+| Comprehensive | Feature-to-value traceability (features → outcomes) | `flowchart` | Traceability matrix |
+
+Emit from the release plan. No new content introduced.
 
 ---
 
@@ -146,6 +162,39 @@ Approve to proceed to Phase 3 (Governance), or adjust.
 ```
 
 User must confirm. This is also the **Phase 2 gate** — Strategy complete.
+
+---
+
+### Post-Gate: Derive Release Planning Artifacts
+
+**Condition:** depth >= Standard AND user has approved Gate 7.
+
+After gate approval, load `strategy/team-domain-planning.md` and derive the following artifacts:
+
+**0. Velocity Model refresh (delivery-method timing).** Load `strategy/delivery-method-timing.md`. If a delivery method was captured (Stage 1), (re)compute `polc-state.md` → `## Velocity Model`: per-work-class effective multipliers, blended project multiplier, and per-team **baseline + effective** velocity. When an AI method is set, the artifacts below render **dual-track** (manual baseline vs chosen method + compression); manual → single track. This supplies the velocity the capacity matrix reads.
+
+1. **`release-relevance-grouping.md`** — functional cluster & dependency rationale
+   - For each release in `release-plan.md`, collect assigned epics
+   - Extract inter-epic dependencies (from Integration sections or `Depends On` fields)
+   - Compute build order (topological sort within each release)
+   - Identify cross-release dependencies
+   - Derive functional theme from BC clusters + strategic themes in `roadmap.md`
+   - At Standard+ depth: add descoping options per release
+   - Generate Mermaid Gantt (release timeline) + dependency graph
+
+2. **`capacity-planning-matrix.md`** — team capacity vs. epic demand
+   - Read `polc-state.md` → `## Velocity Model` section for per-team velocities
+   - Calculate demand (committed SP) vs. capacity (velocity × sprints) per team per release
+   - Compute utilization %, identify bottlenecks (>80%), underutilized teams (<30%)
+   - At Comprehensive depth: generate 3-5 what-if scenarios + sprint allocation guidance
+   - Generate Mermaid demand pie + team-activity Gantt
+
+**Write:** Both files to `{outputRoot}/` immediately. Update `polc-state.md` → Planning Artifacts section (set to `generated`, record timestamp).
+
+**Skip conditions:**
+- depth = Minimal → skip entirely
+- Fewer than 2 releases → skip `release-relevance-grouping.md` (nothing to group)
+- Velocity Model section absent in `polc-state.md` → skip `capacity-planning-matrix.md` (cannot calculate capacity without velocity data)
 
 ---
 

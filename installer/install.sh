@@ -17,10 +17,21 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# installer/ now lives at the family repo root (e.g. pdlc/installer/), one level
-# ABOVE pdlc-packages/. Derive PACKAGES_ROOT by appending the conventional suffix.
+# installer/ lives at the family repo root, beside the <family>-packages/ directory.
+# Derive the family from that *-packages directory that ACTUALLY EXISTS - never from the
+# repo folder name: a real clone is "AI<CODE>" (e.g. AIPDLC) while packages stay
+# "<family>-packages" (e.g. pdlc-packages), so folder-name derivation installs nothing.
+# A --family flag (parsed below) overrides. [installer corrections: Issue 1]
 FAMILY_ROOT="$(dirname "$SCRIPT_DIR")"
-FAMILY="$(basename "$FAMILY_ROOT")"
+FAMILY=""
+for _d in "$FAMILY_ROOT"/*-packages; do
+    [[ -d "$_d" ]] || continue
+    if [[ -n "$FAMILY" ]]; then
+        echo "Multiple *-packages directories found in $FAMILY_ROOT. Use --family <name>." >&2
+        exit 1
+    fi
+    _b="$(basename "$_d")"; FAMILY="${_b%-packages}"
+done
 PACKAGES_ROOT="$FAMILY_ROOT/$FAMILY-packages"
 FAMILY_WS="${FAMILY}-ws"
 
@@ -53,6 +64,7 @@ declare -a PKG_DETAILSDIRS=("ai-ilc-rule-details" "ai-pilc-rule-details" "ai-ppm
 bundle_lookup() {
     case "$1" in
         full)       echo "ai-ilc,ai-pilc,ai-ppm,ai-flo,ai-adlc,ai-uxd,ai-polc,ai-dwg,ai-gce,ai-tge,ai-dfe" ;;
+        design)     echo "ai-ilc,ai-pilc,ai-ppm,ai-flo,ai-adlc,ai-uxd,ai-polc,ai-dwg,ai-dfe" ;;
         minimal)    echo "ai-pilc,ai-adlc,ai-dwg" ;;
         arch)       echo "ai-adlc,ai-dwg,ai-gce" ;;
         governance) echo "ai-gce,ai-tge" ;;
@@ -63,7 +75,15 @@ bundle_lookup() {
 
 MANIFEST_FILE=".ai-family-manifest.json"
 
-TARGET=""; PLATFORM=""; PACKAGES=""; BUNDLE=""; DRY_RUN=false; FORCE=false; UNINSTALL=false
+# Companion (Layer-3) packages vs the Layer-2 design chain. [OI-204]
+# AI-GCE / AI-TGE run in the AI-DWG-generated project workspace, not the design
+# workspace. On a design-workspace install they are STAGED inert (see
+# stage_provisioning_source) so AI-DWG can provision them into Layer 3. Mirror of
+# install.ps1 $CompanionPackages / Install-ProvisioningSource.
+COMPANION_PACKAGES=("ai-gce" "ai-tge")
+is_companion() { case "$1" in ai-gce|ai-tge) return 0 ;; *) return 1 ;; esac; }
+
+TARGET=""; PLATFORM=""; PACKAGES=""; BUNDLE=""; DRY_RUN=false; FORCE=false; UNINSTALL=false; IS_CUSTOM_SELECTION=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -74,12 +94,14 @@ while [[ $# -gt 0 ]]; do
         --dry-run)       DRY_RUN=true; shift ;;
         --force)         FORCE=true; shift ;;
         --uninstall)     UNINSTALL=true; shift ;;
+        --family)        FAMILY="$2"; PACKAGES_ROOT="$FAMILY_ROOT/$FAMILY-packages"; FAMILY_WS="${FAMILY}-ws"; shift 2 ;;
         --help|-h)
             echo "Usage: install.sh [OPTIONS]"
             echo "  --target, -t     Target workspace path"
             echo "  --platform, -p   Platform (kiro|cursor|claude-code|cline|amazonq|copilot)"
             echo "  --packages       Comma-separated package names"
-            echo "  --bundle, -b     Preset bundle (full|minimal|arch|governance|portfolio)"
+            echo "  --family         Override family auto-detection (e.g. pdlc)"
+            echo "  --bundle, -b     Preset bundle (full|design|minimal|arch|governance|portfolio)"
             echo "  --dry-run        Show what would be installed"
             echo "  --force          Overwrite without prompting"
             echo "  --uninstall      Remove installed packages"
@@ -87,6 +109,17 @@ while [[ $# -gt 0 ]]; do
         *) echo "Unknown option: $1"; exit 1 ;;
     esac
 done
+
+# Fail fast if the family / package source did not resolve (Issue 1 hardening).
+if [[ -z "$FAMILY" ]]; then
+    echo "Could not determine the family (no <family>-packages/ directory beside installer/). Use --family <name>." >&2
+    exit 1
+fi
+if [[ "$UNINSTALL" != true && ! -d "$PACKAGES_ROOT" ]]; then
+    echo "Package source not found: $PACKAGES_ROOT" >&2
+    echo "Expected a <family>-packages/ directory beside installer/. Use --family <name> to override." >&2
+    exit 1
+fi
 
 GREEN='\033[0;32m'; CYAN='\033[0;36m'; YELLOW='\033[1;33m'; MAGENTA='\033[0;35m'; GRAY='\033[0;90m'; WHITE='\033[1;37m'; RED='\033[0;31m'; NC='\033[0m'
 
@@ -114,6 +147,7 @@ show_platforms() {
 show_bundles() {
     echo ""; echo -e "  ${WHITE}Preset Bundles:${NC}"; echo ""
     echo "    [F] Full         - All 11 packages (complete family)"
+    echo "    [D] Design       - Design chain only, no companions (recommended - design workspace)"
     echo "    [M] Minimal      - AI-PILC + AI-ADLC + AI-DWG"
     echo "    [A] Architecture - AI-ADLC + AI-DWG + AI-GCE"
     echo "    [G] Governance   - AI-GCE + AI-TGE"
@@ -272,6 +306,48 @@ install_package() {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Stage Layer-3 companions as an inert provisioning source (OI-204 / G1 Option A)
+# ─────────────────────────────────────────────────────────────────────────────
+# On a design-workspace install, the companion engines (AI-GCE / AI-TGE) are copied
+# into .aiflc/{family}/ exactly like a normal package, BUT they are NOT surfaced by the
+# orchestrator (their routing rows are stripped - see install_orchestrator) and are
+# recorded in the manifest under `provisioningSource` with role=provisioning-source
+# (never the routed `packages` list). AI-DWG copies from this local source into the
+# generated Layer-3 workspace's .governance/engine/. Mirror of install.ps1
+# Install-ProvisioningSource (INV-L3-029). Echoes "name|coredest|detailsdest"; logs -> stderr.
+stage_provisioning_source() {
+    local platform="$1" target="$2"; shift 2
+    local names=("$@")
+    local name idx rules details core core_src details_src core_dest details_dest
+    for name in "${names[@]}"; do
+        idx=$(pkg_index "$name"); [[ "$idx" == "-1" ]] && continue
+        rules="${PKG_RULESDIRS[$idx]}"; details="${PKG_DETAILSDIRS[$idx]}"; core="${PKG_COREFILES[$idx]}"
+        core_src="$PACKAGES_ROOT/$name/$rules/$core"
+        details_src="$PACKAGES_ROOT/$name/$details"
+        if [[ ! -f "$core_src" ]]; then
+            warn "Provisioning source not found: $core_src - skipping $name (AI-DWG would have no local copy to provision)." >&2
+            continue
+        fi
+        core_dest="$target/.aiflc/$FAMILY/$rules/$core"
+        details_dest="$target/.aiflc/$FAMILY/$details"
+        if [[ "$DRY_RUN" == true ]]; then
+            echo -e "    ${YELLOW}[DRY RUN] Would stage provisioning source: $name -> .aiflc/$FAMILY/$rules/$core (inert; provisioned into Layer 3 by AI-DWG)${NC}" >&2
+            echo "$name|.aiflc/$FAMILY/$rules/$core|.aiflc/$FAMILY/$details"
+            continue
+        fi
+        mkdir -p "$(dirname "$core_dest")"
+        cp "$core_src" "$core_dest"
+        if [[ -d "$details_src" ]]; then
+            mkdir -p "$(dirname "$details_dest")"
+            rm -rf "$details_dest"
+            cp -R "$details_src" "$details_dest"
+        fi
+        step "Staged provisioning source: $name (inert - AI-DWG provisions it into Layer 3)" >&2
+        echo "$name|.aiflc/$FAMILY/$rules/$core|.aiflc/$FAMILY/$details"
+    done
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Install family tools (visual tools / extensions under tools/)
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -302,7 +378,7 @@ install_tools() {
 
     if [[ "$DRY_RUN" == true ]]; then
         echo -e "    ${YELLOW}[DRY RUN] Would install family tools to $FAMILY_WS/tools/:${NC}"
-        for e in "${ext_dirs[@]}"; do
+        for e in ${ext_dirs[@]+"${ext_dirs[@]}"}; do
             echo -e "      ${GRAY}$FAMILY_WS/tools/extensions/$e/ (excludes: ${TOOLS_EXCLUDE[*]})${NC}"
         done
         [[ ${#ext_dirs[@]} -eq 0 ]] && echo -e "      ${GRAY}(no extensions found)${NC}"
@@ -392,7 +468,7 @@ orchestrator_source() {
 }
 
 install_orchestrator() {
-    local platform="$1" target="$2"
+    local platform="$1" target="$2" companions_inert="${3:-false}"
     local src; src="$(orchestrator_source "$platform")"
     if [[ ! -f "$src" ]]; then
         warn "session-orchestrator.md missing from family source — sessions would load no orchestrator (context-budget risk, INV-L3-027)." >&2
@@ -401,12 +477,28 @@ install_orchestrator() {
     local rel; rel="$(orchestrator_dest "$platform")"
     local dest="$target/$rel"
     if [[ "$DRY_RUN" == true ]]; then
-        echo -e "    ${YELLOW}[DRY RUN] Would deploy orchestrator: session-orchestrator.md -> $rel${NC}" >&2
+        local mode=""; [[ "$companions_inert" == true ]] && mode=" (companion _GCE_/_TGE_ rows omitted - Layer-3, staged inert)"
+        echo -e "    ${YELLOW}[DRY RUN] Would deploy orchestrator: session-orchestrator.md -> $rel$mode${NC}" >&2
         echo "$rel"; return 0
     fi
     mkdir -p "$(dirname "$dest")"
     cp "$src" "$dest"
-    step "Deployed session orchestrator -> $rel  (the family's only always-loaded steering file)" >&2
+    # OI-204: companion ROUTING rows are matched by content (so the SOURCE keeps valid,
+    # unbroken Markdown tables); the Layer-2 "staged inert" NOTE is marker-guarded and
+    # its prose avoids the ai-*-rules tokens. Mirror of install.ps1 Install-Orchestrator.
+    # Design workspace (companions_inert): strip the routing rows, KEEP the note.
+    # For-use install: keep the rows, REMOVE the note. bash-3.2 / BSD-sed safe (-i.bak, -E).
+    if [[ "$companions_inert" == true ]]; then
+        sed -i.bak -E \
+            -e '/^\|[[:space:]]*`_(GCE|TGE)_`/d' \
+            -e '/ai-(gce|tge)-rules/d' \
+            -e '/<!-- AIFLC-COMPANION-NOTE:(start|end) -->/d' \
+            "$dest" && rm -f "$dest.bak"
+    else
+        sed -i.bak '/<!-- AIFLC-COMPANION-NOTE:start -->/,/<!-- AIFLC-COMPANION-NOTE:end -->/d' "$dest" && rm -f "$dest.bak"
+    fi
+    local suffix=""; [[ "$companions_inert" == true ]] && suffix="  (Layer-3 companions omitted - staged inert)"
+    step "Deployed session orchestrator -> $rel  (the family's only always-loaded steering file)$suffix" >&2
     echo "$rel"
     return 0
 }
@@ -685,6 +777,15 @@ do_uninstall() {
     else
         warn "jq not found - please remove files manually based on $MANIFEST_FILE"
     fi
+
+    # Remove staged provisioning-source companions (OI-204), if any.
+    if command -v jq &>/dev/null; then
+        jq -r '(.provisioningSource // [])[] | "\(.CoreDest)|\(.DetailsDest)"' "$manifest" 2>/dev/null | while IFS='|' read -r pcore pdetails; do
+            [[ -n "$pcore" && -f "$target/$pcore" ]] && rm -f "$target/$pcore"
+            [[ -n "$pdetails" && -d "$target/$pdetails" ]] && rm -rf "$target/$pdetails"
+        done
+    fi
+
     rm -f "$manifest"
 
     # Remove installed family tools (extensions). tools/ lives inside the family
@@ -811,11 +912,13 @@ if [[ -n "$BUNDLE" ]]; then
     step "Bundle: $BUNDLE (${SELECTED[*]})"
 elif [[ -n "$PACKAGES" ]]; then
     IFS=',' read -ra SELECTED <<< "$PACKAGES"
+    IS_CUSTOM_SELECTION=true
 else
     show_bundles
-    read -rp "  Select bundle [F/M/A/G/P/C]: " bundle_choice
+    read -rp "  Select bundle [F/D/M/A/G/P/C]: " bundle_choice
     case "$(echo "$bundle_choice" | tr '[:lower:]' '[:upper:]')" in
         F) IFS=',' read -ra SELECTED <<< "$(bundle_lookup full)" ;;
+        D) IFS=',' read -ra SELECTED <<< "$(bundle_lookup design)" ;;
         M) IFS=',' read -ra SELECTED <<< "$(bundle_lookup minimal)" ;;
         A) IFS=',' read -ra SELECTED <<< "$(bundle_lookup arch)" ;;
         G) IFS=',' read -ra SELECTED <<< "$(bundle_lookup governance)" ;;
@@ -827,7 +930,8 @@ else
             for idx in "${indices[@]}"; do
                 idx=$((${idx// /} - 1))
                 if [[ $idx -ge 0 && $idx -lt ${#PKG_NAMES[@]} ]]; then SELECTED+=("${PKG_NAMES[$idx]}"); fi
-            done ;;
+            done
+            IS_CUSTOM_SELECTION=true ;;
         *) echo -e "  ${RED}Invalid selection. Aborted.${NC}"; exit 1 ;;
     esac
 fi
@@ -835,6 +939,33 @@ fi
 for name in "${SELECTED[@]}"; do
     if [[ "$(pkg_index "$name")" == "-1" ]]; then warn "Unknown package: $name"; exit 1; fi
 done
+
+# --- OI-204: Layer-2 / Layer-3 companion placement ----------------------------
+SEL_HAS_COMPANION=false; SEL_HAS_NONCOMPANION=false; SEL_HAS_DWG=false
+for name in "${SELECTED[@]}"; do
+    if is_companion "$name"; then SEL_HAS_COMPANION=true; else SEL_HAS_NONCOMPANION=true; fi
+    [[ "$name" == "ai-dwg" ]] && SEL_HAS_DWG=true
+done
+
+# Hard-block (Q7): refuse a *for-use* companion install mixed with the design chain
+# via a CUSTOM selection. Preset bundles are sanctioned/exempt; a companions-only
+# custom pick (no design-chain package) is a valid direct Layer-3 install and is allowed.
+if [[ "$IS_CUSTOM_SELECTION" == true && "$SEL_HAS_COMPANION" == true && "$SEL_HAS_NONCOMPANION" == true ]]; then
+    warn "AI-GCE / AI-TGE are Layer-3 (Execute) companions - they have no role in a Layer-2 design workspace."
+    echo -e "  ${RED}Your custom pick mixes companion(s) (ai-gce/ai-tge) with design-chain package(s).${NC}"
+    echo "  Choose one of:"
+    echo "    --bundle design      : design chain here; GCE/TGE staged so AI-DWG provisions them into the project (Layer-3) workspace."
+    echo "    --bundle governance  : install GCE/TGE directly into an EXISTING Layer-3 project repo."
+    echo "    --bundle full        : install everything for use in one workspace (power users)."
+    exit 1
+fi
+
+# Stage companions as an inert provisioning source (G1 Option A) when this is a
+# design-workspace install: the design hinge (ai-dwg) is present and neither companion
+# was selected for use (the design/minimal bundles, or a custom design-only pick).
+STAGE_COMPANIONS=false
+if [[ "$SEL_HAS_DWG" == true && "$SEL_HAS_COMPANION" == false ]]; then STAGE_COMPANIONS=true; fi
+# ------------------------------------------------------------------------------
 
 echo ""; echo -e "  ${WHITE}Packages to install:${NC}"
 for name in "${SELECTED[@]}"; do
@@ -861,6 +992,28 @@ for name in "${SELECTED[@]}"; do
     fi
 done
 
+# Hardening: never report success when nothing was installed (Issue 1 class).
+if [[ "$DRY_RUN" != true && ${#INSTALLED_JSON[@]} -eq 0 ]]; then
+    echo -e "  ${RED}No packages were installed. Check the package source: $PACKAGES_ROOT${NC}" >&2
+    exit 1
+fi
+
+# Step 4b: stage Layer-3 companions as an inert provisioning source (OI-204 / G1)
+declare -a PROVISIONING_JSON=()
+if [[ "$STAGE_COMPANIONS" == true ]]; then
+    echo ""; echo -e "  ${WHITE}Staging Layer-3 companions (provisioning source)...${NC}"; echo -e "  ${GRAY}---------------------------------------------------${NC}"
+    info "AI-GCE / AI-TGE are staged INERT (not active in this design workspace). AI-DWG provisions them into the generated Layer-3 project workspace."
+    while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
+        if [[ "$line" == *"|"* ]]; then
+            IFS='|' read -ra pparts <<< "$line"
+            if [[ ${#pparts[@]} -eq 3 ]]; then
+                PROVISIONING_JSON+=("{\"Name\":\"${pparts[0]}\",\"CoreDest\":\"${pparts[1]}\",\"DetailsDest\":\"${pparts[2]}\",\"role\":\"provisioning-source\"}")
+            fi
+        fi
+    done < <(stage_provisioning_source "$PLATFORM" "$TARGET" ${COMPANION_PACKAGES[@]+"${COMPANION_PACKAGES[@]}"})
+fi
+
 echo ""; echo -e "  ${WHITE}Setting up family workspace...${NC}"; echo -e "  ${GRAY}------------------------------${NC}"
 create_skeleton "$TARGET"
 
@@ -870,14 +1023,14 @@ register_consumers "$TARGET"
 
 echo ""; echo -e "  ${WHITE}Deploying fabric + agents...${NC}"; echo -e "  ${GRAY}----------------------------${NC}"
 declare -a INSTALLED_NAMES=()
-for j in "${INSTALLED_JSON[@]}"; do
+for j in ${INSTALLED_JSON[@]+"${INSTALLED_JSON[@]}"}; do
     nm=$(echo "$j" | sed 's/.*"Name":"//;s/".*//')
     [[ -n "$nm" ]] && INSTALLED_NAMES+=("$nm")
 done
 declare -a FABRIC_DEPLOYED=() AGENTS_INSTALLED=()
 fabric_out="$(install_fabric "$PLATFORM" "$TARGET")"
 while IFS= read -r l; do [[ -n "$l" ]] && FABRIC_DEPLOYED+=("$l"); done <<< "$fabric_out"
-ORCHESTRATOR_DEPLOYED="$(install_orchestrator "$PLATFORM" "$TARGET")"
+ORCHESTRATOR_DEPLOYED="$(install_orchestrator "$PLATFORM" "$TARGET" "$STAGE_COMPANIONS")"
 CLAUDE_ENTRY_STATUS="$(install_claude_entrypoint "$PLATFORM" "$TARGET" "$ORCHESTRATOR_DEPLOYED")"
 CLAUDE_SKILL_DEPLOYED="$(install_claude_skill "$PLATFORM" "$TARGET" "$ORCHESTRATOR_DEPLOYED")"
 declare -a CLAUDE_COMMANDS=()
@@ -901,9 +1054,9 @@ if [[ "$DRY_RUN" != true && ${#INSTALLED_JSON[@]} -gt 0 ]]; then
     fi
     # Fabric + agent relative paths (JSON strings).
     declare -a FABRIC_JSON=() AGENTS_JSON=() CLAUDE_CMD_JSON=()
-    for p in "${FABRIC_DEPLOYED[@]}"; do FABRIC_JSON+=("\"$p\""); done
-    for p in "${AGENTS_INSTALLED[@]}"; do AGENTS_JSON+=("\"$p\""); done
-    for p in "${CLAUDE_COMMANDS[@]}"; do CLAUDE_CMD_JSON+=("\"$p\""); done
+    for p in ${FABRIC_DEPLOYED[@]+"${FABRIC_DEPLOYED[@]}"}; do FABRIC_JSON+=("\"$p\""); done
+    for p in ${AGENTS_INSTALLED[@]+"${AGENTS_INSTALLED[@]}"}; do AGENTS_JSON+=("\"$p\""); done
+    for p in ${CLAUDE_COMMANDS[@]+"${CLAUDE_COMMANDS[@]}"}; do CLAUDE_CMD_JSON+=("\"$p\""); done
     # Claude Code entry-point record (for clean uninstall). null on other platforms.
     claude_ep_json="null"
     if [[ "$CLAUDE_ENTRY_STATUS" == "created" ]]; then
@@ -916,16 +1069,17 @@ if [[ "$DRY_RUN" != true && ${#INSTALLED_JSON[@]} -gt 0 ]]; then
         echo "  \"installedAt\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\","
         echo "  \"family\": \"$FAMILY\","
         echo "  \"platform\": \"$PLATFORM\","
-        echo "  \"installerVersion\": \"2.4.0\","
+        echo "  \"installerVersion\": \"2.5.0\","
         echo "  \"packages\": ["
         echo "    $(IFS=','; echo "${INSTALLED_JSON[*]}" | sed 's/},{/},\n    {/g')"
         echo "  ],"
-        echo "  \"tools\": [$(IFS=','; echo "${TOOLS_JSON[*]}")],"
-        echo "  \"fabric\": [$(IFS=','; echo "${FABRIC_JSON[*]}")],"
-        echo "  \"agents\": [$(IFS=','; echo "${AGENTS_JSON[*]}")],"
+        echo "  \"provisioningSource\": [$(IFS=','; echo "${PROVISIONING_JSON[*]-}")],"
+        echo "  \"tools\": [$(IFS=','; echo "${TOOLS_JSON[*]-}")],"
+        echo "  \"fabric\": [$(IFS=','; echo "${FABRIC_JSON[*]-}")],"
+        echo "  \"agents\": [$(IFS=','; echo "${AGENTS_JSON[*]-}")],"
         echo "  \"orchestrator\": \"$ORCHESTRATOR_DEPLOYED\","
         echo "  \"claudeEntrypoint\": $claude_ep_json,"
-        echo "  \"claudeCommands\": [$(IFS=','; echo "${CLAUDE_CMD_JSON[*]}")],"
+        echo "  \"claudeCommands\": [$(IFS=','; echo "${CLAUDE_CMD_JSON[*]-}")],"
         echo "  \"claudeSkill\": \"$CLAUDE_SKILL_DEPLOYED\""
         echo "}"
     } > "$manifest_path"

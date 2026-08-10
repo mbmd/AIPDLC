@@ -11,7 +11,7 @@
 ## Activation Point
 
 - **Primary Stage:** Stage 5 (Container Design)
-- **Secondary Stages:** Stage 11 (Integration Architecture), Stage 10 (Infrastructure & Deployment)
+- **Secondary Stages:** Stage 10 (API Architecture — gateway MS-08), Stage 11 (Integration & Infrastructure — service mesh, saga, observability, deployment), Stage 12 (Component Design)
 
 These rules apply to service decomposition, inter-service communication, data ownership, and operational concerns for microservice architectures.
 
@@ -121,7 +121,9 @@ A good output with this extension sounds like:
 
 **Anti-Pattern:** Attempting distributed transactions (2PC/XA) across microservices, creating tight coupling, latency, and availability issues when any participant is unavailable.
 
-**ADR Trigger:** Yes — When choosing between choreography and orchestration for a specific multi-service workflow.
+**ADR Trigger:** Yes — When choosing between choreography and orchestration for a specific multi-service workflow. Use `templates/adr-saga-pattern.md` (pre-frames the decision drivers, options, and compensation design).
+
+**Core wiring (always-on):** this rule is now surfaced by the core even when this extension is not opted in — the **Stage 5 Multi-Service Consistency Checkpoint** flags consistency-sensitive operations into the Design Backlog, and the **Stage 11 Cross-Service Consistency (Saga) loop** drives this rule per operation. When this extension IS active, that loop makes a full **Saga Design Card** (below) mandatory per operation; when it is not, the loop still requires a Cross-Service Consistency ADR. The same decision is raised by the Automation Lens (`automation-lens/architecture/reliability.md` §3) — resolve to one ADR.
 
 ---
 

@@ -207,9 +207,9 @@ Every stage produces one or more output files. You MUST write these files to the
 | 2 | `product-vision.md` |
 | 3 | `po-charter.md` |
 | 4 | `roadmap.md` |
-| 5 | `epics/EPIC-NNN_*.md` (one per epic) |
+| 5 | `epics/EPIC-NNN_*.md` (one per epic) + `team-epic-distribution.md` + `domain-topology-map.md` *(depth >= Standard only)* |
 | 6 | `prioritization-register.md` |
-| 7 | `release-plan.md` |
+| 7 | `release-plan.md` + `release-relevance-grouping.md` + `capacity-planning-matrix.md` *(depth >= Standard; capacity requires velocity model)* |
 | 8 | `definition-of-ready.md` + `definition-of-done.md` |
 | 9 | `product-risk-register.md` |
 | 10 | `traceability-matrix.md` |

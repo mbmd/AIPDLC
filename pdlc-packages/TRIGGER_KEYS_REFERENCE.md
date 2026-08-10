@@ -32,6 +32,8 @@ Force-activate a family package's workflow, unambiguously, regardless of other i
 |-----|----------------|
 | `_ACTIVE_` | Which AI-* package is currently active + its state-marker status. Read-only — never triggers a package switch. |
 | `_APROJ_` | **Active-project switch** (multi-project workspaces). Reports the current ★ active project from `projects/PROJECTS.md`, lists all projects, and switches the ★ pointer to a user-chosen project. Per-project producers (PILC/ADLC/UXD/POLC/DWG) then default to the newly active project. PPM/FLO are unaffected (registry-wide, §8). Updates only the `★`/`Active project:` pointer — never package state. (Specified as `APROJ__` in design OD#6; normalized to the `_X_` utility-key class alongside `_ACTIVE_`.) |
+| `_AILENS_` | **AI-LENS mode report + toggle.** Prints the current AI-LENS mode (No-AI / AI-Powered + active palette) from `management_framework/Lens_Status.md` (the live SSOT). Offers a one-line change affordance (on confirmation: appends a `Decision_Log` history row AND upserts the `Lens_Status.md` row — dual-write). Works without a package switch — any package can be active. |
+| `_AUTOLENS_` | **Automation-LENS mode report + toggle.** Prints the current Automation-LENS mode (Manual / Automated + active palette) from `management_framework/Lens_Status.md` (the live SSOT). Offers a one-line change affordance (on confirmation: appends a `Decision_Log` history row AND upserts the `Lens_Status.md` row — dual-write). Works without a package switch — any package can be active. |
 
 **Switching guarantees (enforced by every package's "Activation & Multi-Package Isolation" section):**
 - A package switch NEVER happens without a **direct user order** (an explicit `_{PKG}_` key) or **explicit confirmation** (yes/no when a sibling is active).
@@ -79,6 +81,24 @@ Force-activate a family package's workflow, unambiguously, regardless of other i
 | `FHC__` | flo-health-check (FLO-AG-02) | Audit | AI-FLO | Bootstrap readiness — "is this workspace ready for FLO?". Validates fabric trio, discovery, routing graph. `FHC__ fix` attempts simple resolutions. Run first in a new workspace. |
 | `FIA__` | flow-integrity-agent (FLO-AG-01) | Audit | AI-FLO | Operational integrity — "is FLO's state correct?". Validates routing graph consistency, entity positions, marker freshness during active operation. |
 
+## AI-LENS Triggers (ship with AI-LENS facets)
+
+> Shipped by the AI-LENS facets (AI-GCE + AI-TGE). Manual-trigger agents for AI-specific governance and quality evaluation. Available when AI-LENS is active (`AI-Powered` mode).
+
+| Key | Agent | Type | Owner | What It Does |
+|-----|-------|------|-------|--------------|
+| `AIG__` | AIFLC AI Governance | Audit | AI-GCE | AI governance checks: EU AI Act obligations, responsible-AI, operational governance (PII boundary, model pinning, prompt review, cost controls). Reads `.ai-lens/manifest.json`. Writes to `.governance/ai-lens/`. |
+| `AIQ__` | AIFLC AI Quality & Drift | Audit | AI-TGE | AI quality evaluation and drift detection: golden-set eval, acceptance-criteria validation, hallucination/bias/injection testing, drift monitoring. Reads `.ai-lens/manifest.json` + `eval/`. Writes to `.tge/ai-lens/`. |
+
+## Automation-LENS Triggers (ship with Automation-LENS facets)
+
+> Shipped by the Automation-LENS facets (AI-GCE + AI-TGE). Manual-trigger agents for automation-specific governance and quality verification. Available when Automation-LENS is active (`Automated` mode). Seeded into the Layer-3 workspace by AI-DWG; dispatched by GCE/TGE's existing Command Dispatch.
+
+| Key | Agent | Type | Owner | What It Does |
+|-----|-------|------|-------|--------------|
+| `ATG__` | AIFLC Automation Governance | Audit | AI-GCE | Automation governance checks: audit-trail completeness, kill-switch/loop-guard presence, segregation of duties (controlled class), least-privilege identity, control-class compliance. Reads `.automation-lens/manifest.json`. Writes to `.governance/automation-lens/`. |
+| `ATQ__` | AIFLC Automation Quality | Audit | AI-TGE | Automation verification: idempotency, exception-path coverage, retry/compensation correctness, rollback, load/throughput, and the loop test (fire the trigger; assert the causal chain terminates within the hop budget). Reads `.automation-lens/manifest.json`. Writes to `.tge/automation-lens/`. |
+
 ## Governance Spine Trigger (Management Framework)
 
 | Key | Does |
@@ -108,6 +128,21 @@ Force-activate a family package's workflow, unambiguously, regardless of other i
 | **1** (Day 0) | From first generation | `SDC__`, `TGV__`, `IQA__`, `ADA__`, `WIA__` |
 | **2** (Sprint 2+) | After Tier 2 activation | + `SGV__`, `CRV__`, `SQC__`, `DOD__`, `CVR__` |
 | **3** (Pre-Release) | After Tier 3 activation | + `CMG__` |
+
+---
+
+## Workspace Publishing (HTML Export)
+
+> Shipped by the `AIFLC-HtmlExport` extension (not AI-GCE-generated). Publishes the workspace Markdown as a browsable HTML site. `.md` is the single source of truth; the HTML is a derived, read-only shadow.
+
+| Key | Type | What It Does |
+|-----|------|--------------|
+| `HTM__` | Operation | Full idempotent publish: one HTML page per in-scope `.md` + grouped landing page. Safe to re-run. |
+| `HTM__ on` | Switch | Enable auto-refresh (gate-driven + on-demand) + run one full publish. |
+| `HTM__ off` | Switch | Disable auto-refresh (shadow stays as frozen snapshot; manual `HTM__` still works). |
+| `HTM__ status` | Report | Switch state, last publish time, page count. Read-only. |
+| `HTM__ deck` | Operation | Build/refresh the curated executive presentation deck. *(Phase 4.)* |
+| `HTM__ offline` | Operation | Offline build (vendored Mermaid, no internet needed on view). *(Phase 4.)* |
 
 ---
 

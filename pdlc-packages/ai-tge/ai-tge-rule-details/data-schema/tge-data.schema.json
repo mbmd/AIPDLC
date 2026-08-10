@@ -22,6 +22,25 @@
         "riskSummary":{"type":["object","null"],"properties":{"critical":{"type":["integer","null"]},"high":{"type":["integer","null"]},"medium":{"type":["integer","null"]},"low":{"type":["integer","null"]},"totalScored":{"type":["integer","null"]}}},
         "depthLevel":{"type":["object","null"],"properties":{"level":{"type":["string","null"]},"totalScore":{"type":["string","number","null"]}}},
         "observationHistory":{"type":"array","items":{"type":"object","properties":{"cycle":{"type":"integer"},"date":{"type":"string"},"testsAdded":{"type":["integer","null"]},"testsDeprecated":{"type":["integer","null"]},"coverageBefore":{"type":["number","string","null"]},"coverageAfter":{"type":["number","string","null"]}}}}
+      ,
+        "aiLens":{"type":["object","null"],"description":"AI-LENS fields (AI_LENS_PROTOCOL §6.2 — AI-TGE contract). Present when AIQ__ agent has produced eval/drift results.","properties":{
+          "aiFeatures":{"type":"array","description":"Per-feature AI evaluation and drift results from the AIQ__ agent.","items":{"type":"object","properties":{
+            "aiFeatureId":{"type":"string","description":"Stable thread identifier (AIF-{NNN})"},
+            "aiqResult":{"type":["string","null"],"description":"Overall eval result: pass | degraded | fail"},
+            "aiqEvalScores":{"type":["object","null"],"description":"Evaluation scores (e.g. accuracy, relevance, safety) as key-value pairs"},
+            "aiqDriftStatus":{"type":["string","null"],"description":"Drift status: stable | drifting | critical"},
+            "aiqFindings":{"type":"array","items":{"type":"object","properties":{"check":{"type":"string"},"severity":{"type":"string"},"detail":{"type":"string"}}},"description":"Individual quality/drift findings"}
+          }}}
+        }},
+        "automationLens":{"type":["object","null"],"description":"Automation-LENS fields (AUTOMATION_LENS_PROTOCOL §6.2 — AI-TGE contract). Present when ATQ__ agent has produced verification results.","properties":{
+          "automationFeatures":{"type":"array","description":"Per-feature automation verification results from the ATQ__ agent.","items":{"type":"object","properties":{
+            "automationFeatureId":{"type":"string","description":"Stable thread identifier (AUTO-{NNN})"},
+            "atqResult":{"type":["string","null"],"description":"Overall verification result: pass | degraded | fail"},
+            "atqExceptionCoverage":{"type":["string","null"],"description":"Exception-path coverage assessment: full | partial | minimal | none"},
+            "atqLoopStatus":{"type":["string","null"],"description":"Loop termination test result: terminates | budget-exceeded | untested"},
+            "atqFindings":{"type":"array","items":{"type":"object","properties":{"check":{"type":"string"},"severity":{"type":"string"},"detail":{"type":"string"}}},"description":"Individual automation quality findings (idempotency, retry, rollback, load, dead-letter)"}
+          }}}
+        }}
       }
     }
   }

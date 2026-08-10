@@ -32,7 +32,7 @@ Every roadmap item must pass: "Does this connect to a product goal, and can I ex
 |-------|----------|
 | **Minimal** | Simple Now/Next/Later with 2-3 items per horizon. Value proposition in one sentence. |
 | **Standard** | Full roadmap with strategic themes, 3-5 items per horizon, value proposition canvas. |
-| **Comprehensive** | Roadmap + OKRs + JTBD framing + opportunity scoring. Extension: Advanced Discovery activated. |
+| **Comprehensive** | Roadmap + OKRs + JTBD framing + opportunity scoring. Extensions: Advanced Discovery + User Story Mapping (journey backbone → release slices) available. |
 
 ---
 
@@ -134,6 +134,17 @@ If triggered ("OKRs", "jobs to be done", "hypothesis testing"), load `extensions
 - JTBD framing (job stories for each user segment)
 - Opportunity scoring (reach × impact × confidence × effort)
 - Hypothesis backlog (assumptions to validate before building)
+
+---
+
+## Extension: User Story Mapping
+
+If triggered ("story map", "user story mapping", "walking skeleton"), load `extensions/user-story-mapping.md` and additionally produce:
+- A journey backbone (user activities in narrative order) with tasks and ranked stories
+- Horizontal release slices, walking skeleton first — a `story-map.md` artifact
+- Slice → roadmap-horizon reconciliation and a goal → activity → story trace
+
+The map is built here; its release slices feed **Stage 7 (Release & Increment Slicing)**. Full rules USM-01…USM-08 live in the extension file.
 
 ---
 

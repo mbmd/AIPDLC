@@ -42,6 +42,18 @@
 | `counts.approved` | 2 | Count where status = Approved/Routed |
 | `counts.rejected` | 2 | Count where status = Rejected/Parked |
 
+## AI-LENS Fields (AI_LENS_PROTOCOL §6.2)
+
+> Present only when the idea carries an AI posture (set during shape stage via the AI-LENS Resolution Protocol).
+
+| Field path (in `data`) | Source (#) | Extraction rule |
+|------------------------|------------|-----------------|
+| `aiLens.aiPosture` | 3 | Idea Brief front-matter `aiPosture` (from the AI Posture block): `no-ai`, `opportunity`, `augmented`, or `native`. `null` if the field is absent (idea pre-dates AI-LENS or is not AI-relevant). |
+| `aiLens.aiCapabilitySignal` | 3 | Idea Brief front-matter `aiCapability` — high-level capability type from the AI-LENS taxonomy (e.g. `generation`, `recommendation`). `null` if not set. |
+| `aiLens.aiFeatureId` | 3 | Idea Brief front-matter `aiFeatureId` — stable thread identifier (`AIF-{NNN}`). Minted at shape stage if the idea is AI-specific; `null` otherwise. |
+
+---
+
 ## Retention Policy
 
 | Policy | Value |
@@ -54,3 +66,14 @@
 - `ilc-state.md` tracks the *current* idea workflow; `idea-register.md` is the full funnel. DFE reads both — the register for the portfolio-of-ideas view, the state for the active idea.
 - Idea IDs (NNN) are not Project IDs — ILC mints ideas, not projects. Approved ideas route to AI-PILC/AI-POLC where a Project ID is later minted.
 - **Dashboard Ideas funnel (ISS-003):** the dashboard filters the funnel by **lowercase `stage`** (`captured|shaped|evaluated|scoped|approved|routed|parked|rejected`) and reads `idea.brief`, `idea.routeTarget`, and `idea.files[]`. DFE emits `stage` as the lowercase form of the register `Status`, splits `score`/`scoreMax` from `n/35`, and lists per-idea deliverables as `files[]` objects. (Supersedes the earlier counts-only/PascalCase-status projection — the funnel was empty when the renderer received `status` instead of lowercase `stage`.)
+
+
+## Automation-LENS Fields (AUTOMATION_LENS_PROTOCOL §6.2)
+
+> Present only when the idea carries an Automation posture (set during shape stage via the Automation-LENS Resolution Protocol).
+
+| Field path (in `data`) | Source (#) | Extraction rule |
+|------------------------|------------|-----------------|
+| `automationLens.automationPosture` | 3 | Idea Brief front-matter `automationPosture` (from the Automation Posture block): `manual`, `assisted`, `attended`, or `unattended`. `null` if the field is absent (idea pre-dates Automation-LENS or is not automation-relevant). |
+| `automationLens.automationPatternSignal` | 3 | Idea Brief front-matter `automationPattern` — high-level pattern type from the Automation-LENS §5 taxonomy (e.g. `workflow-orchestration`, `routing-assignment`). `null` if not set. |
+| `automationLens.automationFeatureId` | 3 | Idea Brief front-matter `automationFeatureId` — stable thread identifier (`AUTO-{NNN}`). Minted at shape stage if the idea is automation-specific; `null` otherwise. |

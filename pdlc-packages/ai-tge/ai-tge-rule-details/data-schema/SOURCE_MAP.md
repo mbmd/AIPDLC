@@ -52,3 +52,26 @@
 - TGE is per-project scoped: one `tge-data.json` per project. `tge-state.md` is rich and structured — DFE extracts the stats/risk/coverage summary.
 - Individual artifacts (`test-register.md`, `coverage-report.md`, `defect-log.md`) are not fully extracted — the state file already aggregates their key counts.
 - TGE carries `ownership: generated` provenance front-matter (`generatedBy: AI-TGE`).
+
+---
+
+## AI-LENS Fields (AI_LENS_PROTOCOL §6.2)
+
+> Present when the `AIQ__` agent has produced AI evaluation and drift results in `.tge/`.
+
+| Field path (in `data`) | Source | Extraction rule |
+|------------------------|--------|-----------------|
+| `aiLens.aiFeatures[]` | `.tge/` AI evaluation result files (produced by `AIQ__` agent) | For each AI feature evaluated, extract: `{ aiFeatureId, aiqResult, aiqEvalScores, aiqDriftStatus, aiqFindings[] }`. `aiqResult` = overall pass/degraded/fail. `aiqEvalScores` = key-value evaluation metrics. `aiqDriftStatus` = stable/drifting/critical. `aiqFindings` = individual quality/drift findings with severity. Empty array `[]` if `AIQ__` has not run. |
+
+> **Source:** `.tge/` folder — AI-specific evaluation and drift result files produced by the `AIQ__` (AIFLC AI Quality & Drift) agent.
+
+
+## Automation-LENS Fields (AUTOMATION_LENS_PROTOCOL §6.2)
+
+> Present when the `ATQ__` agent has produced automation verification results in `.tge/`.
+
+| Field path (in `data`) | Source | Extraction rule |
+|------------------------|--------|-----------------|
+| `automationLens.automationFeatures[]` | `.tge/` automation verification result files (produced by `ATQ__` agent) | For each automation feature verified, extract: `{ automationFeatureId, atqResult, atqExceptionCoverage, atqLoopStatus, atqFindings[] }`. `atqResult` = overall pass/degraded/fail. `atqExceptionCoverage` = exception-path coverage (full/partial/minimal/none). `atqLoopStatus` = loop termination test (terminates/budget-exceeded/untested). `atqFindings` = individual quality findings (idempotency, retry, rollback, load, dead-letter). Empty array `[]` if `ATQ__` has not run. |
+
+> **Source:** `.tge/` folder — automation-specific verification result files produced by the `ATQ__` (AIFLC Automation Quality) agent.

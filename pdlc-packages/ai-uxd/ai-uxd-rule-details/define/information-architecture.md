@@ -137,6 +137,17 @@ Present:
 
 ---
 
+### Visualization Pack (depth-gated)
+
+| Depth | Diagram | Mermaid type | Source |
+|-------|---------|:------------:|--------|
+| Standard | Site map / navigation hierarchy | `flowchart` | IA structure |
+| Comprehensive | Content model (entities × relationships) | `flowchart` | Content taxonomy |
+
+Emit from the IA structure. No new content introduced.
+
+---
+
 ## Gate
 
 **Approval required before proceeding to Stage 6.**

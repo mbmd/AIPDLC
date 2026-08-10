@@ -80,6 +80,10 @@ guarantees:
 | `payloadRoot` | ✅ | Relative path where output artifacts live. Declared in the contract (the promise); concrete path emitted in the marker at runtime. |
 | `guarantees` | ✅ | Fields the producer promises are present when `status == complete`. These are what consumers match against. |
 
+> **Publishable-artifact scope (HTML export).** The `payloadRoot` declared in each gate contract defines the boundary of what `HTM__` (AIFLC-HtmlExport) considers "in-scope" for publishing. Files under the `payloadRoot` of a completed gate are eligible for the HTML shadow; files outside it (state markers, DFE data, routing artifacts) are excluded by default. The exporter is a read-only consumer of `payloadRoot` — it never writes into it (SSOT-Shadow, INV-L4-011).
+
+> **Gate-driven HTML refresh (`HTM__` auto-refresh).** When the workspace HTML-publishing switch is ON (`.publish/{family}.config.yaml` → `autoRefresh: true`), immediately after a gate is approved and its `payloadRoot` artifacts are written, invoke an `HTM__` refresh so the HTML shadow page(s) and the landing page reflect the newly-completed stage. This is the primary auto-refresh path and is uniform across every AI platform; on-demand `HTM__` remains available at any time. The refresh is one-directional (`.md →.html`) and never modifies the source (SSOT-Shadow, INV-L4-011). If the switch is OFF, `enabled: false`, or the AIFLC-HtmlExport tool is not installed, skip silently.
+
 ### 4.2 Gate-In — What the Consumer REQUIRES
 
 Requirements are **scoped per consumed type** — each capability type the consumer accepts declares its own mandatory/optional fields. This prevents a fan-in consumer from incorrectly requiring (e.g.) architecture fields from a backlog feed.

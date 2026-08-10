@@ -138,6 +138,8 @@ projectId: {project_id}
 
 **Burndown projection:** At current velocity, release scope completes in {n} sprints ({date}).
 
+**Delivery-method dual projection (when an AI method is set):** show the projection for BOTH the manual baseline and the chosen method — baseline velocity vs AI-adjusted — with the compression delta. Manual-only projects show a single projection. Source: `polc-state.md` → `## Velocity Model`.
+
 ---
 
 ## Epic Status

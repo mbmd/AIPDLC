@@ -73,6 +73,7 @@ From the source, extract ONLY what portfolio governance needs:
 | **Sponsor** | Charter → Sponsor | Brief → Requestor | Ask user |
 | **Budget ROM** | Resource Plan → Total ROM | Brief → Effort Estimate | Ask user |
 | **Timeline** | Charter → High-Level Milestones | Brief → Timeline Estimate | Ask user |
+| **Delivery Method** | `pilc-state.md` → Delivery Method / AI Tool (when set) | — | Ask user (optional) |
 | **Risk Level** | Feasibility → Rating (🟢🟡🟠🔴) | Brief → Risk Assessment | Ask user |
 | **Priority (initial)** | Prioritization → Rank | Brief → Evaluation Score | Unranked |
 | **Source Marker** | `pilc-state.md` path | `ilc-state.md` path | "manual" |
@@ -114,6 +115,7 @@ Generate using template `templates/project-intake-card.md`:
 | **Sponsor** | {name/role} |
 | **Budget ROM** | {range} |
 | **Timeline** | {duration or dates} |
+| **Delivery Method** | {manual / ai-assisted / ai-driven / hybrid / n/a} (from PIP when set; portfolio timing is delivery-method-aware) |
 | **Risk Level** | {🟢🟡🟠🔴 or Unassessed} |
 | **Source** | {PIP / ILC Brief / Manual} |
 | **Source Path** | {marker file location} |

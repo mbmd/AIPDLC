@@ -84,6 +84,14 @@ In the standard multi-project layout, `{output_root}` = `{project_root}/architec
 |---|----------|:--------:|:---------:|:------------:|
 | 1 | {question} | {H/M/L} | Stage {n} | Stage {m} |
 
+## Design Backlog
+
+Deferred design work carried between stages so a resumed session never loses it. Notably holds **consistency-sensitive operations** — multi-service / cross-aggregate business operations flagged at the **Stage 5 Multi-Service Consistency Checkpoint** that the **Stage 11 saga loop** must resolve (Saga Design Card or Cross-Service Consistency ADR).
+
+| # | Item | Type | Raised At | Target Stage | Status |
+|---|------|------|:---------:|:------------:|:------:|
+| 1 | {e.g., "checkout writes across Order + Payment + Inventory"} | consistency-sensitive operation / saga | Stage 5 | Stage 11 | Open / Resolved ({Saga Card / ADR ref}) |
+
 ## Containers (from Stage 5)
 
 | Container | Technology | Responsibility |

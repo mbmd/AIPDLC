@@ -184,6 +184,7 @@ The manifest lives at `{family}-ws/.ai-family-manifest.json`. Uninstall removes 
 
 - Each package is independently installable — order doesn't matter.
 - The installer never modifies your existing project files — only adds AI-* package files + the family workspace.
+- Repo-only reference folders at the family root (`narrative/`, `knowledge_docs/`) are **not** installed — they're for reading in the repo or your clone, never copied into your workspace.
 - Chain detection happens at runtime (via state markers), not at install time.
 - See [PLATFORM_CAPABILITIES.md](../pdlc-packages/PLATFORM_CAPABILITIES.md) for what works on each platform.
 

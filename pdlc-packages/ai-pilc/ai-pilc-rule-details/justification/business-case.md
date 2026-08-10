@@ -272,6 +272,8 @@ Based on Q-JUS-01 response:
 - Include only high-level milestones (5-10 max for business case level)
 - More detailed scheduling happens in Stage 11 (Scope Definition)
 
+> **Delivery-method dual timeline (when set).** When an AI delivery method is recorded in `pilc-state.md`, present the milestone timeline for **both** the manual baseline and the chosen method, with the compression delta (e.g., "Manual ~{A} · AI-driven ~{B}"). Keep the manual baseline visible so the investment decision stays transparent and reversible. These are coarse initiation estimates, refined later by AI-POLC.
+
 ---
 
 ### Step 9: Risks & Dependencies Summary

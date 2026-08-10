@@ -144,6 +144,21 @@ Re-run contrast checks from Stage 8 for EACH theme context:
 
 **Every combination must pass.** If it doesn't, adjust the override tokens.
 
+### Step 6b: Figma Variable Mode Mapping (if Figma integration is active)
+
+Each theming dimension maps to a **Figma Variable mode** so the derived token projection (`integrations/figma/out/`) round-trips cleanly. See `templates/figma-handoff.md`.
+
+| UXD conditional feature | Figma Variable mode(s) |
+|-------------------------|------------------------|
+| Color modes (dark/light) | `light`, `dark` |
+| Multi-brand (>1 brand) | `brand-A`, `brand-B`, … |
+| Composed (Brand × Mode) | one mode per combination (e.g. `brand-A/dark`) |
+| i18n / RTL token extensions | not a mode — logical properties (documented, not a Figma mode) |
+
+Each theme's semantic override set (Steps 3-4) becomes one Figma mode's values. The canonical `design-tokens.json` remains the source of truth; the Figma projection expresses the modes as native Variable modes + `$themes` (derived + disposable).
+
+---
+
 ### Step 7: Present for Approval
 
 Present:

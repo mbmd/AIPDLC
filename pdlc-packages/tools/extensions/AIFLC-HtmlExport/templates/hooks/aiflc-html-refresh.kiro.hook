@@ -1,0 +1,16 @@
+{
+  "enabled": false,
+  "name": "AIFLC HTML Refresh on Save",
+  "description": "Optional convenience (Kiro only, off by default). Regenerates the HTML shadow page + landing page after any .md file is created or saved inside the family workspace. The standard refresh path (gate-driven + on-demand HTM__) works identically on every AI platform without this hook. Enable it manually or via HTM__ on for per-save refresh.",
+  "version": "1",
+  "when": {
+    "type": "fileCreatedOrEdited",
+    "patterns": [
+      "*-ws/**/*.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A .md file was just created or saved in the family workspace. The HTM__ publishing switch is ON and the optional file-save refresh hook is enabled. Run the HTML export engine (publish.py) to regenerate the affected page's shadow and rebuild the landing page (index.html). The .md source is the single source of truth; the HTML under .publish/ is a derived, read-only shadow. Never modify any .md file. Output goes to {workspace-root}/.publish/{family}-html/."
+  }
+}

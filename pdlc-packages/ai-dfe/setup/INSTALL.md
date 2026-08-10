@@ -15,7 +15,7 @@ Kiro auto-loads steering only from `.kiro/steering/`. Under the AIFLC model the 
 {AIFLC-workspace-root}/
 ├── .kiro/
 │   └── steering/
-│       └── session-orchestrator.md         ← the ONLY always-loaded file (routes to cores)
+│       └── session-orchestrator-pdlc.md    ← the ONLY always-loaded file (routes to cores)
 └── .aiflc/
     └── pdlc/
         ├── ai-dfe-rules/
@@ -28,7 +28,7 @@ Kiro auto-loads steering only from `.kiro/steering/`. Under the AIFLC model the 
 
 **Steps:**
 1. Copy `ai-dfe-rules/` → `.aiflc/pdlc/ai-dfe-rules/` and `ai-dfe-rule-details/` → `.aiflc/pdlc/ai-dfe-rule-details/`.
-2. Copy the session orchestrator into Kiro's auto-load slot → `.kiro/steering/session-orchestrator.md` (the only always-loaded file).
+2. Copy the session orchestrator into Kiro's auto-load slot → `.kiro/steering/session-orchestrator-pdlc.md` (the only always-loaded file).
 3. **Install the agents:** copy `ai-dfe-rule-details/templates/agents/data-fabric-health-check.md` and `ai-dfe-rule-details/templates/agents/data-fabric-agent.md` → `.kiro/agents/`.
 4. **Register the shortcuts:** append `ai-dfe-rule-details/templates/agents/shortcut-rules-block.md` (between its `<!-- BEGIN/END AI-DFE AGENT SHORTCUTS -->` markers) into `.kiro/steering/workspace-rules.md` — registers both `DHC__` and `DFA__`.
 5. **Bootstrap territory:** ensure `pdlc-ws/data/` exists with an empty `REGISTRY.json`, an empty `CONSUMER_REGISTRY.md` (copy from `ai-dfe-rule-details/templates/CONSUMER_REGISTRY.md`, no rows), a template `dfe-state.md`, and empty `demands/` and `history/` folders. (The family installer already does this; create them manually only if running standalone.)
@@ -48,7 +48,7 @@ The engine core (`.aiflc/pdlc/ai-dfe-rules/core-engine.md`) and rule-details (`.
 | Cursor | `.cursor/rules/pdlc-session-orchestrator.mdc` (with `alwaysApply: true` frontmatter) |
 | Cline | `.clinerules/pdlc-session-orchestrator.md` |
 | Claude Code | root `CLAUDE.md` importing `@CLAUDE_PDLC_ORCHESTRATOR.md` |
-| Copilot | `.github/copilot-instructions.md` (orchestrator block) |
+| Copilot | `.github/copilot-instructions-pdlc-orchestrator.md` (orchestrator block) |
 | Codex | `AGENTS.md` (orchestrator block) |
 
 Runtime paths inside the rules are workspace-root-relative (`pdlc-ws/data/…`), so they resolve identically regardless of where the package files land. Follow the family-level `INSTALL_GUIDE_*.md` for the verified per-platform path table.

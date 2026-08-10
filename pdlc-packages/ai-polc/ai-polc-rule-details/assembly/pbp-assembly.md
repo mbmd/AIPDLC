@@ -44,8 +44,14 @@ Check that all required artifacts exist:
 | Release Notes Governance | ✅ | `release-notes-governance.md` | |
 | State File | ✅ | `polc-state.md` | |
 | Governance Spine | ✅ | `management_framework/` | |
+| Team-Epic Distribution | ⚙️ | `team-epic-distribution.md` | *(depth >= Standard; 2+ teams)* |
+| Domain Topology Map | ⚙️ | `domain-topology-map.md` | *(depth >= Standard; BC fields populated)* |
+| Release Relevance Grouping | ⚙️ | `release-relevance-grouping.md` | *(depth >= Standard; 2+ releases)* |
+| Capacity Planning Matrix | ⚙️ | `capacity-planning-matrix.md` | *(depth >= Standard; velocity model present)* |
 
-Flag any missing artifacts. Do NOT proceed until all required files exist.
+> ⚙️ = depth-gated optional. These planning artifacts are generated at Standard+ depth when their preconditions are met. At Minimal depth they are not generated and their absence is NOT a blocker.
+
+Flag any missing artifacts. Do NOT proceed until all required (✅) files exist. Depth-gated (⚙️) artifacts: verify presence if depth >= Standard and preconditions met; skip check at Minimal depth.
 
 ### Step 13.2: Cross-Reference Integrity Check
 

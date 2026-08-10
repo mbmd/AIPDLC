@@ -91,6 +91,7 @@ All subsequent rule detail file references are relative to whichever rule detail
 - `common/workspace-reading-guide.md` — how to parse AI-DWG workspace output
 - `common/validation-rules.md` — output cross-check requirements (V1–V10) + checkpoint enforcement
 - `common/reference-linking.md` — emit codes defined in another generated file as clickable relative links (Tier 1: object files; Tier 2: register-row `<a id>` anchors); older output retrofit via `UPG__`
+- `common/contextual-prose-accompaniment.md` — ensure explanatory prose around cross-reference keys is self-sufficient at a glance (5 patterns, depth-scaled); complements reference-linking
 
 Load the per-mode and per-category detail files (`flows/*`, `generators/*`, `re-derivation/*`, `drift/*`, `templates/*`) on demand as each mode and rule category is reached.
 

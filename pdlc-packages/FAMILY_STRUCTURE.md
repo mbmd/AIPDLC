@@ -179,7 +179,7 @@ Per **OI-163 (single-copy fabric source)**, the two fabric engines are **not** b
 │       ├── foundation/ decomposition/ decisions/   ← Phases 1-3 (vision → container → tech/tenancy/security)
 │       ├── design/ assembly/                       ← Phases 4-5 (data/api/integration/component → package-assembly)
 │       ├── templates/                              ← ADRs, vision, C4 diagrams, tech-stack, data/api/integration, workbook
-│       └── extensions/                             ← opt-in: ddd-tactical, microservices, bff, event-sourcing-cqrs, resilience, feature-flags
+│       └── extensions/                             ← opt-in: event-storming, domain-storytelling, ddd-tactical, microservices, bff, event-sourcing-cqrs, resilience, feature-flags, wardley-mapping, threat-modeling
 │
 ├── ai-uxd/                                         ← AI-Driven UX Design (lifecycle)
 │   ├── ai-uxd-rules/core-workflow.md               ← 5 phases / 16 stages, persona→journey→flow→screen→component→token traceability
@@ -197,7 +197,7 @@ Per **OI-163 (single-copy fabric source)**, the two fabric engines are **not** b
 │       ├── foundation/ strategy/ governance/       ← vision/charter → discovery/epics/prioritization/release → DoR-DoD/risk/traceability
 │       ├── stakeholders/ assembly/ operations/     ← stakeholder mgmt/docs → PBP-assembly → backlog-ops/acceptance-feedback/value-metrics
 │       ├── tier2/                                  ← story-elaboration (INVEST, Given/When/Then — off by default in chain mode)
-│       ├── extensions/                             ← 6 opt-in (advanced-discovery, full-traceability, full-risk, full-docs, quality-review, mvp-mmp)
+│       ├── extensions/                             ← 7 opt-in (advanced-discovery, user-story-mapping, full-traceability, full-risk, full-docs, quality-review, mvp-mmp)
 │       └── templates/                              ← vision, roadmap, epics, prioritization, DoR/DoD, polc-state,
 │           └── agents/                                 management-framework + backlog-health-agent (BLH__)
 │
@@ -256,6 +256,24 @@ The package **source** above (`ai-{pkg}-rules/` + `ai-{pkg}-rule-details/`) inst
 - Runtime paths in the rules remain **workspace-root-relative** (`{family}-ws/…`).
 - **Claude Code only** additionally gets generated `.claude/commands/pdlc/*.md` slash commands (destination triggers only) that `Read` the same cores under `.aiflc/pdlc/`.
 
+### Companion Engines in the Layer-3 Workspace (provisioned by AI-DWG) — [OI-204]
+
+AI-GCE and AI-TGE are **Layer-3 (Execute) companions** — they run inside the generated project workspace (`{slug}-workspace/`), not the Layer-2 design workspace. Their cores are:
+- **Staged** in the Layer-2 design workspace (`.aiflc/{family}/ai-gce-rules/`, `.aiflc/{family}/ai-tge-rules/`) as an **inert provisioning source** — physically present so AI-DWG can copy them, but NOT routed by the design-workspace orchestrator.
+- **Provisioned** by AI-DWG (Config Gate Q3) into the generated Layer-3 workspace under `.governance/engine/`:
+
+```
+{slug}-workspace/
+└──.governance/
+    ├── engine/
+    │   ├── ai-gce/core-engine.md  +  ai-gce-rule-details/    ← GCE dispatcher + details
+    │   └── ai-tge/core-engine.md  +  ai-tge-rule-details/    ← TGE dispatcher + details
+    ├── GOVERNANCE_INDEX.md         ← first-session bootstrap notice (activate _GCE_ / _TGE_)
+    └── workspace-manifest.yaml     ← discovery contract (governance.provisioned block records placed versions)
+```
+
+The Layer-3 orchestrator (deployed with full companion routing rows by DWG) routes `_GCE_`/`_TGE_` to these cores. The `governance` installer bundle remains as a direct install path for standalone / brownfield adoption into an existing Layer-3 repo without the DWG chain.
+
 ---
 
 ## PART 2: Runtime Output Structure (What Each Package Produces When Run)
@@ -296,9 +314,14 @@ A workspace holds **many projects**. Every per-project producer nests its output
     │   │   ├── architecture/ ← AI-ADLC (AP)       · adlc-state.md
     │   │   ├── ux/           ← AI-UXD (UXP)       · uxd-state.md
     │   │   ├── backlog/      ← AI-POLC (PBP)      · polc-state.md
+    │   │   ├── integrations/ ← shared external-tool surface (opt-in; {target}/{in,out}/ — derived, disposable)
     │   │   └── {slug}-workspace/                 ← AI-DWG dev workspace (opened SEPARATELY; spine carried forward)
-    │   │       ├──.kiro/{steering,hooks}/  ← AI-GCE governs here
-    │   │       ├──.tge/                    ← AI-TGE here
+    │   │       ├──.governance/             ← GCE + TGE single home (engine, rules, hooks, agents, test, logs)
+    │   │       │   ├── engine/ai-gce/       ← AI-GCE core (provisioned by DWG; Q3)
+    │   │       │   ├── engine/ai-tge/       ← AI-TGE core (provisioned by DWG; Q3)
+    │   │       │   ├── GOVERNANCE_INDEX.md  ← entry point (populated on first _GCE_/_TGE_)
+    │   │       │   └── workspace-manifest.yaml  ← discovery contract (DWG-written)
+    │   │       ├── rules/                   ← canonical steering (DWG-generated; GCE reads)
     │   │       ├── management_framework/    ← spine carried forward (DWG/GCE/TGE append)
     │   │       └── src/ · tests/ · configs …
     │   └── PRJ-{ABBREV2}-{slug2}/  …             ← another project (own role folders + spine)
@@ -317,7 +340,7 @@ A workspace holds **many projects**. Every per-project producer nests its output
 | AI-UXD | `ux/` | `uxd-state.md` | `UXD-{ABBREV}-*` | ✅ |
 | AI-POLC | `backlog/` | `polc-state.md` | `POLC-{ABBREV}-*` | ✅ |
 | AI-DWG | `{slug}-workspace/` (generated) | `.kiro/steering/workspace-rules.md` | `DWG-{ABBREV}-*` (in carried-forward spine) | ❌ generates from peers |
-| AI-GCE / AI-TGE | inside `{slug}-workspace/` | `.kiro/hooks/` · `.tge/tge-state.md` | `GCE-/TGE-{ABBREV}-*` | ❌ own-root |
+| AI-GCE / AI-TGE | inside `{slug}-workspace/` | `.governance/engine/ai-gce/core-engine.md` · `.governance/engine/ai-tge/core-engine.md` | `GCE-/TGE-{ABBREV}-*` | ❌ own-root |
 | AI-PPM | `pdlc-ws/portfolio/` | `ppm-state.md` | — (portfolio register) | ❌ registry-wide |
 | AI-FLO | — (reasons over `pdlc-ws/projects/PROJECTS.md`) | `flo-state.md` | — (no artifacts) | ❌ router |
 
@@ -622,8 +645,7 @@ Each package is **contract-aware** — it knows what its predecessor(s) produce 
 │  STATE SCHEMA (DWG/UXD/TGE read): projectId · derivedFrom ·  │
 │    Output Structure {numbered|phase-folder} · Enabled        │
 │    Extensions · Completed Stages · ADR Register               │
-│  EXTENSIONS: opt-in v1.1 (ddd, microservices, bff,           │
-│    event-sourcing, resilience, feature-flags)                 │
+│  EXTENSIONS: 10 opt-in v1.1 (full list in the tree above)     │
 │  GOVERNANCE AGENT: architecture-decision-agent (ADA__)       │
 │  NOTE: ships ROADMAP.md (intentional)                        │
 │                                                              │

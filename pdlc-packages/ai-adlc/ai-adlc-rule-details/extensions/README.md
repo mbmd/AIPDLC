@@ -31,7 +31,7 @@ Workflow Start
     ▼
 [Scan extensions/ folder — load ONLY *.opt-in.md files]
     │
-    ▼ (During relevant stage — Stage 5, 6, or 12)
+    ▼ (During the relevant stage — Stage 4, 5, 6, 8, 9, 11, or 12)
     │
 [Present opt-in questions to user]
     │
@@ -94,9 +94,13 @@ Extensions are presented at the stage where their pattern becomes relevant:
 | Microservices | Stage 5 (Container Design) | Service decomposition is decided here |
 | BFF Pattern | Stage 5 (Container Design) | BFF is a container-level decision |
 | Resilience Patterns | Stage 5 or 11 (Integration/Infrastructure) | Resilience applies to distributed communication |
+| Event Storming | Stage 5 (Container Design / Decomposition) | Bounded contexts and behaviour are discovered from the event flow before structure |
 | DDD Tactical | Stage 12 (Component Design) | DDD patterns apply to internal module structure |
 | Event Sourcing / CQRS | Stage 9 (Data Architecture) | Fundamentally changes data model approach |
 | Feature Flags | Stage 6 (Technology Stack) or Stage 12 | Architectural decision about delivery mechanism |
+| Domain Storytelling | Stage 4/5 (System Context / Decomposition) | Narrative domain discovery; presented via a shared selector with Event Storming |
+| Wardley Mapping | Stage 6 (Technology Stack) | Build-vs-buy positioning is a technology-stack decision |
+| Threat Modeling (deep) | Stage 8 (Security & Identity) | Layers deep threat analysis on the always-run STRIDE baseline |
 
 ---
 
@@ -185,16 +189,20 @@ To create a custom extension:
 
 ## Extension Status (v1.1)
 
-All six high-priority extensions are **complete and enforceable**:
+All ten extensions are **complete and enforceable**:
 
 | Extension | Rules File | Status |
 |-----------|-----------|:------:|
+| `event-storming/` | `event-storming.md` | ✅ Complete |
+| `domain-storytelling/` | `domain-storytelling.md` | ✅ Complete |
 | `ddd-tactical/` | `ddd-tactical.md` | ✅ Complete |
 | `microservices/` | `microservices.md` | ✅ Complete |
 | `bff-pattern/` | `bff-pattern.md` | ✅ Complete |
 | `event-sourcing-cqrs/` | `event-sourcing-cqrs.md` | ✅ Complete |
 | `resilience-patterns/` | `resilience-patterns.md` | ✅ Complete |
 | `feature-flags/` | `feature-flags.md` | ✅ Complete |
+| `wardley-mapping/` | `wardley-mapping.md` | ✅ Complete |
+| `threat-modeling/` | `threat-modeling.md` | ✅ Complete |
 
 **Behavior when user opts in:**
 - Full rules file is loaded

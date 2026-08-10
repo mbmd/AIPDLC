@@ -42,6 +42,23 @@
           "componentLibrary":{"type":["object","null"],"properties":{"path":{"type":["string","null"]},"total":{"type":["integer","null"]},"atoms":{"type":["integer","null"]},"molecules":{"type":["integer","null"]},"organisms":{"type":["integer","null"]},"components":{"type":"array"}}},
           "informationArchitecture":{"type":["object","null"],"properties":{"status":{"type":["string","null"]},"pages":{"type":["integer","null"]}}},
           "accessibility":{"type":["object","null"],"properties":{"target":{"type":["string","null"]},"wcagLevel":{"type":["string","null"]},"criteria":{"type":["integer","null"]},"met":{"type":["integer","null"]},"baselineDefined":{"type":["boolean","null"]}}}
+        }},
+        "aiLens":{"type":["object","null"],"description":"AI-LENS fields (AI_LENS_PROTOCOL §6.2 — AI-UXD contract). Present per aiFeature-tagged item.","properties":{
+          "aiFeatures":{"type":"array","description":"AI features with UX interaction design decisions.","items":{"type":"object","properties":{
+            "aiFeatureId":{"type":"string","description":"Stable thread identifier (AIF-{NNN})"},
+            "aiInteractionModel":{"type":["string","null"],"description":"Primary AI interaction pattern (e.g. suggestion-panel, inline-assist, conversational, ambient)"},
+            "aiDisclosureType":{"type":["string","null"],"description":"Transparency/disclosure approach: badge | inline-label | system-notice | none"},
+            "aiHitlLevel":{"type":["string","null"],"description":"Human-in-the-loop level: review-before-action | edit-after | monitor-only | autonomous"}
+          }}}
+        }},
+        "automationLens":{"type":["object","null"],"description":"Automation-LENS fields (AUTOMATION_LENS_PROTOCOL §6.2 — AI-UXD contract). Present per automationFeature-tagged item.","properties":{
+          "automationFeatures":{"type":"array","description":"Automated features with UX control/monitoring design decisions.","items":{"type":"object","properties":{
+            "automationFeatureId":{"type":"string","description":"Stable thread identifier (AUTO-{NNN})"},
+            "automationConfigModel":{"type":["string","null"],"description":"Configuration UX model (e.g. form-based, rule-builder, wizard, api-only)"},
+            "automationMonitoringModel":{"type":["string","null"],"description":"Monitoring UX model (e.g. run-history, live-dashboard, queue-view, notification-only)"},
+            "automationApprovalModel":{"type":["string","null"],"description":"Approval UX model (Attended): approval-queue | inline-approve | batch-review | none"},
+            "automationOverrideControl":{"type":["string","null"],"description":"Override/stop control: pause-button | kill-switch | per-item-cancel | schedule-hold"}
+          }}}
         }}
       }
     }

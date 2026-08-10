@@ -170,6 +170,17 @@ If Extension E5 is active, additionally:
 
 ---
 
+### Visualization Pack (depth-gated)
+
+| Depth | Diagram | Mermaid type | Source |
+|-------|---------|:------------:|--------|
+| Standard | Portfolio strategic-alignment matrix (project × strategic theme) | `quadrantChart` | Alignment scores |
+| Comprehensive | Portfolio bubble chart (value × risk × investment size) | `quadrantChart` | Portfolio register |
+
+Emit from the alignment assessment. No new content introduced.
+
+---
+
 ## Gate
 
 User approves the alignment map and any low-alignment flags → proceed to Stage 4.

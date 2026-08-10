@@ -135,6 +135,8 @@ A good output at this stage sounds like:
 | 500 | Internal Server Error — unhandled exception |
 ```
 
+> **Multi-service tagging (feeds Stage 11).** Independent of API style: when an endpoint triggers a business operation that writes state across **more than one service** (from the Stage 5 container set), tag it `spansServices: true` in the endpoint's definition. Do **not** design the saga here — this hands the operation to the **Stage 11 Cross-Service Consistency (Saga) loop** (`design/integration-infrastructure.md`), which decides choreography vs. orchestration and produces the Saga Design Card / consistency ADR. This keeps API-stage scope clean: the API is the contract; the saga is the coordination. Single-service endpoints need no tag.
+
 ---
 
 ### Step 4: Define Request/Response Patterns
@@ -500,5 +502,6 @@ Save to:
 | Error handling | Consistent error format; no information leakage |
 | Pagination | All collection endpoints paginated; limits enforced |
 | Tenant-aware | Tenant scoping in all queries (if multi-tenant) |
+| Multi-service ops tagged | Endpoints that orchestrate a cross-service operation are tagged `spansServices: true` for the Stage 11 saga loop |
 | Consumer-friendly | External developer could integrate from docs alone |
 | Principle-aligned | Follows "API-First" principle (if defined) |

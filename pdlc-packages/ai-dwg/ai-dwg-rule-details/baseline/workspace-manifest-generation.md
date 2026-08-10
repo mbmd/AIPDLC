@@ -56,7 +56,7 @@ projectId: PRJ-{ABBREV}-{YYYY}-{NNN}
 storyStyle: {ears | invest | job-story | freestyle | hybrid}
 platformTargets: [kiro, claude-code]
 generatedOn: {ISO-timestamp}
-# buildProfile: PARKED — not populated (build-method-agnostic)
+buildProfile: {spec-driven | aidlc | freestyle}   # ACTIVE — build discipline (self-describing); OMITTED for manual/AI-assisted → GCE uses its Standard mode. NOT the timing multiplier (that stays on the POLC planning surface)
 
 # ─── Folder Locations (look up by role, never hardcode) ───
 paths:
@@ -116,6 +116,19 @@ governance:
   test: .governance/test/              # TGE artifacts (was .tge/)
   driftRegister: .governance/drift-register.md
   complianceLog: .governance/compliance-log/
+  # ─── Provisioned Companions (populated by mapping/companion-bootstrap.md) ───
+  # Present only when Config Gate Q3 ≠ No. Records which companion engines
+  # DWG placed into .governance/engine/ and for which platform targets.
+  # Consumed by UPG__ (version staleness detection) and uninstall. [OI-204]
+  provisioned:                         # omit entirely if Q3 = No
+    - package: ai-gce                  # omit row if GCE not placed
+      version: "{from core front-matter}"
+      provisionedOn: "{ISO-timestamp}"
+    - package: ai-tge                  # omit row if TGE not placed
+      version: "{from core front-matter}"
+      provisionedOn: "{ISO-timestamp}"
+  provisionedBy: AI-DWG
+  provisionedForTools: [kiro, claude-code]   # = Config Gate Q2 platformTargets
 ---
 ```
 
@@ -137,8 +150,13 @@ Header says `DO NOT EDIT MANUALLY`. Only DWG writes the manifest (same custodian
 ### Rule 4: Regenerate on Re-Baseline
 On every generation and re-baseline, rewrite the manifest fresh (bump `baselineVersion`, refresh `generatedOn`, add/remove entries for added/retired files).
 
-### Rule 5: `buildProfile` Parked
-Do NOT populate `buildProfile` (build-method-agnostic). `storyStyle` and `platformTargets` ARE populated (active).
+### Rule 5: `buildProfile` Active (self-describing; omit → Standard mode)
+Populate `buildProfile` with the **build discipline**, projected from the captured delivery method + AI tool + `storyStyle` (from `polc-state.md` → `## Velocity Model` + backlog):
+- `spec-driven` — spec-first / EARS / Spec Kit → **deep** governance
+- `aidlc` — AI-driven via Amazon AI-DLC bolts (structured/gated) → **full** governance
+- `freestyle` — freeform, no spec discipline → **advisory-only** (**explicit opt-in only**; never auto-derived, since it lightens enforcement)
+
+**Omit `buildProfile` for manual / AI-assisted builds** (no distinct discipline) — AI-GCE then uses its default **Standard mode** (full governance). "Standard" is a GCE detection *mode*, **not** a `buildProfile` value. `storyStyle` + `platformTargets` remain active. **The build discipline is distinct from the timing multiplier** — the multiplier stays on the POLC planning surface and never reaches the manifest or governance.
 
 ### Rule 6: Adapters Reflect Selected Platforms
 The `adapters:` block lists ONLY the platforms selected at Config Gate Q2. Multi-target → multiple entries.
@@ -149,7 +167,7 @@ The `adapters:` block lists ONLY the platforms selected at Config Gate Q2. Multi
 
 | Consumer | Reads | For |
 |----------|-------|-----|
-| **AI-GCE** | `paths.rules`, `files.*`, `clusters`, `platformTargets`, `storyStyle` | Discover rules to derive compliance; select enforcement mechanism per platform |
+| **AI-GCE** | `paths.rules`, `files.*`, `clusters`, `platformTargets`, `storyStyle`, `buildProfile` | Discover rules to derive compliance; select enforcement mechanism per platform; select drift-detection depth + gate cadence per `buildProfile` (omitted → Standard mode) |
 | **AI-TGE** | `paths.backlog`, `files.userStories`, `storyStyle` | Find stories/ACs to derive tests; know the AC format |
 | **AI-FLO** | `files.driftRegister`, `paths.*` | Track position, route drift |
 | **Future pkg** | any semantic key | Discover without coordination |
@@ -174,7 +192,7 @@ The `adapters:` block lists ONLY the platforms selected at Config Gate Q2. Multi
 - [ ] `.governance/workspace-manifest.yaml` generated
 - [ ] `DO NOT EDIT MANUALLY` header present
 - [ ] Only existing clusters/files listed (absent ones omitted)
-- [ ] `storyStyle` + `platformTargets` populated; `buildProfile` absent
+- [ ] `storyStyle` + `platformTargets` populated; `buildProfile` set when a build discipline applies (`spec-driven`/`aidlc`/`freestyle`), omitted otherwise (→ GCE Standard mode)
 - [ ] `adapters:` lists only selected platforms
 - [ ] `clusters:` flags accurate
 - [ ] Regenerated on re-baseline with bumped `baselineVersion`

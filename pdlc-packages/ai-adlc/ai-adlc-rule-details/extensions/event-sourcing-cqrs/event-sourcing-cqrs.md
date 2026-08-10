@@ -11,7 +11,7 @@
 ## Activation Point
 
 - **Primary Stage:** Stage 9 (Data Architecture)
-- **Secondary Stages:** Stage 12 (Component Design), Stage 11 (Integration Architecture)
+- **Secondary Stages:** Stage 11 (Integration & Infrastructure), Stage 12 (Component Design)
 
 These rules fundamentally change the data model approach — state is derived from an append-only event log rather than mutated in place.
 
@@ -227,7 +227,9 @@ A good output with this extension sounds like:
 
 **Anti-Pattern:** Embedding cross-aggregate coordination inside a single aggregate, violating aggregate boundaries and creating a "God aggregate" that knows about unrelated domains.
 
-**ADR Trigger:** Yes — When deciding on process manager vs. choreography for a specific cross-aggregate workflow.
+**ADR Trigger:** Yes — When deciding on process manager vs. choreography for a specific cross-aggregate workflow. Use `templates/adr-saga-pattern.md` (its "Process manager (event-sourced)" strategy option covers this path).
+
+**Core wiring (always-on):** the **Stage 11 Cross-Service Consistency (Saga) loop** routes cross-aggregate workflows to this rule via its "Process manager (event-sourced)" strategy option; the **Stage 5 checkpoint** (keyed off "spans a consistency boundary / aggregate", not just "spans a service") flags them even inside a single deployable. When this extension is active, model each as a process manager here; otherwise the loop still requires a Cross-Service Consistency ADR.
 
 ---
 

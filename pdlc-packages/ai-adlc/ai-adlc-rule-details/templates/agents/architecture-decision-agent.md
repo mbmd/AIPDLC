@@ -136,7 +136,7 @@ If you skipped `ADA__` and the AP is already in use:
 - **Content validation:** `ai-adlc-rule-details/common/content-validation.md`
 - **Diagram standards:** `ai-adlc-rule-details/common/diagram-standards.md`
 - **ADR template:** `ai-adlc-rule-details/templates/adr-template.md`
-- **Extensions:** `ai-adlc-rule-details/extensions/` (6 opt-in patterns)
+- **Extensions:** `ai-adlc-rule-details/extensions/` (7 opt-in patterns)
 - **Contract:** Agent Governance Contract §4, §5
 - **Upstream dependency:** AI-PILC's `initiation-quality-agent` validates what AI-ADLC **consumes**; this agent validates what AI-ADLC **produces**
 - **Downstream dependency:** AI-DWG reads `adlc-state.md` — quality of that file directly impacts workspace generation

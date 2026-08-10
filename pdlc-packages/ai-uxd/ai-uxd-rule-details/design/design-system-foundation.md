@@ -236,14 +236,25 @@ Define 4-6 principles that guide ALL design decisions:
 | `spacing.inline.end` | right | left | Use logical properties |
 ```
 
-### Step 8: Compile Token Specification
+### Step 8: Compile & Emit Token Specification
 
-Consolidate all tokens from Steps 2-7 into a single token specification document following W3C Design Tokens Format:
+Consolidate all tokens from Steps 2-7 and emit them in BOTH a human and a machine-readable form. The **canonical, tool-agnostic** artifact is the source of truth; any Figma projection is derived and disposable.
 
-- Group tokens by category (color, typography, spacing, sizing, etc.)
-- Three tiers: Global → Semantic → Component
-- Every token has: name, value, type, description
-- Format suitable for tool consumption (Style Dictionary, Tokens Studio)
+**8a — Human view.** `07_Design_System/Design_Tokens.md` (per `templates/design-tokens.md`) — grouped by category, three tiers (Global → Semantic → Component), every token with name/value/type/description.
+
+**8b — Canonical DTCG JSON (source of truth).** Emit `07_Design_System/design-tokens.json` — the **complete, Figma-agnostic** token set in [W3C Design Tokens Format](https://www.w3.org/community/reports/design-tokens/CG-FINAL-format-20251028/):
+- `$type` per token (`color`, `dimension`, `fontFamily`, `typography`, `shadow`, `number`).
+- `$value` with alias references (`{color.blue.500}`) for Tier-2 / Tier-3.
+- Grouped Global → Semantic → Component.
+- A **stable identity** per token via `$extensions."com.aiflc.uxd".id` (enables later round-trip rename-matching — round-trip-readiness).
+- Provenance in `$extensions."com.aiflc.uxd"`: `generatedBy`, `generatedVersion`, `generatedOn`.
+- This file feeds **all** consumers directly from `ux/` — AI-DWG, AI-GCE, Style Dictionary. None read the Figma folder; none regenerate this file.
+
+**8c — Derived Figma projection (only when Figma integration is active — opt-in).** When the project participates in Figma integration, ALSO emit `{project_root}/integrations/figma/out/design-tokens.json` — a **derived, regenerable** projection of 8b shaped for Figma (adds only Figma plumbing: mode sets, `$themes`), written create-if-absent and regenerated whenever the canonical changes. It NEVER holds original design data.
+
+> **Invariant (INT-1):** the canonical `07_Design_System/design-tokens.json` is complete and self-sufficient — the design system works with **zero** Figma. The `integrations/figma/out/` copy is a projection; **deleting `integrations/` loses no design data.** Never write authoritative tokens only into the integration folder.
+
+The human + canonical files are handed off in Stage 15 (`assemble/dwg-gce-handoff.md`); the Figma import mechanism is documented in `templates/figma-handoff.md`.
 
 ### Step 9: Present for Approval
 

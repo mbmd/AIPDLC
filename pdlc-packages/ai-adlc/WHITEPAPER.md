@@ -72,13 +72,17 @@ The AI never recommends solutions outside stated boundaries. Budget, team skills
 
 ### 3. Extension System (v1.1)
 
-Six opt-in advanced patterns activate only when the architecture justifies them:
+Ten opt-in advanced patterns activate only when the architecture justifies them:
 - **DDD Tactical** — Aggregates, entities, value objects, domain events
+- **Event Storming** — Collaborative discovery of events, commands, aggregates, and bounded contexts; feeds DDD Tactical and Event Sourcing
+- **Domain Storytelling** — Narrative discovery (actor → activity → work object); a calmer alternative/complement to Event Storming, presented via a shared selector; feeds DDD Tactical
 - **Microservices** — Service boundaries, communication patterns, data ownership
 - **BFF Pattern** — Backend-for-frontend layer design
 - **Event Sourcing** — Event store, projections, temporal queries
 - **Resilience** — Circuit breakers, bulkheads, retry policies, graceful degradation
 - **Feature Flags** — Progressive delivery, canary releases, toggle management
+- **Wardley Mapping** — Value-chain × evolution positioning for build-vs-buy decisions (Stage 6)
+- **Threat Modeling (deep)** — STRIDE DFD, attack trees, and risk rating layered on the always-run Stage 8 security baseline
 
 Extensions are blocking when active — not optional suggestions.
 

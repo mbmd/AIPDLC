@@ -34,7 +34,22 @@
         "actions": {"type":"array","items":{"type":"object","properties":{"id":{"type":"string"},"description":{"type":"string"},"owner":{"type":"string"},"due":{"type":["string","null"]},"status":{"type":"string"}}}},
         "assumptions": {"type":"array","items":{"type":"object","properties":{"id":{"type":"string"},"assumption":{"type":"string"},"status":{"type":"string"},"validated":{"type":["string","null"]}}}},
         "lessons": {"type":"array","items":{"type":"object","properties":{"id":{"type":"string"},"lesson":{"type":"string"},"stage":{"type":["string","null"]},"captured":{"type":["string","null"]}}}},
-        "risks": {"type":"array","items":{"type":"object","properties":{"id":{"type":"string"},"risk":{"type":"string"},"probability":{"type":["string","null"]},"impact":{"type":["string","null"]},"score":{"type":["number","null"]},"mitigation":{"type":["string","null"]},"owner":{"type":["string","null"]},"status":{"type":["string","null"]}}}}
+        "risks": {"type":"array","items":{"type":"object","properties":{"id":{"type":"string"},"risk":{"type":"string"},"probability":{"type":["string","null"]},"impact":{"type":["string","null"]},"score":{"type":["number","null"]},"mitigation":{"type":["string","null"]},"owner":{"type":["string","null"]},"status":{"type":["string","null"]}}}},
+        "aiLens":{"type":["object","null"],"description":"AI-LENS fields (AI_LENS_PROTOCOL §6.2 — AI-PILC contract). Present when the project has an AI-mode decision recorded.","properties":{
+          "aiMode":{"type":["string","null"],"description":"Current AI-LENS mode: no-ai | ai-powered"},
+          "aiSubModes":{"type":"array","items":{"type":"string","enum":["opportunity","augmented","native"]},"description":"Active palette (multi-select, ≥1 when ai-powered)"},
+          "aiFeasibility":{"type":["string","null"],"description":"AI feasibility assessment summary (data/model availability, build-vs-buy, skills, technical risk)"},
+          "aiCostModel":{"type":["string","null"],"description":"AI cost model indicator: token-metered | gpu-compute | managed-api | hybrid"},
+          "aiRiskLevel":{"type":["string","null"],"description":"AI-specific risk level: low | medium | high | critical"},
+          "euAiActClass":{"type":["string","null"],"description":"EU AI Act risk classification per candidate: minimal | limited | high | unacceptable"}
+        }},
+        "automationLens":{"type":["object","null"],"description":"Automation-LENS fields (AUTOMATION_LENS_PROTOCOL §6.2 — AI-PILC contract). Present when the project has an automation-mode decision recorded.","properties":{
+          "automationMode":{"type":["string","null"],"description":"Current Automation-LENS mode: manual | automated"},
+          "automationSubModes":{"type":"array","items":{"type":"string","enum":["assisted","attended","unattended"]},"description":"Active palette (multi-select, ≥1 when automated)"},
+          "processSuitability":{"type":["string","null"],"description":"Process suitability assessment summary (stable? rules-based? high-volume? structured input? exception rate?)"},
+          "automationRoi":{"type":["string","null"],"description":"Automation ROI summary (hours saved, FTE, error-rate reduction, cycle-time improvement)"},
+          "automationControlClass":{"type":["string","null"],"description":"Automation control class: informational | operational | controlled | safety-critical"}
+        }}
       }
     }
   }

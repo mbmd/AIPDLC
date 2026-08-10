@@ -58,6 +58,22 @@ description: "Idea → governed code: the full product development journey from 
 
 ---
 
+## Intra-Family Chain (forward execution order)
+
+> Declares this family's **forward execution order** so tooling can classify internal capability
+> edges as **forward** (producer precedes consumer) or **feedback / enrichment** (producer follows
+> consumer — an expected back-flow, not a cycle). Overlays are wildcard observers (`consumes: "*"`)
+> with no chain position. Each family declares its own order, so the classification is family-agnostic.
+
+```yaml
+intraFamilyChain: [AI-ILC, AI-PILC, AI-PPM, AI-POLC, AI-UXD, AI-ADLC, AI-DWG, AI-GCE, AI-TGE]
+overlays: [AI-FLO, AI-DFE]
+```
+
+> Forward spine: **AI-ILC → AI-PILC → AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-GCE / AI-TGE**, with **AI-PPM** as the portfolio consumer of idea + project signals. A reciprocal match such as **AI-ADLC → AI-UXD** (`architecture-design` flowing back to enrich UX) is feedback, not a cycle — the forward edge is **AI-UXD → AI-ADLC** (`ux-design`).
+
+---
+
 ## Notes
 
 - A neighbor discovers this family by finding THIS file (it self-declares `family` + root location).

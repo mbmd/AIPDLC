@@ -92,6 +92,7 @@ All subsequent rule detail file references are relative to whichever rule detail
 - `common/ap-reading-guide.md` — how to locate and parse the peer inputs (AP / PBP / UXP)
 - `common/validation-rules.md` — output cross-check requirements (V1–V7)
 - `common/reference-linking.md` — emit codes defined in another generated file as clickable relative links (Tier 1: object files; Tier 2: register-row `<a id>` anchors); older output retrofit via `UPG__`
+- `common/contextual-prose-accompaniment.md` — ensure explanatory prose around cross-reference keys is self-sufficient at a glance (5 patterns, depth-scaled); complements reference-linking
 
 Load the per-mode and per-category detail files (`flows/*`, `mapping/*`, `reconciliation/*`, `rendering/*`, `baseline/*`, `templates/*`) on demand as each mode and cluster is reached.
 
@@ -158,6 +159,19 @@ AI-DWG adapts output scope and depth based on **which peer inputs are present** 
 
 ---
 
+## Lens Seam
+
+At **generation time** (and at each relevant mapping step), check for active cross-cutting lenses in the design inputs:
+
+1. **Read** `management_framework/Lens_Status.md` (the live current-mode SSOT) and scan the AP/PBP/UXP inputs for lens feature tags.
+2. **For each lens row with Mode ON** (`ai-lens` = `AI-Powered` · `automation-lens` = `Automated` · any future lens) → `Read` this package's facet for that lens (`ai-dwg-rule-details/{lens-id}/facet.md`) and, per that facet: **provision** the lens scaffolding, **courier** the lens context (+ guards) into the generated workspace manifest (`.{lens-id}/manifest.json`), and **seed** the lens's Layer-3 agents into the governance/test engine slots.
+3. **Intersection facets (co-active lenses):** if two or more lens rows are ON, also evaluate the registry's `intersection-facets` entries whose `activateWhen` holds → `Read` the entry's facet (`ai-dwg-rule-details/{id}/facet.md`) and provision per it. Today: when `ai-lens = AI-Powered` **AND** `automation-lens = Automated`, load the **agentic** facet — at AI-DWG it provisions the agent framework scaffolding (tool registry, memory store, loop runner) and couriers the agentic context into Layer 3. A composed facet, **not** a lens (no mode row of its own); its Layer-3 checks extend the two lenses' seeded agents (`AIQ__/ATQ__/AIG__/ATG__`), no new agent.
+4. **No file, no tagged features, or Mode OFF** (`No-AI` / `Manual`), and no intersection predicate holds → **no-op**; generate no lens scaffolding.
+
+The canonical registry — **lenses + `intersection-facets`**, activation values, facet paths, agents, manifests — is `contracts/LENS_REGISTRY.md`. A future lens plugs in as a new registry row (zero core edits); the agentic intersection facet is wired above. AI-DWG is the Layer-2 → Layer-3 hinge: it is where lens context crosses into the dev workspace.
+
+---
+
 ## MANDATORY: Chain Contract
 
 AI-DWG is contract-aware — it knows its predecessors' output formats and its successor's input expectations. **Paths are never hardcoded; detection is by marker file.** In the Project layer, **AI-ADLC, AI-POLC, and AI-UXD are equal-impact peer inputs** that all feed AI-DWG. None dominates. DWG accepts any non-empty combination and generates only the output clusters whose corresponding input is present.
@@ -195,65 +209,21 @@ ADLC, POLC, and UXD are **equal-impact peers**. No input is privileged. DWG acce
 | **Successor** | AI-GCE (Governance & Compliance Engine) |
 | **Marker file** | `rules/workspace-rules.md` + `.governance/workspace-manifest.yaml` |
 | **Output location** | The generated **dev workspace** at `{project_root}/{slug}-workspace/` (default: `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/`), opened **separately** in its own Kiro IDE to build |
-| **Structure guarantee** | AI-GCE can always find the guaranteed output (below) relative to the dev-workspace root |
+| **Structure guarantee** | AI-GCE can always find the guaranteed output relative to the dev-workspace root |
 
 > **Dev-workspace generation (`OUTPUT_AND_STATE_CONTRACT.md` §12):** DWG generates a self-contained `{slug}-workspace/` under the project (opened in its own Kiro IDE — clean `.kiro/`, no collision with the planning workspace). It carries forward the per-project spine into `{slug}-workspace/management_framework/` (so GCE/TGE append there), sets this project's `Dev (DWG)` column to `generated` in `pdlc-ws/projects/PROJECTS.md`, and does NOT recommend exporting the workspace outside `{project_root}` (breaks the feedback loop).
 
-**Guaranteed output (AI-GCE can depend on these existing — scoped by present inputs):**
+**Guaranteed output:** The full output table (30+ guaranteed files scoped by present inputs), contract principles (9 rules), and runtime directory structure live in → `common/output-contract.md`. Load that file during generation/validation to verify completeness.
 
-| Path | Content | Present When |
-|------|---------|:------------:|
-| `rules/workspace-rules.md` | Core rules + identity + Project ID (correlation key) | ✅ Always (minimal version even with single input) |
-| `rules/` core tech steering — `architecture-principles`, `tech-stack`, `coding-standards`, `security-rules`, `api-standards`, `module-structure`, `testing-strategy` (unless TGE activated), `database-rules`, `naming-conventions`, `git-workflow`, `error-handling`, `observability-logging`, `observability-sensitive` | Per-file rules + conventions | IF ADLC |
-| `rules/design-system.md` | Design tokens + component rules | IF UXD |
-| `rules/frontend-standards.md` | UI patterns + a11y | IF UXD or ADLC (UI containers) |
-| `rules/` UX steering — `navigation-structure`, `design-qa`, `content-guidelines`, `theming`, `i18n-standards` | Routes/taxonomy, drift rules, voice/tone, multi-brand, locales | IF UXD (respective artefact present) |
-| `rules/[conditional files]` | Pattern-specific rules (multi-tenancy, api-versioning, resilience, tracing, performance, workflow-engine, event-sourcing, feature-flags, brownfield-patterns) | Depends on AP content |
-| `info/vision.md` | AI-DLC v1 Vision Document | IF POLC |
-| `architecture/technical-environment.md` | AI-DLC v1 Technical Environment Document | IF ADLC |
-| `architecture/constraint-register.md` | Full architecture constraint set (hard + derived) | IF ADLC |
-| `architecture/architecture-decision-records.md` | ADR register with rationale | IF ADLC |
-| `ux/ui-implementation-spec.md` | AI-DLC v1 UI Implementation Spec | IF UXD |
-| `ux/wireframes/` | Per-screen wireframe specifications | IF UXD (wireframes present) |
-| `ux/user-flows/` | Multi-step interaction choreography | IF UXD (user flows present) |
-| `ux/personas/` | User profiles for implementation context | IF UXD (personas present) |
-| `ux/journey-maps/` | End-to-end experience maps | IF UXD (journey maps present) |
-| `backlog/traceability-matrix.md` · `backlog/value-metrics.md` · `backlog/epics-and-backlog.md` + `backlog/epics/` | Traceability matrix · KPI register · prioritized epic/backlog scaffold + full story files (if Tier 2) | IF POLC (respective artefact present) |
-| `backlog/user-stories.md` + `examples/acceptance/` | INVEST story index + G/W/T skeletons | IF POLC Tier 2 |
-| `backlog/DEFINITION_OF_DONE.md` | Quality criteria | IF POLC or ADLC |
-| `backlog/DEFINITION_OF_READY.md` | Sprint entry gate criteria | IF POLC |
-| `backlog/scope-and-risks.md` | Scope definition + risk register | IF POLC |
-| `backlog/po-charter.md` | Product Owner authority/escalation reference | IF POLC |
-| `backlog/prioritization-register.md` | Build order rationale | IF POLC |
-| `CODEOWNERS` | Module ownership | IF ADLC |
-| `WORKSPACE_CONTEXT_MAP.md` | Root discovery index (pointers to all areas) | ✅ Always |
-| `backlog/README.md` · `ux/README.md` · `architecture/README.md` | Folder-level context indexes | IF respective cluster present |
-| `rules/relevance-map.md` | Code-area → reference-artifact mapping | IF ADLC + (POLC or UXD) |
-| `.governance/workspace-manifest.yaml` | Discovery contract — consumers read paths by role | ✅ Always |
-| Per-document baseline stamp (first line of every carried file) | Approach C: `v{N} (confirmed v{M})` | ✅ Always |
-| Baseline archive (planning side) | `baselines/v{N}/baseline-manifest.yaml` + `snapshot-meta.yaml` | ✅ Always (planning workspace) |
+**Key guarantees (always present regardless of inputs):** `rules/workspace-rules.md` (identity + Project ID), `WORKSPACE_CONTEXT_MAP.md` (discovery index), `.governance/workspace-manifest.yaml` (consumer discovery contract), per-document baseline stamps, baseline archive on the planning side.
 
-> After generation or reconciliation, DWG signals AI-GCE (`workspace-generated` / `steering-files-updated`). The full ⚡ DOWNSTREAM SIGNAL formats (Mode 1 + Mode 2), signal-delivery model, and when-to-signal rules live in `reconciliation/downstream-signaling.md`.
-
-### Contract Principles
-
-| Principle | Implementation |
-|-----------|---------------|
-| **Detection by marker, not by path** | Look for `adlc-state.md` / `polc-state.md` / `uxd-state.md`, not for `./architecture/` |
-| **Fixed output root** | Dev workspace generated at `{project_root}/{slug}-workspace/`; package defines WHAT files exist |
-| **Peer-input, no master** | {ADLC, POLC, UXD} are equal. Any non-empty subset is valid. None dominates. Missing inputs = skipped clusters + quality-impact disclosure |
-| **Per-cluster generation** | Each output traces to exactly one input cluster. Absent input → cluster skipped, reported. Present input → cluster generated in full |
-| **Quality-impact disclosure** | Missing inputs MUST be disclosed with downstream impact. User MUST explicitly approve reduced coverage before DWG proceeds |
-| **Cross-repo support** | Peer inputs can be in different folders, drives, or repos — just point to them |
-| **Format tolerance** | Support both numbered (`01_Architecture_Vision.md`) and phase-folder (`foundation/`) structures for ADLC |
-| **Standalone capable** | Works without AI-ADLC state file if user provides equivalent markdown docs manually |
-| **Conflict = anomaly** | ADLC, POLC, UXD are designed not to overlap. If overlap detected: DWG provides root-cause analysis + suggested correction → user resolves. DWG does NOT proceed until resolved |
+> After generation or reconciliation, DWG signals AI-GCE (`workspace-generated` / `steering-files-updated`). The full DOWNSTREAM SIGNAL formats live in `reconciliation/downstream-signaling.md`.
 
 ---
 
 ## TWO-AXIS GENERATION MODEL
 
-DWG is **AI-agnostic** and **build-method-agnostic**. It produces a design-complete workspace; HOW you build from it (AI-DLC, spec-driven via Spec Kit, or freestyle) is a downstream consumption choice DWG does NOT ask about. DWG output is determined by two axes:
+DWG is **AI-agnostic**, and its **generated workspace is build-method-agnostic** — it produces a design-complete workspace that serves all build methods (AI-DLC, spec-driven via Spec Kit, or freestyle) identically. DWG does NOT *ask* how you'll build. It DOES record a **derived** `buildProfile` signal in the manifest (`spec-driven` / `aidlc` / `freestyle`, or omitted for manual/AI-assisted → GCE Standard mode) — a **downstream governance** hint AI-GCE uses for drift/gate cadence, never a generation gate (DWG output is identical regardless). DWG generation output is determined by two axes:
 
 ```
 DWG output = f(peer inputs, platform targets)
@@ -266,7 +236,7 @@ DWG output = f(peer inputs, platform targets)
 
 The **shared core** (~95% of output — `rules/`, `backlog/`, `architecture/`, `ux/`, `info/`) is identical regardless of build method. The **platform adapter layer** (~5%) varies by target. The workspace serves ALL build methods — a freestyle developer, an AI-DLC user, and a Spec Kit user all consume the same workspace.
 
-> **Build-profile axis — PARKED (2026-07-05):** An earlier design added a third axis (build profile: aidlc-v1 / spec-driven / freestyle) with a hard compatibility gate. This is parked. DWG no longer asks the build method — the workspace is build-agnostic. A build-method **advisory** (below) informs the user which formats fit which methods, without blocking. See `DWG_DUAL_GENERATOR_DESIGN.md` (parked) for the future revisit.
+> **Build-profile axis — generation-gate rejected; governance signal un-parked (2026-08-09):** An earlier design (2026-07-05) proposed a build profile as a **hard generation gate** — that gate stays rejected (it would contradict build-method-agnostic generation and change no output). DWG still does NOT *ask* the build method, and the generated workspace stays build-agnostic. What changed: DWG now records a **derived** `buildProfile` (`spec-driven` / `aidlc` / `freestyle`, or omitted → GCE Standard mode) in the manifest as a **downstream governance signal** (AI-GCE drift/gate cadence only — not a generation gate). The build-method **advisory** (below) is unchanged. See `DWG_DUAL_GENERATOR_DESIGN.md` (deferred) for explicit workspace *generation* variants.
 
 ---
 
@@ -287,6 +257,21 @@ CONFIG GATE:
       → Accepts ONE or MULTIPLE (multi-target)
       → DWG generates canonical rules/ + one adapter per selected platform
       → For limited platforms (copilot, cline): compiled single-file from canonical content
+
+  Q3: "Prepare workspace for AI-GCE (governance) and AI-TGE (test governance)?"
+      → Yes (recommended) | No | GCE-only | TGE-only
+      → Default: Yes — provisions companion engines for project governance
+      → On Yes/GCE-only/TGE-only: DWG copies the selected companion cores from
+        the design-workspace provisioning source (.aiflc/{family}/) into
+        .governance/engine/ and populates GOVERNANCE_INDEX.md (the first-session
+        bootstrap notice) — see mapping/companion-bootstrap.md
+      → DWG places the package files but does NOT run derivation / auto-activate;
+        the dev team activates via _GCE_ / _TGE_ when ready
+      → On No: .governance/ structure still exists (reserved by DWG for baseline +
+        drift register); companions simply aren't provisioned
+      → Brownfield detect-and-adapt: if .governance/engine/ already has content,
+        DWG reports "companions already present" and skips (no re-provision;
+        use UPG__ for version bumps)
 ```
 
 DWG does NOT ask "how will this be built?" — that's a downstream choice. The build-method advisory (below) informs without asking.
@@ -298,65 +283,28 @@ Answers are recorded in workspace metadata — consumed by GCE, TGE, FLO, and an
 ```yaml
 storyStyle: {from polc-state.md — ears | invest | job-story | freestyle | hybrid}
 platformTargets: [kiro, claude-code]
+companionProvision: {yes | no | gce-only | tge-only}   # from Q3; drives companion-bootstrap
 dwgBuildVersion: v1.1
-# buildProfile: PARKED — not populated (build-method-agnostic)
+buildProfile: {spec-driven | aidlc | freestyle}   # derived governance signal (omit for manual/AI-assisted → Standard mode) — DWG output identical regardless; AI-GCE reads it for cadence
 ```
 
 ---
 
 ## BUILD-METHOD ADVISORY (Soft Notice — Never Blocks)
 
-DWG reads the story style from `polc-state.md` and generates an advisory in `info/PROJECT_INSTRUCTIONS.md` (or `info/BUILD_NOTES.md`) that informs the user which build methods fit their story format — **without asking or blocking**.
+DWG reads the story style from `polc-state.md` and generates a short advisory in `info/PROJECT_INSTRUCTIONS.md` informing the user which build methods fit their story format — **without asking or blocking**. DWG *generation* is build-method-agnostic; the workspace serves all methods (AI-DLC, spec-driven, freestyle). (DWG also records a derived `buildProfile` governance signal in the manifest for AI-GCE cadence — downstream only, not a generation gate.)
 
-**Advisory logic (story format → build-method fit):**
-
-| Story Style (from POLC) | Fits well | Advisory if planning spec-driven |
-|-------------------------|-----------|----------------------------------|
-| **EARS** | ✅ spec-driven (Spec Kit), AI-DLC, freestyle | None — EARS is spec-ready |
-| **Classic INVEST (G/W/T)** | ✅ AI-DLC, freestyle | ⚠️ Spec Kit favors EARS — G/W/T is convertible but not 1:1; review before feeding a spec runner |
-| **Job Story** | ✅ freestyle, AI-DLC | ⚠️ Same EARS caveat as INVEST |
-| **Freestyle** | ✅ freestyle only | ⚠️ Not structured for AI-DLC or spec runners |
-| **Hybrid** | ✅ depends per-story | ⚠️ Mixed — check individual stories |
-
-**Example advisory (generated into `info/`):**
-```markdown
-## Build Method Advisory
-
-Your backlog stories are in **{storyStyle}** format (from AI-POLC).
-- ✅ Works with: {fitting methods}
-- ⚠️ If using spec-driven development (e.g., GitHub Spec Kit): {caveat}
-
-This is advisory — nothing blocks. The workspace serves all build methods.
-```
-
-The advisory is informational only. DWG never blocks on story format.
+> Full advisory logic (story-style → fit table, generated template, rules) → `flows/build-method-advisory.md`. Load it during the output phase when POLC is a peer input.
 
 ---
 
 ## RENDERER ARCHITECTURE (Canonical + Adapters)
 
-DWG uses a **canonical + adapter** rendering model:
+DWG uses a **canonical + adapter** rendering model: `rules/` is ALWAYS generated as the platform-neutral canonical source; each selected platform (kiro, claude-code, cursor, codex, generic) gets a thin adapter that wires `rules/` into its native format. Platform adapters NEVER contain original content — they reference/include from `rules/`. Multi-target = one canonical `rules/`, N adapters.
 
 ```
-DWG Shared Core (42+ mapping rules)
-        │
-        ▼
-  rules/              ← CANONICAL output (platform-neutral markdown)
-        │
-        ├──▶ .kiro/steering/        (Kiro adapter: fileMatch + includes)
-        ├──▶ CLAUDE.md + .claude/   (Claude Code adapter: @import + paths)
-        ├──▶ .cursor/rules/         (Cursor adapter: glob patterns)
-        ├──▶ AGENTS.md              (Codex adapter: sections)
-        └──▶ (rules/ is self-sufficient for Generic — no adapter needed)
+rules/ (canonical) → .kiro/steering/ | CLAUDE.md+.claude/ | .cursor/rules/ | AGENTS.md | (generic: rules/ self-sufficient)
 ```
-
-**Rules:**
-1. `rules/` is ALWAYS generated — it's the canonical source regardless of platform
-2. Each selected platform gets a thin adapter that wires `rules/` into platform-native format
-3. For limited platforms (single-file only): DWG compiles `rules/` content into one concatenated file
-4. Multi-target: one canonical `rules/`, N adapters (one per selected platform)
-5. Platform adapters NEVER contain original content — they reference/include from `rules/`
-6. Generic platform = minimal adapter (`WORKSPACE_GUIDE.md` pointer; `rules/` is readable as-is)
 
 ### Renderer Detail Files (Load During Rendering Step)
 
@@ -441,6 +389,14 @@ After any generation or reconciliation completes (Mode 1, 2, or 3), install the 
 
 ---
 
+## Post-Generation: Companion Bootstrap (IF Q3 ≠ No)
+
+After agent installation, if Config Gate Q3 = Yes / GCE-only / TGE-only, DWG provisions the companion engines (AI-GCE, AI-TGE) into the generated workspace's `.governance/engine/`. This is the Layer-2 → Layer-3 handoff — companions are staged inert in L2 and activate in L3 when the developer types `_GCE_` / `_TGE_`. [OI-204]
+
+> Full provisioning logic (7 transformation rules, source/target layout, brownfield detection, manifest recording, Mode 2 version-bump offer) → `mapping/companion-bootstrap.md`. Load it when Q3 ≠ No.
+
+---
+
 ## Gate Contract
 
 > Conforms to `GATE_PROTOCOL.md` protocolVersion 1.2.0 · interfaceVersion 1.0
@@ -506,86 +462,9 @@ strictness-default: warn
 
 ## Directory Structure — AI-DWG Output (Runtime)
 
-When AI-DWG completes, this structure exists in the generated dev workspace (maximum output shown — all three peer inputs present; conditional artifacts in `[brackets]`):
+The full runtime directory structure (maximum output with all three peer inputs present, conditional artifacts marked) lives in → `common/output-contract.md` § "Directory Structure". Load it during generation for the canonical tree reference.
 
-```
-{workspace-root}/
-├── .kiro/
-│   └── steering/                                 ← Kiro platform adapter (includes from rules/)
-│       └── (fileMatch + always-include wiring to rules/)
-│
-├── rules/                                        ← AI rules (canonical, platform-neutral)
-│   ├── workspace-rules.md                        ← ALWAYS (identity adapts to present inputs)
-│   ├── architecture-principles.md                ← IF ADLC
-│   ├── tech-stack.md · coding-standards.md · naming-conventions.md   ← IF ADLC
-│   ├── project-governance.md · session-governance.md · role-isolation.md  ← IF ADLC
-│   ├── domain-context.md · module-structure.md                       ← IF ADLC
-│   ├── api-standards.md · security-rules.md · database-rules.md      ← IF ADLC
-│   ├── testing-strategy.md · error-handling.md                       ← IF ADLC
-│   ├── observability-logging.md · observability-sensitive.md · git-workflow.md  ← IF ADLC
-│   ├── design-system.md                          ← IF UXD
-│   ├── [frontend-standards.md]                   ← IF UXD or ADLC (UI containers)
-│   ├── [navigation-structure · design-qa · content-guidelines · theming · i18n-standards]  ← conditional (UXD)
-│   ├── [multi-tenancy · api-versioning · resilience-standards · observability-tracing ·
-│   │    performance-standards · workflow-engine · event-sourcing · feature-flags ·
-│   │    brownfield-patterns]                     ← conditional (ADLC)
-│   └── relevance-map.md                          ← Code-area → reference mapping (auto-generated)
-│
-├── info/                                         ← Operational guides for the team
-│   ├── PROJECT_INSTRUCTIONS.md                   ← ALWAYS (master dev guide)
-│   ├── CONTRIBUTING.md                           ← ALWAYS
-│   ├── ONBOARDING.md                             ← ALWAYS
-│   ├── CICD_GUIDE.md                             ← ALWAYS
-│   ├── TEAM_AGREEMENTS.md                        ← ALWAYS
-│   └── vision.md                                 ← IF POLC (+UXD personas/journeys)
-│
-├── architecture/                                 ← IF ADLC (reference material)
-│   ├── technical-environment.md                  ← AI-DLC v1 Technical Environment Document
-│   ├── constraint-register.md                   ← Full constraint set (hard + derived)
-│   ├── architecture-decision-records.md         ← ADR register with rationale
-│   └── docker-compose.yml                       ← Infrastructure config
-│
-├── backlog/                                      ← IF POLC
-│   ├── README.md                                ← Folder-level context index
-│   ├── epics-and-backlog.md                     ← Prioritized epic/backlog scaffold
-│   ├── DEFINITION_OF_DONE.md                    ← Quality criteria
-│   ├── DEFINITION_OF_READY.md                   ← Sprint entry gate
-│   ├── scope-and-risks.md                       ← Scope definition + risk register
-│   ├── traceability-matrix.md                   ← Requirements traceability
-│   ├── value-metrics.md                         ← KPI register
-│   ├── user-stories.md                          ← Story index/entry-point (if Tier 2)
-│   ├── po-charter.md                            ← PO authority/escalation reference
-│   ├── prioritization-register.md               ← Build order rationale
-│   └── epics/                                   ← IF POLC Tier 2 (full story files)
-│       ├── EPIC-001_*.md
-│       ├── EPIC-001_stories/
-│       └── …
-│
-├── ux/                                           ← IF UXD (reference material)
-│   ├── README.md                                ← Folder-level context index
-│   ├── ui-implementation-spec.md                ← AI-DLC v1 UI Implementation Spec
-│   ├── wireframes/                              ← Per-screen wireframe specs (if present)
-│   ├── user-flows/                              ← Multi-step interaction flows (if present)
-│   ├── personas/                                ← User profiles (if present)
-│   └── journey-maps/                            ← End-to-end experience maps (if present)
-│
-├── README.md                                     ← Git convention + master pointer
-├── CONTRIBUTING.md                               ← Git convention
-├── CODEOWNERS                                    ← IF ADLC
-├── WORKSPACE_CONTEXT_MAP.md                      ← Discovery index (auto-regenerated)
-├── .github/pull_request_template.md              ← ALWAYS
-├── examples/                                     ← skeleton patterns
-├── aidlc-rules/extensions/                       ← AI-DLC v1 extension rules bundle
-├── templates/                                    ← session-planning · sprint-planning · estimation-guide
-├── .gitignore · .editorconfig                    ← IF ADLC
-├── management_framework/                         ← Shared governance spine (active — GCE appends)
-│   └── MANAGEMENT_FRAMEWORK.md · Decision_Log.md · Change_Log.md · Issue_Log.md · Lessons_Learned.md
-├── .governance/                                  ← DWG/GCE runtime
-│   ├── baseline-manifest.yaml
-│   ├── drift-register.md
-│   └── agents/
-└── {src-structure}/                              ← IF ADLC (C4 L3 derived)
-```
+**Top-level areas:** `rules/` (canonical steering) · `info/` (operational guides) · `architecture/` (IF ADLC) · `backlog/` (IF POLC) · `ux/` (IF UXD) · `management_framework/` (governance spine) · `.governance/` (DWG/GCE runtime) · `{src-structure}/` (IF ADLC, C4 L3 derived).
 
 ---
 

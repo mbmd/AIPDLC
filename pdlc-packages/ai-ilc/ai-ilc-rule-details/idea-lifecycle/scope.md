@@ -110,6 +110,8 @@ Any other risks you see? _[awaiting input]_
 **Your Decision:** _[awaiting input]_
 ```
 
+> **Manual-baseline note.** This effort / timeline signal is a **pre-delivery-method manual baseline** — produced before the build's delivery method (manual / AI-assisted / AI-driven) is known. Downstream, AI-PILC and AI-POLC recompute timing against the chosen delivery method (their velocity model shows manual-baseline vs AI figures side by side). Treat this ILC estimate as the manual-baseline anchor, not a delivery-method-adjusted commitment.
+
 ### Step 6: Comprehensive-Only Extensions
 
 If depth = Comprehensive, additionally:

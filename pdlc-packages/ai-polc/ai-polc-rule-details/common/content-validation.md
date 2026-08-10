@@ -5,6 +5,21 @@
 
 ---
 
+## Pre-Gate Structural Lint
+
+Before presenting a completed artifact at a gate, run this mechanical 6-point check on the full `.md` file and silently fix the auto-fixable issues. These are formatting/structure checks — they run alongside the semantic checks below, not in place of them.
+
+1. **Monotonic headings** — sections stay in order (no §5.6 after §7). *(flag)*
+2. **Single footer** — exactly one closing footer; remove duplicates. *(auto-fix)*
+3. **Status consistency** — status strings agree with the current state. *(auto-fix)*
+4. **List blank-line** — every list has a blank line before its first item. *(auto-fix)*
+5. **xychart axis range** — the y-axis spans the actual data values. *(auto-fix)*
+6. **Heading-level sanity** — no level jumps (H2 → H4) and only one H1. *(flag)*
+
+Record a one-line result — "Pre-gate lint: {N} passed, {M} auto-fixed, {K} flagged." — and flag the non-auto-fixable issues (checks 1, 6) with the artifact.
+
+---
+
 ## Universal Rules (Apply to ALL Outputs)
 
 ### 1. Source-Driven Content
@@ -153,6 +168,28 @@ Before presenting a stage output to the user, verify:
 - [ ] No implementation prescription (WHAT, not HOW)
 - [ ] Acceptance criteria are testable
 - [ ] Governance spine entries properly formatted
+
+---
+
+### 11. Contextual Prose Accompaniment (CPA)
+
+**Detects:** Cross-reference keys or `See …` pointers that lack explanatory context.
+
+**Rule:** Every cross-reference in the artifact must have contextual accompaniment per the CPA patterns (see `common/contextual-prose-accompaniment.md`), scaled to the current depth level:
+
+| Pattern | Applies to | Minimal | Standard | Comprehensive |
+|---------|-----------|---------|----------|---------------|
+| **A** (qualifier phrase) | Table cells with refs | ≤ 12 words | ≤ 25 words | ≤ 50 words |
+| **B** (contextual sentence) | Narrative refs | Single phrase | 1 sentence | 1–2 sentences |
+| **C** (provenance block) | State file front-matter | Omitted | 2-line comment | 3–4 line comment |
+| **D** (Consumer/Reads/Why) | Package README refs | Bullet list | Full table | Table + narrative |
+| **E** (decision expansion) | ADR/decision refs | Title + link only | Title + ≤ 15-word rationale + link | Title + rationale + alternatives + link |
+
+**Exempt:** Same-file references, the `## References` block, forward references (`_[To be produced in Stage {n}]_`), YAML front-matter values, fabric routing metadata.
+
+**Auto-fixable:** ❌ (requires semantic understanding of the referenced content)
+
+**Action if violated:** Flag to user: "Reference {code} at line {N} lacks contextual accompaniment. Add a qualifier explaining what this reference means here."
 
 ---
 

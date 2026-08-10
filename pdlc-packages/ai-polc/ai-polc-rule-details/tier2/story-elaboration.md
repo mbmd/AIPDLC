@@ -178,6 +178,34 @@ EPIC-003: Provider Abstraction Layer
 
 Apply the format above. Ensure INVEST compliance for each.
 
+**Discovering the acceptance criteria — Example Mapping (recommended).** Before inventing a story's AC, run a quick **Example Mapping** pass to *discover* them from concrete examples. Lay out four card types for the story:
+
+| Card | Colour (convention) | Content |
+|------|---------------------|---------|
+| **Story** | yellow | the story under discussion |
+| **Rules** | blue | the business rules / acceptance constraints that govern it |
+| **Examples** | green | concrete instances that illustrate each rule (happy path, edge, error) |
+| **Questions** | red | unknowns / assumptions that block clarity |
+
+Then **formalize each example into a Given/When/Then (or EARS) acceptance criterion** — the examples *are* the AC in narrative form:
+
+```
+Rule: A payment over the daily limit is rejected.
+  Example (happy): Given a $400 daily limit, When I pay $200, Then it succeeds.
+  Example (edge):  Given a $400 limit with $350 spent, When I pay $50, Then it succeeds.
+  Example (error): Given a $400 limit with $350 spent, When I pay $100, Then it is rejected ("daily limit exceeded").
+Question: Does the limit reset at midnight UTC or local time?  → open question → DoR blocker
+```
+
+**Rules:**
+- One example map per story; every **Rule** has at least one **Example**
+- Each **Example** becomes a testable AC (G/W/T for INVEST / Job Story; a `shall`-statement for EARS)
+- Every **Question** is an open item — route it to the Definition of Ready (Stage 8) as a readiness blocker; a story with unresolved blocking questions is NOT ready
+- Too many rules for one story → the story is too big; split it (feeds INVEST **S**)
+- **Feeds:** the story's Acceptance Criteria (below); DoR (open questions → blockers); AI-TGE (examples → acceptance tests)
+
+This is a discovery step, not a separate artifact — its output *is* the story's AC. Skip it only when the AC are already obvious and agreed.
+
 ### Step T2.3: Validate Story Set
 
 Per epic:

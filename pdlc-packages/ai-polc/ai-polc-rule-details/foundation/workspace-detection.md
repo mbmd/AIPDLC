@@ -60,6 +60,7 @@ If upstream markers detected, read and extract:
 - Project-level risks
 - Depth level used in PILC
 - Scale (single team / multi-team / enterprise)
+- **Delivery method + AI tool (if captured):** `Delivery Method` / `AI Tool` / `Team AI Maturity` — inherit when present; never re-ask what upstream already captured. Seeds the `## Velocity Model` (`strategy/delivery-method-timing.md`).
 
 **From `adlc-state.md` / AP:**
 - Architecture pattern (monolith / modular / DDD / microservices)
@@ -97,6 +98,8 @@ For each of the 13 context factors, determine the value:
 At **Minimal** depth: ask only 🔴 Required; use defaults for 🟡 Optional.
 At **Standard** depth: ask all, offer defaults.
 At **Comprehensive** depth: ask all, explain impact of each.
+
+> **Delivery method (velocity-model seed — not one of the 13 factors).** Also capture *how the product is built* — manual / AI-assisted / AI-driven / hybrid. Inherit from `pilc-state.md` when present; else ask per `strategy/delivery-method-timing.md` (Q-DM1..Q-DM4). **Manual is the default** and needs no AI-tool detail. This is kept separate from the *Delivery Methodology* factor (Scrum/Kanban/SAFe) and seeds the `## Velocity Model` section that drives dual-track timing at Stages 5/7. It is intentionally not added to the 13 governance factors above.
 
 ### Step 1.4: Scan for Upstream Changes (Resume Only)
 

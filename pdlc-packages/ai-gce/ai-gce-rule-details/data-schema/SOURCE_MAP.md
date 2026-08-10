@@ -53,3 +53,26 @@
 - GCE is per-project scoped: one `gce-data.json` per project. `.compliance-state.json` is the authoritative source (structured JSON — easy to extract).
 - The append-only JSONL compliance-log is NOT fully read (too large/high-churn); DFE reads only the latest snapshot summary. Consumers wanting the event stream read the log directly.
 - `projectId` correlation: GCE keys its log events on `projectId` (read from the dev workspace's `workspace-rules.md`); DFE joins GCE data to a project via the dev-workspace path + that ID.
+
+---
+
+## AI-LENS Fields (AI_LENS_PROTOCOL §6.2)
+
+> Present when the `AIG__` agent has produced AI governance results in `.governance/`.
+
+| Field path (in `data`) | Source | Extraction rule |
+|------------------------|--------|-----------------|
+| `aiLens.aiFeatures[]` | `.governance/` AI governance result files (produced by `AIG__` agent) | For each AI feature governed, extract: `{ aiFeatureId, aigResult, aigObligations[], aigFindings[] }`. `aigResult` = overall pass/warning/fail. `aigObligations` = EU AI Act + RAI obligations identified. `aigFindings` = individual rule violations with severity. Empty array `[]` if `AIG__` has not run. |
+
+> **Source:** `.governance/` folder — AI-specific governance result files produced by the `AIG__` (AIFLC AI Governance) agent.
+
+
+## Automation-LENS Fields (AUTOMATION_LENS_PROTOCOL §6.2)
+
+> Present when the `ATG__` agent has produced automation governance results in `.governance/`.
+
+| Field path (in `data`) | Source | Extraction rule |
+|------------------------|--------|-----------------|
+| `automationLens.automationFeatures[]` | `.governance/` automation governance result files (produced by `ATG__` agent) | For each automation feature governed, extract: `{ automationFeatureId, atgResult, atgObligations[], atgFindings[] }`. `atgResult` = overall pass/warning/fail. `atgObligations` = audit, SoD, kill-switch, fail-safe, and control-class obligations identified. `atgFindings` = individual rule violations with severity. Empty array `[]` if `ATG__` has not run. |
+
+> **Source:** `.governance/` folder — automation-specific governance result files produced by the `ATG__` (AIFLC Automation Governance) agent.

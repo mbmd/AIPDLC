@@ -71,7 +71,7 @@ storyStyle: {from polc-state.md — ears | invest | job-story | freestyle | hybr
 platformTargets: [kiro, claude-code]        # from Config Gate Q2
 dwgBuildVersion: {semantic}
 peerInputs: [adlc, polc, uxd]               # which inputs present at generation
-# buildProfile: PARKED — not populated (build-method-agnostic)
+buildProfile: {spec-driven | aidlc | freestyle}   # derived governance signal; OMIT for manual/AI-assisted → GCE Standard mode. Does not change DWG output or the governed surface
 
 # ─── Hard-Governed Elements (drift = BLOCK at gate) ───
 governedElements:
@@ -119,7 +119,7 @@ previousVersions:
 ---
 ```
 
-> **`storyStyle` + `platformTargets` are active fields.** `buildProfile` is PARKED — do not populate (build-method-agnostic; GCE defaults to Standard detection when absent, per drift design §5.7).
+> **`storyStyle` + `platformTargets` + `buildProfile` are active fields.** `buildProfile` (`spec-driven` / `aidlc` / `freestyle`; omitted for manual/AI-assisted) is a *derived* downstream-governance signal — AI-GCE reads it for drift/gate cadence, and uses its default **Standard mode** when `buildProfile` is absent. It does NOT change the governed surface or DWG output; the generated workspace stays build-method-agnostic.
 
 ---
 
@@ -186,7 +186,7 @@ pdlc-ws/projects/{projectId}/
 - [ ] `baseline-manifest.yaml` written to `baselines/v{N}/` with governed + advisory elements
 - [ ] Element IDs stable and sequential per category
 - [ ] hard vs advisory classification set per element
-- [ ] `storyStyle` + `platformTargets` populated; `buildProfile` absent (parked)
+- [ ] `storyStyle` + `platformTargets` populated; `buildProfile` set when a discipline applies (`spec-driven`/`aidlc`/`freestyle`), omitted otherwise (→ Standard mode)
 - [ ] `current/` points to latest version
 - [ ] Prior versions archived immutably
 - [ ] `snapshot-meta.yaml` records timestamp + trigger

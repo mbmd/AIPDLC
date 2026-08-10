@@ -148,6 +148,8 @@ Assess four criteria, each scored 1-5:
 
 ---
 
+> **Delivery-method dual view (when set).** When `pilc-state.md` records an AI delivery method, assess **timeline realism under both tracks** — the manual baseline and the AI-adjusted estimate — and note the compression in the Schedule commentary. The score reflects the *chosen* method's realism; the baseline is shown for transparency. PILC estimates here are coarse (no architecture yet) and are refined by AI-POLC's velocity model downstream.
+
 ### Step 6: Calculate Overall Feasibility Score
 
 Apply weighted scoring:

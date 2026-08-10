@@ -39,9 +39,9 @@ A good output at this stage sounds like:
 
 | Depth | Security Architecture Behavior |
 |-------|-------------------------------|
-| **Minimal** | Define auth method, RBAC model, encryption approach. Brief threat acknowledgment. 1-2 ADRs for key decisions. |
-| **Standard** | Full authentication + authorization architecture. Token strategy. Data protection (at rest + transit). Audit logging. OWASP Top 10 mitigations acknowledged. ADR per major security decision. |
-| **Comprehensive** | Detailed threat model (STRIDE or similar). Per-container security analysis. API security deep-dive (rate limiting, input validation, injection prevention). Secrets management architecture. Compliance controls mapping. Security monitoring and incident detection. Multiple ADRs. |
+| **Minimal** | Define auth method, RBAC model, encryption approach. **STRIDE checklist on key assets** (named method — never skipped, just scaled down). 1-2 ADRs for key decisions. |
+| **Standard** | Full authentication + authorization architecture. Token strategy. Data protection (at rest + transit). Audit logging. **STRIDE per major component** + OWASP Top 10 mitigations. ADR per major security decision. |
+| **Comprehensive** | **STRIDE per element across a trust-boundary DFD** + risk rating per threat. Per-container security analysis. API security deep-dive (rate limiting, input validation, injection prevention). Secrets management architecture. Compliance controls mapping. Security monitoring and incident detection. Multiple ADRs. |
 
 ---
 
@@ -267,7 +267,48 @@ Determine which authentication methods the system supports:
 
 ---
 
-### Step 6: Address Threat Mitigations
+### Step 6: Threat Model (STRIDE) & Mitigations
+
+Threat modeling comes first — you cannot design defenses without knowing what you are defending against. **STRIDE is this stage's named threat-modeling method**, scaled to the project's depth; model the threats, then map each to a mitigation. This step is **never skipped** — even a Minimal project runs a STRIDE checklist against its key assets.
+
+#### 6a: STRIDE Threat Model
+
+STRIDE enumerates threats in six categories against system elements and the trust boundaries they cross:
+
+| Category | Threat | Property violated | Mitigation class (where it lives) |
+|----------|--------|-------------------|-----------------------------------|
+| **S**poofing | Impersonating a user or system | Authentication | Strong authN, MFA, mutual TLS (Step 2) |
+| **T**ampering | Unauthorized modification of data or code | Integrity | Signing, hashing, input validation, access control |
+| **R**epudiation | Denying an action with no proof | Non-repudiation | Audit logging (Step 5), signed records |
+| **I**nformation disclosure | Exposing data to the wrong party | Confidentiality | Encryption + least-privilege authZ (Steps 3–4) |
+| **D**enial of service | Making the system unavailable | Availability | Rate limiting, quotas, timeouts, autoscaling |
+| **E**levation of privilege | Gaining rights you should not have | Authorization | RBAC/ABAC, deny-by-default (Step 3) |
+
+**Depth-scaled STRIDE pass:**
+
+| Depth | STRIDE pass |
+|-------|-------------|
+| **Minimal** | STRIDE **checklist against key assets** (the most sensitive data store + the primary entry point) — one row per asset: which categories are a real risk, and the mitigation. |
+| **Standard** | STRIDE **per major container/component** (from Stage 5) — walk the six categories for each and record threats + mitigations. |
+| **Comprehensive** | STRIDE **per element and per trust-boundary crossing** on a trust-boundary DFD (built from the trust boundaries in Step 1) — add a risk rating (likelihood × impact) and a mitigation or accepted-risk rationale per threat. |
+
+Route each finding to its existing home so nothing is duplicated: Repudiation → Audit (Step 5); Information disclosure → Data Protection (Step 4); Spoofing / Elevation → Auth (Steps 2–3); Denial of service → API security (below) + Infrastructure (Stage 11). A threat that needs a decision between real alternatives → produce an ADR (Step 7).
+
+```markdown
+## Threat Model (STRIDE)
+
+| # | Element / Flow | Trust boundary crossed | STRIDE category | Threat | Likelihood × Impact | Mitigation | Owner / ADR |
+|---|----------------|------------------------|-----------------|--------|:-------------------:|-----------|-------------|
+| T1 | {API gateway} | Internet → application | Spoofing | {Forged or replayed token} | {H × H} | {OIDC + short-lived JWT + signature verification} | {ADR-nnn} |
+| T2 | {Primary DB} | application → data | Information disclosure | {PII exposure via over-broad query} | {M × H} | {AES-256 at rest + column encryption + least-privilege} | — |
+| T3 | {Admin endpoint} | tenant → platform | Elevation of privilege | {Cross-tenant access} | {L × H} | {Deny-by-default RBAC + tenant scoping + audit} | {ADR-nnn} |
+
+Every high/critical threat has a mitigation OR an explicitly accepted-risk rationale.
+```
+
+> The optional **`threat-modeling` deep extension** (attack trees, DREAD / OWASP Risk Rating, per-flow analysis) layers on top of this baseline for high-security systems — it does not replace it.
+
+#### 6b: Mitigations
 
 ```markdown
 ## Security Threat Mitigations
@@ -323,7 +364,7 @@ Compile **Security & Identity Architecture** document:
 2. Authorization Architecture (model, roles, enforcement layers)
 3. Data Protection (encryption at rest, in transit, secrets)
 4. Audit & Compliance (what's logged, structure, integrity, export)
-5. Threat Mitigations (OWASP Top 10, API security)
+5. Threat Model (STRIDE) + Threat Mitigations (OWASP Top 10, API security)
 6. ADR references
 
 ---
@@ -340,6 +381,7 @@ I've designed the security architecture.
 - **Authorization:** {model} with {granularity} permissions
 - **Encryption:** {at-rest method}; TLS {version}+ in transit
 - **Audit:** {scope summary}; {retention period}
+- **Threat model:** STRIDE pass ({n} threats identified, {n} mitigated)
 - **OWASP:** All Top 10 addressed
 
 **Security layers:**
@@ -410,6 +452,7 @@ Save to:
 | Encryption comprehensive | Data protected at rest AND in transit |
 | Secrets managed | No hardcoded credentials; rotation policy defined |
 | Audit sufficient | All state-changing operations auditable |
+| Threat model complete (STRIDE) | STRIDE pass run at the project's depth; every high/critical threat has a mitigation or accepted-risk rationale |
 | OWASP addressed | All Top 10 have stated mitigation |
 | Tenant-aware (if multi-tenant) | Security model respects tenant boundaries |
 | Constraint-compliant | Meets stated compliance/regulatory requirements |

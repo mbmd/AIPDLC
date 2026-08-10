@@ -51,3 +51,32 @@
 - DWG is a generator with no state file. Its "data" is the fact that a dev workspace exists + the identity it embedded. This lets a dashboard show "workspace generated: yes/no" and the tech identity.
 - The full steering set (tech-stack, coding-standards, etc.) inside `{slug}-workspace/rules/` is not machine-extracted — too varied. DFE captures the identity block, which is the structured, predictable part.
 - `workspace-rules.md` carries `ownership: hybrid` — teams edit it. DFE reads it read-only and never writes back.
+
+---
+
+## AI-LENS Fields (AI_LENS_PROTOCOL §6.2)
+
+> Present when the generated workspace was scaffolded for a project with AI features. DWG acts as the courier — it carries AI context across the DWG hinge.
+
+| Field path (in `data`) | Source | Extraction rule |
+|------------------------|--------|-----------------|
+| `aiLens.aiFeaturesCouriered` | Generated workspace `data-schema/` or AI feature manifest | Count of distinct `aiFeatureId` values couriered. `null` if no AI features. |
+| `aiLens.aiFeatureIds[]` | Generated workspace AI feature manifest | List of `AIF-{NNN}` IDs couriered into the workspace. |
+| `aiLens.aiScaffoldingGenerated` | Generated workspace file scan | `true` if AI-specific scaffolding files exist (eval harness, prompts/, LLM client, vector-DB config). |
+| `aiLens.aiContextCouriered` | Generated workspace AI context manifest | `true` if the full AI-feature context (AC + architecture + EU-AI-Act) was carried across the hinge for `AIG__`/`AIQ__`. |
+
+> **Source:** The generated workspace (`{slug}-workspace/`) — AI feature manifest + scaffolding files presence check.
+
+
+## Automation-LENS Fields (AUTOMATION_LENS_PROTOCOL §6.2)
+
+> Present when the workspace was generated for a project that has automation features.
+
+| Field path (in `data`) | Source | Extraction rule |
+|------------------------|--------|-----------------|
+| `automationLens.automationFeaturesCouriered` | workspace-manifest or automation-context files | Count of automation features couriered into this workspace. `null` if no automation features. |
+| `automationLens.automationFeatureIds` | workspace-manifest or automation-context files | Array of `automationFeatureId` values couriered (`AUTO-{NNN}`). Empty array if none. |
+| `automationLens.automationScaffoldingGenerated` | workspace file structure | `true` if automation-specific scaffolding (engine config, scheduler, queue, connector stubs) was generated; `false`/`null` otherwise. |
+| `automationLens.automationContextCouriered` | automation-context files | `true` if the full automation-feature context (AC, architecture, control-class) was couriered for `ATG__`/`ATQ__`; `false`/`null` otherwise. |
+
+> **Source:** Generated workspace identity + automation-feature manifest/context files placed by AI-DWG during generation.

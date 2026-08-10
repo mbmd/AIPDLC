@@ -27,7 +27,7 @@
     Comma-separated list of package names (e.g., "ai-pilc,ai-adlc").
 
 .PARAMETER Bundle
-    Preset bundle: full, minimal, arch, governance, portfolio.
+    Preset bundle: full, design, minimal, arch, governance, portfolio.
 
 .PARAMETER DryRun
     Show what would be installed without copying files.
@@ -48,7 +48,8 @@ param(
     [ValidateSet("kiro", "cursor", "claude-code", "cline", "amazonq", "copilot")]
     [string]$Platform,
     [string]$Packages,
-    [ValidateSet("full", "minimal", "arch", "governance", "portfolio")]
+    [string]$Family,
+    [ValidateSet("full", "design", "minimal", "arch", "governance", "portfolio")]
     [string]$Bundle,
     [switch]$DryRun,
     [switch]$Force,
@@ -57,12 +58,31 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-# installer/ now lives at the family repo root (e.g. pdlc/installer/), one level
-# ABOVE pdlc-packages/. Derive PackagesRoot by appending the conventional suffix.
+# installer/ lives at the family repo root, beside the <family>-packages/ directory.
+# Derive the family from that *-packages directory that ACTUALLY EXISTS - never from the
+# repo folder name: a real clone is "AI<CODE>" (e.g. AIPDLC) while packages stay
+# "<family>-packages" (e.g. pdlc-packages), so folder-name derivation installs nothing.
+# A -Family parameter overrides. [installer corrections: Issue 1]
 $FamilyRoot = Split-Path -Parent $ScriptDir
-$Family = Split-Path -Leaf $FamilyRoot          # e.g. "pdlc"
-$PackagesRoot = Join-Path $FamilyRoot "$Family-packages"   # e.g. pdlc/pdlc-packages/
+if (-not $Family) {
+    $pkgDirs = @(Get-ChildItem -Path $FamilyRoot -Directory -Filter '*-packages' -ErrorAction SilentlyContinue)
+    if ($pkgDirs.Count -gt 1) {
+        Write-Host "  Multiple *-packages directories found in $FamilyRoot. Use -Family <name>." -ForegroundColor Red
+        exit 1
+    }
+    if ($pkgDirs.Count -eq 1) { $Family = ($pkgDirs[0].Name) -replace '-packages$', '' }
+}
+$PackagesRoot = Join-Path $FamilyRoot "$Family-packages"
 $FamilyWs = "$Family-ws"
+if (-not $Family) {
+    Write-Host "  Could not determine the family (no <family>-packages directory beside installer). Use -Family <name>." -ForegroundColor Red
+    exit 1
+}
+if (-not $Uninstall -and -not (Test-Path $PackagesRoot)) {
+    Write-Host "  Package source not found: $PackagesRoot" -ForegroundColor Red
+    Write-Host "  Expected a <family>-packages directory beside installer. Use -Family <name> to override." -ForegroundColor Red
+    exit 1
+}
 
 # Package catalogue
 $PackageCatalogue = @(
@@ -80,13 +100,26 @@ $PackageCatalogue = @(
 )
 
 # Preset bundles
+# "full" = literally everything (spans both workspaces - power users). "design" = the
+# Layer-2 design chain only, NO companions (ai-gce/ai-tge) - the recommended bundle for a
+# design workspace; the companions are provisioned into the Layer-3 dev workspace by
+# AI-DWG, not co-installed here. "governance" (gce+tge) stays for direct standalone /
+# brownfield install into an existing Layer-3 repo. [OI-204]
 $Bundles = @{
     "full"       = @("ai-ilc", "ai-pilc", "ai-ppm", "ai-flo", "ai-adlc", "ai-uxd", "ai-polc", "ai-dwg", "ai-gce", "ai-tge", "ai-dfe")
+    "design"     = @("ai-ilc", "ai-pilc", "ai-ppm", "ai-flo", "ai-adlc", "ai-uxd", "ai-polc", "ai-dwg", "ai-dfe")
     "minimal"    = @("ai-pilc", "ai-adlc", "ai-dwg")
     "arch"       = @("ai-adlc", "ai-dwg", "ai-gce")
     "governance" = @("ai-gce", "ai-tge")
     "portfolio"  = @("ai-ilc", "ai-pilc", "ai-ppm", "ai-flo")
 }
+
+# Companion (Layer-3) packages vs the Layer-2 design chain. [OI-204]
+# AI-GCE / AI-TGE are Layer-3 (Execute) companions: they run in the AI-DWG-generated
+# project workspace, not the Layer-2 design workspace. On a design-workspace install
+# they are STAGED as an inert provisioning source (physically present so AI-DWG can
+# copy them into Layer 3, but NOT routed by the orchestrator - see Install-ProvisioningSource).
+$CompanionPackages = @("ai-gce", "ai-tge")
 
 $ManifestFileName = ".ai-family-manifest.json"
 
@@ -131,6 +164,7 @@ function Show-Bundles {
     Write-Host "  ----------------" -ForegroundColor DarkGray
     Write-Host ""
     Write-Host "    [F] Full         - All 11 packages (complete family)" -ForegroundColor White
+    Write-Host "    [D] Design       - Design chain only, no companions (recommended - design workspace)" -ForegroundColor White
     Write-Host "    [M] Minimal      - AI-PILC + AI-ADLC + AI-DWG (quick start)" -ForegroundColor White
     Write-Host "    [A] Architecture - AI-ADLC + AI-DWG + AI-GCE" -ForegroundColor White
     Write-Host "    [G] Governance   - AI-GCE + AI-TGE" -ForegroundColor White
@@ -342,6 +376,49 @@ function Install-Package {
 }
 
 # -----------------------------------------------------------------------------
+# Stage Layer-3 companions as an inert provisioning source (OI-204 / G1 Option A)
+# -----------------------------------------------------------------------------
+# On a design-workspace install, the companion engines (AI-GCE / AI-TGE) are copied
+# into the uniform home .aiflc/{family}/ exactly like a normal package, BUT they are
+# NOT surfaced by the orchestrator (their routing rows are stripped - see
+# Install-Orchestrator -CompanionsInert) and they are recorded in the manifest under
+# `provisioningSource` with role=provisioning-source (never the routed `packages` list).
+# AI-DWG copies from this local source into the generated Layer-3 workspace's
+# .governance/engine/. This reconciles "not installed FOR USE in Layer 2" with
+# "physically present so AI-DWG can provision" (G1 Option A).
+function Install-ProvisioningSource {
+    param([array]$Names, [string]$PlatformName, [string]$Target, [bool]$IsDryRun)
+    $staged = @()
+    foreach ($name in $Names) {
+        $pkg = $PackageCatalogue | Where-Object { $_.Name -eq $name }
+        if (-not $pkg) { continue }
+        $paths = Get-PlatformPaths -PlatformName $PlatformName -Pkg $pkg
+        if (-not (Test-Path $paths.CoreSource)) {
+            Write-Warn "Provisioning source not found: $($paths.CoreSource) - skipping $name (AI-DWG would have no local copy to provision)."
+            continue
+        }
+        $coreDest = Join-Path $Target $paths.CoreDest
+        $detailsDest = Join-Path $Target $paths.DetailsDest
+        if ($IsDryRun) {
+            Write-Host "    [DRY RUN] Would stage provisioning source: $name -> $($paths.CoreDest) (inert; provisioned into Layer 3 by AI-DWG)" -ForegroundColor Yellow
+            $staged += @{ Name = $name; CoreDest = $paths.CoreDest; DetailsDest = $paths.DetailsDest; role = "provisioning-source" }
+            continue
+        }
+        $coreDir = Split-Path -Parent $coreDest
+        if (-not (Test-Path $coreDir)) { New-Item -ItemType Directory -Force -Path $coreDir | Out-Null }
+        Copy-Item $paths.CoreSource -Destination $coreDest -Force
+        if (Test-Path $paths.DetailsSource) {
+            if (Test-Path $detailsDest) { Remove-Item -Recurse -Force $detailsDest }
+            New-Item -ItemType Directory -Force -Path (Split-Path -Parent $detailsDest) | Out-Null
+            Copy-Item -Recurse $paths.DetailsSource -Destination $detailsDest
+        }
+        Write-Step "Staged provisioning source: $name (inert - AI-DWG provisions it into Layer 3)"
+        $staged += @{ Name = $name; CoreDest = $paths.CoreDest; DetailsDest = $paths.DetailsDest; role = "provisioning-source" }
+    }
+    return $staged
+}
+
+# -----------------------------------------------------------------------------
 # Install family tools (visual tools / extensions under tools/)
 # -----------------------------------------------------------------------------
 
@@ -486,7 +563,7 @@ function Get-OrchestratorSource {
 }
 
 function Install-Orchestrator {
-    param([string]$PlatformName, [string]$Target, [bool]$IsDryRun)
+    param([string]$PlatformName, [string]$Target, [bool]$IsDryRun, [bool]$CompanionsInert = $false)
 
     $src = Get-OrchestratorSource -PlatformName $PlatformName
     if (-not (Test-Path $src)) {
@@ -498,14 +575,35 @@ function Install-Orchestrator {
     $dest = Join-Path $Target $rel
 
     if ($IsDryRun) {
-        Write-Host "    [DRY RUN] Would deploy orchestrator: session-orchestrator.md -> $rel" -ForegroundColor Yellow
+        $mode = if ($CompanionsInert) { " (companion _GCE_/_TGE_ rows omitted - Layer-3, staged inert)" } else { "" }
+        Write-Host "    [DRY RUN] Would deploy orchestrator: session-orchestrator.md -> $rel$mode" -ForegroundColor Yellow
         return $rel
     }
 
     $destDir = Split-Path -Parent $dest
     if ($destDir -and -not (Test-Path $destDir)) { New-Item -ItemType Directory -Force -Path $destDir | Out-Null }
     Copy-Item $src -Destination $dest -Force
-    Write-Step "Deployed session orchestrator -> $rel  (the family only always-loaded steering file)"
+
+    # OI-204: reconcile companion presence in the deployed orchestrator copy.
+    # Companion ROUTING rows (the activation-key `_GCE_`/`_TGE_` rows + any detection /
+    # path-map row that references ai-gce-rules / ai-tge-rules) are matched by CONTENT,
+    # so the SOURCE file keeps valid, unbroken Markdown tables (no inline comments).
+    # The Layer-2 "staged inert" NOTE is marker-guarded (AIFLC-COMPANION-NOTE) and its
+    # prose deliberately avoids the ai-*-rules tokens so it is never caught by the row match.
+    # Design workspace (CompanionsInert): strip the routing rows, KEEP the note.
+    # For-use install: keep the rows, REMOVE the note (markers always stripped).
+    $content = Get-Content $dest -Raw
+    if ($CompanionsInert) {
+        $content = [regex]::Replace($content, '(?m)^\|\s*`_(?:GCE|TGE)_`.*\r?\n', '')
+        $content = [regex]::Replace($content, '(?m)^.*ai-(?:gce|tge)-rules.*\r?\n', '')
+        $content = $content -replace '[ \t]*<!-- AIFLC-COMPANION-NOTE:(?:start|end) -->[ \t]*\r?\n?', ''
+    } else {
+        $content = [regex]::Replace($content, '(?s)[ \t]*<!-- AIFLC-COMPANION-NOTE:start -->.*?<!-- AIFLC-COMPANION-NOTE:end -->[ \t]*\r?\n?', '')
+    }
+    Set-Content -Path $dest -Encoding utf8 -Value $content
+
+    $suffix = if ($CompanionsInert) { "  (Layer-3 companions omitted - staged inert)" } else { "" }
+    Write-Step "Deployed session orchestrator -> $rel  (the family only always-loaded steering file)$suffix"
     return $rel
 }
 
@@ -776,20 +874,21 @@ function Register-Consumers {
 # -----------------------------------------------------------------------------
 
 function Save-Manifest {
-    param([string]$Target, [string]$PlatformName, [array]$Installed, [array]$Tools, [array]$Fabric, [array]$Agents, [string]$Orchestrator, $ClaudeEntrypoint, [array]$ClaudeCommands, [string]$ClaudeSkill)
+    param([string]$Target, [string]$PlatformName, [array]$Installed, [array]$Tools, [array]$Fabric, [array]$Agents, [string]$Orchestrator, $ClaudeEntrypoint, [array]$ClaudeCommands, [string]$ClaudeSkill, [array]$ProvisioningSource)
     $manifest = @{
-        installedAt      = (Get-Date -Format "o")
-        family           = $Family
-        platform         = $PlatformName
-        installerVersion = "2.4.0"
-        packages         = $Installed
-        tools            = $Tools
-        fabric           = $Fabric
-        agents           = $Agents
-        orchestrator     = $Orchestrator
-        claudeEntrypoint = $ClaudeEntrypoint
-        claudeCommands   = $ClaudeCommands
-        claudeSkill      = $ClaudeSkill
+        installedAt        = (Get-Date -Format "o")
+        family             = $Family
+        platform           = $PlatformName
+        installerVersion   = "2.5.0"
+        packages           = $Installed
+        provisioningSource = $ProvisioningSource
+        tools              = $Tools
+        fabric             = $Fabric
+        agents             = $Agents
+        orchestrator       = $Orchestrator
+        claudeEntrypoint   = $ClaudeEntrypoint
+        claudeCommands     = $ClaudeCommands
+        claudeSkill        = $ClaudeSkill
     }
     $manifestPath = Join-Path $Target "$FamilyWs\$ManifestFileName"
     $manifest | ConvertTo-Json -Depth 4 | Out-File -FilePath $manifestPath -Encoding utf8
@@ -838,6 +937,20 @@ function Invoke-Uninstall {
         Remove-EmptyAncestors -LeafPath $detailsPath -StopAt $Target
         Write-Step "Removed $($pkg.Name)"
     }
+
+    # Remove staged provisioning-source companions (OI-204), if any.
+    if ($manifest.PSObject.Properties.Name -contains 'provisioningSource' -and $manifest.provisioningSource) {
+        foreach ($ps in $manifest.provisioningSource) {
+            $psCore = Join-Path $Target $ps.CoreDest
+            $psDetails = Join-Path $Target $ps.DetailsDest
+            if (Test-Path $psCore) { Remove-Item -Force $psCore }
+            if (Test-Path $psDetails) { Remove-Item -Recurse -Force $psDetails }
+            Remove-EmptyAncestors -LeafPath $psCore -StopAt $Target
+            Remove-EmptyAncestors -LeafPath $psDetails -StopAt $Target
+            Write-Step "Removed provisioning source: $($ps.Name)"
+        }
+    }
+
     Remove-Item -Force $manifestPath
 
     # Remove installed family tools (extensions)
@@ -990,18 +1103,21 @@ Write-Host ""
 
 # Step 3: Package selection
 $selectedPackageNames = @()
+$isCustomSelection = $false   # true when the user hand-picks packages (-Packages or interactive [C]); drives the OI-204 companion hard-block
 if ($Bundle) {
     $selectedPackageNames = $Bundles[$Bundle]
     Write-Step "Bundle: $Bundle ($($selectedPackageNames -join ', '))"
 }
 elseif ($Packages) {
     $selectedPackageNames = @($Packages -split "," | ForEach-Object { $_.Trim() })
+    $isCustomSelection = $true
 }
 else {
     Show-Bundles
-    $bundleChoice = Read-Host "  Select bundle [F/M/A/G/P/C]"
+    $bundleChoice = Read-Host "  Select bundle [F/D/M/A/G/P/C]"
     switch ($bundleChoice.ToUpper()) {
         "F" { $selectedPackageNames = $Bundles["full"] }
+        "D" { $selectedPackageNames = $Bundles["design"] }
         "M" { $selectedPackageNames = $Bundles["minimal"] }
         "A" { $selectedPackageNames = $Bundles["arch"] }
         "G" { $selectedPackageNames = $Bundles["governance"] }
@@ -1011,6 +1127,7 @@ else {
             $picks = Read-Host "  Enter package numbers separated by commas (e.g. 1,2,5)"
             $indices = $picks -split "," | ForEach-Object { [int]$_.Trim() - 1 }
             $selectedPackageNames = $indices | ForEach-Object { $PackageCatalogue[$_].Name }
+            $isCustomSelection = $true
         }
         default { Write-Host "  Invalid selection. Aborted." -ForegroundColor Red; exit 1 }
     }
@@ -1024,6 +1141,31 @@ if ($invalidPkgs) {
     Write-Host "  Valid packages: $($validNames -join ', ')" -ForegroundColor DarkGray
     exit 1
 }
+
+# --- OI-204: Layer-2 / Layer-3 companion placement ----------------------------
+$selHasCompanion    = @($selectedPackageNames | Where-Object { $CompanionPackages -contains $_ }).Count -gt 0
+$selHasNonCompanion = @($selectedPackageNames | Where-Object { $CompanionPackages -notcontains $_ }).Count -gt 0
+$selHasDwg          = $selectedPackageNames -contains "ai-dwg"
+
+# Hard-block (Q7): refuse a *for-use* companion install mixed with the design chain
+# via a CUSTOM selection. Preset bundles (full/arch/governance/...) are sanctioned and
+# exempt. A companions-only custom pick (no design-chain package) is a valid direct
+# Layer-3 / brownfield install and is allowed.
+if ($isCustomSelection -and $selHasCompanion -and $selHasNonCompanion) {
+    Write-Warn "AI-GCE / AI-TGE are Layer-3 (Execute) companions - they have no role in a Layer-2 design workspace."
+    Write-Host "  Your custom pick mixes companion(s) (ai-gce/ai-tge) with design-chain package(s)." -ForegroundColor Red
+    Write-Host "  Choose one of:" -ForegroundColor DarkGray
+    Write-Host "    -Bundle design      : design chain here; GCE/TGE staged so AI-DWG provisions them into the project (Layer-3) workspace." -ForegroundColor DarkGray
+    Write-Host "    -Bundle governance  : install GCE/TGE directly into an EXISTING Layer-3 project repo." -ForegroundColor DarkGray
+    Write-Host "    -Bundle full        : install everything for use in one workspace (power users)." -ForegroundColor DarkGray
+    exit 1
+}
+
+# Stage companions as an inert provisioning source (G1 Option A) when this is a
+# design-workspace install: the design hinge (AI-DWG) is present and neither companion
+# was selected for use (the design/minimal bundles, or a custom design-only pick).
+$stageCompanions = $selHasDwg -and -not $selHasCompanion
+# ------------------------------------------------------------------------------
 
 Write-Host ""
 Write-Host "  Packages to install:" -ForegroundColor White
@@ -1049,6 +1191,21 @@ foreach ($name in $selectedPackageNames) {
     if ($result) { $installedPackages += $result }
 }
 
+if (-not $DryRun -and $installedPackages.Count -eq 0) {
+    Write-Host "  No packages were installed. Check the package source: $PackagesRoot" -ForegroundColor Red
+    exit 1
+}
+
+# Step 4b: stage Layer-3 companions as an inert provisioning source (OI-204 / G1)
+$stagedProvisioning = @()
+if ($stageCompanions) {
+    Write-Host ""
+    Write-Host "  Staging Layer-3 companions (provisioning source)..." -ForegroundColor White
+    Write-Host "  ---------------------------------------------------" -ForegroundColor DarkGray
+    Write-Info "AI-GCE / AI-TGE are staged INERT (not active in this design workspace). AI-DWG provisions them into the generated Layer-3 project workspace."
+    $stagedProvisioning = Install-ProvisioningSource -Names $CompanionPackages -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
+}
+
 # Step 5: Family workspace skeleton + bootstraps
 Write-Host ""
 Write-Host "  Setting up family workspace..." -ForegroundColor White
@@ -1067,7 +1224,7 @@ Write-Host ""
 Write-Host "  Deploying fabric + agents..." -ForegroundColor White
 Write-Host "  ----------------------------" -ForegroundColor DarkGray
 $installedFabric = Install-Fabric -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
-$installedOrchestrator = Install-Orchestrator -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
+$installedOrchestrator = Install-Orchestrator -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun -CompanionsInert $stageCompanions
 $installedClaudeEntrypoint = Install-ClaudeEntrypoint -PlatformName $Platform -Target $TargetWorkspace -OrchestratorRel $installedOrchestrator -IsDryRun $DryRun
 $installedClaudeCommands = Install-ClaudeCommands -InstalledNames ($installedPackages | ForEach-Object { $_.Name }) -PlatformName $Platform -Target $TargetWorkspace -IsDryRun $DryRun
 $installedClaudeSkill = Install-ClaudeSkill -PlatformName $Platform -Target $TargetWorkspace -OrchestratorRel $installedOrchestrator -IsDryRun $DryRun
@@ -1076,7 +1233,7 @@ $installedAgents = Install-Agents -InstalledNames ($installedPackages | ForEach-
 # Step 7: Manifest
 if (-not $DryRun -and $installedPackages.Count -gt 0) {
     Write-Host ""
-    Save-Manifest -Target $TargetWorkspace -PlatformName $Platform -Installed $installedPackages -Tools $installedTools -Fabric $installedFabric -Agents $installedAgents -Orchestrator $installedOrchestrator -ClaudeEntrypoint $installedClaudeEntrypoint -ClaudeCommands $installedClaudeCommands -ClaudeSkill $installedClaudeSkill
+    Save-Manifest -Target $TargetWorkspace -PlatformName $Platform -Installed $installedPackages -Tools $installedTools -Fabric $installedFabric -Agents $installedAgents -Orchestrator $installedOrchestrator -ClaudeEntrypoint $installedClaudeEntrypoint -ClaudeCommands $installedClaudeCommands -ClaudeSkill $installedClaudeSkill -ProvisioningSource $stagedProvisioning
 }
 
 # Step 7: Summary

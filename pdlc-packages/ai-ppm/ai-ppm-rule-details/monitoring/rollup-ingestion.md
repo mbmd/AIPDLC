@@ -64,6 +64,8 @@ Extract per Project ID:
 ├── current_phase         ← which Project-layer package is active
 ├── budget_actual         ← spend to date vs. planned
 ├── velocity_trend        ← accelerating / stable / decelerating
+├── delivery_method        ← manual / ai-assisted / ai-driven / hybrid (when the project reports it; optional)
+├── planned_vs_baseline    ← dual duration/effort — AI-method vs manual baseline — when the project's velocity model provides it (optional; arrives via FLO, never a direct read)
 ├── compliance_score      ← from GCE (if available)
 ├── test_coverage_pct     ← from TGE (if available)
 ├── open_issues           ← count from governance spine

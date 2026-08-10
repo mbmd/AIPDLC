@@ -130,9 +130,16 @@ GCE reads the new baseline to learn every resolution (the ledger entry says what
 
 ---
 
-## Build-Profile Note (Parked)
+## Build-Profile Detection Depth (Active)
 
-The drift design (§5.7) tunes detection depth by `buildProfile` (spec-driven = deep, freestyle = advisory-only). **`buildProfile` is PARKED** (build-method-agnostic DWG). When absent from the manifest, GCE uses **Standard** mode — measures reality against the baseline's governed elements regardless of build method. Detection does NOT depend on build profile. The mode-selection table activates only when the build-profile axis is unparked.
+GCE reads `buildProfile` from `.governance/workspace-manifest.yaml` to tune **detection depth**. **Backward-compatible default:** when `buildProfile` is **absent** (legacy workspaces, or DWG did not populate it), GCE uses **Standard** mode — unchanged from prior behavior. `freestyle` — the only profile that lightens detection — is set upstream **only on explicit opt-in**, never auto-derived from the delivery method. The build *discipline* drives cadence here; the timing multiplier (POLC planning surface) never does.
+
+| Build Profile | Detection Depth |
+|---------------|-----------------|
+| (absent — manual / AI-assisted — default) | Standard (all hard-governed elements) |
+| `aidlc` | Standard (all hard-governed elements) |
+| `spec-driven` | Deep (hard + advisory) |
+| `freestyle` *(explicit opt-in only)* | Advisory-only (drift logged, never blocks) |
 
 ---
 
@@ -158,4 +165,4 @@ The drift design (§5.7) tunes detection depth by `buildProfile` (spec-driven = 
 - [ ] Entries logged to the drift register, pinned to baseline version
 - [ ] Existing OPEN entries re-measured (self-resolved detected)
 - [ ] Dispositions verified by re-reading vN+1 (Waive = annotation check)
-- [ ] Standard mode used when `buildProfile` absent (parked)
+- [ ] Detection depth selected by `buildProfile` (Standard when absent — backward-compatible)

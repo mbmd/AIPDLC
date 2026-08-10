@@ -108,6 +108,8 @@ Before any detail, produce a 5-bullet executive summary:
 - {Projects with no budget data (stale)}
 ```
 
+> **Delivery-method view (when reported).** When projects report an AI delivery method with dual duration/effort via the roll-up (Stage 7), surface the portfolio-level **manual-baseline vs AI-method** comparison — aggregate committed effort/cost and the blended compression across delivery-method-adaptive projects. Projects reporting only a manual baseline (or no method) contribute a single figure. This stays roll-up-fed — never a direct Project-layer read (Layered Communication Rule).
+
 ### Step 8.5: Risk Heat Map
 
 ```markdown
@@ -197,6 +199,17 @@ Actions available:
 
 What would you like to do?
 ```
+
+---
+
+### Visualization Pack (depth-gated)
+
+| Depth | Diagram | Mermaid type | Source |
+|-------|---------|:------------:|--------|
+| Standard | Portfolio health dashboard (RAG status × project) | `xychart-beta` | Status data |
+| Comprehensive | Resource utilization heatmap (team × period) | `quadrantChart` | Resource data |
+
+Emit from the portfolio monitoring data. No new content introduced.
 
 ---
 

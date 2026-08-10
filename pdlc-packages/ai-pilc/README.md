@@ -74,6 +74,44 @@ It is designed as a general-purpose, reusable framework with zero project-specif
 
 ---
 
+## Where AI-PILC Sits in the Chain
+
+AI-PILC is the **first node** of the AI-* PDLC Family and lives in the **Portfolio layer** (scope = many projects). It turns a raw requirement into the Project Initiation Package (PIP) that every downstream package builds on.
+
+| Aspect | AI-PILC |
+|--------|---------|
+| **Layer** | Portfolio |
+| **Position** | First node — the chain entry point |
+| **Optional predecessor** | AI-ILC (idea evaluation), detected via `ilc-state.md` |
+| **Direct successor** | AI-PPM (portfolio governance); if AI-PPM is absent, hands off directly to AI-POLC |
+| **Reads (input)** | A raw requirement in any form, or an Approved Idea Brief from AI-ILC |
+| **Produces (output)** | Project Initiation Package (PIP) under `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/pip/` |
+| **Input marker (optional)** | `ilc-state.md` |
+| **Output marker** | `pilc-state.md` |
+| **Correlation key** | Mints `projectId` — the immutable, camelCase key every downstream package carries |
+| **Capability emitted** | `project-initiation@1` (consumed by AI-POLC, AI-UXD, AI-ADLC, AI-PPM) |
+
+**Simplified chain view** (see the diagram above for the full topology):
+
+```
+(AI-ILC) → AI-PILC → AI-PPM → AI-FLO → AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-DLC v1
+             ▲ you are here
+                       (AI-GCE + AI-TGE run alongside the build)
+```
+
+AI-PILC answers **"should we start, and on what terms?"** — it does not design, build, or manage the backlog. It hands a governed, execution-ready mandate to the packages that do.
+
+### Standalone vs. chained
+
+AI-PILC is fully functional on its own — the chain is additive, never required.
+
+- **Standalone.** Point it at any raw requirement (a PRD, RFP, spec, email, verbal brief, or an existing project to restructure). You are the orchestrator; AI-PILC produces a complete PIP with no other package present.
+- **Chained (upstream).** If AI-ILC ran first, AI-PILC detects `ilc-state.md` and enriches Stage 2 with the Approved Idea Brief (scope, dependencies, risks, originating idea ID) — it never re-asks what the idea already answered.
+- **Chained (downstream).** On completion it writes `pilc-state.md` and the PIP. AI-PPM, AI-POLC, AI-UXD, and AI-ADLC detect that marker and read the PIP automatically — no manual wiring.
+- **Cross-family (optional).** AI-PILC can also consume a *validated business case* emitted by another AIFLC family (a capability-typed seam). Absent that, it builds the business case itself.
+
+---
+
 ## Key Features
 
 | Feature | Description |
@@ -131,11 +169,110 @@ A complete Project Initiation Package containing:
 
 ## Installation
 
-1. Download or clone this repository
-2. The package contains two key directories:
-   - `ai-pilc-rules/` — the core workflow (always loaded by the AI)
-   - `ai-pilc-rule-details/` — phase details and templates (loaded on demand)
-3. Follow the platform-specific instructions in [setup/INSTALL.md](./setup/INSTALL.md)
+AI-PILC is pure Markdown — no runtime, no dependencies, no build step. "Installing" means placing two folders and one always-loaded router file where your AI agent will read them.
+
+### The model (read this first)
+
+Installation writes to exactly three places:
+
+1. **The package home** — `ai-pilc-rules/` (the core **dispatcher**) and `ai-pilc-rule-details/` (phase details + templates, read on demand) are copied into `.aiflc/pdlc/`. This path is **identical on every platform**.
+2. **One always-loaded orchestrator** — a single small router placed in your platform's native auto-load slot. It is the *only* file that loads automatically; it reads the AI-PILC core on demand when you activate the package. (Nothing under `.aiflc/` auto-loads — that is what keeps the context window free no matter how many packages you install.)
+3. **The output workspace** — `pdlc-ws/` at your workspace root, where AI-PILC writes the PIP.
+
+### Option A — Install alongside the family (recommended)
+
+Run the family installer from the repo root. It places AI-PILC (and any other packages you pick) correctly for your platform, deploys the orchestrator, and creates `pdlc-ws/`.
+
+```powershell
+# Windows (PowerShell) — install just AI-PILC on Kiro
+.\installer\install.ps1 -TargetWorkspace "C:\path\to\your\project" -Platform kiro -Packages "ai-pilc"
+```
+
+```bash
+# macOS / Linux — install just AI-PILC on Kiro
+./installer/install.sh --target ~/path/to/your/project --platform kiro --packages ai-pilc
+```
+
+Swap `-Packages "ai-pilc"` for `-Bundle portfolio` (AI-ILC + AI-PILC + AI-PPM + AI-FLO) or `-Bundle full` to install more of the chain at once. Supported `-Platform` values: `kiro`, `cursor`, `claude-code`, `cline`, `amazonq`, `copilot`.
+
+### Option B — Install this package individually (manual)
+
+Two copy operations plus one orchestrator placement. Copy the two package folders into the uniform home (same on every platform):
+
+```
+ai-pilc/ai-pilc-rules/        →  <workspace>/.aiflc/pdlc/ai-pilc-rules/
+ai-pilc/ai-pilc-rule-details/ →  <workspace>/.aiflc/pdlc/ai-pilc-rule-details/
+```
+
+Then place the always-loaded orchestrator (`session-orchestrator.md`, from the packages root) in your platform's slot:
+
+| Platform | Orchestrator destination | How it loads |
+|----------|--------------------------|--------------|
+| **Kiro** | `.kiro/steering/session-orchestrator-pdlc.md` | Auto-loaded steering |
+| **Amazon Q** | `.amazonq/rules/pdlc/session-orchestrator.md` | Auto-loaded rule |
+| **Cursor** | `.cursor/rules/pdlc-session-orchestrator.mdc` | Add `alwaysApply: true` frontmatter |
+| **Cline** | `.clinerules/pdlc-session-orchestrator.md` | Auto-loaded rule |
+| **Claude Code** | `CLAUDE_PDLC_ORCHESTRATOR.md` | Import from root `CLAUDE.md` via `@CLAUDE_PDLC_ORCHESTRATOR.md` |
+| **GitHub Copilot** | `.github/copilot-instructions-pdlc-orchestrator.md` | Workspace instructions |
+| **Codex / VS Code agent** | `AGENTS.md` (workspace root) | Auto-loaded agent instructions |
+
+> Claude Code uses a parallel orchestrator source, `session-orchestrator.claude.md`. Finally, create `pdlc-ws/` at your workspace root for output.
+
+### For AI agents — machine-readable install manifest
+
+An AI assistant can install AI-PILC by parsing and executing the block below. All `copy.from` and `orchestrator.source` paths are relative to `source_root`; every destination is relative to the workspace root. Pick the one `orchestrator.slot` row that matches the target platform. The manifest is **platform-agnostic** — everything except `orchestrator.slot` is identical on every platform.
+
+```yaml
+# AIFLC INSTALL MANIFEST — AI-PILC
+package: AI-PILC
+family: pdlc                       # package home: .aiflc/pdlc/
+version: 1.0.0
+runtime: none                      # pure Markdown; no deps, no build
+source_root: pdlc-packages/        # clone root of the AIPDLC repo
+activation_phrase: "Using AI-PILC, initiate a project from this requirement: ..."
+trigger_key: "_PILC_"              # universal explicit key (recognized by the orchestrator on any platform); or use activation_phrase
+status_key: "_ACTIVE_"             # reports which package is currently active
+depends_on: []                     # standalone-capable
+optional_inputs:
+  - marker: ilc-state.md           # AI-ILC Approved Idea Brief (enriches Stage 2)
+  - type: "validated-business-case@^1"   # optional cross-family seam-in
+emits_capability: "project-initiation@1"
+output_marker: pilc-state.md
+output_dir: pdlc-ws/               # created at workspace root; never write output to the root itself
+copy:
+  - from: ai-pilc/ai-pilc-rules
+    to: .aiflc/pdlc/ai-pilc-rules
+  - from: ai-pilc/ai-pilc-rule-details
+    to: .aiflc/pdlc/ai-pilc-rule-details
+orchestrator:
+  source: session-orchestrator.md            # the ONLY always-loaded file
+  source_claude: session-orchestrator.claude.md   # use this source for claude-code
+  slot:
+    kiro: .kiro/steering/session-orchestrator-pdlc.md
+    amazonq: .amazonq/rules/pdlc/session-orchestrator.md
+    cursor: .cursor/rules/pdlc-session-orchestrator.mdc   # + frontmatter alwaysApply: true
+    cline: .clinerules/pdlc-session-orchestrator.md
+    claude-code: CLAUDE_PDLC_ORCHESTRATOR.md              # import from root CLAUDE.md
+    copilot: .github/copilot-instructions-pdlc-orchestrator.md
+    codex: AGENTS.md
+    vscode: AGENTS.md
+core_entry: .aiflc/pdlc/ai-pilc-rules/core-workflow.md    # orchestrator Reads this on activation
+rule_details_home: .aiflc/pdlc/ai-pilc-rule-details/      # core resolves these on demand
+verify:
+  - path_exists: .aiflc/pdlc/ai-pilc-rules/core-workflow.md
+  - path_exists: .aiflc/pdlc/ai-pilc-rule-details/
+  - orchestrator_present_in_platform_slot: true
+  - action: 'say "Using AI-PILC, initiate a project" and expect the AI-PILC welcome message'
+```
+
+### Verify
+
+1. Open the workspace in your IDE with the AI agent active.
+2. Confirm the orchestrator loaded (Kiro: it appears in the Steering panel).
+3. Start a chat: `Using AI-PILC, initiate a project`.
+4. AI-PILC greets you and begins; output appears under `pdlc-ws/`.
+
+For the full per-platform walkthrough (including limitations and workarounds), see [setup/INSTALL.md](./setup/INSTALL.md) and the family-wide [INSTALL_GUIDE.md](../../INSTALL_GUIDE.md).
 
 ---
 
@@ -213,7 +350,7 @@ AI-PILC supports multi-session workflows:
 ai-pilc/
 ├── README.md                          ← This file
 ├── ai-pilc-rules/
-│   └── core-workflow.md               ← Master orchestration (always loaded)
+│   └── core-workflow.md               ← Master dispatcher (read on demand by the orchestrator)
 └── ai-pilc-rule-details/
     ├── common/
     │   ├── process-overview.md        ← High-level process map
@@ -276,13 +413,40 @@ ai-pilc/
 
 ---
 
-## Methodology Alignment
+## Patterns, Methodologies & Frameworks Covered
 
-AI-PILC draws from established project-governance discipline:
+AI-PILC operationalizes the **initiation and up-front planning** end of established project-governance practice. In short, it draws from established project-governance discipline:
 
 - **Principles, performance domains, and process groups** — the standard vocabulary of modern project management
 - **Business case-driven, stage-gated governance** — investment justification before authorization, staged delivery with management by exception
 - **Service management context** — where applicable, for service-oriented initiatives
+
+The table below maps each body of knowledge to *what AI-PILC actually applies* and *where it deliberately stops*. AI-PILC **aligns with** these frameworks and adapts their concepts to an AI-assisted, human-gated workflow — it does not certify against, or claim conformance to, any of them.
+
+| Framework / body of knowledge | What AI-PILC applies | Where it stops (scope boundary) |
+|---|---|---|
+| **PMBOK / PMI** (process groups, performance domains) | The **Initiating** and **Planning** work: charter, stakeholder register, scope statement + WBS, resource & ROM budget, risk register, RACI, communications plan | **Executing, Monitoring & Controlling, Closing** — delivery-time concerns owned by build/PM tooling, not initiation |
+| **PRINCE2** (governance principles) | Business-case-driven authorization, stage boundaries, "manage by exception," defined authority/roles, a go/no-go gate before commitment | Not a full PRINCE2 method tailoring; no run-stage product-based planning |
+| **Stage-gate governance** | One explicit **initiation gate** — feasibility + business case must clear before a charter is authorized | Portfolio-level gating across many projects is **AI-PPM's** role, not AI-PILC's |
+| **Business case / investment appraisal** | Cost-benefit framing, options analysis, ROM estimates, strategic-alignment and MoSCoW prioritization | Detailed financial modelling (multi-scenario NPV/IRR) is summarized, not exhaustively modelled |
+| **Service management (ITIL-style)** | Service-oriented framing for initiatives that stand up or change a service | Not full service-lifecycle or operational service management |
+| **Risk management (probability × impact)** | A qualitative P×I risk register with triggers, owners, and responses, established at initiation | Quantitative/Monte-Carlo analysis and live delivery-risk burndown |
+
+Every concept above is expressed as a **deliverable** (one artifact per stage) behind a human approval gate — never as background theory. What AI-PILC leaves out is picked up elsewhere in the family: **AI-PPM** (portfolio prioritization and cross-project governance), **AI-POLC** (backlog and story-level prioritization such as WSJF), and the build lifecycle (execution).
+
+---
+
+## Cross-Cutting Lenses (AI · Automation · Agentic)
+
+AI-PILC is where the family's cross-cutting **lens** modes are first promoted into the governance spine's `Lens_Status.md` (dual-written with the Decision Log). From here they flow through the whole chain — one switch, a different facet per package.
+
+| Lens | Mode (on / off) | Key | What AI-PILC does when it's on |
+|------|-----------------|-----|-------------------------------|
+| **AI Lens** | AI-Powered / No-AI | `_AILENS_` | Adds an AI-powered feasibility view to the assessment |
+| **Automation Lens** | Automated / Manual | `_AUTOLENS_` | Adds an automation feasibility view |
+| **Agentic** (AI ∩ Automation) | derived — both on | — | Adds agent feasibility (tool-integration, loop-cost realism) + an EU-AI-Act risk note, folded into the feasibility sections |
+
+Downstream, AI-POLC tags features per lens, AI-DWG provisions the scaffolding, and AI-GCE / AI-TGE govern and test lens-tagged features via Layer-3 agents (`AIG__`/`ATG__`, `AIQ__`/`ATQ__`).
 
 ---
 
@@ -317,6 +481,25 @@ Conceptualized and designed based on real-world PPM/PMO practice, combining stru
 
 ---
 
+## Further Reading
+
+Deep-dive knowledge documents for this package (in the family repo under `knowledge_docs/`):
+
+| Document | What it covers |
+|----------|---------------|
+| [How PILC Workflow Engine Works](../../knowledge_docs/HOW_PILC_WORKFLOW_ENGINE_WORKS.md) | Internal mechanics of the 6-phase / 16-stage initiation engine |
+| [How to Initiate a Project](../../knowledge_docs/HOW_TO_INITIATE_A_PROJECT.md) | Practitioner guide — running AI-PILC on real requirements |
+| [How Package Installation Works](../../knowledge_docs/HOW_PACKAGE_INSTALLATION_WORKS.md) | How the installer places packages into your workspace |
+| [How Package Activation & Isolation Works](../../knowledge_docs/HOW_PACKAGE_ACTIVATION_ISOLATION_WORKS.md) | Activation keys, switching rules, multi-package coexistence |
+| [How Chain Handoff Works](../../knowledge_docs/HOW_CHAIN_HANDOFF_WORKS.md) | How AI-PILC reads AI-ILC output and feeds AI-POLC |
+| [How Gates and Approvals Work](../../knowledge_docs/HOW_GATES_AND_APPROVALS_WORK.md) | The human-in-the-loop gate model at every stage |
+| [How Depth Levels Work](../../knowledge_docs/HOW_DEPTH_LEVELS_WORK.md) | Minimal / Standard / Comprehensive adaptive tiers |
+| [How State Files Work](../../knowledge_docs/HOW_STATE_FILES_WORK.md) | State marker anatomy and session resume logic |
+| [PILC Output Structure](../../knowledge_docs/PILC_OUTPUT_STRUCTURE.md) | Runtime output folder structure and portfolio feeding |
+| [Why Project Initiation Matters](../../knowledge_docs/WHY_PROJECT_INITIATION_MATTERS.md) | Stakeholder justification — what breaks without initiation |
+
+---
+
 ## License
 
 **Apache License 2.0 with Attribution Addendum**
@@ -337,4 +520,4 @@ See `LICENSE` and `NOTICE` in this directory for full terms.
 
 ---
 
-*Part of [AIFLC](../README.md) — the AI-* PDLC Family*
+*Part of [AIFLC](../../README.md) — the AI-* PDLC Family*

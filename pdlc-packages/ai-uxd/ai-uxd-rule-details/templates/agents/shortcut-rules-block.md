@@ -11,19 +11,27 @@
 ```markdown
 <!-- BEGIN AI-UXD AGENT SHORTCUTS -->
 
-### AI-UXD Governance Agent
+### AI-UXD Governance Agents
 
 | Trigger | Agent | Purpose |
 |---------|-------|---------|
 | `UXC__` | UX Consistency Agent | Validates UXP internal consistency, traceability, token alignment, accessibility spec match, and handoff consumability |
+| `UXC__ sync-figma` | Figma Sync Agent | Reconciles a Figma export against governed tokens via 3-way diff — produces a report; merges only on approval |
 
-**Usage:** Type `UXC__` in any prompt to invoke the UX Consistency Agent. It runs autonomously and produces a consistency report.
+**Usage:**
+- Type `UXC__` to invoke the UX Consistency Agent (full UXP validation).
+- Type `UXC__ sync-figma` to invoke the Figma Sync Agent (reconcile a Figma export dropped in `integrations/figma/in/`).
 
-**When to use:**
+**When to use `UXC__`:**
 - After revising any UXP artifact
 - Before downstream handoffs (AI-POLC, AI-DWG, AI-GCE)
 - After incorporating AI-DLC v1 feedback
 - Monthly governance check
+
+**When to use `UXC__ sync-figma`:**
+- After a designer exports updated Variables from Figma
+- After a design sprint that modified Figma tokens
+- Periodic sync checkpoint (on-demand cadence)
 
 <!-- END AI-UXD AGENT SHORTCUTS -->
 ```

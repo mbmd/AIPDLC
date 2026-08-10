@@ -84,3 +84,26 @@
 - ADLC produces 4 registers (not 6); Actions → tracked in Architecture_Workbook; Assumptions → resolved in Vision stage.
 - Individual architecture documents (`01_*.md` through `11_*.md`) — DFE extracts their **structured sub-sections** for the dashboard `arch` pane: fenced ```mermaid blocks (C4 L1/L2/L3 + security/data/api/infrastructure diagrams), the technology-stack tables, NFR tables, the ADR register + `ADR/` folder, and the containers table. It does NOT parse free-form prose; the few free-form roll-ups (vision status/statement, NFR targets, techStack grouping) come from a small `dashboard-summary` block in `adlc-state.md` (Hybrid emit). (Supersedes the earlier "not read by DFE — too unstructured" stance — scoped to structured sub-sections per the Dashboard Data-Fidelity Plan.)
 - The `containers[]` field is what AI-DWG consumes; DFE preserves it (top-level + mirrored under `arch.containers`) so dashboards can show system topology.
+
+---
+
+## AI-LENS Fields (AI_LENS_PROTOCOL §6.2)
+
+> Present when AP artifacts (ADRs, component designs) carry `aiFeature` tags. The ADLC facet produces the deepest AI-architecture decisions.
+
+| Field path (in `data`) | Source | Extraction rule |
+|------------------------|--------|-----------------|
+| `aiLens.aiFeatures[]` | AP ADRs + component/data/integration design files with `aiFeature: true` front-matter | For each tagged artifact, extract: `{ aiFeatureId, aiModelStrategy, aiDataStrategy, aiMlOpsStrategy, aiRaiPosture, aiCostEstimate, aiSecurityControls[] }`. Values from the ADR decision/context or from the AI architecture section of the design file. Empty array `[]` if no AI features architected. |
+
+> **Source:** AP architecture artifacts in the project's `architecture/` folder carrying `aiFeature` front-matter (ADRs, design files produced by the AI-LENS ADLC facet + sub-module).
+
+
+## Automation-LENS Fields (AUTOMATION_LENS_PROTOCOL §6.2)
+
+> Present when AP artifacts (ADRs, component designs) carry `automationFeature` tags. The ADLC facet produces the deepest automation-architecture decisions.
+
+| Field path (in `data`) | Source | Extraction rule |
+|------------------------|--------|-----------------|
+| `automationLens.automationFeatures[]` | AP ADRs + component/integration design files with `automationFeature: true` front-matter | For each tagged artifact, extract: `{ automationFeatureId, automationEngineStrategy, idempotencyStrategy, retryCompensationStrategy, automationActorIdentity, auditStrategy, loopGuardStrategy }`. Values from the ADR decision/context or from the automation architecture section of the design file. Empty array `[]` if no automation features architected. |
+
+> **Source:** AP architecture artifacts in the project's `architecture/` folder carrying `automationFeature` front-matter (ADRs, design files produced by the Automation-LENS ADLC facet + sub-module).

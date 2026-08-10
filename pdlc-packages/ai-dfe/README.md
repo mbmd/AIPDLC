@@ -70,6 +70,34 @@ AI-DFE is part of **AIFLC** (AI Full Life Cycle) and the **AI-* PDLC Family**. L
 
 ---
 
+## Where AI-DFE Sits in the Chain
+
+AI-DFE is a **fabric engine**, not a chain step — the family's **data layer**. Like AI-FLO it runs *alongside* the whole family rather than as a linear stage, but where FLO carries *decisions*, DFE carries *data*: it gathers every package's scattered Markdown output, shapes it into schema-validated JSON, and distributes it to one governed read-point so dashboards, extensions, and reports never touch raw source files. It owns exactly one folder — `{family}-ws/data/` — and is its sole writer.
+
+| Aspect | AI-DFE |
+|--------|---------|
+| **Role** | Universal fabric data layer — gather → shape → distribute |
+| **Position** | Alongside the whole family (a continuous engine); not a chain row |
+| **Reads (input)** | Every package's output marker (`*` wildcard) + each consumer's declared `data-demand/` |
+| **Produces (output)** | Schema-validated JSON under `{family}-ws/data/` — per-package (Layer 1) + demand-shaped (Layer 2) — indexed by `REGISTRY.json` |
+| **Output marker** | `dfe-state.md` |
+| **Correlation key** | Preserves each package's `projectId` in the data it shapes |
+| **Capability emitted** | `data-surface@1` (internal — a consumption surface, not a chain deliverable) |
+| **Capability consumed** | `*` (all marker types, as gather triggers) |
+| **Territory** | Sole owner + sole writer of `{family}-ws/data/`; never writes into another package's folder |
+| **Family footprint** | Cloned into every family at assemble — one canonical family-agnostic engine, family scope resolved from `{family}` tokens |
+
+AI-DFE answers **"what does every package currently hold, in one clean machine-readable place?"** Producers and consumers are fully decoupled: a producer just emits its normal Markdown; a consumer declares a DEMAND and reads `REGISTRY.json` — neither knows where the other's files live.
+
+### Standalone vs. chained
+
+- **Additive, never required.** Nothing in the family depends on DFE to function — packages produce their Markdown outputs with or without it. DFE adds a machine-readable surface on top; remove it and the family still runs.
+- **Discover-once, monitor-continuously.** It reads each package's data interface once (cached in `dfe-state.md`), then only checks timestamps — a missing or unrun package becomes a `null` field, never an error.
+- **Schema-first, single-writer.** Every file validates against a schema before it is written; only DFE writes to `data/`, and every write is snapshotted into `history/` with a millisecond timestamp.
+- **Family-scoped.** Each family owns its own `data/`; cross-family exchange reads the neighbour's surface, never mixes territories.
+
+---
+
 ## Features
 
 - **3 phases** — Configure (discover) → Operate (gather, shape, distribute, monitor) → Govern (validate, freshness, history, cleanup)
@@ -99,12 +127,127 @@ AI-DFE is part of **AIFLC** (AI Full Life Cycle) and the **AI-* PDLC Family**. L
 
 ## Installation
 
-See `setup/INSTALL.md` for full multi-platform installation instructions.
+AI-DFE is pure Markdown — no runtime, no dependencies, no build step. "Installing" it means placing two folders and one always-loaded router file where your AI agent reads them, plus a one-time bootstrap of its runtime territory (`{family}-ws/data/`). (What AI-DFE then *produces* — schema-validated JSON — is written into that territory at run time.)
 
-**Quick start (Kiro):**
-1. Copy `ai-dfe-rules/` and `ai-dfe-rule-details/` into the uniform home `.aiflc/pdlc/`
-2. Copy `session-orchestrator.md` into `.kiro/steering/` (the only always-loaded file; it `Read`s the core on demand)
-3. The installer bootstraps an empty `pdlc-ws/data/`; run `DAT__ all` to populate it.
+> **Fabric-engine note.** AI-DFE ships **inside every AI-* family** — if you installed the family, DFE is already present and its territory is bootstrapped. Install it **directly** (below) only to add the data layer to a workspace that has other AI-* packages but no DFE yet.
+
+### The model (read this first)
+
+Installation writes to four places:
+
+1. **The package home** — `ai-dfe-rules/` (the core **engine/dispatcher**) and `ai-dfe-rule-details/` (configure / operate / govern stages, data-schema, and templates, read on demand) are copied into `.aiflc/pdlc/`. This path is **identical on every platform**.
+2. **One always-loaded orchestrator** — a single small router placed in your platform's native auto-load slot. It is the *only* file that loads automatically; it `Read`s the AI-DFE core on demand when you activate the engine.
+3. **The runtime territory** — a one-time bootstrap of `{family}-ws/data/` (empty `REGISTRY.json`, empty `CONSUMER_REGISTRY.md`, a template `dfe-state.md`, and empty `demands/` + `history/` folders). The family installer does this automatically.
+4. **The agents** — DFE's two report-only agents (`DHC__`, `DFA__`) plus their shortcut block.
+
+### Option A — Install alongside the family (recommended)
+
+Use the family installer to place AI-DFE and bootstrap its territory:
+
+```powershell
+# Windows (PowerShell)
+.\installer\install.ps1 -TargetWorkspace "C:\path\to\your\project" -Platform kiro -Packages "ai-dfe"
+```
+
+```bash
+# macOS / Linux
+./installer/install.sh --target ~/path/to/your/project --platform kiro --packages ai-dfe
+```
+
+Supported `-Platform` values: `kiro`, `cursor`, `claude-code`, `cline`, `amazonq`, `copilot`. The installer creates `{family}-ws/data/` with an empty registry so DFE is ready to populate on first run.
+
+### Option B — Install this engine individually (manual)
+
+Copy the two package folders into the uniform home (same on every platform):
+
+```
+ai-dfe/ai-dfe-rules/        →  <workspace>/.aiflc/pdlc/ai-dfe-rules/
+ai-dfe/ai-dfe-rule-details/ →  <workspace>/.aiflc/pdlc/ai-dfe-rule-details/
+```
+
+Then place the always-loaded orchestrator (`session-orchestrator.md`, from the packages root) in your platform's slot:
+
+| Platform | Orchestrator destination | How it loads |
+|----------|--------------------------|--------------|
+| **Kiro** | `.kiro/steering/session-orchestrator-pdlc.md` | Auto-loaded steering |
+| **Amazon Q** | `.amazonq/rules/pdlc/session-orchestrator.md` | Auto-loaded rule |
+| **Cursor** | `.cursor/rules/pdlc-session-orchestrator.mdc` | Add `alwaysApply: true` frontmatter |
+| **Cline** | `.clinerules/pdlc-session-orchestrator.md` | Auto-loaded rule |
+| **Claude Code** | `CLAUDE_PDLC_ORCHESTRATOR.md` | Import from root `CLAUDE.md` via `@CLAUDE_PDLC_ORCHESTRATOR.md` |
+| **GitHub Copilot** | `.github/copilot-instructions-pdlc-orchestrator.md` | Workspace instructions |
+| **Codex / VS Code agent** | `AGENTS.md` (workspace root) | Auto-loaded agent instructions |
+
+Then bootstrap the territory and register the agents:
+
+- Create `{family}-ws/data/` with an empty `REGISTRY.json`, an empty `CONSUMER_REGISTRY.md` (from `ai-dfe-rule-details/templates/CONSUMER_REGISTRY.md`, no rows), a template `dfe-state.md`, and empty `demands/` + `history/` folders.
+- On Kiro, copy the agents (`DHC__`, `DFA__`) into `.kiro/agents/` and append their shortcut block into `workspace-rules.md`; on other platforms, register the shortcut block in your workspace rules.
+
+### For AI agents — machine-readable install manifest
+
+An AI assistant can install AI-DFE by parsing and executing the block below. All `copy.from` and `orchestrator.source` paths are relative to `source_root`; every destination is relative to the workspace root. Pick the one `orchestrator.slot` row that matches the target platform. The manifest is **platform-agnostic** — everything except `orchestrator.slot` is identical on every platform.
+
+```yaml
+# AIFLC INSTALL MANIFEST — AI-DFE
+package: AI-DFE
+family: pdlc                       # package home: .aiflc/pdlc/
+version: 1.0.0
+runtime: none                      # pure Markdown; no deps, no build
+role: fabric-engine                # ships in every family; the family's data layer
+source_root: pdlc-packages/        # clone root of the AIPDLC repo
+activation_phrase: "Using AI-DFE, gather and publish the family data"
+trigger_key: "_DFE_"               # universal explicit key (recognized by the orchestrator on any platform); or use activation_phrase
+status_key: "_ACTIVE_"             # reports which package is currently active
+operations_key: "DAT__"            # data operations (e.g. DAT__ all, DAT__ status)
+depends_on: []                     # standalone-capable; advisory — degrades gracefully to null on missing sources
+consumes_capability: "*"           # all marker types present, as gather triggers
+emits_capability: "data-surface@1" # internal — a consumption surface, not a chain deliverable
+output_marker: dfe-state.md
+output_dir: pdlc-ws/data/          # sole-writer territory; JSON surface written here at run time
+copy:
+  - from: ai-dfe/ai-dfe-rules
+    to: .aiflc/pdlc/ai-dfe-rules
+  - from: ai-dfe/ai-dfe-rule-details
+    to: .aiflc/pdlc/ai-dfe-rule-details
+orchestrator:
+  source: session-orchestrator.md            # the ONLY always-loaded file
+  source_claude: session-orchestrator.claude.md   # use this source for claude-code
+  slot:
+    kiro: .kiro/steering/session-orchestrator-pdlc.md
+    amazonq: .amazonq/rules/pdlc/session-orchestrator.md
+    cursor: .cursor/rules/pdlc-session-orchestrator.mdc   # + frontmatter alwaysApply: true
+    cline: .clinerules/pdlc-session-orchestrator.md
+    claude-code: CLAUDE_PDLC_ORCHESTRATOR.md              # import from root CLAUDE.md
+    copilot: .github/copilot-instructions-pdlc-orchestrator.md
+    codex: AGENTS.md
+    vscode: AGENTS.md
+core_entry: .aiflc/pdlc/ai-dfe-rules/core-engine.md       # orchestrator Reads this on activation
+rule_details_home: .aiflc/pdlc/ai-dfe-rule-details/       # core resolves these on demand
+bootstrap_territory:               # one-time; the family installer does this automatically
+  dir: pdlc-ws/data/
+  create:
+    - REGISTRY.json                # empty index
+    - CONSUMER_REGISTRY.md         # from templates/, no rows
+    - dfe-state.md                 # from template
+    - demands/                     # empty
+    - history/                     # empty
+agents:                            # report-only; Kiro → .kiro/agents/, others → shortcut blocks
+  - trigger: "DHC__"               # data-fabric health check — run first (read-only)
+  - trigger: "DFA__"               # data-fabric integrity agent (18 checks / 5 categories)
+verify:
+  - path_exists: .aiflc/pdlc/ai-dfe-rules/core-engine.md
+  - path_exists: pdlc-ws/data/REGISTRY.json
+  - orchestrator_present_in_platform_slot: true
+  - action: 'type "DHC__" and expect a readiness verdict, then "DAT__ all" to populate the surface'
+```
+
+### Verify
+
+1. Open the target workspace in your IDE with the AI agent active.
+2. Confirm the orchestrator loaded (Kiro: it appears in the Steering panel).
+3. Run the health check: type `DHC__` — expect a readiness verdict (HEALTHY / DEGRADED / NOT READY / IDLE).
+4. Populate the surface: `DAT__ all` — AI-DFE gathers from every installed package and writes `pdlc-ws/data/REGISTRY.json` + per-package `{pkg}-data.json`. Use `DFA__` for a report-only integrity pass.
+
+For the full per-platform walkthrough, see [setup/INSTALL.md](./setup/INSTALL.md) and the family-wide [INSTALL_GUIDE.md](../../INSTALL_GUIDE.md).
 
 ---
 
@@ -128,7 +271,7 @@ ai-dfe/
 ├── PLAN.md  ·  CONCEPTUAL_MAP.md      ← rationale + navigation
 ├── USER_GUIDE.md  ·  WHITEPAPER.md    ← walkthrough + design narrative
 ├── ai-dfe-rules/
-│   └── core-engine.md                 ← Master orchestration (THE spec) + § Gate Contract
+│   └── core-engine.md                 ← Master orchestration engine (read on demand by the orchestrator) + § Gate Contract
 ├── ai-dfe-rule-details/
 │   ├── common/                        ← process-overview, session-continuity
 │   ├── configure/                     ← Phase 1: family / package / demand discovery
@@ -150,6 +293,25 @@ ai-dfe/
 4. **Consumers are decoupled** — they declare a DEMAND and read the registry; they never reach into source files.
 5. **Family-scoped** — each family owns its own `data/`; cross-family exchange reads the neighbour's data, never mixes.
 6. **Graceful degradation** — incomplete is allowed; broken is not.
+
+---
+
+## Patterns, Methodologies & Frameworks Covered
+
+AI-DFE operationalizes **data integration** — turning scattered, human-readable package outputs into one governed, machine-readable surface. It is family-agnostic; family scope is resolved from `{family}` tokens at clone time. The table maps each pattern to *what AI-DFE applies* and *where it stops*.
+
+| Pattern / methodology | How AI-DFE applies it | Where it stops (scope boundary) |
+|---|---|---|
+| **ETL / ingestion pipeline** | Two-layer pipeline — gather sources → shape per-package JSON (Layer 1) → shape demand-driven consumer outputs (Layer 2) → distribute | It transforms and republishes existing package outputs; it never authors or edits source content |
+| **Single source of truth / registry** | `REGISTRY.json` — every consumer resolves its data path through one fixed entry point | The registry indexes data; it is not a query API or a database |
+| **Schema-on-write (contract-first)** | Every file validates against a JSON Schema before it is written; malformed data is rejected at the boundary | It enforces shape, not semantics — it does not judge whether a package's *content* is correct |
+| **Publisher/subscriber decoupling** | Producers emit normal Markdown; consumers declare a `data-demand/` and read the registry — neither knows the other's file paths | Decoupling of data delivery only; it does not orchestrate *when* packages run (that is AI-FLO) |
+| **Single-writer ownership** | DFE is the sole owner and sole writer of `{family}-ws/data/`; any consumer may read | It writes only the data surface — never into another package's territory |
+| **Snapshotting / point-in-time history** | Every write is snapshotted into `history/` with a millisecond timestamp, plus retention and cleanup | Point-in-time history of the data surface, not full event-sourced replay of package state |
+| **Graceful degradation (null-object)** | A missing or unrun package yields a `null` field, never an error; incomplete is allowed, broken is not | It reports absence; it never fabricates data to fill a gap |
+| **Materialized view** | Demand-shaped Layer-2 outputs are pre-computed views tailored to each consumer, refreshed on each `DAT__` pass | Views refresh per pass; DFE is not a live/streaming view engine |
+
+**Scope boundary (what AI-DFE does *not* do):** it never authors or edits a package's source content, never routes decisions or decides *when* a package runs (that is AI-FLO), and never writes outside `{family}-ws/data/`. Everything in `data/` is tool-generated, schema-validated, and reproducible from sources.
 
 ---
 

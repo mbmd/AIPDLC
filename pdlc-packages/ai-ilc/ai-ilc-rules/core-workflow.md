@@ -69,6 +69,7 @@ All detail-file references below are relative to the resolved directory. **Befor
 - `common/question-format-guide.md` — full question-format rules
 - `common/content-validation.md` — content validation requirements
 - `common/reference-linking.md` — emit codes defined in another generated file as clickable relative links (Tier 1: object files; Tier 2: register-row `<a id>` anchors); older output retrofit via `UPG__`
+- `common/contextual-prose-accompaniment.md` — ensure explanatory prose around cross-reference keys is self-sufficient at a glance (5 patterns, depth-scaled); complements reference-linking
 
 ---
 
@@ -173,6 +174,19 @@ pdlc-ws/ideas/                              ← FIXED output root (workspace-roo
 ## MANDATORY: Two-Source Evaluation Model
 
 The Evaluate stage scores against a **two-source model**: a **default baseline rubric** (built in — 7 universal criteria that work for any idea in any domain; functional even with no customization) plus optional **enterprise customization** (the org can override criteria, weights, or thresholds on a per-criterion basis). Resolution: enterprise custom overrides baseline per-criterion; baseline stands where the enterprise is silent; full baseline applies when there is no customization at all. Full rubric, criteria, and scoring bands: `idea-lifecycle/evaluate.md`.
+
+---
+
+## Lens Seam
+
+At each **stage boundary** (before loading the stage's detail file), check for active cross-cutting lenses:
+
+1. **Read** `management_framework/Lens_Status.md` (the live current-mode SSOT; may not exist yet).
+2. **For each lens row with Mode ON** (`ai-lens` = `AI-Powered` · `automation-lens` = `Automated` · any future lens) → `Read` this package's facet for that lens (`ai-ilc-rule-details/{lens-id}/facet.md`) and apply it alongside the stage detail.
+3. **Intersection facets (co-active lenses):** if two or more lens rows are ON, also evaluate the registry's `intersection-facets` entries whose `activateWhen` holds → `Read` the entry's facet (`ai-ilc-rule-details/{id}/facet.md`) and apply it. Today: when `ai-lens = AI-Powered` **AND** `automation-lens = Automated`, load the **agentic** facet — at AI-ILC it records the idea's *agentic posture*, derived from the AI + automation postures (no new prompt). A composed facet, **not** a lens (no mode row of its own).
+4. **No file, no row, or Mode OFF** (`No-AI` / `Manual`), and no intersection predicate holds → **no-op**; proceed normally with zero extra load.
+
+The canonical registry — **lenses + `intersection-facets`**, activation values, facet paths, agents — is `contracts/LENS_REGISTRY.md`. A future lens plugs in as a new registry row (zero core edits); the agentic intersection facet is wired above. Token discipline: facets load on demand only; an inactive lens (or an unmet intersection predicate) costs nothing beyond the one-line status read.
 
 ---
 

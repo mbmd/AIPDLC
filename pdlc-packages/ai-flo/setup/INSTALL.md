@@ -24,7 +24,7 @@ The installer places package files in the correct location for your platform and
 your-workspace/
 ├── .kiro/
 │   ├── steering/
-│   │   └── session-orchestrator.md           ← the ONLY always-loaded file (routes to cores)
+│   │   └── session-orchestrator-pdlc.md      ← the ONLY always-loaded file (routes to cores)
 │   └── agents/
 │       ├── flo-health-check.md               ← FHC__ health check (Kiro)
 │       └── flow-integrity-agent.md           ← FIA__ integrity agent (Kiro)
@@ -50,12 +50,12 @@ If you prefer manual install, copy the package core to `.aiflc/pdlc/ai-flo-rules
 
 | Platform | Session orchestrator (always-loaded) → |
 |----------|----------------------------------------|
-| Kiro | `.kiro/steering/session-orchestrator.md` |
+| Kiro | `.kiro/steering/session-orchestrator-pdlc.md` |
 | Amazon Q | `.amazonq/rules/pdlc/session-orchestrator.md` |
 | Cursor | `.cursor/rules/pdlc-session-orchestrator.mdc` (with `alwaysApply: true` frontmatter) |
 | Cline | `.clinerules/pdlc-session-orchestrator.md` |
 | Claude Code | root `CLAUDE.md` importing `@CLAUDE_PDLC_ORCHESTRATOR.md` |
-| Copilot | `.github/copilot-instructions.md` (orchestrator block) |
+| Copilot | `.github/copilot-instructions-pdlc-orchestrator.md` (orchestrator block) |
 | Codex | `AGENTS.md` (orchestrator block) |
 
 The core (`core-engine.md`) and `ai-flo-rule-details/` are plain copies under `.aiflc/pdlc/` on every platform — there are no per-package `.mdc`, `.instructions.md`, or `CLAUDE_PDLC_AI_*` files anymore.

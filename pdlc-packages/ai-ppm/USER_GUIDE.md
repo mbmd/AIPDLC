@@ -254,4 +254,4 @@ See `setup/INSTALL.md` for detailed platform instructions.
 
 ---
 
-*AI-PPM v1.0.0 | Part of [AIFLC](../README.md) — the AI-* PDLC Family*
+*AI-PPM v1.0.0 | Part of [AIFLC](../../README.md) — the AI-* PDLC Family*

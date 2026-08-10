@@ -231,6 +231,8 @@ Based on the source content, assess project complexity across these factors:
 
 ---
 
+> **Delivery method (optional early capture — feeds downstream timing).** If the source or the user indicates *how* the product will be built — manual, AI-assisted, AI-driven, or hybrid (and which AI tool) — capture it and record `Delivery Method` / `AI Tool` in `pilc-state.md`. It is **optional and often unknown at initiation** (default: leave unset/manual) — do not force it. When set, it flows downstream via the marker: AI-POLC inherits it for its velocity model and dual-track timing, and it informs the dual schedule/effort views in Feasibility (Stage 6), Business Case (Stage 8), and Resource & Budget (Stage 12). This is *how code is produced* — distinct from delivery methodology (the agile framework).
+
 ### Step 4: Determine Workflow Depth
 
 Map completeness + complexity to workflow depth:

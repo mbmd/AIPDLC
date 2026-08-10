@@ -10,8 +10,8 @@
 
 ## Activation Point
 
-- **Primary Stage:** Stage 5 (Container Design) / Stage 11 (Integration Architecture)
-- **Secondary Stages:** Stage 10 (Infrastructure & Deployment), Stage 12 (Component Design)
+- **Primary Stage:** Stage 5 (Container Design) / Stage 11 (Integration & Infrastructure)
+- **Secondary Stages:** Stage 10 (API Architecture), Stage 12 (Component Design)
 
 These rules apply to distributed system communication, failure handling, and ensuring the system degrades gracefully rather than failing catastrophically.
 

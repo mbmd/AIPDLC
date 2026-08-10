@@ -40,8 +40,39 @@
           "releases":{"type":"array","items":{"type":"object","properties":{"name":{"type":"string"},"date":{"type":["string","null"]},"status":{"type":["string","null"]},"stories":{"type":["integer","null"]},"done":{"type":["integer","null"]},"scope":{"type":"array"}}}},
           "backlog":{"type":["object","null"],"properties":{"totalEpics":{"type":["integer","null"]},"totalStories":{"type":["integer","null"]},"prioritised":{"type":["integer","null"]},"inReleasePlan":{"type":["integer","null"]},"dorReady":{"type":["boolean","null"]},"dodReady":{"type":["boolean","null"]},"dorPath":{"type":["string","null"]},"dodPath":{"type":["string","null"]}}},
           "acceptance":{"type":["object","null"],"properties":{"totalCriteria":{"type":["integer","null"]},"validated":{"type":["integer","null"]}}},
-          "velocity":{"type":["object","null"],"properties":{"trend":{"type":["string","null"],"description":"stable|up|down"}}},
-          "stakeholders":{"type":"array","items":{"type":"object","properties":{"name":{"type":"string"},"engagement":{"type":["string","null"],"description":"champion|supportive|neutral|resistant"},"influence":{"type":["string","null"],"description":"high|low"}}}}
+          "velocity":{"type":["object","null"],"properties":{"trend":{"type":["string","null"],"description":"stable|up|down"},"method":{"type":["string","null"],"description":"delivery method: manual|ai-assisted|ai-driven|hybrid (when set; null/manual otherwise)"},"blendedMultiplier":{"type":["number","null"],"description":"blended project velocity multiplier vs manual baseline (when an AI method is set)"},"plannedVsBaseline":{"type":["number","null"],"description":"compression ratio 1 - B/A (planned AI vs manual baseline); null for manual. Distinct from trend (actual, from build engine)"}}},
+          "stakeholders":{"type":"array","items":{"type":"object","properties":{"name":{"type":"string"},"engagement":{"type":["string","null"],"description":"champion|supportive|neutral|resistant"},"influence":{"type":["string","null"],"description":"high|low"}}}},
+          "planning":{"type":["object","null"],"description":"Team-domain planning view data (Standard+ depth, derived from epics). Extracted from team-epic-distribution.md and capacity-planning-matrix.md.","properties":{
+            "teamDistribution":{"type":"array","items":{"type":"object","properties":{"team":{"type":"string"},"primaryEpics":{"type":["integer","null"]},"sharedEpics":{"type":["integer","null"]},"totalSP":{"type":["integer","null"]},"utilization":{"type":["number","null"],"description":"Percentage 0-100; null if velocity model absent"}}}},
+            "capacityFit":{"type":["object","null"],"description":"Overall capacity assessment for the next release (null if velocity model absent)","properties":{"overallFit":{"type":["string","null"],"description":"fits|tight|over"},"bottleneckTeam":{"type":["string","null"]},"bottleneckUtilization":{"type":["number","null"]}}}
+          }}
+        }},
+        "aiLens":{"type":["object","null"],"description":"AI-LENS fields (AI_LENS_PROTOCOL §6.2 — AI-POLC contract). Present on aiFeature-tagged epics/stories.","properties":{
+          "aiFeatures":{"type":"array","description":"AI features identified and tagged during epic decomposition / story elaboration.","items":{"type":"object","properties":{
+            "aiFeatureId":{"type":"string","description":"Stable thread identifier (AIF-{NNN})"},
+            "aiSubMode":{"type":["string","null"],"description":"Sub-mode from the active palette: opportunity | augmented | native"},
+            "aiCapability":{"type":["string","null"],"description":"Primary AI capability from the taxonomy (e.g. generation, recommendation)"},
+            "epicId":{"type":["string","null"],"description":"ID of the epic/story this feature is tagged on"},
+            "aiAcceptanceCriteria":{"type":"array","items":{"type":"string"},"description":"Product-level AI acceptance criteria (quality threshold, confidence, fallback, HITL)"}
+          }}}
+        }},
+        "automationLens":{"type":["object","null"],"description":"Automation-LENS fields (AUTOMATION_LENS_PROTOCOL §6.2 — AI-POLC contract). Present on automationFeature-tagged epics/stories.","properties":{
+          "automationFeatures":{"type":"array","description":"Automated features identified and tagged during epic decomposition / story elaboration.","items":{"type":"object","properties":{
+            "automationFeatureId":{"type":"string","description":"Stable thread identifier (AUTO-{NNN})"},
+            "automationMode":{"type":["string","null"],"description":"Sub-mode from the active palette: assisted | attended | unattended"},
+            "automationPattern":{"type":["string","null"],"description":"Primary automation pattern from the §5 taxonomy (e.g. workflow-orchestration, routing-assignment)"},
+            "automationTrigger":{"type":["string","null"],"description":"Firing mechanism: scheduled | event | manual | continuous"},
+            "epicId":{"type":["string","null"],"description":"ID of the epic/story this feature is tagged on"},
+            "automationAcceptanceCriteria":{"type":"array","items":{"type":"string"},"description":"Automation acceptance criteria (throughput/SLA, exception handling, human-fallback, straight-through-rate, reversibility)"}
+          }}}
+        }},
+        "agenticProfile":{"type":["object","null"],"description":"Agentic intersection-facet fields (AGENTIC_FACET_SPEC section 3 - DERIVED from co-tagged aiFeature+automationFeature at threshold; NOT a lens, no agenticFeatureId, no register). Present on epics/stories where the agentic profile was confirmed; dissolves if either lens tag is removed or drops below threshold.","properties":{
+          "agenticFeatures":{"type":"array","description":"Features confirmed agentic (both lens tags at threshold: aiSubMode in {augmented,native} AND automationMode in {attended,unattended}). Threaded by the two existing feature ids.","items":{"type":"object","properties":{
+            "aiFeatureId":{"type":"string","description":"AI Lens thread id (AIF-{NNN})"},
+            "automationFeatureId":{"type":"string","description":"Automation Lens thread id (AUTO-{NNN})"},
+            "epicId":{"type":["string","null"],"description":"ID of the epic/story carrying agenticProfile: true"},
+            "agenticAcceptanceCriteria":{"type":"array","items":{"type":"string"},"description":"Agentic acceptance criteria: autonomy scope, tool inventory (intent-level), task-completion definition, escalation path"}
+          }}}
         }}
       }
     }

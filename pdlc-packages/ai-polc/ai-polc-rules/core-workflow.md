@@ -14,7 +14,7 @@ inclusion: manual
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Purpose:** Guide a user step-by-step through establishing and operating disciplined product ownership — from business intent to a governed, prioritized Product Backlog Package (PBP) ready for development consumption.
 
-**Methodology Alignment:** Scrum Product Ownership / SAFe Lean Portfolio / WSJF / Impact Mapping / INVEST / MoSCoW
+**Methodology Alignment:** Scrum Product Ownership / SAFe Lean Portfolio / WSJF / Impact Mapping / Story Mapping / INVEST / MoSCoW
 **Interaction Model:** Human-in-the-loop at every phase gate; adaptive depth per product complexity.
 
 > **Identity Spine:** AI-POLC turns business intent into a prioritized, value-justified product backlog, and is the single source of truth for *what gets built, in what order, and why*. **Inclusion rule:** answers *what / why / in what order* → POLC scope; answers *how / when-built / is-it-compliant* → out of scope (AI-DLC v1 / AI-DWG / AI-GCE). Full boundary table: `common/process-overview.md`.
@@ -91,6 +91,7 @@ All detail-file references below are relative to the resolved directory. **Befor
 - `common/question-format-guide.md` — full question-format rules
 - `common/content-validation.md` — content validation + provenance front-matter requirements
 - `common/reference-linking.md` — emit codes defined in another generated file as clickable relative links (Tier 1: object files; Tier 2: register-row `<a id>` anchors); older output retrofit via `UPG__`
+- `common/contextual-prose-accompaniment.md` — ensure explanatory prose around cross-reference keys is self-sufficient at a glance (5 patterns, depth-scaled); complements reference-linking
 
 ---
 
@@ -169,6 +170,19 @@ When gathering information, use the structured `### Q-{nn}` block: Context → O
 ## MANDATORY: Output Structure
 
 All output nests under the fixed project folder `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/`, with POLC's deliverables in `backlog/` and the shared spine a sibling at the project root. The path is deterministic — **do NOT ask the user where to place output**. Brownfield/legacy flat layouts are detected and the user offered a non-destructive restructure; new work always targets the standard path. **Write each stage's file(s) to disk immediately on gate approval** — never defer first-time creation to Assembly (per-stage write table: `common/session-continuity.md`). All artifacts carry provenance front-matter (`common/content-validation.md`).
+
+---
+
+## Lens Seam
+
+At each **stage boundary** (before loading the stage's detail file), check for active cross-cutting lenses:
+
+1. **Read** `management_framework/Lens_Status.md` (the live current-mode SSOT; may not exist yet).
+2. **For each lens row with Mode ON** (`ai-lens` = `AI-Powered` · `automation-lens` = `Automated` · any future lens) → `Read` this package's facet for that lens (`ai-polc-rule-details/{lens-id}/facet.md`) and apply it alongside the stage detail. *(AI-POLC is the per-feature origin point — the facet proposes a sub-mode, applies the feature tag + id, and writes lens acceptance criteria.)*
+3. **Intersection facets (co-active lenses):** if two or more lens rows are ON, also evaluate the registry's `intersection-facets` entries whose `activateWhen` holds. Here that means: when `ai-lens = AI-Powered` **AND** `automation-lens = Automated`, `Read` `ai-polc-rule-details/agentic-lens/facet.md` and run the **Agentic-Opportunity Scan** — it proposes agent candidates (convergence of the two scans + dedicated agentic signals) and, on confirm, sets **both** lens tags + the derived `agenticProfile` marker. It is a composed facet, **not** a lens (no mode row of its own).
+4. **No file, no row, or Mode OFF** (`No-AI` / `Manual`), and no intersection predicate holds → **no-op**; proceed normally with zero extra load.
+
+The canonical registry — **lenses + `intersection-facets`**, activation values, facet paths, agents — is `contracts/LENS_REGISTRY.md`. A future lens plugs in as a new registry row (zero core edits); the agentic intersection facet is already wired above. Token discipline: facets load on demand only; an inactive lens (or an unmet intersection predicate) costs nothing beyond the one-line status read.
 
 ---
 

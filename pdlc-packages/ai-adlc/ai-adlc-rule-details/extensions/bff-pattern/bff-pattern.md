@@ -11,7 +11,7 @@
 ## Activation Point
 
 - **Primary Stage:** Stage 5 (Container Design)
-- **Secondary Stages:** Stage 7 (API Architecture), Stage 11 (Integration Architecture)
+- **Secondary Stages:** Stage 10 (API Architecture), Stage 11 (Integration & Infrastructure)
 
 These rules apply to the design of client-specific backend layers that aggregate, shape, and optimize data delivery for distinct consumer types.
 

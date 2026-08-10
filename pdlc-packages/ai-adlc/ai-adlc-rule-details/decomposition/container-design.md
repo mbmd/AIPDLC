@@ -251,6 +251,26 @@ Produce ADRs for any decisions made. Log in state file ADR register.
 
 ---
 
+### Step 8b: Multi-Service Consistency Checkpoint
+
+**Execute IF:** the confirmed container set has **more than one** independently deployable, state-holding service. **Skip IF:** modular monolith / single service — a fast no-op.
+
+Stage 5 is where multi-service topology first becomes real, so the concern is *raised and recorded* here — but the saga itself is designed later at **Stage 11** (containers + APIs known). Do **not** design sagas here (C4 discipline: no coordination detail before boundaries are stable).
+
+Ask **once**:
+
+> "Do any business operations write state across more than one of these services?"
+
+- **No** → record "No cross-service write operations — single-service consistency only" in the Container document. Done — no cross-service consistency concern downstream.
+- **Yes** →
+  1. Record each such operation as a **"consistency-sensitive operation"** in **both** the Architecture Workbook and the `adlc-state.md` **Design Backlog** — so the **Stage 11 saga loop** and any resumed session pick them up.
+  2. Recommend opting into the **Microservices Deep-Dive** extension (its primary activation point is this stage) for full saga design (**MS-05** + Saga Design Card).
+  3. If the user **declines** the extension, a **Cross-Service Consistency ADR** (`templates/adr-saga-pattern.md`) becomes **required at Stage 11** — the decision is recorded even without the extension.
+
+This is a nudge + a recorded hand-off, not a saga design. **Event-sourced systems:** key the same checkpoint off "spans a consistency boundary (aggregate)" rather than "spans a service" — cross-aggregate workflows route to **ES-11** (process manager), even inside a single deployable.
+
+---
+
 ### Step 9: Update State File
 
 Store the container list in state (used by all subsequent stages):
@@ -283,6 +303,8 @@ I've decomposed the system into its major containers.
 - Sync (REST): {n} relationships
 - Async (Queue): {n} relationships
 - Real-time (WebSocket): {n} relationships
+
+**Cross-service consistency:** {none — single-service / {n} consistency-sensitive operations flagged → Stage 11 saga loop}
 
 **Key design observations:**
 - {Observation 1 — e.g., "Single application container with 3 separate UIs"}
@@ -354,3 +376,4 @@ Save to:
 | Principle compliance | Decomposition aligns with architecture principles |
 | Constraint compliance | No container requires infrastructure that violates constraints |
 | Reasonable count | Not too few (<3 suggests under-decomposition) or too many (>20 suggests premature microservices) |
+| Consistency raised | If >1 stateful service: cross-service write operations were assessed; any found are recorded as consistency-sensitive operations (Design Backlog) for the Stage 11 saga loop |

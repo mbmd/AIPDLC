@@ -233,4 +233,4 @@ See `setup/INSTALL.md` for detailed platform instructions.
 
 ---
 
-*AI-GCE v1.0.0 | Part of [AIFLC](../README.md) — the AI-* PDLC Family*
+*AI-GCE v1.0.0 | Part of [AIFLC](../../README.md) — the AI-* PDLC Family*

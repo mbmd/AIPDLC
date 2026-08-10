@@ -1,6 +1,6 @@
 # AI-* Family — Naming & Ownership Convention
 
-**Version:** 1.1.0 (RATIFIED — hybrid approach approved; multi-project project-folder convention added 2026-06-17)
+**Version:** 1.2.0 (RATIFIED — hybrid approach approved; multi-project project-folder convention added 2026-06-17; shared integration surface added 2026-07-30)
 **Date:** 2026-06-17
 **Author:** Maheri
 **Status:** 🟢 Ratified — the §5 A-dominant hybrid is approved. Propagation per §7 complete. v1.1.0 (2026-06-17) adds the multi-project project-folder convention (§5.5).
@@ -87,7 +87,9 @@ The two approaches are not mutually exclusive. Use each where it fits:
 | **Project config** (`.editorconfig`, `docker-compose.yml`, `CODEOWNERS`, operational docs) | AI-DWG | Generic name (ecosystem-standard) | Provenance front-matter where the format allows comments |
 | **Compliance rules** (`.governance/rules/*.md`) | AI-GCE | Generic name **inside the `.governance/` folder** | Folder = tool-owned boundary (Approach B by folder); front-matter for source trace |
 | **Hooks** (`.kiro/hooks/*`) | AI-GCE | Standard `.json` extension (Kiro IDE requirement); provenance via `generatedBy` field inside the JSON | `generatedBy` field inside the JSON |
+| **Companion engine cores** (`.governance/engine/ai-gce/`, `.governance/engine/ai-tge/`) | AI-DWG (places); AI-GCE/AI-TGE (owns content) | Namespaced folder under `.governance/engine/` — copied verbatim from the provisioning source [OI-204] | Folder = **`[tool]`** boundary; files carry their own internal provenance; DWG never modifies them after placement |
 | **GCE steering enrichments** (`compliance-*.md`) | AI-GCE | Keep `compliance-` prefix (already a meaningful namespace) | Provenance front-matter |
+| **Integration surface** (`integrations/{target}/{in,out}/`) | any participating package (opt-in) | Generic `integrations/{target}/{in,out}/` at the project root (sibling of `management_framework/`) | **Derived + disposable** — regenerated from the package's own canonical artifacts; deleting it loses nothing (Approach A metadata where the format allows) |
 
 ### 5.2 Provenance front-matter schema (for `.md` artifacts)
 
@@ -186,3 +188,4 @@ Propagation proceeds per §7.
 | 1.0.1 | 2026-06-10 | Front-matter key names locked (Plan Phase 0.4): camelCase across `.md` + hook JSON; `sourceRule` renamed to `source`. §5.2/§5.3 finalized, §7 step 1 closed. |
 | 1.1.0 | 2026-06-17 | Added the multi-project **project-folder convention** to §5.5: `projects/PRJ-{ABBREV}-{slug}/` as a Lesson-40 stable-domain-key exception; "project root" redefined for multi-project mode; canonical `projectId` stays in metadata. Source of truth = `OUTPUT_AND_STATE_CONTRACT.md`. |
 | 1.1.1 | 2026-06-22 | **Family-workspace prefix** (install-lock design): §5.5 "project root" now nests under the family workspace → `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/`. Convention unchanged; path gains the `pdlc-ws/` prefix. |
+| 1.2.0 | 2026-07-30 | Added the **shared integration surface** (`integrations/{target}/{in,out}/`, §5.1) — a family-wide canonical, opt-in, project-root sibling of `management_framework/`; **derived + disposable** (deleting it loses nothing). Source of truth = `OUTPUT_AND_STATE_CONTRACT.md` §4a (INT-1). |

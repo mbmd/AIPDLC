@@ -16,7 +16,8 @@ Each extension has two files:
 
 | Extension | Stage | Trigger | What It Adds |
 |-----------|:---:|---------|-------------|
-| Advanced Discovery | 4 | "OKRs" / "JTBD" / "hypothesis testing" | OKR hierarchy, JTBD framing, opportunity scoring |
+| Advanced Discovery | 4 | "OKRs" / "JTBD" / "hypothesis testing" / "impact mapping" | OKR hierarchy, JTBD framing, opportunity scoring, impact mapping |
+| User Story Mapping | 4 | "story map" / "user story mapping" / "walking skeleton" | Journey backbone, task/story decomposition, release slices, `story-map.md` |
 | Full Traceability | 10 | "full traceability" / compliance context | Audit-grade matrix with outcome tracing |
 | Full Risk Register | 9 | "full risk management" / high uncertainty | Scoring, response plans, risk owners, review cadence |
 | Value & Metrics Engine | 16 | "track value" / "measure outcomes" | KPIs, benefits realization, cost-of-delay, experiments |

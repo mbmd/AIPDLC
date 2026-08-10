@@ -78,11 +78,14 @@ All platforms support the same preset bundles via the automated installer:
 
 | Bundle | Flag | Packages | Best For |
 |--------|------|----------|----------|
-| **Full** | `-Bundle full` | AI-ILC + AI-PILC + AI-PPM + AI-FLO + AI-POLC + AI-UXD + AI-ADLC + AI-DWG + AI-GCE + AI-TGE + AI-DFE | New project, complete family |
+| **Design** (recommended) | `-Bundle design` | AI-ILC + AI-PILC + AI-PPM + AI-FLO + AI-POLC + AI-UXD + AI-ADLC + AI-DWG + AI-DFE | Design workspace — the full design chain. AI-GCE/AI-TGE are staged as inert provisioning sources so AI-DWG can provision them into the project (Layer-3) workspace. |
+| **Full** | `-Bundle full` | All 11 packages | Power users — everything installed for use in one workspace |
 | **Minimal** | `-Bundle minimal` | AI-PILC + AI-ADLC + AI-DWG | Quick start, architecture focus |
 | **Architecture** | `-Bundle arch` | AI-ADLC + AI-DWG + AI-GCE | Architecture → workspace → governance |
-| **Governance** | `-Bundle governance` | AI-GCE + AI-TGE | Existing project, add compliance |
+| **Governance** | `-Bundle governance` | AI-GCE + AI-TGE | Existing project workspace, add governance + test enforcement directly |
 | **Portfolio** | `-Bundle portfolio` | AI-ILC + AI-PILC + AI-PPM + AI-FLO | Multi-project management |
+
+> **Why "design" is recommended:** AI-GCE (governance) and AI-TGE (test) are Layer-3 (Execute) companions — they run inside the AI-DWG-generated project workspace, not the design workspace. The `design` bundle installs the design chain for use and stages the companions so AI-DWG can provision them into the correct workspace on generation. Use `governance` to install GCE/TGE directly into an **existing** project repo (standalone/brownfield adoption).
 
 ---
 

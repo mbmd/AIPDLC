@@ -11,7 +11,7 @@
 ## Activation Point
 
 - **Primary Stage:** Stage 6 (Technology Stack) / Stage 12 (Component Design)
-- **Secondary Stages:** Stage 10 (Infrastructure & Deployment), Stage 5 (Container Design)
+- **Secondary Stages:** Stage 11 (Integration & Infrastructure), Stage 5 (Container Design)
 
 These rules apply to the architectural design of feature flag evaluation, lifecycle management, and progressive delivery mechanisms.
 

@@ -70,6 +70,43 @@ flowchart LR
 
 ---
 
+## Where AI-TGE Sits in the Chain
+
+AI-TGE is a **continuous companion**, not a forward chain step — the family's first companion package. It runs **alongside AI-DLC v1** (the build), together with AI-GCE, inside the AI-DWG-generated development workspace. It reads what the architecture promised and what the build is doing, derives a test-governance layer, and continuously tracks whether what was designed is getting tested.
+
+| Aspect | AI-TGE |
+|--------|---------|
+| **Layer** | Project — a continuous companion (runs in the dev workspace, alongside the build) |
+| **Position** | Alongside AI-DLC v1 (not a sequential design step); sibling of AI-GCE |
+| **Predecessors** | AI-ADLC (AP — the commitments to test) and AI-DWG (the workspace); observes AI-DLC v1 |
+| **Runs with** | AI-DLC v1 (the build) and AI-GCE (its sibling companion) |
+| **Reads (input)** | AP (`adlc-state.md`), DW (`.governance/workspace-manifest.yaml` / `rules/`), AI-DLC v1 state (`aidlc-docs/`), and existing tests (brownfield) |
+| **Produces (output)** | A test-governance layer under `.governance/test/` — strategy, register, coverage report, debt scorecard, defect log (+ quality dashboard) |
+| **Output marker** | `tge-state.md` (in `.governance/test/`) |
+| **Correlation key** | Reads the `projectId` and stamps it into every coverage/defect record |
+| **Capability emitted** | `test-strategy@1` (internal — companion to AI-DLC v1) |
+| **Capability consumed** | `development-workspace@1` (AI-DWG) + `architecture-design@1` (AI-ADLC) |
+
+**Simplified chain view** (see the diagram above for the full topology):
+
+```
+… AI-ADLC → AI-DWG → AI-DLC v1  (build)
+                       ├── AI-GCE  (guards, alongside)
+                       └── AI-TGE  ← you are here (tests, alongside)
+```
+
+AI-TGE answers **"do tests exist for what we designed, and which missing tests matter most?"** It **governs test accountability** — deriving the tests that MUST exist from architectural commitments, tracking what actually gets tested, and risk-scoring every gap. It never writes or runs test code (that's AI-DLC v1's build-and-test), and it is distinct from AI-GCE (code compliance) — see the Boundary Statement and Differences from AI-GCE below.
+
+### Standalone vs. chained
+
+- **Standalone.** It never requires the full chain — four auto-detected input modes: an AP alone yields architecture-derived strategy; existing tests alone yield a brownfield assessment; a running AI-DLC v1 alone yields observation-only tracking.
+- **Chained.** With AP + DW + `aidlc-docs` present it runs full Strategy + Observation — deriving the register from commitments and tracking coverage as the build proceeds.
+- **Delegation-on-activation.** When AI-TGE is active it **owns** `testing-strategy.md` (AI-DWG defers it); if AI-TGE is absent, AI-DWG produces a basic one from the architecture's quality attributes.
+- **Graceful degradation (OR-input).** Each input is additive enrichment — its absence reduces scope but never halts the engine.
+- **Platform-aware.** Its two report-only agents (`TGV__`, `CVR__`) render per platform; auto-execution/shortcuts are strongest on Kiro, advisory elsewhere.
+
+---
+
 ## What is AI-TGE?
 
 AI-TGE is an injectable test governance engine that reads architecture decisions (from AI-ADLC) and a development workspace (from AI-DWG), derives a structured test governance layer — strategy, register, coverage tracking, risk scoring — and continuously observes AI-DLC v1 execution to maintain test accountability.
@@ -210,11 +247,115 @@ AI-TGE supports multi-session workflows:
 
 ## Installation
 
-1. Download or clone this repository
-2. The package contains two key directories:
-   - `ai-tge-rules/` — the core engine (always loaded by the AI)
-   - `ai-tge-rule-details/` — phase details and templates (loaded on demand)
-3. Follow the platform-specific instructions in [setup/INSTALL.md](./setup/INSTALL.md)
+AI-TGE is pure Markdown — no runtime, no dependencies, no build step. "Installing" the package means placing two folders and one always-loaded router file where your AI agent will read them. (What AI-TGE then *produces* — the `.governance/test/` layer — is written into the development workspace at run time.)
+
+> **Companion note.** AI-TGE is a **Layer-3 (Execute) companion**. In the normal chain, **AI-DWG provisions it into the generated dev workspace automatically** (its Config Gate Q3), where it activates on `_TGE_`. Install it **directly** (below) only for standalone or brownfield adoption into an existing repository.
+
+### The model (read this first)
+
+Installation writes to exactly three places:
+
+1. **The package home** — `ai-tge-rules/` (the core **engine/dispatcher**) and `ai-tge-rule-details/` (strategy, observation, and templates, read on demand) are copied into `.aiflc/pdlc/`. This path is **identical on every platform**.
+2. **One always-loaded orchestrator** — a single small router placed in your platform's native auto-load slot. It is the *only* file that loads automatically; it reads the AI-TGE core on demand when you activate the package.
+3. **The output layer** — AI-TGE writes its governance artifacts into the target workspace's `.governance/test/` at run time.
+
+### Option A — Install alongside the family (direct adoption)
+
+Use the `governance` bundle to install AI-TGE (+ AI-GCE) directly into an **existing** project repository:
+
+```powershell
+# Windows (PowerShell) — governance companions into an existing repo
+.\installer\install.ps1 -TargetWorkspace "C:\path\to\your\project" -Platform kiro -Bundle governance
+```
+
+```bash
+# macOS / Linux
+./installer/install.sh --target ~/path/to/your/project --platform kiro --bundle governance
+```
+
+Install just AI-TGE with `-Packages "ai-tge"`. Supported `-Platform` values: `kiro`, `cursor`, `claude-code`, `cline`, `amazonq`, `copilot`. (For a greenfield project, prefer `-Bundle design` and let AI-DWG provision AI-TGE into the generated workspace.)
+
+### Option B — Install this package individually (manual)
+
+Two copy operations plus one orchestrator placement. Copy the two package folders into the uniform home (same on every platform):
+
+```
+ai-tge/ai-tge-rules/        →  <workspace>/.aiflc/pdlc/ai-tge-rules/
+ai-tge/ai-tge-rule-details/ →  <workspace>/.aiflc/pdlc/ai-tge-rule-details/
+```
+
+Then place the always-loaded orchestrator (`session-orchestrator.md`, from the packages root) in your platform's slot:
+
+| Platform | Orchestrator destination | How it loads |
+|----------|--------------------------|--------------|
+| **Kiro** | `.kiro/steering/session-orchestrator-pdlc.md` | Auto-loaded steering |
+| **Amazon Q** | `.amazonq/rules/pdlc/session-orchestrator.md` | Auto-loaded rule |
+| **Cursor** | `.cursor/rules/pdlc-session-orchestrator.mdc` | Add `alwaysApply: true` frontmatter |
+| **Cline** | `.clinerules/pdlc-session-orchestrator.md` | Auto-loaded rule |
+| **Claude Code** | `CLAUDE_PDLC_ORCHESTRATOR.md` | Import from root `CLAUDE.md` via `@CLAUDE_PDLC_ORCHESTRATOR.md` |
+| **GitHub Copilot** | `.github/copilot-instructions-pdlc-orchestrator.md` | Workspace instructions |
+| **Codex / VS Code agent** | `AGENTS.md` (workspace root) | Auto-loaded agent instructions |
+
+> AI-TGE's agents are **report-only** (`TGV__`, `CVR__`) — it informs, it never blocks. Claude Code uses a parallel orchestrator source, `session-orchestrator.claude.md`.
+
+### For AI agents — machine-readable install manifest
+
+An AI assistant can install AI-TGE by parsing and executing the block below. All `copy.from` and `orchestrator.source` paths are relative to `source_root`; every destination is relative to the workspace root. Pick the one `orchestrator.slot` row that matches the target platform. The manifest is **platform-agnostic** — everything except `orchestrator.slot` is identical on every platform.
+
+```yaml
+# AIFLC INSTALL MANIFEST — AI-TGE
+package: AI-TGE
+family: pdlc                       # package home:.aiflc/pdlc/
+version: 1.0.0
+runtime: none                      # pure Markdown; no deps, no build
+role: layer-3-companion            # normally provisioned by AI-DWG; direct install for standalone/brownfield
+source_root: pdlc-packages/        # clone root of the AIPDLC repo
+activation_phrase: "Using AI-TGE, establish test governance"
+trigger_key: "_TGE_"               # universal explicit key (recognized by the orchestrator on any platform); or use activation_phrase
+status_key: "_ACTIVE_"             # reports which package is currently active
+depends_on: []                     # standalone-capable; four auto-detected input modes
+optional_inputs:
+  - marker: adlc-state.md                         # AP — architectural commitments to test
+  - marker:.governance/workspace-manifest.yaml   # AI-DWG discovery contract (primary)
+  - marker: rules/workspace-rules.md              # legacy DW fallback
+  - marker: aidlc-docs/aidlc-state.md             # AI-DLC v1 build state (observation)
+emits_capability: "test-strategy@1"
+output_marker: tge-state.md        # in.governance/test/
+output_dir:.governance/test/      # test-governance layer written into the target workspace root
+copy:
+  - from: ai-tge/ai-tge-rules
+    to:.aiflc/pdlc/ai-tge-rules
+  - from: ai-tge/ai-tge-rule-details
+    to:.aiflc/pdlc/ai-tge-rule-details
+orchestrator:
+  source: session-orchestrator.md            # the ONLY always-loaded file
+  source_claude: session-orchestrator.claude.md   # use this source for claude-code
+  slot:
+    kiro:.kiro/steering/session-orchestrator-pdlc.md
+    amazonq:.amazonq/rules/pdlc/session-orchestrator.md
+    cursor:.cursor/rules/pdlc-session-orchestrator.mdc   # + frontmatter alwaysApply: true
+    cline:.clinerules/pdlc-session-orchestrator.md
+    claude-code: CLAUDE_PDLC_ORCHESTRATOR.md              # import from root CLAUDE.md
+    copilot:.github/copilot-instructions-pdlc-orchestrator.md
+    codex: AGENTS.md
+    vscode: AGENTS.md
+core_entry:.aiflc/pdlc/ai-tge-rules/core-engine.md       # orchestrator Reads this on activation
+rule_details_home:.aiflc/pdlc/ai-tge-rule-details/       # core resolves these on demand
+verify:
+  - path_exists:.aiflc/pdlc/ai-tge-rules/core-engine.md
+  - path_exists:.aiflc/pdlc/ai-tge-rule-details/
+  - orchestrator_present_in_platform_slot: true
+  - action: 'say "Using AI-TGE, establish test governance" and expect the AI-TGE mode detection'
+```
+
+### Verify
+
+1. Open the target workspace in your IDE with the AI agent active.
+2. Confirm the orchestrator loaded (Kiro: it appears in the Steering panel).
+3. Start a chat: `Using AI-TGE, establish test governance` (or, for brownfield, `assess my existing test coverage against the architecture`).
+4. AI-TGE detects your input mode and generates the `.governance/test/` layer (strategy, register, coverage, debt scorecard).
+
+For the full per-platform walkthrough, see [setup/INSTALL.md](./setup/INSTALL.md) and the family-wide [INSTALL_GUIDE.md](../../INSTALL_GUIDE.md).
 
 ---
 
@@ -278,7 +419,7 @@ ai-tge/
 ├── LICENSE                            ← Apache 2.0 (unmodified)
 ├── NOTICE                             ← Attribution requirement
 ├── ai-tge-rules/
-│   └── core-engine.md                 ← Master orchestration (always loaded)
+│   └── core-engine.md                 ← Master orchestration engine (read on demand by the orchestrator)
 ├── ai-tge-rule-details/
 │   ├── common/
 │   │   ├── process-overview.md        ← High-level process map
@@ -338,14 +479,42 @@ ai-tge/
 
 ---
 
-## Methodology Alignment
+## Patterns, Methodologies & Frameworks Covered
 
-AI-TGE draws from:
+AI-TGE operationalizes **test governance** — deciding what MUST be tested and tracking whether it is. It draws from:
 
 - **ISTQB** — Test levels, types, and techniques taxonomy
 - **IEEE 829** — Test documentation standards (adapted for agile governance)
 - **Risk-Based Testing** — Prioritization by architectural and business risk
 - **AIDLC** — Adaptive workflow structure and interaction patterns (inspired by [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows))
+
+The table maps each to *what AI-TGE applies* and *where it stops*. AI-TGE **aligns with** these bodies of knowledge and adapts them to an AI-assisted governance engine; it does not certify against any of them.
+
+| Framework / body of knowledge | What AI-TGE applies | Where it stops (scope boundary) |
+|---|---|---|
+| **ISTQB taxonomy** | Three-dimensional classification of every required test — Level (Unit/Integration/System/Acceptance) × Type (Functional/Non-Functional/Structural) × Technique | It classifies and governs tests; it does not run an ISTQB process or certify testers |
+| **IEEE 829 test documentation** | A governed test strategy + register (adapted for agile) — the documented plan of what must be verified | Adapted, not the literal IEEE 829 document set — governance over ceremony |
+| **Risk-Based Testing** | 4-factor scoring (Architectural Risk × Blast Radius × Logic Complexity × Change Frequency) ranking every missing test Critical → Low | It prioritizes gaps; it does not make the release go/no-go call |
+| **Test pyramid** | Pyramid ratios, tooling, and coverage goals in the generated test strategy | It recommends the shape; it does not write the tests to fill it |
+| **Two-source derivation** | Architecture-derived requirements + a universal baseline minimum — coverage even when the AP is thin | It derives from commitments; it never invents requirements the design/baseline don't imply |
+| **Commitment-based coverage** | Traceable "did we test what we designed?" — every register entry maps to an architectural promise or baseline rule | Not line-of-code coverage — it measures verification of commitments, not code % |
+| **Technical-debt governance** | A debt scorecard of prioritized missing tests, re-scored as context changes | It surfaces and ranks test debt; remediation (writing the tests) is the build's job |
+
+The hard boundary (see the Boundary Statement above): AI-TGE **governs — it does not write or run tests**. It is not a test runner, a test-code generator, or a CI/CD tool, and it is complementary to (not a replacement for) AI-GCE (code compliance) or AI-DLC v1's build-and-test stage.
+
+---
+
+## Cross-Cutting Lenses (AI · Automation · Agentic)
+
+AI-TGE is the **quality end** of the family's lens system. Engine cores carry no design-time lens seam; instead AI-TGE tests whatever the upstream lenses tagged, via Layer-3 agents provisioned into the workspace.
+
+| Lens | Quality agent | What AI-TGE checks |
+|------|---------------|--------------------|
+| **AI Lens** | `AIQ__` | Test quality for AI-lens features (`aiFeature` work) |
+| **Automation Lens** | `ATQ__` | Test quality for automation-lens features (`automationFeature` work) |
+| **Agentic** (AI ∩ Automation) | `AIQ__` + `ATQ__` (extended) | Adds agentic test depth — agent trajectory evaluation and step-cap tests |
+
+Modes originate upstream (set at AI-PILC in `Lens_Status.md`, tagged per-feature at AI-POLC); AI-TGE checks the tagged features. AI-GCE is the governance counterpart (`AIG__` / `ATG__`).
 
 ---
 
@@ -365,6 +534,24 @@ Contributions welcome. When modifying:
 Created by **Maheri** — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 
 Designed to bridge the gap between architecture promises and test accountability — ensuring that what was designed gets tested, and what isn't tested is visible and risk-scored.
+
+---
+
+## Further Reading
+
+Deep-dive knowledge documents for this package (in the family repo under `knowledge_docs/`):
+
+| Document | What it covers |
+|----------|---------------|
+| [How TGE Test Governance Works](../../knowledge_docs/HOW_TGE_TEST_GOVERNANCE_WORKS.md) | Internal mechanics of the 2-phase / 12-stage test engine |
+| [How Test Strategy Works](../../knowledge_docs/HOW_TEST_STRATEGY_WORKS.md) | How AI-TGE derives test strategy from the workspace |
+| [How to Use Test Mode](../../knowledge_docs/HOW_TO_USE_TEST_MODE.md) | The opt-in test-mode feedback layer |
+| [How Package Installation Works](../../knowledge_docs/HOW_PACKAGE_INSTALLATION_WORKS.md) | How the installer places packages into your workspace |
+| [How Package Activation & Isolation Works](../../knowledge_docs/HOW_PACKAGE_ACTIVATION_ISOLATION_WORKS.md) | Activation keys, switching rules, companion staging |
+| [How Tiered Governance Works](../../knowledge_docs/HOW_TIERED_GOVERNANCE_WORKS.md) | The 3-tier progressive compliance model (shared with AI-GCE) |
+| [Pattern: Two Source Model](../../knowledge_docs/PATTERN_TWO_SOURCE_MODEL.md) | How AI-TGE combines architecture + workspace to derive coverage |
+| [Why Testing Strategy Matters](../../knowledge_docs/WHY_TESTING_STRATEGY_MATTERS.md) | Stakeholder justification for governed test strategy |
+| [Interaction Between Depth and Governance](../../knowledge_docs/INTERACTION_BETWEEN_DEPTH_AND_GOVERNANCE.md) | How depth levels affect test tier availability |
 
 ---
 
@@ -388,4 +575,4 @@ See `LICENSE` and `NOTICE` in this directory for full terms.
 
 ---
 
-*Part of [AIFLC](../README.md) — the AI-* PDLC Family*
+*Part of [AIFLC](../../README.md) — the AI-* PDLC Family*

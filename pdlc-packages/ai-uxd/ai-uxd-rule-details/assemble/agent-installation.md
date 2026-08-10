@@ -11,6 +11,7 @@
 | Artifact | Destination | Action |
 |----------|-------------|--------|
 | `ux-consistency-agent.md` | `.kiro/agents/` | Copy from `templates/agents/` |
+| `figma-sync-agent.md` | `.kiro/agents/` | Copy from `templates/agents/` |
 | Shortcut rules block | `.kiro/steering/workspace-rules.md` | Append `<!-- BEGIN AI-UXD AGENT SHORTCUTS -->` block (or replace if exists) |
 | Agent registry entries | `.governance/AGENT_REGISTRY.md` | Create file if absent; append AI-UXD entries if exists |
 | Agent guide section | `.governance/AGENT-GUIDE.md` | Create file if absent; append AI-UXD section if exists |
@@ -19,19 +20,21 @@
 
 ## Installation Logic
 
-1. **Agent file:** Copy `templates/agents/ux-consistency-agent.md` to `.kiro/agents/ux-consistency-agent.md`. Populate `{version}` with the current AI-UXD version and `{ISO-date}` with today's date.
+1. **Agent files:** Copy `templates/agents/ux-consistency-agent.md` to `.kiro/agents/ux-consistency-agent.md`. Copy `templates/agents/figma-sync-agent.md` to `.kiro/agents/figma-sync-agent.md`. Populate `{version}` with the current AI-UXD version and `{ISO-date}` with today's date.
 
 2. **Shortcut block:** Check `.kiro/steering/workspace-rules.md` for the `<!-- BEGIN AI-UXD AGENT SHORTCUTS -->` marker:
    - If found → replace the block (between BEGIN and END markers)
    - If not found → append the block from `templates/agents/shortcut-rules-block.md`
 
 3. **Agent registry:** Check for `.governance/AGENT_REGISTRY.md`:
-   - If absent → create with header + AI-UXD entry (UXD-AG-01)
-   - If exists → append AI-UXD entry using the next available `UXD-AG-{NN}` ID
-   - Entry: `| UXD-AG-01 | ux-consistency-agent | Process | UXC__ | 1 | AI-UXD | Active | {date} |`
+   - If absent → create with header + AI-UXD entries (UXD-AG-01, UXD-AG-02)
+   - If exists → append AI-UXD entries using the next available `UXD-AG-{NN}` IDs
+   - Entries:
+     - `| UXD-AG-01 | ux-consistency-agent | Process | UXC__ | 1 | AI-UXD | Active | {date} |`
+     - `| UXD-AG-02 | figma-sync-agent | Process | UXC__ sync-figma | 1 | AI-UXD | Active | {date} |`
 
 4. **Agent guide:** Check for `.governance/AGENT-GUIDE.md`:
-   - If absent → create with header + AI-UXD section (when to call, consequences, recovery — from `ux-consistency-agent.md`)
+   - If absent → create with header + AI-UXD section (when to call, consequences, recovery — from both agent files)
    - If exists → append AI-UXD section (between `<!-- BEGIN AI-UXD AGENT GUIDE SECTION -->` markers)
 
 ---
@@ -45,10 +48,13 @@ AI-UXD installs its own agent independently. No dependency on AI-GCE being prese
 ## Post-Install Confirmation
 
 ```
-🤖 AI-UXD Governance Agent Installed
+🤖 AI-UXD Governance Agents Installed
    • Agent: ux-consistency-agent (UXD-AG-01)
-   • Shortcut: UXC__ (active immediately)
-   • Call UXC__ before UXP handoff (AI-POLC / AI-DWG / AI-GCE) to validate consistency, traceability, token alignment, and handoff consumability.
+     Shortcut: UXC__ (active immediately)
+   • Agent: figma-sync-agent (UXD-AG-02)
+     Shortcut: UXC__ sync-figma (active immediately)
+   • Call UXC__ before UXP handoff to validate consistency, traceability, token alignment, and handoff consumability.
+   • Call UXC__ sync-figma after dropping a Figma export in integrations/figma/in/ to reconcile design-tool changes.
 ```
 
 ---

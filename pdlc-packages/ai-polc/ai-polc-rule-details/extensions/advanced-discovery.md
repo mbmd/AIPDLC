@@ -2,7 +2,7 @@
 # Extension: Advanced Discovery (Full Rules)
 
 **Stage:** 4 (Product Discovery & Roadmap)
-**Adds:** OKR hierarchy, JTBD framing, opportunity scoring, hypothesis backlog
+**Adds:** OKR hierarchy, JTBD framing, opportunity scoring, hypothesis backlog, impact mapping
 
 ---
 
@@ -70,6 +70,29 @@ For uncertain capabilities, frame as testable hypotheses:
 - Failed hypothesis → epic deprioritized or removed
 - Validated hypothesis → proceed with confidence
 
+### Step 4.E5: Impact Mapping
+
+Connect goals to deliverables through the behaviours that actually move them. An impact map is a four-level tree — **Goal → Actors (who) → Impacts (how their behaviour changes) → Deliverables (what we build)**:
+
+```
+Goal: {measurable business goal — reuse a Stage 2 goal / OKR Objective}
+├── Actor: {who can help or hinder the goal?}
+│   ├── Impact: {what behaviour change in this actor moves the goal?}
+│   │   ├── Deliverable: {what could we build/do to cause that impact?}  → {EPIC-00X}
+│   │   └── Deliverable: {alternative — often cheaper}                    → {EPIC-00Y}
+│   └── Impact: {another behaviour change}
+└── Actor: {another actor}
+```
+
+**Rules:**
+- Anchor every map on ONE measurable goal (reuse a Stage 2 goal or an OKR Objective — do not invent a new one)
+- Deliverables are **hypotheses about impact**, not commitments — the map's power is showing which deliverables you can safely *drop*
+- Rank deliverables by expected contribution to the goal; the lowest-contribution branches are your first de-scope candidates
+- Every deliverable traces down to an epic (Stage 5) and up to a goal (Stage 2) — no orphan deliverables
+- Prefer the cheapest deliverable that could cause a needed impact (impact mapping is a scope-cutting tool first)
+
+**Feeds:** epics (Stage 5) — deliverables become or link to epics; roadmap (Stage 4) — goal-ranked deliverables inform Now/Next/Later; prioritization — low-contribution branches are de-scope candidates. This **operationalizes the "Impact Mapping" method already named in the POLC methodology-alignment line**.
+
 ---
 
 ## Additional Output
@@ -79,3 +102,4 @@ When this extension is active, `roadmap.md` additionally contains:
 - JTBD mapping (jobs → epics)
 - RICE scores (if used for opportunity scoring)
 - Hypothesis backlog (linked to relevant epics)
+- Impact map (goal → actors → impacts → deliverables; low-contribution branches flagged as de-scope candidates)

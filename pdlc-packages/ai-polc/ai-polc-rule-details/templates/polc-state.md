@@ -65,10 +65,44 @@ dashboard-summary:
     statement: "{one-line product vision}"
   velocity:
     trend: "{stable | up | down}"
+    method: "{manual | ai-assisted | ai-driven | hybrid}"   # delivery method when set (dashboard-facing subset of ## Velocity Model); omit/manual otherwise
+    plannedVsBaseline: "{compression e.g. 0.52 when an AI method is set; omit for manual}"
   acceptance:
     totalCriteria: {N}
     validated: {N}
 ```
+
+## Velocity Model
+
+> Populated when a delivery method is captured (Stage 1) and/or per-team capacity planning runs (Stage 7). **Absent by default** — when absent, `capacity-planning-matrix.md` is skipped (graceful). Manual-only projects render the Baseline column/track only; the dual view activates only when an AI method is chosen. Full rules: `strategy/delivery-method-timing.md`.
+
+### Delivery Method Profile
+- Delivery Method: {manual | ai-assisted | ai-driven | hybrid}
+- AI Tool: {tool name | "n/a"}
+- Team AI Maturity: {new | practiced | expert | "n/a"}
+- Work-Complexity Mix: generic {x}% / standard {y}% / complex {z}%   ← from AI-ADLC Effort Bands when present, else domain classification
+
+### Effective Multiplier Matrix (after maturity discount)
+| Work class | Manual | {method} |
+|------------|:------:|:--------:|
+| Generic    | 1×     | {m_g}×   |
+| Standard   | 1×     | {m_s}×   |
+| Complex    | 1×     | {m_c}×   |
+- Blended project multiplier: {M}×
+
+### Per-Team Velocity (SP/sprint)
+| Team | Baseline (manual) | Effective (AI-adjusted) |
+|------|:-----------------:|:-----------------------:|
+| {team} | {v} | {v × team-blended multiplier} |
+- plannedVsBaseline: manual {A} · {method} {B} · compression {1 − B/A}
+
+## Planning Artifacts
+
+- team-epic-distribution: {generated | stale | not-generated}
+- domain-topology-map: {generated | stale | not-generated}
+- release-relevance-grouping: {generated | stale | not-generated}
+- capacity-planning-matrix: {generated | stale | not-generated}
+- Last Derived: {ISO-date or "never"}
 
 ## Pending Decisions
 

@@ -165,7 +165,7 @@ STEP 3D: MANIFEST — Write the Discovery Contract
 ──────────────────────────────────────────────────
 Load: baseline/workspace-manifest-generation.md
 • Write .governance/workspace-manifest.yaml (paths + files by role + adapters + clusters
-  + platformTargets + storyStyle; buildProfile PARKED/absent)
+  + platformTargets + storyStyle + buildProfile [spec-driven/aidlc/freestyle, or omit → Standard mode])
 • This is what GCE/TGE/FLO read to discover the workspace — no hardcoded paths downstream
 
 STEP 4: VALIDATE — Cross-Check Against Present Inputs

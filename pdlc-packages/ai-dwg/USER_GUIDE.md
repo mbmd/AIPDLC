@@ -212,4 +212,4 @@ See `setup/INSTALL.md` for detailed platform instructions.
 
 ---
 
-*AI-DWG v1.0.0 | Part of [AIFLC](../README.md) — the AI-* PDLC Family*
+*AI-DWG v1.0.0 | Part of [AIFLC](../../README.md) — the AI-* PDLC Family*

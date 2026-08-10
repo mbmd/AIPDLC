@@ -11,7 +11,7 @@
 ## Activation Point
 
 - **Primary Stage:** Stage 12 (Component Design)
-- **Secondary Stages:** Stage 9 (Data Architecture), Stage 11 (Integration Architecture)
+- **Secondary Stages:** Stage 9 (Data Architecture), Stage 11 (Integration & Infrastructure)
 
 These rules apply to internal module/component structure, domain modeling, and cross-context communication.
 

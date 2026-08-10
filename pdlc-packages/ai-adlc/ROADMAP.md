@@ -1,7 +1,7 @@
 # AI-ADLC — Extension Roadmap
 
 **Version:** 1.1.0
-**Status:** Core workflow complete. v1.1 extensions (High Priority) delivered. v1.2 extensions planned.
+**Status:** Core workflow complete. v1.1 extensions delivered (ten — the initial seven plus Domain Storytelling, Wardley Mapping, and deep Threat Modeling). v1.2 extensions planned.
 
 ---
 
@@ -20,11 +20,15 @@ Extensions follow the opt-in model — activated during the workflow when a user
 | Extension | Pattern | Status | Rules |
 |-----------|---------|:------:|:-----:|
 | `ddd-tactical/` | DDD Tactical Patterns (Aggregates, Domain Events, ACL, Value Objects) | ✅ Complete | DDD-01 → DDD-12 |
+| `event-storming/` | Event Storming (domain events, commands, actors, aggregates, policies, hotspots, bounded-context discovery) | ✅ Complete | EVS-01 → EVS-12 |
 | `microservices/` | Microservices Deep-Dive (service mesh, distributed tracing, saga/choreography, schema registry) | ✅ Complete | MS-01 → MS-12 |
 | `bff-pattern/` | Backend-for-Frontend (aggregation, client-specific shaping, gateway vs. BFF) | ✅ Complete | BFF-01 → BFF-10 |
 | `event-sourcing-cqrs/` | Event Sourcing + CQRS (event store, projections, read models, snapshots) | ✅ Complete | ES-01 → ES-12 |
 | `resilience-patterns/` | Resilience Catalog (circuit breaker, bulkhead, graceful degradation, timeout policies) | ✅ Complete | RES-01 → RES-12 |
 | `feature-flags/` | Feature Flags & Progressive Delivery (flag architecture, rollout strategies, flag lifecycle) | ✅ Complete | FF-01 → FF-11 |
+| `domain-storytelling/` | Domain Storytelling (narrative discovery: actor → activity → work object; feeds DDD Tactical + role model) | ✅ Complete | DST-01 → DST-10 |
+| `wardley-mapping/` | Wardley Mapping (value-chain × evolution; build-vs-buy positioning, Stage 6) | ✅ Complete | WDL-01 → WDL-08 |
+| `threat-modeling/` | Threat Modeling — Deep (STRIDE DFD, attack trees, DREAD/OWASP rating; layers on the Stage 8 baseline) | ✅ Complete | THM-01 → THM-10 |
 
 ---
 
@@ -70,7 +74,7 @@ ai-adlc-rule-details/
 
 **Activation:** During Stage 5 (Container Design) or Stage 6 (Technology Stack), the workflow presents opt-in prompts for applicable extensions. User opts in → extension rules loaded and enforced in subsequent stages.
 
-**v1.1 Delivery Note:** All six high-priority extensions now have complete rule files with numbered rules, verification criteria, anti-patterns, ADR triggers, and templates. Enforcement is structured — once a user opts in, rules are blocking constraints verified at stage completion.
+**Delivery Note:** All ten extensions now have complete rule files with numbered rules, verification criteria, anti-patterns, ADR triggers, and templates. Enforcement is structured — once a user opts in, rules are blocking constraints verified at stage completion. *(Event Storming was added after the initial v1.1 six as a discovery technique; Domain Storytelling later joined as a narrative discovery alternative presented via a shared selector with Event Storming, alongside Wardley Mapping for build-vs-buy positioning and a deep Threat Modeling extension that layers on the always-run Stage 8 STRIDE baseline.)*
 
 ---
 
