@@ -67,6 +67,22 @@ These are NOT signals — they're one-time data flows that don't repeat:
 
 ---
 
+## Fabric Signal: FLO → DFE Data-Refresh (a distinct mechanism)
+
+Separate from the package-to-package downstream signals above, the fabric engines have their own
+signal: AI-Driven Flow Orchestrator (AI-FLO) emits a **data-refresh signal** into
+`{family}-ws/data/signals/` whenever a package advances, and AI-Driven Data Fabric Engine (AI-DFE)
+consumes it to run a scoped data refresh. This is a **fire-and-forget file inbox**, not a downstream
+reconciliation signal — it keeps the data surface and dashboards fresh without a manual `DAT__`.
+
+| From | To | Event | File written | Consumer action |
+|------|----|-------|--------------|-----------------|
+| AI-FLO | AI-DFE | `gate-complete` / `stage-advance` | `{family}-ws/data/signals/flo-refresh-{epoch-ms}.signal.md` | Scoped `gather → shape → distribute` for the named package, FIFO, then archive |
+
+Full contract and the `dfeRefreshGranularity` setting → *How FLO → DFE Auto-Refresh Works*.
+
+---
+
 ## Related Documents
 
 | Document | Location |
@@ -75,5 +91,6 @@ These are NOT signals — they're one-time data flows that don't repeat:
 | How Chain Handoff Works | `knowledge_docs/HOW_CHAIN_HANDOFF_WORKS.md` |
 | How GCE Rederivation Works | `knowledge_docs/HOW_GCE_REDERIVATION_WORKS.md` |
 | When to Trigger Re-Derivation | `knowledge_docs/WHEN_TO_TRIGGER_REDERIVATION.md` |
+| How FLO → DFE Auto-Refresh Works | `knowledge_docs/HOW_FLO_DFE_AUTO_REFRESH_WORKS.md` |
 
-*Knowledge Document | Created: 2026-06-12 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-12 | Updated: 2026-09-05 (added the FLO → DFE data-refresh fabric signal) | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

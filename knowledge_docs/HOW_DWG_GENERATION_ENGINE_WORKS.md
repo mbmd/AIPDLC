@@ -207,15 +207,33 @@ Technology, architecture patterns, and folder structure are NOT asked — the AP
 
 ---
 
+## Build Method and the `buildProfile` Signal
+
+The generated workspace is **build-method-agnostic** — its shared core (`rules/`, `backlog/`,
+`architecture/`, `ux/`, `info/`) serves every build method identically. The workspace manifest
+(`.governance/workspace-manifest.yaml`) records a **`buildProfile`** value — `aidlc`,
+`spec-driven-kiro`, `spec-driven-speckit`, `freestyle`, or `manual` — that downstream tooling reads
+to decide how to consume the workspace.
+
+When `buildProfile: aidlc`, AI-DWG additionally emits a **conditional `aidlc/` surface** — the
+behavioural-rules tree, per-agent knowledge, sensor manifests, and a code knowledge base — in the
+exact shape AI-DLC v2 reads. Under every other build method that surface is absent. This conditional
+output is governed by a separate frozen contract and explained end-to-end in *How AI-DLC v2 Support
+Works*.
+
+---
+
 ## Related Documents
 
 | Document | Location |
 |----------|----------|
 | Core generator | `ai-dwg/ai-dwg-rules/core-generator.md` |
 | AP reading guide | `ai-dwg/ai-dwg-rule-details/common/ap-reading-guide.md` |
-| Mapping files (23) | `ai-dwg/ai-dwg-rule-details/mapping/` |
+| Mapping files | `ai-dwg/ai-dwg-rule-details/mapping/` |
 | Reconciliation logic | `ai-dwg/ai-dwg-rule-details/reconciliation/` |
-| Templates (48) | `ai-dwg/ai-dwg-rule-details/templates/` |
+| Templates | `ai-dwg/ai-dwg-rule-details/templates/` |
+| How AI-DLC v2 Support Works | `knowledge_docs/HOW_AIDLC_V2_SUPPORT_WORKS.md` |
+| How Team-Aligned Workspaces Work | `knowledge_docs/HOW_TEAM_ALIGNED_WORKSPACES_WORK.md` |
 | Family Structure | `FAMILY_STRUCTURE.md` |
 
-*Knowledge Document | Created: 2026-06-11 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-11 | Updated: 2026-09-05 (added `buildProfile` + AI-DLC v2 conditional surface) | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

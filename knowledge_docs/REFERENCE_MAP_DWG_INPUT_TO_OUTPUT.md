@@ -152,6 +152,7 @@ When a contributing input is absent, the output is still generated from its prim
 
 | Document | Location |
 |----------|----------|
+| Interaction Between the PDLC Chain and AI-DLC | `knowledge_docs/INTERACTION_BETWEEN_THE_PDLC_CHAIN_AND_AIDLC.md` |
 | How DWG Generation Engine Works | `knowledge_docs/HOW_DWG_GENERATION_ENGINE_WORKS.md` |
 | How Project-Layer Collaboration Works | `knowledge_docs/HOW_PROJECT_LAYER_COLLABORATION_WORKS.md` |
 | Reference Map: Conditional Generation Triggers | `knowledge_docs/REFERENCE_MAP_TRIGGERS.md` |

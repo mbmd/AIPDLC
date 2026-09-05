@@ -156,10 +156,21 @@ Two report-only agents support the engine: a **health check** (`DHC__` (health c
 
 ---
 
+## Automatic Refresh (FLO → DFE Signals)
+
+You do not have to run `DAT__` by hand to keep the surface fresh. When AI-Driven Flow Orchestrator
+(AI-FLO) is installed, it emits a lightweight file-based signal into `{family}-ws/data/signals/`
+whenever a package advances, and AI-DFE picks it up on its next pass and runs a **scoped** refresh
+for just that package. `DAT__` still works exactly as before — the signal mechanism supplements it.
+See *How FLO → DFE Auto-Refresh Works* for the full contract and the granularity setting.
+
+---
+
 ## Related Documents
 
 | Document | Location |
 |----------|----------|
+| How FLO → DFE Auto-Refresh Works | `knowledge_docs/HOW_FLO_DFE_AUTO_REFRESH_WORKS.md` |
 | How to Use the Dashboard | `knowledge_docs/HOW_TO_USE_THE_DASHBOARD.md` |
 | How the Communication Fabric Works | `knowledge_docs/HOW_COMMUNICATION_FABRIC_WORKS.md` |
 | How State Files Work | `knowledge_docs/HOW_STATE_FILES_WORK.md` |
@@ -169,4 +180,4 @@ Two report-only agents support the engine: a **health check** (`DHC__` (health c
 
 ---
 
-*Knowledge Document | Created: 2026-07-05 | Updated: 2026-07-05 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-07-05 | Updated: 2026-09-05 (added FLO → DFE auto-refresh) | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

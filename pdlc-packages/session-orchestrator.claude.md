@@ -4,10 +4,10 @@
   Claude Code has NO `inclusion:` directive and does NOT auto-load `CLAUDE*.md`
   by filename glob — only a real `CLAUDE.md` (which the installer wires to import
   this file via `@CLAUDE_PDLC_ORCHESTRATOR.md`). Routing uses on-demand `Read` of
-  the cores in the uniform home `.aiflc/pdlc/` (OI-158) — identical targets to the
+  the cores in the uniform home `.aiflc/pdlc/` — identical targets to the
   generic orchestrator; only this file's loading header (import vs `inclusion:`)
   differs. Any change to the routing/trigger semantics here MUST be mirrored in
-  session-orchestrator.md (and vice versa). Enforced by INV-L3-030.
+  session-orchestrator.md (and vice versa).
 -->
 # AIFLC Session Orchestrator — AI-* PDLC Family (Claude Code)
 
@@ -49,7 +49,7 @@ Prevent context overload. Instead of loading all package workflows into every se
 | `FIA__` | AI-FLO | FLO integrity audit — "is FLO's state correct?" |
 
 <!-- AIFLC-COMPANION-NOTE:start -->
-> **Layer-3 companions staged inert.** AI-GCE (`_GCE_`) and AI-TGE (`_TGE_`) are **not active in this design workspace** — they are staged here only as a provisioning source. AI-DWG (`_DWG_`) places them into the generated project (Layer-3) workspace, where they activate. Do not route to them here. [OI-204]
+> **Layer-3 companions staged inert.** AI-GCE (`_GCE_`) and AI-TGE (`_TGE_`) are **not active in this design workspace** — they are staged here only as a provisioning source. AI-DWG (`_DWG_`) places them into the generated project (Layer-3) workspace, where they activate. Do not route to them here.
 <!-- AIFLC-COMPANION-NOTE:end -->
 
 ---

@@ -129,6 +129,34 @@ AI-GCE answers **"is the team building it the way the design and governance say 
 
 ---
 
+## AI-DLC v2 Sensor Support
+
+When the workspace's `buildProfile` is `aidlc` (AI-DLC — AI-Driven Development Life Cycle, Amazon's
+open-source build lifecycle), AI-GCE adapts how it enforces:
+
+- **Sensor-convertible checks become AI-DLC sensors** rather than platform hooks — for each such
+  check AI-GCE emits the rule, its pairing declaration, and an executable check script as a v2
+  sensor manifest.
+- **The secrets/PII check stays a pre-write blocking hook** — only a hook can stop a bad write
+  before it lands, so this one genuine pairing is retained.
+- **The hand-over contract reports an `enforcementSurface`** — `hooks`, `sensors`, `both`, or
+  `docs-only` — so downstream tooling reads what is actually present instead of assuming.
+- AI-GCE **skips generating its own compliance log and process agents** under `aidlc` — v2 has
+  native audit shards and its own learning loop — and it **verifies that emitted sensors are wired**
+  into v2's stages (an unwired manifest never fires).
+
+Every other build method is unchanged. See *How AI-DLC v2 Support Works* in the knowledge docs.
+
+## Team-Topology Governance (opt-in)
+
+When a workspace is generated with a per-team topology, AI-GCE extends its rule set with
+**`GOV-TT-008/009/010`** — contract-compatibility at the gate, no cross-workspace source imports
+(teams couple only through published contracts), and interaction-mode conformance — and produces a
+cross-workspace roll-up by reading each team workspace from the Layer-2 control plane. See *How
+Team-Aligned Workspaces Work*.
+
+---
+
 ## How to Use
 
 ### Quick Start
@@ -184,7 +212,7 @@ AI-GCE works on **any workspace** that has `rules/` files — it does NOT requir
 
 Even if your workspace has minimal or no steering files, the **built-in baseline** provides universal governance rules (author ≠ approver, no direct-push to main, spec before code, session discipline, etc.) that apply to any project. Steering files enrich and specialize — their absence doesn't block.
 
-**Graceful degradation (OR-input):** AI-GCE never blocks on missing steering. It degrades gracefully from full-enriched enforcement (every steering file produces tailored rules) to baseline-only governance (universal rules from the built-in set). Start wherever you are — bring what you have.
+**Graceful degradation (— OR-input):** AI-GCE never blocks on missing steering. It degrades gracefully from full-enriched enforcement (every steering file produces tailored rules) to baseline-only governance (universal rules from the built-in set). Start wherever you are — bring what you have.
 
 ---
 
@@ -408,6 +436,8 @@ Deep-dive knowledge documents for this package (in the family repo under `knowle
 | Document | What it covers |
 |----------|---------------|
 | [How GCE Derivation Pipeline Works](../../knowledge_docs/HOW_GCE_DERIVATION_PIPELINE_WORKS.md) | How AI-GCE reads steering and derives enforcement rules |
+| [How AI-DLC v2 Support Works](../../knowledge_docs/HOW_AIDLC_V2_SUPPORT_WORKS.md) | Sensor-vs-hook enforcement and the `enforcementSurface` under `buildProfile: aidlc` |
+| [How Team-Aligned Workspaces Work](../../knowledge_docs/HOW_TEAM_ALIGNED_WORKSPACES_WORK.md) | The GOV-TT rules and the cross-workspace roll-up |
 | [How GCE Compliance Audit Works](../../knowledge_docs/HOW_GCE_COMPLIANCE_AUDIT_WORKS.md) | The audit mode and compliance scoring model |
 | [How GCE Rederivation Works](../../knowledge_docs/HOW_GCE_REDERIVATION_WORKS.md) | Incremental re-derivation when architecture changes |
 | [How Hook Generation Works](../../knowledge_docs/HOW_HOOK_GENERATION_WORKS.md) | How steering rules become IDE hooks |

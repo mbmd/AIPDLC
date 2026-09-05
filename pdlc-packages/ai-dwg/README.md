@@ -111,6 +111,31 @@ AI-DWG answers **"turn the design into a workspace a team (and AI-DLC) can build
 
 ---
 
+## Build Method & AI-DLC v2 Support
+
+The generated workspace is **build-method-agnostic** — its shared core (`rules/`, `backlog/`,
+`architecture/`, `ux/`, `info/`) serves every build method identically. The workspace manifest
+records a **`buildProfile`** value — `aidlc`, `spec-driven-kiro`, `spec-driven-speckit`,
+`freestyle`, or `manual` — that downstream tooling reads to decide how to consume the workspace.
+
+When `buildProfile: aidlc`, AI-DWG additionally emits a **conditional `aidlc/` surface** in the
+exact shape **AI-DLC v2** reads — behavioural rules (`memory/`), per-agent knowledge routing, sensor
+manifests, and a code knowledge base — plus a bootstrap record. AI-DLC's own stages then affirm this
+context instead of interviewing for it. Under every other build method that surface is absent, and
+only `aidlc` workspaces carry the awslabs attribution line. See *How AI-DLC v2 Support Works* in the
+knowledge docs.
+
+## Workspace Topology (opt-in)
+
+By default AI-DWG generates one monorepo workspace. When the architecture justifies it, **Config
+Gate Q4** offers a per-team topology: `single` (default), `per-team`, or `hybrid`, with a
+`subfolder` or `polyrepo` physical layout. Choosing `per-team` / `hybrid` generates a Layer-2
+control plane (a workspace-set manifest + authoritative contract registry) and N clean per-team
+Layer-3 workspaces, each with a `TEAM_CHARTER.md` and a read-only, version-pinned copy of the
+contracts it produces and consumes. See *How Team-Aligned Workspaces Work*.
+
+---
+
 ## Features
 
 - **Full Generation** — one-shot workspace creation from architecture docs
@@ -361,7 +386,8 @@ AI-GCE and AI-TGE then govern and test the tagged features in Layer 3 via those 
 ## Compatibility
 
 - AI-ADLC v1.0 (core workflow)
-- AI-ADLC v1.1 (6 extensions)
+- AI-ADLC v1.1 (10 architecture-pattern extensions + the opt-in Team Topologies extension)
+- AI-DLC v2 (as a build method — emits the `aidlc/` surface when `buildProfile: aidlc`)
 - Standalone Architecture Package (any structured markdown)
 
 ---
@@ -380,6 +406,8 @@ Deep-dive knowledge documents for this package (in the family repo under `knowle
 | Document | What it covers |
 |----------|---------------|
 | [How DWG Generation Engine Works](../../knowledge_docs/HOW_DWG_GENERATION_ENGINE_WORKS.md) | Internal mechanics of the peer-input, per-cluster generator |
+| [How AI-DLC v2 Support Works](../../knowledge_docs/HOW_AIDLC_V2_SUPPORT_WORKS.md) | The `buildProfile` signal and the conditional `aidlc/` output surface |
+| [How Team-Aligned Workspaces Work](../../knowledge_docs/HOW_TEAM_ALIGNED_WORKSPACES_WORK.md) | Config Gate Q4, the L2 control plane, and per-team L3 workspaces |
 | [How DWG Brownfield Detection Works](../../knowledge_docs/HOW_DWG_BROWNFIELD_DETECTION_WORKS.md) | How AI-DWG handles existing code (Mode 2 reconciliation) |
 | [How to Prepare a Development Workspace](../../knowledge_docs/HOW_TO_PREPARE_A_DEVELOPMENT_WORKSPACE.md) | Practitioner guide — running AI-DWG after architecture |
 | [How Package Installation Works](../../knowledge_docs/HOW_PACKAGE_INSTALLATION_WORKS.md) | How the installer places packages into your workspace |

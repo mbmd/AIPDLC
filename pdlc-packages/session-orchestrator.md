@@ -4,7 +4,7 @@ inclusion: always
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # AIFLC Session Orchestrator — AI-* PDLC Family
 
-> **This is the ONLY always-loaded steering file for the AI-* PDLC Family.** All package cores live in the uniform home `.aiflc/pdlc/` (OI-158) and are **not** auto-loaded — this orchestrator `Read`s the relevant core on demand when a package is activated. This keeps the context window free for actual work.
+> **This is the ONLY always-loaded steering file for the AI-* PDLC Family.** All package cores live in the uniform home `.aiflc/pdlc/` and are **not** auto-loaded — this orchestrator `Read`s the relevant core on demand when a package is activated. This keeps the context window free for actual work.
 
 ---
 
@@ -43,7 +43,7 @@ Prevent context overload. Instead of loading all package workflows into every se
 | `FIA__` | AI-FLO | FLO integrity audit — "is FLO's state correct?" |
 
 <!-- AIFLC-COMPANION-NOTE:start -->
-> **Layer-3 companions staged inert.** AI-GCE (`_GCE_`) and AI-TGE (`_TGE_`) are **not active in this design workspace** — they are staged here only as a provisioning source. AI-DWG (`_DWG_`) places them into the generated project (Layer-3) workspace, where they activate. Do not route to them here. [OI-204]
+> **Layer-3 companions staged inert.** AI-GCE (`_GCE_`) and AI-TGE (`_TGE_`) are **not active in this design workspace** — they are staged here only as a provisioning source. AI-DWG (`_DWG_`) places them into the generated project (Layer-3) workspace, where they activate. Do not route to them here.
 <!-- AIFLC-COMPANION-NOTE:end -->
 
 ---

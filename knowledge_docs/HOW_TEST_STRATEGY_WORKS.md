@@ -241,7 +241,7 @@ Observation is **non-blocking** — it informs, reports, and scores. It never st
 
 ## What the Strategy Contains
 
-The test strategy document (`.tge/test-strategy.md`) produced by AI-TGE includes:
+The test strategy document (`.governance/test/test-strategy.md`) produced by AI-TGE includes:
 
 | Section | Content |
 |---------|---------|
@@ -298,6 +298,6 @@ The test strategy document (`.tge/test-strategy.md`) produced by AI-TGE includes
 
 ---
 
-*Knowledge Document | Created: 2026-06-11 | Updated: 2026-06-13 (rewritten per AI-TGE package) | Author: Maheri*
+*Knowledge Document | Created: 2026-06-11 | Updated: 2026-09-05 (output path corrected to `.governance/test/`) | Author: Maheri*
 
 *Knowledge Document | Created: 2026-06-11 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

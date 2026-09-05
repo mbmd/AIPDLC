@@ -2,7 +2,7 @@
 
 **Purpose:** Master registry of all knowledge documents for the AI-* Family — covering technical mechanics (HOW), operational practices (HOW TO), and impact rationale (WHY). Together these form the institutional knowledge base that serves builders, practitioners, and stakeholders.
 
-**Created:** 2026-06-11 | **Updated:** 2026-07-05
+**Created:** 2026-06-11 | **Updated:** 2026-09-05
 
 ---
 
@@ -43,6 +43,9 @@ How the AI-* packages function internally — their engines, modes, and behavior
 | 11 | [`HOW_POLC_PRODUCT_OWNERSHIP_WORKS.md`](HOW_POLC_PRODUCT_OWNERSHIP_WORKS.md) | AI-POLC (Product Ownership Life Cycle) | ✅ |
 | 117 | [`HOW_DFE_DATA_FABRIC_WORKS.md`](HOW_DFE_DATA_FABRIC_WORKS.md) | AI-DFE (Data Fabric Engine) | ✅ |
 | 110 | [`HOW_PACKAGE_ARCHETYPES_WORK.md`](HOW_PACKAGE_ARCHETYPES_WORK.md) | Family-wide | ✅ |
+| 122 | [`HOW_AIDLC_V2_SUPPORT_WORKS.md`](HOW_AIDLC_V2_SUPPORT_WORKS.md) | AI-DWG + AI-GCE + AI-TGE → AI-DLC v2 | ✅ |
+| 123 | [`HOW_TEAM_ALIGNED_WORKSPACES_WORK.md`](HOW_TEAM_ALIGNED_WORKSPACES_WORK.md) | AI-ADLC + AI-POLC + AI-UXD + AI-DWG + AI-GCE | ✅ |
+| 124 | [`HOW_LENSES_WORK.md`](HOW_LENSES_WORK.md) | Family-wide (AI Lens · Automation Lens · Agentic) | ✅ |
 
 ---
 
@@ -63,6 +66,12 @@ How packages hand off to each other, share contracts, and maintain coherence.
 | 111 | [`HOW_PACKAGE_ACTIVATION_ISOLATION_WORKS.md`](HOW_PACKAGE_ACTIVATION_ISOLATION_WORKS.md) | Family-wide | ✅ |
 | 112 | [`HOW_PROJECT_LAYER_COLLABORATION_WORKS.md`](HOW_PROJECT_LAYER_COLLABORATION_WORKS.md) | AI-ADLC / AI-UXD (UX Design) / AI-POLC → AI-DWG | ✅ |
 | 113 | [`HOW_COMMUNICATION_FABRIC_WORKS.md`](HOW_COMMUNICATION_FABRIC_WORKS.md) | Family-wide / Cross-family | ✅ |
+| 121 | [`INTERACTION_BETWEEN_THE_PDLC_CHAIN_AND_AIDLC.md`](INTERACTION_BETWEEN_THE_PDLC_CHAIN_AND_AIDLC.md) | AI-DWG + AI-GCE + AI-TGE → AI-DLC | ✅ |
+| 130 | [`INTERACTION_BETWEEN_AI_GCE_GOVERNANCE_AND_AIDLC_SENSORS.md`](INTERACTION_BETWEEN_AI_GCE_GOVERNANCE_AND_AIDLC_SENSORS.md) | AI-GCE vs AI-DLC v2 sensors | ✅ |
+| 125 | [`HOW_FLO_DFE_AUTO_REFRESH_WORKS.md`](HOW_FLO_DFE_AUTO_REFRESH_WORKS.md) | AI-FLO + AI-DFE | ✅ |
+| 126 | [`HOW_DRAFT_FIRST_GATES_WORK.md`](HOW_DRAFT_FIRST_GATES_WORK.md) | Family-wide | ✅ |
+| 127 | [`HOW_ARTIFACT_QUALITY_RULES_WORK.md`](HOW_ARTIFACT_QUALITY_RULES_WORK.md) | Family-wide | ✅ |
+| 128 | [`HOW_DELIVERY_METHOD_TIMING_WORKS.md`](HOW_DELIVERY_METHOD_TIMING_WORKS.md) | AI-POLC + AI-PILC + AI-PPM | ✅ |
 
 ---
 
@@ -77,6 +86,7 @@ How packages are installed, configured, and activated on different platforms.
 | 22 | [`HOW_STEERING_FILE_LOADING_WORKS.md`](HOW_STEERING_FILE_LOADING_WORKS.md) | Family-wide | ✅ |
 | 23 | `HOW_ONE_COMMAND_INSTALL_WORKS.md` | Family-wide | 💡 |
 | 24 | `HOW_CROSS_AGENT_PORTABILITY_WORKS.md` | Family-wide | 💡 |
+| 129 | [`HOW_WORKSPACE_HTML_PUBLISHING_WORKS.md`](HOW_WORKSPACE_HTML_PUBLISHING_WORKS.md) | Family-wide (AIFLC-HtmlExport) | ✅ |
 
 ---
 
@@ -285,9 +295,9 @@ Consolidated lookup tables for specific reference data — instant answers witho
 
 | Category | Documents | ✅ Created | 📋 Planned | 💡 Future |
 |----------|:---------:|:----------:|:----------:|:---------:|
-| 1. Package Mechanics | 13 | 13 | 0 | 0 |
-| 2. Chain & Orchestration | 10 | 9 | 1 | 0 |
-| 3. Installation & Delivery | 5 | 3 | 0 | 2 |
+| 1. Package Mechanics | 16 | 16 | 0 | 0 |
+| 2. Chain & Orchestration | 14 | 13 | 1 | 0 |
+| 3. Installation & Delivery | 6 | 4 | 0 | 2 |
 | 4. Governance & Compliance | 11 | 5 | 1 | 5 |
 | 5. Versioning & Change | 3 | 0 | 2 | 1 |
 | 6. UX & Design | 3 | 1 | 0 | 2 |
@@ -300,7 +310,7 @@ Consolidated lookup tables for specific reference data — instant answers witho
 | 13. Lifecycle | 4 | 4 | 0 | 0 |
 | 14. Interactions | 4 | 4 | 0 | 0 |
 | 15. Reference Maps | 7 | 7 | 0 | 0 |
-| **TOTAL** | **121** | **107** | **4** | **10** |
+| **TOTAL** | **128** | **114** | **4** | **10** |
 
 ---
 
@@ -352,4 +362,4 @@ All planned knowledge docs for the four newest packages are now written (every b
 
 *Catalogue maintained by: Maheri | Created: 2026-06-11*
 
-*Knowledge Document | Created: 2026-06-11 | Updated: 2026-07-05 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-11 | Updated: 2026-09-05 (indexed 6 new feature docs — AI-DLC v2 support, team-aligned workspaces, lenses, HTML publishing, draft-first gates, FLO→DFE auto-refresh, artifact-quality rules — plus the previously-omitted delivery-method timing doc) | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

@@ -149,6 +149,13 @@ All artifacts are generated under `.governance/test/` in the workspace root:
 | `debt-scorecard.md` | Prioritized missing tests ranked by architectural risk |
 | `defect-log.md` | Structured defect tracking linked to stories/components |
 
+> **Observation Fidelity — degraded runs are reported loudly.** When AI-TGE observes a workspace
+> whose layout it does not fully recognise, it can only infer activity from weaker signals (such as
+> file timestamps) rather than real story-level coverage. Rather than emit a report that looks
+> complete but is not, AI-TGE declares the run **degraded** in three places at once — the coverage
+> report, the artifact records, and the state file (`tge-state.md`) — so a low-fidelity run is never
+> mistaken for full coverage. Fail-loud, never fail-silent.
+
 ---
 
 ## Dual-Mode Operation
@@ -188,7 +195,7 @@ AI-TGE adapts to what exists. It never requires the full chain to have run.
 | **Brownfield** | Existing project with existing tests (no AP) | Assessment mode — map tests, identify gaps |
 | **Observation Only** | Active AI-DLC with aidlc-docs but no prior TGE run | Jump to observation — register as you go |
 
-**Standalone Usage (OR-input):** AI-TGE never blocks on a missing predecessor. AP alone produces architecture-derived strategy. Existing tests alone produce brownfield assessment. Running AI-DLC alone produces observation-only tracking. Each input is additive enrichment — its absence reduces scope but never halts the engine. You do NOT need to run AI-PILC, AI-ADLC, or AI-DWG first if you have existing code with tests to assess.
+**Standalone Usage (— OR-input):** AI-TGE never blocks on a missing predecessor. AP alone produces architecture-derived strategy. Existing tests alone produce brownfield assessment. Running AI-DLC alone produces observation-only tracking. Each input is additive enrichment — its absence reduces scope but never halts the engine. You do NOT need to run AI-PILC, AI-ADLC, or AI-DWG first if you have existing code with tests to assess.
 
 ---
 

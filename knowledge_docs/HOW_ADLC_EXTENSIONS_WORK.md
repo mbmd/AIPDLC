@@ -1,6 +1,6 @@
 # How AI-ADLC (Architecture Design Life Cycle) Extensions Work
 
-**Purpose:** Explains the opt-in extension system that lets AI-ADLC enforce specialized architectural patterns (Event Storming, DDD, Microservices, BFF, Event Sourcing, Resilience, Feature Flags) — how they load, activate, compose, and propagate downstream.
+**Purpose:** Explains the opt-in extension system that lets AI-ADLC enforce specialized architectural patterns (Event Storming, Domain Storytelling, DDD, Microservices, BFF, Event Sourcing, Resilience, Feature Flags, Wardley Mapping, Threat Modeling) — how they load, activate, compose, and propagate downstream. A separate opt-in extension, Team Topologies, addresses team organization and is covered in *How Team-Aligned Workspaces Work*.
 
 ---
 
@@ -15,14 +15,19 @@ CORE WORKFLOW (covers 80% of all architectures)
 └── Produces complete AP without extensions
         │
         ▼  (user opts in during relevant stage)
-EXTENSIONS (cover the 20% specialized patterns)
+EXTENSIONS (cover the 20% specialized patterns) — ten architecture-pattern extensions
 ├── Event Storming (discovery — feeds DDD + Event Sourcing)
+├── Domain Storytelling (discovery — feeds DDD + Event Sourcing)
 ├── DDD Tactical Patterns
 ├── Microservices
 ├── BFF Pattern
 ├── Event Sourcing / CQRS
 ├── Resilience Patterns
-└── Feature Flags
+├── Feature Flags
+├── Wardley Mapping
+└── Threat Modeling (deep)
+
+(+ Team Topologies — a separate opt-in team-organization extension; see its own doc.)
 
 Each extension ADDS rules — never replaces or conflicts with core.
 ```
@@ -76,12 +81,15 @@ Extensions are presented at the stage where their pattern becomes architecturall
 | Extension | Presented At | Why This Stage |
 |-----------|-------------|----------------|
 | Event Storming | Stage 5 (Container Design / Decomposition) | Behaviour, boundaries, and aggregates are discovered from the event flow before structure |
+| Domain Storytelling | Stage 4/5 (System Context / Decomposition) | Narrative domain discovery; presented via a shared selector with Event Storming |
 | Microservices | Stage 5 (Container Design) | Service decomposition is a container-level decision |
 | BFF Pattern | Stage 5 (Container Design) | BFF is a container added to the system |
 | Event Sourcing/CQRS | Stage 9 (Data Architecture) | Fundamentally changes data model approach |
-| Resilience Patterns | Stage 11 (Integration/Infra) | Resilience applies to distributed communication |
+| Resilience Patterns | Stage 5 or 11 (Integration/Infra) | Resilience applies to distributed communication |
 | DDD Tactical | Stage 12 (Component Design) | DDD patterns apply to internal module structure |
 | Feature Flags | Stage 6 or 12 (Tech Stack/Components) | Delivery mechanism decision |
+| Wardley Mapping | Stage 6 (Technology Stack) | Build-vs-buy positioning is a technology-stack decision |
+| Threat Modeling (deep) | Stage 8 (Security & Identity) | Layers deep threat analysis on the always-run STRIDE baseline |
 
 ---
 
@@ -157,12 +165,15 @@ Extensions activated in AI-ADLC affect the entire downstream chain:
 | Active Extension | AI-DWG Generates |
 |-----------------|------------------|
 | Event Storming | Nothing directly — findings flow through DDD Tactical / Event Sourcing (below) |
+| Domain Storytelling | Nothing directly — narrative findings flow through DDD Tactical / Event Sourcing (below) |
 | DDD Tactical | Enriches `domain-context.md`, `module-structure.md`, `naming-conventions.md` |
 | Microservices | Forces `resilience-standards.md` + `observability-tracing.md` (regardless of normal triggers) |
 | BFF Pattern | Forces `frontend-standards.md`; enriches `api-standards.md` |
 | Event Sourcing/CQRS | Generates `event-sourcing.md` steering file |
 | Resilience Patterns | Forces `resilience-standards.md` with full detail |
 | Feature Flags | Generates `feature-flags.md` steering file |
+| Wardley Mapping | Nothing directly — build/buy dispositions land in the technology-stack ADRs |
+| Threat Modeling (deep) | Enriches the security steering with the modeled threats and their mitigations |
 
 ### AI-GCE (Governance & Compliance Engine) reads workspace → conditional steering files
 
@@ -172,19 +183,42 @@ Extensions that caused AI-DWG to generate conditional steering files are then re
 
 ---
 
-## The Seven Extensions (v1.1)
+## The Ten Architecture-Pattern Extensions (v1.1)
 
-| Extension | Prefix | Rules | Primary Stage |
-|-----------|:------:|:-----:|:-------------:|
-| Event Storming | `EVS-` | 12 | Stage 5 |
-| DDD Tactical | `DDD-` | 10-12 | Stage 12 |
-| Microservices | `MS-` | 10-12 | Stage 5 |
-| BFF Pattern | `BFF-` | 10-12 | Stage 5 |
-| Event Sourcing/CQRS | `ES-` | 10-12 | Stage 9 |
-| Resilience Patterns | `RES-` | 10-12 | Stage 11 |
-| Feature Flags | `FF-` | 10-12 | Stage 6/12 |
+| Extension | Prefix | Primary Stage |
+|-----------|:------:|:-------------:|
+| Event Storming | `EVS-` | Stage 5 |
+| Domain Storytelling | `DST-` | Stage 4/5 |
+| DDD Tactical | `DDD-` | Stage 12 |
+| Microservices | `MS-` | Stage 5 |
+| BFF Pattern | `BFF-` | Stage 5 |
+| Event Sourcing/CQRS | `ES-` | Stage 9 |
+| Resilience Patterns | `RES-` | Stage 5/11 |
+| Feature Flags | `FF-` | Stage 6/12 |
+| Wardley Mapping | `WDL-` | Stage 6 |
+| Threat Modeling (deep) | `THM-` | Stage 8 |
 
-All seven are complete and enforceable as of AI-ADLC v1.1. Event Storming is a **discovery technique** — unlike the six structural-pattern extensions, its output feeds DDD Tactical and Event Sourcing/CQRS rather than producing its own downstream steering.
+All ten are complete and enforceable as of AI-ADLC v1.1. **Event Storming** and **Domain
+Storytelling** are **discovery techniques** — unlike the structural-pattern extensions, their
+output feeds DDD Tactical and Event Sourcing/CQRS rather than producing its own downstream steering.
+An **eleventh** opt-in extension, **Team Topologies** (`TT-`), organizes teams and per-team
+workspaces rather than an architecture pattern; it is documented in *How Team-Aligned Workspaces
+Work*.
+
+### Saga / cross-service consistency (built into the core, not an extension)
+
+Distributed, multi-service designs need a consistency strategy across service boundaries. This is
+handled by the **core workflow**, not by a separate opt-in extension:
+
+- A dedicated **Saga pattern ADR template** (`adr-saga-pattern.md`) captures the chosen
+  orchestration-vs-choreography approach, the compensating actions, and the failure semantics.
+- **Stage 11 (Integration)** runs a **Cross-Service Consistency (Saga) loop** for flows that span
+  services, and **Stage 5** carries a **Multi-Service Consistency Checkpoint**.
+- Flows that cross service boundaries are marked with a **`spansServices`** tag so the checkpoint
+  and the downstream test governance can find them.
+
+Because saga concerns arise whenever a design is distributed, they are always available rather than
+gated behind an opt-in — the Microservices extension makes them especially likely to apply.
 
 ---
 
@@ -203,8 +237,9 @@ All seven are complete and enforceable as of AI-ADLC v1.1. Event Storming is a *
 | Document | Location |
 |----------|----------|
 | Extensions README (source) | `ai-adlc/ai-adlc-rule-details/extensions/README.md` |
-| Extension folders (7) | `ai-adlc/ai-adlc-rule-details/extensions/` |
+| Extension folders (11 incl. Team Topologies) | `ai-adlc/ai-adlc-rule-details/extensions/` |
+| How Team-Aligned Workspaces Work | `knowledge_docs/HOW_TEAM_ALIGNED_WORKSPACES_WORK.md` |
 | AI-DWG extension detection | `ai-dwg/ai-dwg-rules/core-generator.md` (§ Extension-Aware Reading) |
 | AI-DWG enrichment mappings | `ai-dwg/ai-dwg-rule-details/mapping/extension-*.md` |
 
-*Knowledge Document | Created: 2026-06-11 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-11 | Updated: 2026-09-05 (expanded to 10 architecture-pattern extensions + Saga core coverage; Team Topologies noted) | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

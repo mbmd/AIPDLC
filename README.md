@@ -371,7 +371,7 @@ Derives which tests **must** exist from architectural commitments, then continuo
 
 **Boundary:** It governs test accountability; it never writes or runs test code, and it is complementary to (not a replacement for) AI-GCE (code compliance).
 
-**Activate** `_TGE_` · **Marker** `.tge/tge-state.md` · **Agents** `TGV__` / `CVR__` (+ lens `AIQ__`/`ATQ__`) · [Install](./pdlc-packages/ai-tge/setup/INSTALL.md) · [Full README](./pdlc-packages/ai-tge/README.md)
+**Activate** `_TGE_` · **Marker** `.governance/test/tge-state.md` · **Agents** `TGV__` / `CVR__` (+ lens `AIQ__`/`ATQ__`) · [Install](./pdlc-packages/ai-tge/setup/INSTALL.md) · [Full README](./pdlc-packages/ai-tge/README.md)
 
 ---
 
@@ -567,7 +567,7 @@ packages:
     layer: project
     type: hybrid-test-governance-engine (companion, alongside the build)
     activate: _TGE_
-    marker: .tge/tge-state.md
+    marker: .governance/test/tge-state.md
     reads: workspace-rules.md + adlc-state.md + aidlc-docs/aidlc-state.md
     consumes_capability: [development-workspace@1, architecture-design@1]
     produces: test-governance layer (strategy, register, coverage, debt, defects, dashboard)
@@ -734,6 +734,14 @@ The `knowledge_docs/` folder ships with this repo as **deep-dive reference mater
 | [How ILC Idea Lifecycle Works](./knowledge_docs/HOW_ILC_IDEA_LIFECYCLE_WORKS.md) | AI-ILC's funnel + routing model |
 | [How POLC Product Ownership Works](./knowledge_docs/HOW_POLC_PRODUCT_OWNERSHIP_WORKS.md) | AI-POLC's 6-phase lifecycle |
 | [How UX Design Lifecycle Works](./knowledge_docs/HOW_UX_DESIGN_LIFECYCLE_WORKS.md) | AI-UXD's Double Diamond adaptation |
+| [How AI-DLC v2 Support Works](./knowledge_docs/HOW_AIDLC_V2_SUPPORT_WORKS.md) | The `buildProfile` signal and the conditional `aidlc/` output surface |
+| [How Team-Aligned Workspaces Work](./knowledge_docs/HOW_TEAM_ALIGNED_WORKSPACES_WORK.md) | Team Topologies, the L2 control plane, and per-team L3 workspaces |
+| [How Lenses Work](./knowledge_docs/HOW_LENSES_WORK.md) | The AI and Automation lenses and the derived Agentic facet |
+| [How Draft-First Gates Work](./knowledge_docs/HOW_DRAFT_FIRST_GATES_WORK.md) | Write-the-artifact-then-gate + the gap-marker convention |
+| [How FLO → DFE Auto-Refresh Works](./knowledge_docs/HOW_FLO_DFE_AUTO_REFRESH_WORKS.md) | Keeping the data surface fresh automatically as packages advance |
+| [How Workspace HTML Publishing Works](./knowledge_docs/HOW_WORKSPACE_HTML_PUBLISHING_WORKS.md) | The `HTM__` browsable shadow site (SSOT-Shadow) |
+| [How Artifact-Quality Rules Work](./knowledge_docs/HOW_ARTIFACT_QUALITY_RULES_WORK.md) | The blocking quality rules on generated artifacts |
+| [How Delivery-Method Timing Works](./knowledge_docs/HOW_DELIVERY_METHOD_TIMING_WORKS.md) | The AI-accelerated delivery multiplier + dual manual/AI timing |
 
 ### Decision support (when to / why)
 

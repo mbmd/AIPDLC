@@ -6,6 +6,18 @@ Repository: [mbmd/AIPDLC](https://github.com/mbmd/AIPDLC) · Part of [AIFLC](htt
 
 ---
 
+## v0.1.0-beta.6-r2 — 2026-09-05
+
+**Documentation additions + published-surface cleanup (patch).** Two new knowledge documents
+explain how the family works with AI-DLC: one on how the whole PDLC chain feeds AI-DLC and where
+AI-DWG sources each piece it hands over, and one comparing AI-GCE governance with AI-DLC's sensor
+system (including the precise enforcement model — AI-GCE registers findings by default, with a
+single opt-in pre-write exception for secrets/PII). Alongside these, several always-shipped files
+were scrubbed of internal build-side references so every published file stays self-contained. No
+package behaviour changes — this is a documentation and hygiene patch on top of `beta.6`.
+
+---
+
 ## v0.1.0-beta.6 — 2026-09-01
 
 **AI-DLC v2 support across the build-and-govern surface.** Three packages step to `1.1.0` — AI-DWG

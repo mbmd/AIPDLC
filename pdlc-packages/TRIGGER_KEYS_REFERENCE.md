@@ -88,7 +88,7 @@ Force-activate a family package's workflow, unambiguously, regardless of other i
 | Key | Agent | Type | Owner | What It Does |
 |-----|-------|------|-------|--------------|
 | `AIG__` | AIFLC AI Governance | Audit | AI-GCE | AI governance checks: EU AI Act obligations, responsible-AI, operational governance (PII boundary, model pinning, prompt review, cost controls). Reads `.ai-lens/manifest.json`. Writes to `.governance/ai-lens/`. |
-| `AIQ__` | AIFLC AI Quality & Drift | Audit | AI-TGE | AI quality evaluation and drift detection: golden-set eval, acceptance-criteria validation, hallucination/bias/injection testing, drift monitoring. Reads `.ai-lens/manifest.json` + `eval/`. Writes to `.tge/ai-lens/`. |
+| `AIQ__` | AIFLC AI Quality & Drift | Audit | AI-TGE | AI quality evaluation and drift detection: golden-set eval, acceptance-criteria validation, hallucination/bias/injection testing, drift monitoring. Reads `.ai-lens/manifest.json` + `eval/`. Writes to `.governance/test/ai-lens/`. |
 
 ## Automation-LENS Triggers (ship with Automation-LENS facets)
 
@@ -97,7 +97,7 @@ Force-activate a family package's workflow, unambiguously, regardless of other i
 | Key | Agent | Type | Owner | What It Does |
 |-----|-------|------|-------|--------------|
 | `ATG__` | AIFLC Automation Governance | Audit | AI-GCE | Automation governance checks: audit-trail completeness, kill-switch/loop-guard presence, segregation of duties (controlled class), least-privilege identity, control-class compliance. Reads `.automation-lens/manifest.json`. Writes to `.governance/automation-lens/`. |
-| `ATQ__` | AIFLC Automation Quality | Audit | AI-TGE | Automation verification: idempotency, exception-path coverage, retry/compensation correctness, rollback, load/throughput, and the loop test (fire the trigger; assert the causal chain terminates within the hop budget). Reads `.automation-lens/manifest.json`. Writes to `.tge/automation-lens/`. |
+| `ATQ__` | AIFLC Automation Quality | Audit | AI-TGE | Automation verification: idempotency, exception-path coverage, retry/compensation correctness, rollback, load/throughput, and the loop test (fire the trigger; assert the causal chain terminates within the hop budget). Reads `.automation-lens/manifest.json`. Writes to `.governance/test/automation-lens/`. |
 
 ## Governance Spine Trigger (Management Framework)
 

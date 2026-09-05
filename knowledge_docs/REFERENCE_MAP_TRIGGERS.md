@@ -60,6 +60,31 @@ When an extension is active, it can force conditional generation regardless of n
 | BFF Pattern | Enriches `api-standards.md` with BFF routing rules |
 | Resilience | `resilience-standards.md` |
 | Feature Flags | `feature-flags.md` |
+| Threat Modeling (deep) | Enriches the security steering with modeled threats + mitigations |
+| Domain Storytelling | No steering of its own — findings feed DDD / Event Sourcing generation |
+| Wardley Mapping | No steering of its own — build/buy dispositions land in technology-stack ADRs |
+| Team Topologies | Drives multi-workspace generation when Config Gate Q4 selects `per-team` / `hybrid` (see below) |
+
+> **Extension set (v1.1).** AI-ADLC now ships **ten** architecture-pattern extensions (Event
+> Storming, Domain Storytelling, DDD Tactical, Microservices, BFF, Event Sourcing/CQRS, Resilience,
+> Feature Flags, Wardley Mapping, Threat Modeling) plus an eleventh, **Team Topologies**, that
+> drives per-team workspace generation. See *How ADLC Extensions Work* and *How Team-Aligned
+> Workspaces Work*.
+
+---
+
+## Related Trigger Concepts (Different From Conditional Generation)
+
+This map covers **conditional file generation** — which output files AI-DWG produces. Two other
+trigger concepts exist and are documented elsewhere:
+
+- **Package activation keys** (`_ILC_` … `_DFE_`) and **agent shortcuts** (`IQA__`, `TGV__`, `HTM__`,
+  the lens agents `AIG__`/`AIQ__`/`ATG__`/`ATQ__`, etc.) — the complete, canonical list lives in the
+  family's `TRIGGER_KEYS_REFERENCE.md`.
+- **Lens mode toggles** (`_AILENS_`, `_AUTOLENS_`) — report and switch the AI and Automation lenses;
+  see *How Lenses Work*.
+- **Workspace HTML publishing** (`HTM__` + `on`/`off`/`status`) — see *How Workspace HTML Publishing
+  Works*.
 
 ---
 
@@ -83,6 +108,9 @@ When an extension is active, it can force conditional generation regardless of n
 | Pattern: Conditional Generation | `knowledge_docs/PATTERN_CONDITIONAL_GENERATION.md` |
 | How DWG Generation Engine Works | `knowledge_docs/HOW_DWG_GENERATION_ENGINE_WORKS.md` |
 | How ADLC Extensions Work | `knowledge_docs/HOW_ADLC_EXTENSIONS_WORK.md` |
+| How Lenses Work | `knowledge_docs/HOW_LENSES_WORK.md` |
+| How Team-Aligned Workspaces Work | `knowledge_docs/HOW_TEAM_ALIGNED_WORKSPACES_WORK.md` |
+| How Workspace HTML Publishing Works | `knowledge_docs/HOW_WORKSPACE_HTML_PUBLISHING_WORKS.md` |
 | Interaction Between Extensions and Governance | `knowledge_docs/INTERACTION_BETWEEN_EXTENSIONS_AND_GOVERNANCE.md` |
 
-*Knowledge Document | Created: 2026-06-12 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-12 | Updated: 2026-09-05 (added new extensions + cross-links to lens / topology / HTML-publishing triggers) | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

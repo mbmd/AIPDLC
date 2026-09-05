@@ -81,16 +81,24 @@ Technical leads, solution architects, or senior developers who need to design a 
 
 At Stage 4 (or whenever architecture justifies it), you can activate extensions:
 
+AI-ADLC ships **ten architecture-pattern extensions** (plus an eleventh, opt-in **Team Topologies** extension for per-team workspaces — see *How Team-Aligned Workspaces Work*):
+
 | Extension | Activate When | What It Adds |
 |-----------|--------------|-------------|
+| **Event Storming** | Process-heavy domain; boundaries unclear | Event → command → aggregate → bounded-context discovery (feeds DDD) |
+| **Domain Storytelling** | Experts narrate the work better than they diagram it | Actor → activity → work-object stories that surface the model (feeds DDD) |
 | **DDD Tactical** | Complex domain logic, multiple bounded contexts | Aggregate design, domain events, repository patterns |
 | **Microservices** | ≥3 independently deployable services | Service mesh, discovery, distributed tracing |
 | **BFF Pattern** | Multiple frontend channels (web, mobile, partner) | Backend-for-frontend design, API gateway routing |
 | **Event Sourcing / CQRS** | Audit-critical or temporal data requirements | Event stores, projections, command/query separation |
 | **Resilience Patterns** | ≥3 external integrations or high-availability needs | Circuit breakers, bulkheads, retry policies, fallbacks |
 | **Feature Flags** | Gradual rollout, A/B testing, trunk-based delivery | Flag taxonomy, evaluation strategy, lifecycle rules |
+| **Wardley Mapping** | Build-vs-buy positioning across the value chain | Value-chain × evolution positioning, build/buy/adopt dispositions |
+| **Threat Modeling (deep)** | Security-sensitive system beyond the STRIDE baseline | STRIDE-per-element, attack trees, risk-rated mitigations |
 
 Extensions are additive — once activated, their rules become blocking constraints at relevant stages. Multiple extensions compose without conflict.
+
+**Cross-service consistency (Saga)** is handled by the **core** workflow, not an opt-in extension: a Saga-pattern ADR template plus a Stage-11 Cross-Service Consistency loop and a Stage-5 checkpoint apply to any flow tagged as spanning services. See *How ADLC Extensions Work*.
 
 ---
 
@@ -171,4 +179,4 @@ The handoff is automatic — AI-DWG detects `adlc-state.md` and reads the AP.
 | Why Architecture Before Code Matters | `knowledge_docs/WHY_ARCHITECTURE_BEFORE_CODE_MATTERS.md` |
 | How Depth Levels Work | `knowledge_docs/HOW_DEPTH_LEVELS_WORK.md` |
 
-*Knowledge Document | Created: 2026-06-12 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-12 | Updated: 2026-09-05 (extensions list expanded to the full 10 + Saga core note) | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

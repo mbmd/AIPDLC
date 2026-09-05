@@ -198,6 +198,10 @@ The development team (via AI-DLC) writes tests. AI-TGE ensures the RIGHT tests g
 
 ## Output Artifacts
 
+All artifacts are written under **`.governance/test/`** in your workspace root. AI-TGE is a
+companion layer — it owns this dotfolder, keeps it independent of the build, and never writes
+outside it (it never writes test code or any source file).
+
 | Artifact | Purpose | Updated When |
 |----------|---------|-------------|
 | `test-strategy.md` | Test approach, pyramid, thresholds | Strategy phase (Stage 5) |
@@ -206,6 +210,31 @@ The development team (via AI-DLC) writes tests. AI-TGE ensures the RIGHT tests g
 | `debt-scorecard.md` | Ranked test gaps by risk | After risk scoring (Stage 6, 12) |
 | `defect-log.md` | Defects found + gap correlation | When defects are reported |
 | `tge-state.md` | Session continuity + mode + progress | After every stage |
+
+> **Output location note.** The governance layer lives at `.governance/test/` (alongside the
+> shared `.governance/agents/`). A former top-level `.tge/` folder was retired — if you have an
+> older workspace, AI-TGE now reads and writes `.governance/test/`.
+
+---
+
+## Observation Fidelity — degraded runs are reported loudly
+
+AI-TGE's Observation phase reads the build workspace to track what is actually being tested. When
+the workspace layout is one it fully recognises, observation is complete. When it is not — for
+example an unfamiliar folder shape where AI-TGE can only infer activity from file timestamps rather
+than from real story-level coverage — the run is **degraded**.
+
+The risk this guards against is a *silent* degradation: a coverage report that looks complete but
+was derived from weak signal, with no warning. Observation Fidelity makes that impossible to miss.
+A degraded run is declared as degraded in three places at once:
+
+- **In the coverage report** — a fidelity banner states the run was degraded and why.
+- **In the artifact itself** — the register/coverage records carry the reduced-fidelity marker.
+- **In the state file** (`tge-state.md`) — so the next session, and any dashboard reading it, sees
+  the degraded status rather than assuming full coverage.
+
+The rule is fail-loud, never fail-silent: AI-TGE would rather tell you it could not see clearly than
+report a confident number it cannot stand behind.
 
 ---
 
@@ -219,4 +248,4 @@ The development team (via AI-DLC) writes tests. AI-TGE ensures the RIGHT tests g
 | Why Testing Strategy Matters | `knowledge_docs/WHY_TESTING_STRATEGY_MATTERS.md` |
 | How to Run the Full Chain | `knowledge_docs/HOW_TO_RUN_THE_FULL_CHAIN.md` |
 
-*Knowledge Document | Created: 2026-06-12 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-12 | Updated: 2026-09-05 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

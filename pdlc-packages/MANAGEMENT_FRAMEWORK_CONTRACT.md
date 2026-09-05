@@ -2,9 +2,7 @@
 
 **Version:** 2.0.0
 **Date:** 2026-07-11
-**Author:** Maheri
-**Authored under:** `#persona-process-designer` (lead) + `#persona-compliance-governance` (support)
-**Status:** CANONICAL — this is the single source of truth for the AIFLC governance spine across **all** families. Each family carries a verbatim copy at its family root (`1.dev/{family}/MANAGEMENT_FRAMEWORK_CONTRACT.md`), propagated by the sync script (never hand-copied). Mirrors the GATE_PROTOCOL propagation model.
+**Status:** CANONICAL — this is the single source of truth for the AIFLC governance spine across **all** families. Each family carries a verbatim copy at its family root (`MANAGEMENT_FRAMEWORK_CONTRACT.md`), kept uniform across the family set. Mirrors the GATE_PROTOCOL propagation model.
 
 > **Lineage.** Generalized from the PDLC-local contract v1.3.0 (project-scoped). v2.0.0 makes the contract **scope-agnostic** so every family — product (PDLC), enterprise-architecture (BALC, DALC, …), and strategy (SFLC, SXLC) — carries one uniform governance spine.
 
@@ -195,7 +193,7 @@ appends its decisions, changes, issues, actions, assumptions, and lessons here.
 ```
 
 - Never hardcode a start; always scan for the current max.
-- Never reuse removed IDs (non-destructive).
+- Never reuse removed IDs (— non-destructive).
 - Each `{PKG}-{SCOPE}-{TYPE}` group has an independent counter.
 - **Concurrency:** single-user/single-agent model — scan-and-increment is race-free. Parallel-writer locking is explicitly deferred.
 - **Carry-forward:** where a spine is carried into a downstream workspace, numbering continues from the highest existing `{N}` — never resets.
