@@ -1,6 +1,6 @@
 # How to Adopt Governance on a Project
 
-**Purpose:** Practical guide for using AI-GCE to bring automated compliance enforcement to a project — whether it's a freshly generated workspace from AI-DWG or an existing codebase that needs governance added progressively.
+**Purpose:** Practical guide for using AI-GCE (Governance & Compliance Engine) to bring automated compliance enforcement to a project — whether it's a freshly generated workspace from AI-DWG (Workspace Generator) or an existing codebase that needs governance added progressively.
 
 ---
 
@@ -216,7 +216,7 @@ Re-derivation is **non-destructive:**
 
 4. **Use compliance score as a team metric.** The score in `.compliance-state.json` tracks improvement over time. Share it in retrospectives. Celebrate improvement rather than punishing violations.
 
-5. **Let AI-GCE re-derive after architecture changes.** If AI-ADLC adds a new container or changes an ADR, the downstream chain (DWG → GCE) should run to keep governance aligned. Stale governance is worse than no governance — it creates a false sense of compliance.
+5. **Let AI-GCE re-derive after architecture changes.** If AI-ADLC (Architecture Design Life Cycle) adds a new container or changes an ADR, the downstream chain (DWG → GCE) should run to keep governance aligned. Stale governance is worse than no governance — it creates a false sense of compliance.
 
 ---
 

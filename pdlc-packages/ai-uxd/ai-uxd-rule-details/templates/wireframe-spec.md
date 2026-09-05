@@ -16,6 +16,8 @@ ownership: hybrid
 | Template Type | {Dashboard / List / Detail / Form / Wizard / Modal / Empty} |
 | Primary Flow | {flow that owns this screen} |
 | Persona | {primary user of this screen} |
+| Owning Team | {TEAM-slug — optional; set when the AI-ADLC team-topologies feature is active; else inherited from the Primary Flow (see Traceability) or "n/a"} |
+| Bounded Context | {BC-slug — optional; set when the topology feature is active; else inherited or "n/a"} |
 | Entry Points | {how user arrives — nav, flow step, link} |
 | Exit Points | {where user goes from here} |
 | Prototype Link | {external Figma/tool link, if available} |
@@ -109,6 +111,9 @@ ownership: hybrid
 | Journey Stage | {journey → stage this screen serves} |
 | Components used | {list of components from Component Library} |
 | Template shared with | {other screens using same template layout} |
+| Owning Team / Bounded Context | {TEAM-* / BC-* — see Metadata} |
+
+> **Team/context attribution (hybrid — Q-D9).** When the `team-topologies` feature is active, set the `Owning Team` (`TEAM-*`) / `Bounded Context` (`BC-*`) tag natively from the AI-ADLC `team-context-registry`. When untagged, inherit it from the **Primary Flow** (which resolves persona → epic → BC/TEAM). AI-DWG uses this to route each team its `ux/` slice. **Design-system tokens and the accessibility baseline stay SHARED across all teams — never team-scoped.**
 
 ---
 

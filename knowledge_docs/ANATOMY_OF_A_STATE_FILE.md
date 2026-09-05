@@ -58,9 +58,9 @@ Every lifecycle package produces one. Its filename is non-negotiable.
 | `Project Name` | Stage 1 | Rarely (rename only) | Successor packages (display/context) |
 
 **Project ID format:** `PRJ-{ABBREVIATION}-{YEAR}-{SEQUENCE}`
-- Minted by AI-PILC (or AI-ILC if it runs first)
+- Minted by AI-PILC (Project Initiation Life Cycle) (or AI-ILC (Idea Life Cycle) if it runs first)
 - Carried forward through the entire chain
-- Used by AI-PPM for portfolio roll-up
+- Used by AI-PPM (Project Portfolio Management) for portfolio roll-up
 
 ### Progress
 
@@ -108,7 +108,7 @@ Every lifecycle package produces one. Its filename is non-negotiable.
 - Register Counts: Decisions=6, Changes=1, Issues=3, Actions=4, Assumptions=5, Lessons=2
 ```
 
-### AI-ADLC (`adlc-state.md`) adds:
+### AI-ADLC (Architecture Design Life Cycle) (`adlc-state.md`) adds:
 
 ```markdown
 ## Architecture
@@ -123,7 +123,7 @@ Every lifecycle package produces one. Its filename is non-negotiable.
 - Components Designed: 12/16
 ```
 
-### AI-GCE (`.compliance-state.json`) — different format:
+### AI-GCE (Governance & Compliance Engine) (`.compliance-state.json`) — different format:
 
 ```json
 {
@@ -143,7 +143,7 @@ Every lifecycle package produces one. Its filename is non-negotiable.
 }
 ```
 
-### AI-TGE (`tge-state.md`) adds:
+### AI-TGE (Test Governance Engine) (`tge-state.md`) adds:
 
 ```markdown
 ## Test Governance
@@ -162,7 +162,7 @@ Every lifecycle package produces one. Its filename is non-negotiable.
 | Successor | Fields It Reads | Why |
 |-----------|----------------|-----|
 | AI-ADLC reads `pilc-state.md` | Status, Depth, Output Structure, Project ID | Confirms PIP is complete, inherits depth, knows file naming |
-| AI-DWG reads `adlc-state.md` | Enabled Extensions, Output Structure, Container Count | Triggers extension-enrichment, knows what to generate |
+| AI-DWG (Workspace Generator) reads `adlc-state.md` | Enabled Extensions, Output Structure, Container Count | Triggers extension-enrichment, knows what to generate |
 | AI-GCE reads workspace marker | (Doesn't read a state file — detects `.kiro/steering/`) | Presence = workspace exists |
 | AI-TGE reads `adlc-state.md` | Extensions, ADR Count, Containers | Derives test requirements from architecture scope |
 

@@ -44,8 +44,8 @@ If you're still inside the package that needs more depth:
 1. **Check state file** — which stages are complete?
 2. **Identify gaps** — what would Standard/Comprehensive depth have produced that Minimal skipped?
 3. **Re-run skipped stages** — navigate back to stages that were simplified or skipped:
-   - AI-PILC Minimal skips deep feasibility and detailed stakeholder analysis
-   - AI-ADLC Minimal skips Stages 9-12 (detailed design)
+   - AI-PILC (Project Initiation Life Cycle) Minimal skips deep feasibility and detailed stakeholder analysis
+   - AI-ADLC (Architecture Design Life Cycle) Minimal skips Stages 9-12 (detailed design)
 4. **Update state file** — change `Workflow Depth: Standard` (or Comprehensive)
 5. **Continue forward** — remaining stages now run at the new depth
 
@@ -66,8 +66,8 @@ Depth change in AI-PILC affects downstream:
 AI-PILC depth upgraded (Minimal → Standard)
     → Produces richer PIP (more constraints, more risks, more stakeholders)
     → AI-ADLC reads richer input → asks fewer questions, produces richer AP
-    → AI-DWG reads richer AP → generates more steering files
-    → AI-GCE derives more rules (richer steering = richer governance)
+    → AI-DWG (Workspace Generator) reads richer AP → generates more steering files
+    → AI-GCE (Governance & Compliance Engine) derives more rules (richer steering = richer governance)
 ```
 
 **Decision:** Do you re-run the full chain, or just accept the current downstream output?

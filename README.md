@@ -2,14 +2,14 @@
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 
-**Version:** 0.1.0-beta.5
+**Version:** 0.1.0-beta.6
 **Author:** [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 
 ---
 
 ## What Is This?
 
-The AI-* PDLC Family is part of **AIFLC** (AI Full Life Cycle) — a suite of **injectable workflow packages** that guide AI coding assistants through professional software delivery — from idea through architecture, workspace setup, governance, and test accountability.
+The AI-* PDLC (Product Development Life Cycle) Family is part of **AIFLC** (AI Full Life Cycle) — a suite of **injectable workflow packages** that guide AI coding assistants through professional software delivery — from idea through architecture, workspace setup, governance, and test accountability.
 
 Each package is a set of markdown files you drop into your IDE workspace. The AI reads them and gains structured expertise: it knows what to ask, what to produce, and when to hand off to the next package in the chain. No plugins, no APIs, no vendor lock-in.
 
@@ -35,7 +35,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -43,13 +43,13 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 ---
 
@@ -57,19 +57,19 @@ flowchart LR
 
 | Layer | Package | Type | What It Does | Reads → Produces | Marker | Activate |
 |-------|---------|------|--------------|------------------|--------|:--------:|
-| Portfolio | [AI-ILC](./pdlc-packages/ai-ilc/) | Interactive workflow | Evaluate raw ideas → Approved Idea Brief | Raw idea → Go/No-Go decision + routed brief | `ilc-state.md` | `_ILC_` |
-| Portfolio | [AI-PILC](./pdlc-packages/ai-pilc/) | Interactive workflow | Raw requirement → Project Initiation Package (PIP) | Raw requirement (or Idea Brief) → PIP; mints `projectId` | `pilc-state.md` | `_PILC_` |
-| Portfolio | [AI-PPM](./pdlc-packages/ai-ppm/) | Adaptive portfolio engine | Multiple PIPs → Portfolio governance & prioritization | PIPs + briefs (+ AI-FLO roll-up) → portfolio register, prioritization, dispatch | `ppm-state.md` | `_PPM_` |
-| Project | [AI-POLC](./pdlc-packages/ai-polc/) | Interactive workflow | PIP/AP → Product Backlog Package (PBP) | PIP / AP → Product Backlog Package (PBP) | `polc-state.md` | `_POLC_` |
-| Project | [AI-UXD](./pdlc-packages/ai-uxd/) | Interactive workflow | PIP/AP → UX Design Package (personas, flows, design system) | PIP / PBP (+ AP) → UX Design Package (UXP) | `uxd-state.md` | `_UXD_` |
-| Project | [AI-ADLC](./pdlc-packages/ai-adlc/) | Interactive workflow | Requirements → Architecture Package (AP) | PIP (+ PBP + UXP) → Architecture Package (AP) | `adlc-state.md` | `_ADLC_` |
-| Project | [AI-DWG](./pdlc-packages/ai-dwg/) | One-time generator | AP + PBP + UXP → Ready-to-code workspace | AP ∥ PBP ∥ UXP (any ≥1) → ready-to-code dev workspace | `dwg-state.md` (+ `rules/workspace-rules.md`) | `_DWG_` |
-| Project | [AI-GCE](./pdlc-packages/ai-gce/) | Adaptive governance engine | Workspace → Compliance enforcement layer | Dev workspace → compliance enforcement layer (companion) | `.governance/hooks/` (+ `gce-state.md`) | `_GCE_` |
-| Project | [AI-TGE](./pdlc-packages/ai-tge/) | Test governance engine | Workspace → Test strategy, register, coverage tracking | AP + dev workspace → test-governance layer (companion) | `.governance/test/tge-state.md` | `_TGE_` |
+| Portfolio | [AI-ILC (Idea Life Cycle)](./pdlc-packages/ai-ilc/) | Interactive workflow | Evaluate raw ideas → Approved Idea Brief | Raw idea → Go/No-Go decision + routed brief | `ilc-state.md` | `_ILC_` |
+| Portfolio | [AI-PILC (Project Initiation Life Cycle)](./pdlc-packages/ai-pilc/) | Interactive workflow | Raw requirement → Project Initiation Package (PIP) | Raw requirement (or Idea Brief) → PIP; mints `projectId` | `pilc-state.md` | `_PILC_` |
+| Portfolio | [AI-PPM (Project Portfolio Management)](./pdlc-packages/ai-ppm/) | Adaptive portfolio engine | Multiple PIPs → Portfolio governance & prioritization | PIPs + briefs (+ AI-FLO roll-up) → portfolio register, prioritization, dispatch | `ppm-state.md` | `_PPM_` |
+| Project | [AI-POLC (Product Ownership Life Cycle)](./pdlc-packages/ai-polc/) | Interactive workflow | PIP/AP → Product Backlog Package (PBP) | PIP / AP → Product Backlog Package (PBP) | `polc-state.md` | `_POLC_` |
+| Project | [AI-UXD (UX Design)](./pdlc-packages/ai-uxd/) | Interactive workflow | PIP/AP → UX Design Package (personas, flows, design system) | PIP / PBP (+ AP) → UX Design Package (UXP) | `uxd-state.md` | `_UXD_` |
+| Project | [AI-ADLC (Architecture Design Life Cycle)](./pdlc-packages/ai-adlc/) | Interactive workflow | Requirements → Architecture Package (AP) | PIP (+ PBP + UXP) → Architecture Package (AP) | `adlc-state.md` | `_ADLC_` |
+| Project | [AI-DWG (Workspace Generator)](./pdlc-packages/ai-dwg/) | One-time generator | AP + PBP + UXP → Ready-to-code workspace | AP ∥ PBP ∥ UXP (any ≥1) → ready-to-code dev workspace | `dwg-state.md` (+ `rules/workspace-rules.md`) | `_DWG_` |
+| Project | [AI-GCE (Governance & Compliance Engine)](./pdlc-packages/ai-gce/) | Adaptive governance engine | Workspace → Compliance enforcement layer | Dev workspace → compliance enforcement layer (companion) | `.governance/hooks/` (+ `gce-state.md`) | `_GCE_` |
+| Project | [AI-TGE (Test Governance Engine)](./pdlc-packages/ai-tge/) | Test governance engine | Workspace → Test strategy, register, coverage tracking | AP + dev workspace → test-governance layer (companion) | `.governance/test/tge-state.md` | `_TGE_` |
 
-> **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT part of this suite — it's Amazon's open-source build lifecycle. Our chain produces the workspace AI-DLC v1 consumes.
+> **AI-DLC** (AI-Driven Development Life Cycle — [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT part of this suite — it's Amazon's open-source build lifecycle. Our chain produces the workspace AI-DLC consumes.
 >
-> **Fabric (not table rows):** **AI-FLO** (router / orchestration — package-to-package flow, shown on the edge of the diagram above, `flo-state.md`, `_FLO_`) · **AI-DFE** (data fabric engine — gathers data from all packages and distributes structured JSON for dashboards and status roll-ups, `_DFE_`, `DAT__`). Both run *alongside* the chain rather than as linear steps, so neither is shown as a chain row above. They are family-scoped fabric engines that install with the family. Type `_ACTIVE_` at any time to see which package is active. Full activation and agent-shortcut keys are in `pdlc-packages/TRIGGER_KEYS_REFERENCE.md`.
+> **Fabric (not table rows):** **AI-FLO** (Flow Orchestrator — router / orchestration for package-to-package flow, shown on the edge of the diagram above, `flo-state.md`, `_FLO_`) · **AI-DFE** (Data Fabric Engine — gathers data from all packages and distributes structured JSON for dashboards and status roll-ups, `_DFE_`, `DAT__` (data operations)). Both run *alongside* the chain rather than as linear steps, so neither is shown as a chain row above. They are family-scoped fabric engines that install with the family. Type `_ACTIVE_` (report which package is currently active) at any time to see which package is active. Full activation and agent-shortcut keys are in `pdlc-packages/TRIGGER_KEYS_REFERENCE.md`.
 
 ---
 
@@ -77,11 +77,11 @@ flowchart LR
 
 ### 1. Pick a starting point
 
-- **New project from scratch?** Start with [AI-PILC](./pdlc-packages/ai-pilc/) (project initiation)
-- **Have requirements, need architecture?** Start with [AI-ADLC](./pdlc-packages/ai-adlc/)
-- **Have architecture, need a workspace?** Start with [AI-DWG](./pdlc-packages/ai-dwg/)
-- **Have an idea to evaluate?** Start with [AI-ILC](./pdlc-packages/ai-ilc/)
-- **Managing multiple projects?** Start with [AI-PPM](./pdlc-packages/ai-ppm/)
+- **New project from scratch?** Start with [AI-PILC (Project Initiation Life Cycle)](./pdlc-packages/ai-pilc/)
+- **Have requirements, need architecture?** Start with [AI-ADLC (Architecture Design Life Cycle)](./pdlc-packages/ai-adlc/)
+- **Have architecture, need a workspace?** Start with [AI-DWG (Workspace Generator)](./pdlc-packages/ai-dwg/)
+- **Have an idea to evaluate?** Start with [AI-ILC (Idea Life Cycle)](./pdlc-packages/ai-ilc/)
+- **Managing multiple projects?** Start with [AI-PPM (Project Portfolio Management)](./pdlc-packages/ai-ppm/)
 
 ### 2. Install only what you need
 
@@ -308,7 +308,7 @@ Turns a PIP (+ PBP + UXP) into an **Architecture Package (AP)** — a C4-decompo
 
 Project layer · one-time generator + reconciler (the design→build hinge) · speaks as a DevOps / platform engineer. *(Inspired by [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows).)*
 
-Composes a **ready-to-code development workspace (DW)** from whichever design peers exist — it *is* the workspace: steering rules, project docs, config, source skeleton, and the AI-DLC v1 build inputs.
+Composes a **ready-to-code development workspace (DW)** from whichever design peers exist — it *is* the workspace: steering rules, project docs, config, source skeleton, and the AI-DLC build inputs.
 
 **Standalone:** Generates from any single structured package (AP, PBP, or UXP).
 
@@ -321,7 +321,7 @@ Composes a **ready-to-code development workspace (DW)** from whichever design pe
 
 **Patterns:** Project scaffolding / generators · policy-as-code · multi-source convergence + conditional generation · non-destructive reconciliation · provenance · AI-agnostic canonical + adapter rendering · day-1 developer experience.
 
-**Boundary:** It prepares the workspace; it does not build the software (AI-DLC v1 does) or make product/architecture decisions (it renders its peers' decisions).
+**Boundary:** It prepares the workspace; it does not build the software (AI-DLC does) or make product/architecture decisions (it renders its peers' decisions).
 
 **Activate** `_DWG_` · **Marker** `workspace-rules.md` (+ engine state `dwg-state.md`) · **Agent** `WIA__` · [Install](./pdlc-packages/ai-dwg/setup/INSTALL.md) · [Full README](./pdlc-packages/ai-dwg/README.md)
 
@@ -331,7 +331,7 @@ Composes a **ready-to-code development workspace (DW)** from whichever design pe
 
 #### 8 · AI-GCE — *Guard it* (AI-Driven Governance & Compliance Engine)
 
-Project layer · adaptive governance engine · companion (runs in the generated workspace, alongside AI-DLC v1) · speaks as a compliance / governance lead. *(Inspired by [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows).)*
+Project layer · adaptive governance engine · companion (runs in the generated workspace, alongside AI-DLC) · speaks as a compliance / governance lead. *(Inspired by [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows).)*
 
 Reads the development workspace and derives a **compliance & enforcement layer** — the hooks, rules, agents, and audit log that keep the build inside its own declared standards, continuously.
 
@@ -354,13 +354,13 @@ Reads the development workspace and derives a **compliance & enforcement layer**
 
 #### 9 · AI-TGE — *Test it* (AI-Driven Test Governance Engine)
 
-Project layer · hybrid test-governance engine · companion (runs alongside AI-DLC v1, sibling of AI-GCE) · speaks as a QA / test architect. *(Inspired by [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows).)*
+Project layer · hybrid test-governance engine · companion (runs alongside AI-DLC, sibling of AI-GCE) · speaks as a QA / test architect. *(Inspired by [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows).)*
 
 Derives which tests **must** exist from architectural commitments, then continuously tracks whether they do — answering "did we test what we designed, and which missing tests matter most?"
 
 **Standalone:** (four auto-detected modes) An AP yields an architecture-derived strategy, existing tests yield a brownfield assessment, and a running build yields observation-only tracking.
 
-**In the chain:** Reads AP + DW + AI-DLC v1 state for full strategy + observation, and **owns `testing-strategy.md`** when active (AI-DWG defers to it). Tests tagged AI / automation / agentic features via lens agents.
+**In the chain:** Reads AP + DW + AI-DLC state for full strategy + observation, and **owns `testing-strategy.md`** when active (AI-DWG defers to it). Tests tagged AI / automation / agentic features via lens agents.
 
 **Inputs:** AP + DW + `aidlc-docs`
 **Output:** The **`.governance/test/`** layer: `test-strategy.md`, `test-register.md`, `coverage-report.md`, `debt-scorecard.md`, `defect-log.md`, a `quality-dashboard.md`, and the `tge-state.md` marker.
@@ -396,7 +396,7 @@ Carries decisions down and status up — it reads every package's state marker, 
 
 **Boundary:** It routes and records; it never decides *what* to build (AI-PPM decides; the operator overrides), never produces a package's artifacts, and (in v1.0) never auto-executes a session.
 
-**Activate** `_FLO_` · **Marker** `flo-state.md` · **Agents** `FHC__` (health) / `FIA__` (integrity) · [Install](./pdlc-packages/ai-flo/setup/INSTALL.md) · [Full README](./pdlc-packages/ai-flo/README.md)
+**Activate** `_FLO_` · **Marker** `flo-state.md` · **Agents** `FHC__` (health) / `FIA__` (integrity) · Setup & full README ship inside the `ai-flo/` fabric engine (`ai-flo/setup/INSTALL.md` and `ai-flo/README.md`), which is delivered alongside the family.
 
 ---
 
@@ -419,7 +419,7 @@ Gathers every package's scattered Markdown output, shapes it into schema-validat
 
 **Boundary:** It fabricates a data surface; it never authors or edits a package's source content, never routes decisions or decides when a package runs (that is AI-FLO), and never writes outside `pdlc-ws/data/`.
 
-**Activate** `_DFE_` (operations `DAT__`) · **Marker** `dfe-state.md` · **Agents** `DHC__` (health) / `DFA__` (integrity) · [Install](./pdlc-packages/ai-dfe/setup/INSTALL.md) · [Full README](./pdlc-packages/ai-dfe/README.md)
+**Activate** `_DFE_` (operations `DAT__`) · **Marker** `dfe-state.md` · **Agents** `DHC__` (health) / `DFA__` (integrity) · Setup & full README ship inside the `ai-dfe/` fabric engine (`ai-dfe/setup/INSTALL.md` and `ai-dfe/README.md`), which is delivered alongside the family.
 
 ---
 
@@ -447,11 +447,11 @@ Independent of the chain, the family carries a **lens seam** — cross-cutting m
 
 | Lens | Mode (on / off) | Key | Purpose |
 |------|-----------------|-----|---------|
-| **AI Lens** | AI-Powered / No-AI | `_AILENS_` | Design AI features — model serving/RAG, AI-feature UX (human-in-the-loop), AI governance & testing |
-| **Automation Lens** | Automated / Manual | `_AUTOLENS_` | Design automated features — workflow automation, approval / monitoring / override UX |
+| **AI Lens** | AI-Powered / No-AI | `_AILENS_` (toggle AI mode) | Design AI features — model serving/RAG, AI-feature UX (human-in-the-loop), AI governance & testing |
+| **Automation Lens** | Automated / Manual | `_AUTOLENS_` (toggle Automation mode) | Design automated features — workflow automation, approval / monitoring / override UX |
 | **Agentic** (AI ∩ Automation) | derived — both on | — | Composed facet for agentic features — tool-use, memory, reasoning-loop; tool-permission / kill-switch governance; trajectory / step-cap testing |
 
-**How a lens flows through the chain:** **AI-PILC** promotes the modes into the governance spine's `Lens_Status.md` → **AI-POLC** tags features (`aiFeature` / `automationFeature`, derived `agenticProfile`) → **AI-UXD** and **AI-ADLC** design the interaction and architecture facets → **AI-DWG** provisions the scaffolding into the dev workspace → **AI-GCE** and **AI-TGE** govern and test the tagged features via Layer-3 agents (`AIG__`/`ATG__` governance, `AIQ__`/`ATQ__` quality). AI-ILC captures an early posture; AI-PPM is lens-neutral (it aggregates, it doesn't apply a facet).
+**How a lens flows through the chain:** **AI-PILC** promotes the modes into the governance spine's `Lens_Status.md` → **AI-POLC** tags features (`aiFeature` / `automationFeature`, derived `agenticProfile`) → **AI-UXD** and **AI-ADLC** design the interaction and architecture facets → **AI-DWG** provisions the scaffolding into the dev workspace → **AI-GCE** and **AI-TGE** govern and test the tagged features via Layer-3 agents (`AIG__` (AI Governance) / `ATG__` (Automation Governance) for governance, `AIQ__` (AI Quality & Drift) / `ATQ__` (Automation Quality) for quality). AI-ILC captures an early posture; AI-PPM is lens-neutral (it aggregates, it doesn't apply a facet).
 
 ---
 
@@ -469,7 +469,7 @@ This block is a machine-readable index of the whole family. An AI assistant can 
 brand: AIFLC
 family: pdlc
 family_repo: AIPDLC
-version: 0.1.0-beta.5
+version: 0.1.0-beta.6
 package_home: .aiflc/pdlc/          # uniform on EVERY platform (cores + rule-details + fabric)
 source_root: pdlc-packages/          # clone root of this repo
 workspace_output_root: pdlc-ws/      # all runtime output nests here
@@ -549,7 +549,7 @@ packages:
     activate: _DWG_
     marker: workspace-rules.md            # (+ engine state dwg-state.md)
     reads: adlc-state.md || polc-state.md || uxd-state.md   # any non-empty subset (>=1)
-    produces: development workspace (DW) + AI-DLC v1 build inputs; provisions AI-GCE + AI-TGE
+    produces: development workspace (DW) + AI-DLC build inputs; provisions AI-GCE + AI-TGE
     emits_capability: development-workspace@1
     governance_agent: WIA__
     install: pdlc-packages/ai-dwg/setup/INSTALL.md
@@ -629,17 +629,17 @@ AIPDLC/
 ├── knowledge_docs/        ← Design patterns and reference material (repo reference, not installed)
 │
 └── pdlc-packages/         ← All packages (one level down to keep root clean)
-    ├── ai-ilc/            ← Idea evaluation workflow
-    ├── ai-pilc/           ← Project initiation workflow
-    ├── ai-adlc/           ← Architecture design workflow
-    ├── ai-uxd/            ← UX design workflow
-    ├── ai-polc/           ← Product ownership workflow
-    ├── ai-dwg/            ← Workspace generator
-    ├── ai-ppm/            ← Portfolio management engine
-    ├── ai-flo/            ← Flow router engine
-    ├── ai-gce/            ← Governance compliance engine
-    ├── ai-tge/            ← Test governance engine
-    ├── ai-dfe/            ← Data fabric engine
+    ├── ai-ilc/            ← Idea Life Cycle — idea evaluation workflow
+    ├── ai-pilc/           ← Project Initiation Life Cycle
+    ├── ai-adlc/           ← Architecture Design Life Cycle
+    ├── ai-uxd/            ← UX Design workflow
+    ├── ai-polc/           ← Product Ownership Life Cycle
+    ├── ai-dwg/            ← Workspace Generator
+    ├── ai-ppm/            ← Project Portfolio Management engine
+    ├── ai-flo/            ← Flow Orchestrator (router engine)
+    ├── ai-gce/            ← Governance & Compliance Engine
+    ├── ai-tge/            ← Test Governance Engine
+    ├── ai-dfe/            ← Data Fabric Engine
     │
     └── contracts/         ← Cross-package conventions & contracts
 ```
@@ -650,7 +650,7 @@ AIPDLC/
 
 ## Use Them Together or Alone
 
-**Full chain** (maximum value): AI-ILC → AI-PILC → AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-GCE + AI-TGE → AI-DLC v1 (build)
+**Full chain** (maximum value): AI-ILC (Idea Life Cycle) → AI-PILC (Project Initiation) → AI-POLC (Product Ownership) → AI-UXD (UX Design) → AI-ADLC (Architecture Design) → AI-DWG (Workspace Generator) → AI-GCE (Governance) + AI-TGE (Test Governance) → AI-DLC (build)
 
 **Standalone** (each package works independently):
 - AI-PILC alone produces a professional Project Initiation Package

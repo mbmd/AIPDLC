@@ -154,7 +154,8 @@ manual/CI; hard-blocking happens at the CI gate, not the editor.
 
 | Related | Relationship |
 |---------|--------------|
-| `generators/hooks-from-steering.md` | Produces canonical hook logic → this file renders per platform |
+| `rendering/neutral-intermediate.md` | **The upstream source (merged item 23).** Generators emit a format-neutral intermediate (rule + check logic + glob); the **mechanism** axis (`buildProfile` → hook vs v2 sensor) is resolved there, and this file renders the **hook** side per `platformTargets`. Sensors render from the same intermediate (item 25). This file owns *format*, not *mechanism*. |
+| `generators/hooks-from-steering.md` | Renders the **hook form** of the neutral intermediate → this file renders it per platform |
 | `generators/agents-from-steering.md` | Produces canonical agent specs → rendered per platform |
 | `drift/*` | Drift infra is canonical governance → rendered per platform |
 | `templates/agents/*` | Agent templates → placed via the platform adapter |

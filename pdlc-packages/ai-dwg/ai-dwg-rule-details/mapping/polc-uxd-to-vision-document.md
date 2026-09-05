@@ -3,7 +3,7 @@
 
 ## Purpose
 
-Assembles the **Vision Document** that AI-DLC v1 expects as one of its two primary human-authored inputs. The Vision Document answers "What are we building, for whom, and why?" — combining product strategy from AI-POLC with user-research artefacts from AI-UXD.
+Assembles the **Vision Document** — product knowledge consumed as team context during the build (Kiro steering + AI-DLC's `aidlc-product-agent/` knowledge system when `buildProfile = aidlc`). The Vision Document answers "What are we building, for whom, and why?" — combining product strategy from AI-POLC with user-research artefacts from AI-UXD.
 
 **Output:** `{workspace-root}/vision.md`
 
@@ -20,10 +20,10 @@ Assembles the **Vision Document** that AI-DLC v1 expects as one of its two prima
 During THIS activity, ALSO adopt the mindset of a **Business Analyst**. This does NOT replace your primary role (DevOps/Platform Engineer + Senior Architect) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
-- Think product-first — the Vision Document serves the product owner and the AI-DLC v1, not the architect
+- Think product-first — the Vision Document serves the product owner and the build agent, not the architect
 - Preserve the PO's voice — vision statements, success metrics, and scope decisions are quoted verbatim
 - Personas and journeys ADD user empathy to the product strategy — they don't replace it
-- Structure matters for AI-DLC v1 — follow the expected section format precisely
+- Structure matters for the build agent — follow the expected section format precisely
 
 ### Anti-Patterns for This Activity
 - Do NOT inject technical architecture into the Vision Document (that's `technical-environment.md`)
@@ -166,11 +166,11 @@ The product vision statement from AI-POLC is quoted exactly. Do not paraphrase, 
 
 ### Rule 2: Personas Replace Segments (When UXD Present)
 
-If UXD provides persona profiles, they REPLACE the basic user segments from POLC. Personas are richer — they include goals, frustrations, and scenarios that AI-DLC v1 uses for empathy-driven development.
+If UXD provides persona profiles, they REPLACE the basic user segments from POLC. Personas are richer — they include goals, frustrations, and scenarios the build agent uses for empathy-driven development.
 
 ### Rule 3: Journey Maps Replace User Stories (When UXD Present)
 
-If UXD provides journey maps, they REPLACE basic user story summaries in the MVP User Journeys section. Journey maps give AI-DLC v1 the full context of user flows.
+If UXD provides journey maps, they REPLACE basic user story summaries in the MVP User Journeys section. Journey maps give the build agent the full context of user flows.
 
 ### Rule 4: Success Metrics Are Measurable
 

@@ -110,7 +110,7 @@ AI-ILC routes approved ideas based on impact:
 Does a project exist for this idea?
 ├── NO ──────────────────────► AI-PILC (new project) → Approved Idea Brief
 ├── YES + BIG change ────────► AI-PILC change management → Change Request Brief
-└── YES + SMALL change ──────► Product backlog (AI-POLC/AI-DLC v1) → Feature Brief
+└── YES + SMALL change ──────► Product backlog (AI-POLC/AI-DLC) → Feature Brief
 ```
 
 **You're never blocked.** If a target package isn't installed, the brief is a portable document you can use with any methodology.

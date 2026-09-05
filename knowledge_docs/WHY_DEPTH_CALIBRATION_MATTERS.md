@@ -41,10 +41,10 @@ Depth calibration means choosing how much process rigor to apply based on projec
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
 | **All packages** | Three depth levels | Minimal / Standard / Comprehensive — every stage adapts behavior, deliverable detail, and gate rigor to the chosen depth. |
-| **AI-PILC** | Depth selection at Stage 2 | After reading the input, AI-PILC recommends a depth level based on complexity signals (team size, integrations, risk indicators, regulatory mentions). User confirms or overrides. |
+| **AI-PILC (Project Initiation Life Cycle)** | Depth selection at Stage 2 | After reading the input, AI-PILC recommends a depth level based on complexity signals (team size, integrations, risk indicators, regulatory mentions). User confirms or overrides. |
 | **All packages** | Depth cascading | Depth chosen at entry point cascades through the entire chain. A Minimal project stays minimal across PILC → POLC → UXD → ADLC → DWG → GCE. No manual re-selection per package. |
-| **AI-ADLC** | Stage skipping at Minimal | Minimal depth skips detailed design stages (9-12) and produces L1-L2 architecture only. Appropriate for simple systems. |
-| **AI-GCE** | Tier alignment with depth | Minimal projects start (and may stay) at Tier 1 governance. Comprehensive projects can immediately adopt Tier 2-3. Governance weight matches project weight. |
+| **AI-ADLC (Architecture Design Life Cycle)** | Stage skipping at Minimal | Minimal depth skips detailed design stages (9-12) and produces L1-L2 architecture only. Appropriate for simple systems. |
+| **AI-GCE (Governance & Compliance Engine)** | Tier alignment with depth | Minimal projects start (and may stay) at Tier 1 governance. Comprehensive projects can immediately adopt Tier 2-3. Governance weight matches project weight. |
 | **All packages** | Depth override | Any package can override inherited depth upward (a Minimal project discovers complexity) or downward (a phase is simpler than expected). Recalibration is always available. |
 
 ---

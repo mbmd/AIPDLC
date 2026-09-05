@@ -119,13 +119,13 @@ Ongoing product ownership during development — re-enter as needed.
 
 ---
 
-## The Relationship with AI-DLC v1
+## The Relationship with AI-DLC
 
-AI-POLC and AI-DLC v1 have a **bidirectional exchange** — they're not a one-shot handoff:
+AI-POLC and AI-DLC have a **bidirectional exchange** — they're not a one-shot handoff:
 
 ```
-AI-POLC ──(epics/stories)──► AI-DLC v1
-AI-POLC ◄──(feedback/completion)── AI-DLC v1
+AI-POLC ──(epics/stories)──► AI-DLC
+AI-POLC ◄──(feedback/completion)── AI-DLC
 ```
 
 | Direction | What Flows | When |
@@ -135,25 +135,25 @@ AI-POLC ◄──(feedback/completion)── AI-DLC v1
 
 **Who does what:**
 - AI-POLC = *what* to build, *in what order*, *to what quality bar*
-- AI-DLC v1 = *how* to build it (design docs, code, tests)
+- AI-DLC = *how* to build it (design docs, code, tests)
 - AI-POLC does NOT write code or implementation specs
-- AI-DLC v1 does NOT decide product priorities or acceptance
+- AI-DLC does NOT decide product priorities or acceptance
 
 ---
 
 ## Tier 2: Story Elaboration
 
-By default, AI-POLC stops at epic level. Story elaboration (user stories + acceptance criteria) is handled by AI-DLC v1's Inception phase in chain mode.
+By default, AI-POLC stops at epic level. Story elaboration (user stories + acceptance criteria) is handled by AI-DLC's Inception phase in chain mode.
 
 **AI-POLC asks you — you don't have to remember to enable it.** Once your epics are confirmed (end of Stage 5), AI-POLC explicitly offers the choice:
 
-- **Keep Tier 2 OFF** — epics are the handoff artifact (recommended in chain mode, since AI-DLC v1 elaborates stories)
+- **Keep Tier 2 OFF** — epics are the handoff artifact (recommended in chain mode, since AI-DLC elaborates stories)
 - **Turn Tier 2 ON now** — AI-POLC writes PO-quality user stories, and you pick the story format
 
 You can flip this decision at any point in the workflow, not just at the gate. Say *"turn on story elaboration"* (or *"turn it off"*) mid-session and AI-POLC adjusts on the fly.
 
 **When to turn Tier 2 ON:**
-- Standalone mode (no AI-DLC v1 available)
+- Standalone mode (no AI-DLC available)
 - You want PO-quality pre-elaboration before handing to developers
 
 **Choosing the story format:** When Tier 2 is on, AI-POLC asks which user-story type you want:
@@ -304,7 +304,7 @@ Three stories completed, one blocked.
 
 - NOT a project management tool (that's AI-PILC)
 - NOT architecture design (that's AI-ADLC)
-- NOT code or test generation (that's AI-DLC v1)
+- NOT code or test generation (that's AI-DLC)
 - NOT compliance enforcement (that's AI-GCE)
 - NOT portfolio management (that's AI-PPM)
 

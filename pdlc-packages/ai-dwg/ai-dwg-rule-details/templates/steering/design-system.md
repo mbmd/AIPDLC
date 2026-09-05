@@ -14,7 +14,7 @@ ownership: hybrid
 
 ## Purpose
 
-This steering file governs all UI implementation to ensure consistency with the design system produced by AI-UXD. It is the single source of truth for design tokens, component usage rules, and pattern compliance. AI-GCE derives enforcement hooks from this file. AI-DLC v1 uses it to produce UI code that respects the design system without deviation.
+This steering file governs all UI implementation to ensure consistency with the design system produced by AI-UXD. It is the single source of truth for design tokens, component usage rules, and pattern compliance. AI-GCE derives enforcement hooks from this file. AI-DLC uses it to produce UI code that respects the design system without deviation.
 
 ## Template
 

@@ -5,7 +5,11 @@
 
 AI-TGE (AI-Driven Test Governance Engine) is a hybrid package that derives test governance from architecture decisions and continuously observes the build process to maintain test accountability. Acting as a Senior QA Engineer / Test Architect, it reads everything the architecture promised — API contracts, security decisions, integration maps, component designs — and builds a register of tests that MUST exist to verify those promises were kept. Then it watches the build, tracking what gets tested and what doesn't, scoring the risk of every gap.
 
-> **Delivery-method invariance.** AI-TGE's test scope is **architecture/commitment-derived** (Rules 2 + 7 — *did we test what we designed?*), so it does **not** vary with the project's delivery method. The number of required tests is a function of architectural commitments, not code volume — AI generating more code does not change *what must be verified*. Delivery method (manual / AI-assisted / AI-driven) affects how fast code and tests are produced, which is a velocity concern AI-POLC owns; TGE's observation cadence already follows AI-DLC v1 unit completion. TGE therefore needs no delivery-method field.
+> **Delivery-method invariance.** AI-TGE's test scope is **architecture/commitment-derived** (Rules 2 + 7 — *did we test what we designed?*), so it does **not** vary with the project's delivery method. The number of required tests is a function of architectural commitments, not code volume — AI generating more code does not change *what must be verified*. Delivery method (manual / AI-assisted / AI-driven) affects how fast code and tests are produced, which is a velocity concern AI-POLC owns; TGE's observation cadence already follows AI-DLC unit completion. TGE therefore needs no delivery-method field **for scope**.
+>
+> ⚠️ **Split the claim — scope is invariant, observation is NOT (Improvement 4b / merged item 11).** The invariance above is true for test **scope** (what must be verified is a function of architectural commitments, and that genuinely does not vary by build method). It is **false for the observation mechanism**, which depends entirely on the build engine's file layout — *where* the build state lives, *where* stories live, and *what* the progress vocabulary is all differ by build method. Conflating the two is why AI-TGE historically hardcoded AI-DLC v1's `aidlc-docs/` layout with silent fallbacks. **Observation resolves its layout through the build-engine layout descriptor** (`common/manifest-resolution.md` → "Build-Engine Layout Descriptor"), one descriptor per supported build method, and degrades **loudly** (Observation Fidelity, `common/observation-fidelity.md`) when it cannot resolve. So: **scope needs no delivery-method field; observation needs the layout descriptor.**
+>
+> ⚠️ **Traceability computation also splits by build method (merged item 27).** AI-TGE **keeps its Test Register under every build method** — dropping it would remove requirement-to-test traceability for the four non-`aidlc` methods, which is capability removal (§0.1 principle 4). But *who computes* traceability differs: under `aidlc`, v2's `traceability` / `upstream-coverage` sensors compute it and AI-TGE **reads-and-persists** their outcome rather than re-running (the observability read-and-persist precedent, AI-GCE item 21); under the other four methods AI-TGE computes it itself. No `pdlc-traceability` sensor id is frozen — the register ID schemes and v2's sensor IDs stay separate. See `common/traceability-ownership.md`.
 
 ---
 
@@ -27,7 +31,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -35,13 +39,13 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -55,11 +59,11 @@ flowchart LR
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 ### AI-TGE Position (Companion Pattern)
 
@@ -69,20 +73,20 @@ AI-TGE is a **companion package** in the family — it operates alongside the ch
    ── PROJECT LAYER ────────────────────────────────────►
 
     AI-ADLC ─┐
-    AI-UXD  ─┼─►  AI-DWG  ─►  AI-DLC v1 (build) ¹
+    AI-UXD  ─┼─►  AI-DWG  ─►  AI-DLC (build) ¹
     AI-POLC  ─┘                    ▲
                                   │ observes
-    AI-GCE  +  AI-TGE  ── alongside AI-DLC v1 (continuous quality) ──►
+    AI-GCE  +  AI-TGE  ── alongside AI-DLC (continuous quality) ──►
     Guard it   Test it
                    ▲
-                   └─ AI-TGE reads AP (AI-ADLC) + DW (AI-DWG); observes AI-DLC v1
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+                   └─ AI-TGE reads AP (AI-ADLC) + DW (AI-DWG); observes AI-DLC
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 ```
 
 - **Reads from:** AI-ADLC (Architecture Package) + AI-DWG (Development Workspace)
-- **Observes:** AI-DLC v1 execution (aidlc-docs state)
+- **Observes:** AI-DLC execution (aidlc-docs state)
 - **Produces:** Test governance artifacts (strategy, register, coverage, debt scoring)
-- **Runs:** as a continuous quality companion alongside AI-DLC v1 (with AI-GCE) — does NOT block the Project-layer build flow
+- **Runs:** as a continuous quality companion alongside AI-DLC (with AI-GCE) — does NOT block the Project-layer build flow
 
 ---
 
@@ -127,9 +131,13 @@ AI-TGE is a **companion package** in the family — it operates alongside the ch
 | Stage | Condition to Execute | Condition to Skip |
 |:-----:|---------------------|-------------------|
 | 4 | Existing test directories detected in workspace | Greenfield project with no existing tests |
-| 8 | User stories exist in `aidlc-docs/inception/user-stories/` | No user stories available |
+| 8 | User stories exist in `aidlc-docs/inception/user-stories/` | The story location **resolved** and holds no story files |
 | 10 | AP modified since last `tge-state.md` read | AP unchanged |
 | 11 | User reports defect OR test failure detected | No defects reported |
+
+> **A skip is classified by cause, and only one kind of skip is silent.** The Skip column above covers the case where the engine looked in a location that exists and found nothing there — a fact about the project, reported quietly. It does **not** cover the case where the **declared location did not resolve at all**: that is a degradation, it sets Observation Fidelity to `⚠️ Degraded`, and it is disclosed in the produced artifact, `tge-state.md`, and the user-facing report. The two are indistinguishable in the output unless they are separated here. Classification rules, the three values, and both fail-closed rules: `common/observation-fidelity.md`.
+>
+> **Why this row in particular.** *"No user stories available"* — the wording this row previously carried — reads identically whether a project has no stories or the engine could not find where the stories live. Stage 8 supplies every acceptance-test register entry, so when it skips for the second reason, acceptance coverage reports **zero data** while looking like **zero tests**.
 
 ---
 
@@ -139,10 +147,10 @@ AI-TGE adapts to what exists. It does NOT require the full chain to have run.
 
 | Mode | What Exists | Behavior |
 |------|------------|----------|
-| **Full Chain** | AP + DW + aidlc-docs (AI-DLC v1 running) | Full strategy + observation |
+| **Full Chain** | AP + DW + aidlc-docs (AI-DLC running) | Full strategy + observation |
 | **Architecture Only** | AP (from AI-ADLC) but no DW or DLC | Strategy mode only — derive register from AP |
 | **Brownfield** | Existing project with existing tests (no AP) | Assessment mode — map existing tests, identify gaps |
-| **Observation Only** | Active AI-DLC v1 with aidlc-docs but no prior TGE run | Jump to observation — register what should be tested as you go |
+| **Observation Only** | Active AI-DLC with aidlc-docs but no prior TGE run | Jump to observation — register what should be tested as you go |
 
 Detection order:
 1. Check for `tge-state.md` (resume if found)
@@ -150,6 +158,21 @@ Detection order:
 3. Check for `aidlc-docs/` → observation possible
 4. Check for existing test directories → brownfield assessment possible
 5. None found → ask user what they have
+
+### Adaptation is disclosed, never silent
+
+Adapting to what exists is the principle above. **Disclosing what was therefore not measured is the other half of it**, and it is mandatory (`INV-L2-021`).
+
+Each mode **declares** a set of inputs. Once a mode is selected, an input that mode declares and that fails to resolve makes the run `⚠️ Degraded`: the engine proceeds on a substitute — a heuristic, a partial scan, or a skip — and says so in the produced artifact, `tge-state.md`, **and** the user-facing report. An input a mode never declared costs nothing and is reported as `n/a`, so a lean mode is never falsely flagged.
+
+| Mode | Declares — absence is a degradation | Does not declare |
+|------|------------------------------------|------------------|
+| **Full Chain** | AP · DW · build state · unit-progress vocabulary · user-story location · NFR location | existing tests |
+| **Architecture Only** | AP | everything else |
+| **Brownfield** | existing test locations | everything else |
+| **Observation Only** | build state · unit-progress vocabulary · user-story location | AP · DW |
+
+**Reduced scope must be visible scope.** A run that quietly substitutes for a declared input converts *"I could not find the input"* into *"here is your answer"* — and the answer looks identical to a real one. Values, the two fail-closed rules (an unassessed run reads as degraded; a skip is classified by cause), and the canonical disclosure blocks: `common/observation-fidelity.md`.
 
 ---
 
@@ -211,7 +234,7 @@ See `common/two-source-model.md` for complete derivation logic.
 ### Observation Phase (Continuous)
 
 ```
-[AI-DLC v1 completes a unit] → [AI-TGE detects state change]
+[AI-DLC completes a unit] → [AI-TGE detects state change]
                                         │
                                         ▼
                             [Check: do required tests exist?]
@@ -265,7 +288,7 @@ Throughout the workflow, the AI operates as an experienced Senior QA Engineer / 
 - ❌ Replace the testing framework (Jest, Pytest, etc. remain — TGE governs completeness)
 - ❌ Make architecture decisions (reads them, doesn't produce them)
 - ❌ Replace AI-GCE (GCE governs code compliance; TGE governs test completeness)
-- ❌ Replace AI-DLC v1's Build-and-Test stage (that generates test instructions; TGE verifies sufficiency)
+- ❌ Replace AI-DLC's Build-and-Test stage (that generates test instructions; TGE verifies sufficiency)
 - ❌ Connect to CI/CD pipelines (no external integrations)
 - ❌ Manage deployment or release decisions
 
@@ -317,3 +340,23 @@ flowchart TB
     S10 --> S11["Stage 11<br/>Defect Logging"]
     S11 --> S12["Stage 12<br/>Debt Reassessment"]
 ```
+
+---
+
+### Workflow-Discipline Checklist (per stage)
+
+**Before starting a stage:**
+- [ ] Have I loaded this stage's rule-detail file (not working from memory)?
+- [ ] Was the previous stage approved by the user?
+- [ ] Is this the next stage in order (or a user-directed jump)?
+- [ ] Do I understand this stage's inputs and expected output?
+
+**While executing:**
+- [ ] Does every element trace to a package file, template, or the user's input?
+- [ ] Am I using the package's templates rather than inventing a format?
+- [ ] Am I avoiding improvised procedures and "best-practice" filler?
+
+**After completing a stage:**
+- [ ] Does the output match the package template / spec?
+- [ ] Have I updated the state file?
+- [ ] Have I obtained explicit user approval before the next stage?

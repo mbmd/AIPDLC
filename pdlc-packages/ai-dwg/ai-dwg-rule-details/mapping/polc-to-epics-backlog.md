@@ -24,12 +24,12 @@ During THIS activity, ALSO adopt the mindset of a **Business Analyst** (with a r
 - Epics are containers of value, not feature buckets — preserve the goal each epic serves
 - Acceptance criteria at the epic level define "done for the epic" — copy them; do not soften
 - Prioritization order is a decision, not a suggestion — preserve WSJF/MoSCoW rank verbatim
-- The scaffold seeds work; it does NOT pre-write stories AI-DLC v1 should elaborate
+- The scaffold seeds work; it does NOT pre-write stories that are elaborated during build
 
 ### Anti-Patterns for This Activity
 - Do NOT re-prioritize epics — copy POLC's order exactly
 - Do NOT invent epics not in the PBP
-- Do NOT pre-decompose epics into stories unless POLC's Tier 2 already did (then carry them; otherwise leave a `## Stories (elaborated by AI-DLC v1)` placeholder)
+- Do NOT pre-decompose epics into stories unless POLC's Tier 2 already did (then carry them; otherwise leave a `## Stories (elaborated during build)` placeholder)
 
 ---
 
@@ -65,7 +65,7 @@ projectId: "{project-id}"
 # Epics & Backlog
 
 > Prioritized epic backbone seeded from the Product Backlog Package.
-> AI-DLC v1 elaborates stories into `backlog/epics/EPIC-*_stories/`; order is POLC-authoritative.
+> Stories are elaborated during build into `backlog/epics/EPIC-*_stories/`; order is POLC-authoritative.
 
 ## Prioritized Order
 <!-- begin: PBP-sourced -->
@@ -106,7 +106,7 @@ parentGoal: "{goal-id}"
 ## Stories
 <!-- If POLC Tier 2, stories are in backlog/epics/EPIC-{id}_stories/ -->
 {IF Tier 2: "See `EPIC-{id}_stories/` for full elaborated stories."}
-{IF Tier 1 only: "_Stories elaborated by AI-DLC v1 during build._"}
+{IF Tier 1 only: "_Stories elaborated during build._"}
 ```
 
 ### backlog/epics/EPIC-{id}_stories/ (IF Tier 2 — full story files)
@@ -163,7 +163,7 @@ When POLC Tier 2 story elaboration is complete (detected via `polc-state.md` sta
 - Cross-link from epic stubs to their stories folder
 
 When Tier 2 is NOT available (Tier 1 only):
-- Leave epic stubs with placeholder: "_Stories elaborated by AI-DLC v1 during build._"
+- Leave epic stubs with placeholder: "_Stories elaborated during build._"
 - Do NOT generate empty `_stories/` folders
 - `backlog/user-stories.md` is NOT generated (no Tier 2 content to index)
 
@@ -183,7 +183,7 @@ When Tier 2 is NOT available (Tier 1 only):
 
 | Situation | Response |
 |-----------|----------|
-| POLC present, no epic decomposition | Skip backlog seed; flag: "PBP has no epics — backlog left empty for AI-DLC v1" |
+| POLC present, no epic decomposition | Skip backlog seed; flag: "PBP has no epics — backlog left empty for build-time elaboration" |
 | Epics have no rank | Use document order; mark `Priority Model = unranked (PO to confirm)` |
 | Tier 2 stories present | Copy full story files into `backlog/epics/EPIC-{id}_stories/`; populate `backlog/user-stories.md` index |
 | Tier 1 only (no story elaboration) | Leave epic stub placeholders; do NOT generate empty `_stories/` folders or `user-stories.md` |

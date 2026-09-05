@@ -217,7 +217,7 @@ Log completion in `management_framework/Decision_Log.md`:
 ## Post-Completion
 
 After the UXP is complete, the package enters **maintenance mode**:
-- Feedback from AI-DLC v1 (usability signals) triggers targeted revisions
+- Feedback from AI-DLC (usability signals) triggers targeted revisions
 - Design QA reports trigger component spec updates
 - New features trigger persona/journey/flow additions
 - The UXC__ agent governs ongoing consistency

@@ -3,7 +3,7 @@
 
 ## Purpose
 
-Transforms the **information architecture** produced by AI-UXD (`define/information-architecture.md` — site map, navigation model, taxonomy, search strategy) into a prescriptive `navigation-structure.md` steering file. This governs how the application's routes, navigation, and content hierarchy are built, so AI-DLC v1 scaffolds routing and nav components that match the designed IA instead of improvising structure.
+Transforms the **information architecture** produced by AI-UXD (`define/information-architecture.md` — site map, navigation model, taxonomy, search strategy) into a prescriptive `navigation-structure.md` steering file. This governs how the application's routes, navigation, and content hierarchy are built, so AI-DLC scaffolds routing and nav components that match the designed IA instead of improvising structure.
 
 **Output:** `rules/navigation-structure.md`
 

@@ -155,9 +155,9 @@ For complex projects (Comprehensive depth):
 
 | Package Type | Gate Frequency | Rationale |
 |-------------|---------------|-----------|
-| Lifecycle (AI-PILC, AI-ADLC) | Every stage + phase boundaries | Interactive; user makes decisions throughout |
-| Generator (AI-DWG) | Before generation + after generation | One-shot; user confirms input and reviews output |
-| Engine (AI-GCE) | Before derivation + after derivation | One-shot; user reviews impact and output |
+| Lifecycle (AI-PILC (Project Initiation Life Cycle), AI-ADLC (Architecture Design Life Cycle)) | Every stage + phase boundaries | Interactive; user makes decisions throughout |
+| Generator (AI-DWG (Workspace Generator)) | Before generation + after generation | One-shot; user confirms input and reviews output |
+| Engine (AI-GCE (Governance & Compliance Engine)) | Before derivation + after derivation | One-shot; user reviews impact and output |
 
 Generators and engines have fewer gates because they don't have multi-stage linear progression — they read input, transform, and output in one pass.
 

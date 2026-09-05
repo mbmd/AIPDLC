@@ -99,11 +99,11 @@ Absent inputs: {list of missing markers}
 
 Impact of absent inputs:
 • {ADLC absent}: Cannot produce tech steering (13+ files), src folder structure,
-  or technical-environment.md. AI-DLC v1 will lack technical constraints and module layout.
+  or technical-environment.md. AI-DLC will lack technical constraints and module layout.
 • {POLC absent}: Cannot produce vision.md, DEFINITION_OF_DONE.md with product acceptance bar,
-  or scope-and-risks.md. AI-DLC v1 will lack product context and success metrics.
+  or scope-and-risks.md. AI-DLC will lack product context and success metrics.
 • {UXD absent}: Cannot produce design-system.md, ui-implementation-spec.md,
-  or frontend accessibility baseline. AI-DLC v1 will lack UX governance and design tokens.
+  or frontend accessibility baseline. AI-DLC will lack UX governance and design tokens.
 
 Recommended: WAIT for the missing peer(s) — the default gate is all three.
 Proceed with {n}/3 inputs anyway? (Acknowledged reduced coverage — user must explicitly approve)

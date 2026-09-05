@@ -75,6 +75,23 @@ All detail-file references below are relative to the resolved directory. **Befor
 
 ---
 
+<!-- BEGIN WORKFLOW-DISCIPLINE v1 (synced from WORKFLOW_DISCIPLINE_CONTRACT.md — do not edit inline) -->
+## Workflow Discipline
+
+This package's workflow is authoritative — do not improvise it. (Full rules:
+"Workflow Discipline (Enforced)" in the session orchestrator.)
+
+- **Read before you execute.** Load this package's core + the relevant rule-detail
+  file before performing any stage. Never generate its outputs from memory.
+- **Trace to source.** Every deliverable derives from this package's templates,
+  rule-detail files, or the user's own input — never unstated "best practice."
+- **No unilateral deviation.** Do not skip, reorder, combine, or auto-progress past
+  a gate on your own initiative; the user may direct these — confirm and log them.
+  Every gate needs explicit user approval.
+<!-- END WORKFLOW-DISCIPLINE -->
+
+---
+
 ## MANDATORY: Welcome Message
 
 When starting ANY architecture design request: load `common/welcome-message.md`, display it in full, ONCE, at the start of a new workflow. Do NOT reload it in subsequent interactions.
@@ -227,7 +244,7 @@ Five phases, 13 stages. Each stage produces one primary deliverable behind an ap
 
 ## Extensions (opt-in, v1.1)
 
-Ten advanced architecture patterns are available as **opt-in** extensions — Event Storming, Domain Storytelling, DDD Tactical, Microservices, BFF Pattern, Event Sourcing / CQRS, Resilience Patterns, Feature Flags, Wardley Mapping, and Threat Modeling (deep). Only their lightweight `*.opt-in.md` prompts are scanned at workflow start; the full rules file (`{name}.md`) loads ONLY when the user opts in at the relevant stage (4, 5, 6, 8, 9, 11, or 12). Once active, extension rules become **blocking constraints** verified at stage completion, and enabled extensions are tracked in `adlc-state.md`. Core workflow is 100% functional with zero extensions. Full mechanism + catalogue: `extensions/README.md`.
+Eleven advanced architecture patterns are available as **opt-in** extensions — Event Storming, Domain Storytelling, DDD Tactical, Microservices, BFF Pattern, Event Sourcing / CQRS, Resilience Patterns, Feature Flags, Wardley Mapping, Threat Modeling (deep), and Team Topologies (team classification, interaction modes, Conway alignment + the shared `TEAM-*`/`BC-*`/`SVC-*` identity — Stage 5). Only their lightweight `*.opt-in.md` prompts are scanned at workflow start; the full rules file (`{name}.md`) loads ONLY when the user opts in at the relevant stage (4, 5, 6, 8, 9, 11, or 12). Once active, extension rules become **blocking constraints** verified at stage completion, and enabled extensions are tracked in `adlc-state.md`. Core workflow is 100% functional with zero extensions. Full mechanism + catalogue: `extensions/README.md`.
 
 ---
 

@@ -10,8 +10,12 @@ ownership: hybrid
 # STORY-{EPIC}-{NN}: {Story Title}
 
 **Epic:** EPIC-{NNN}: {Epic Name}
+**Owning Team:** {inherited from parent epic — TEAM-slug or "unassigned"}
+**Bounded Context:** {inherited from parent epic — BC-slug or "n/a"}
 **Priority:** {Rank from register}
 **Release:** R{N}
+
+> `Owning Team` / `Bounded Context` are **inherited from the parent epic** (no per-story elicitation). They carry the epic's `TEAM-*` / `BC-*` identity down to the story so backlog and workspace slicing stay consistent at story granularity.
 
 ---
 

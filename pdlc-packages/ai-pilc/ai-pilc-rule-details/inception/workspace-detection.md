@@ -240,6 +240,8 @@ Create `{output_root}/pilc-state.md` with initial content:
 | Started | {current_timestamp} |
 | Last Updated | {current_timestamp} |
 | Workflow Depth | _[To be determined at Stage 2]_ |
+| Delivery Method | _[optional — set at Stage 2/3 if known; default manual]_  (how code is built — flows to AI-POLC velocity model) |
+| AI Tool | _[n/a unless an AI delivery method is set]_ |
 | Output Structure | numbered |
 | Output Root | {output_root}  (= {project_root}/pip/) |
 | Source Document | _[To be provided at Stage 2]_ |

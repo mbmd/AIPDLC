@@ -3,7 +3,7 @@
 
 ## Purpose
 
-Transforms the value/KPI tracking model produced by AI-POLC (`operations/value-metrics.md`) into a **value-metrics tracking scaffold** in the destination workspace. This gives AI-DLC v1 a measurable definition of "success" beyond functional completion, and gives the observability layer the product KPIs it must instrument. Without it, the workspace can build features but cannot prove they delivered value.
+Transforms the value/KPI tracking model produced by AI-POLC (`operations/value-metrics.md`) into a **value-metrics tracking scaffold** in the destination workspace. This gives AI-DLC a measurable definition of "success" beyond functional completion, and gives the observability layer the product KPIs it must instrument. Without it, the workspace can build features but cannot prove they delivered value.
 
 **Output:** `{workspace-root}/value-metrics.md`
 **Secondary effect:** Relay the instrument-able subset of KPIs to `observability-logging.md` (IF ADLC present) so the metrics have a technical home.
@@ -60,7 +60,7 @@ projectId: "{project-id}"
 
 # Value & Success Metrics
 
-> Defines how this product proves it delivered value. AI-DLC v1 instruments these;
+> Defines how this product proves it delivered value. AI-DLC instruments these;
 > the observability layer reports them; AI-GCE may gate releases against them.
 
 ## KPI Register

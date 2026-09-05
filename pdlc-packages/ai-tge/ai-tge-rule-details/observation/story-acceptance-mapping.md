@@ -9,7 +9,7 @@
 
 ## Purpose
 
-Read user stories and their acceptance criteria from `aidlc-docs/inception/user-stories/` (or equivalent location). For each acceptance criterion, register an acceptance test requirement. Link to existing register entries where overlap exists (preventing duplication). This stage ensures that as stories are elaborated during delivery, test requirements keep pace.
+Read user stories and their acceptance criteria — the backlog location resolved via `manifest.paths.backlog` (`common/manifest-resolution.md`), with `aidlc-docs/inception/user-stories/` as the legacy fallback, and **parsed according to `manifest.storyStyle`** (see Step 2). For each acceptance criterion, register an acceptance test requirement. Link to existing register entries where overlap exists (preventing duplication). This stage ensures that as stories are elaborated during delivery, test requirements keep pace.
 
 ---
 
@@ -17,11 +17,25 @@ Read user stories and their acceptance criteria from `aidlc-docs/inception/user-
 
 | Execute IF | Skip IF |
 |-----------|---------|
-| `aidlc-docs/inception/user-stories/` contains story files | No user stories in aidlc-docs |
+| `aidlc-docs/inception/user-stories/` contains story files | The story location **resolved** and contains no story files |
 | Stories have been added or modified since last TGE observation | Stories unchanged since last mapping |
 | User explicitly requests "map stories" or "derive acceptance tests" | User says "skip story mapping" |
 
-**If skipped:** Log in state file: `Stage 8: Skipped (no user stories detected)`. Proceed to Stage 9.
+### If skipped — classify the cause first
+
+⚠️ **Two skips look identical in the output and are completely different findings.** Classify before recording (`common/observation-fidelity.md`, fail-closed rule F2):
+
+| Cause | Fidelity | What to record | Does the user see it? |
+|---|:---:|---|:---:|
+| **The story location resolved and is empty** — this project has no stories yet, or none changed | unaffected | `Stage 8: Skipped — story location resolved, no stories present` in the state file Progress table | No. **Silent**, and correctly so |
+| **The story location did not resolve** — the directory this stage was told to read is absent from the workspace | **⚠️ Degraded** | Fidelity block: input = *User-story location* · expected at `aidlc-docs/inception/user-stories/` · substitute = *Stage 8 skipped* · unmeasured = *story-derived acceptance coverage is zero, not complete* | **Yes — all three destinations** |
+| **The user declined** — "skip story mapping" | unaffected | `Stage 8: Skipped — declined by user` | No |
+
+**NEVER record an unresolved location as an empty one.** The previous wording — *"no user stories detected"* — reads as a reassuring fact about the project and was written to the state file **only**, so the coverage report and the user-facing summary said nothing at all. That is how a workspace whose stories AI-TGE simply could not find produced a report with zero acceptance coverage and no warning.
+
+**The distinction in one line:** *"this project has no stories"* is a project fact; *"I could not find where the stories are"* is an engine finding. Only the second one is a defect, and only the second one must be loud.
+
+Proceed to Stage 9 in all three cases — this stage never blocks.
 
 ---
 
@@ -63,13 +77,25 @@ A good output at this stage sounds like:
 
 Find user stories at known locations:
 
-| Location | Format Expected |
-|----------|----------------|
-| `aidlc-docs/inception/user-stories/` | Markdown files with acceptance criteria sections |
-| `aidlc-docs/inception/requirements/` | May contain stories with NFR criteria |
-| `{custom path from tge-state.md}` | User-specified story location |
+Resolve each location by **semantic role** via `common/manifest-resolution.md`; the literal paths below are the legacy fallback, used only when no manifest exists.
 
-**Story structure expected:**
+| Manifest role (fallback location) | Declared input | Format Expected | If it does not resolve |
+|----------|:-------------:|----------------|------------------------|
+| `manifest.paths.backlog` (fallback `aidlc-docs/inception/user-stories/`) | User-story location | Story files parsed per `manifest.storyStyle` (see Step 2) | **⚠️ Degraded** — skip the stage, disclose per the Conditional Trigger classification above |
+| `manifest.paths.requirements` (fallback `aidlc-docs/inception/requirements/`) | NFR location | May contain stories with NFR criteria | **⚠️ Degraded** — skip story-carried NFR extraction only. Record: unmeasured = *NFR coverage reflects the Architecture Package only*. AP-derived NFR requirements are unaffected |
+| `{custom path from tge-state.md}` | — | User-specified story location | Not a declared input; its absence is never degradation |
+
+**Record each location's resolution separately.** The two declared inputs above fail independently: a workspace can carry stories with no NFR directory, or the reverse. Collapsing them into one "stories not found" verdict over-reports in one direction and under-reports in the other.
+
+**Story structure expected — branch on `manifest.storyStyle`** (`common/manifest-resolution.md`). The style names the *format* the ACs are written in; parse accordingly rather than assuming one shape. When `storyStyle` is absent, default to the free-form list (the historical behaviour — a benign default, not a degradation):
+
+| `storyStyle` | AC shape to parse | Each testable unit |
+|---|---|---|
+| `ears` | `WHEN {trigger} the system SHALL {response}` clauses | one clause → one assertion |
+| `invest` | Given/When/Then scenarios | one scenario → one acceptance test (compound Whens decompose) |
+| free-form / absent | `AC1/AC2/…` bullets under `## Acceptance Criteria` | one bullet → one criterion |
+
+Free-form / absent (the default):
 ```markdown
 # US-{NNN}: {Story Title}
 
@@ -183,7 +209,31 @@ Append new story-derived entries to the test register:
 
 ### Step 7: Report (Non-Blocking)
 
+**This stage reports on a degraded skip too.** Previously nothing was printed when the stage skipped, so the one case that most needed saying was the one case that said nothing.
+
 ```markdown
+{IF skipped because the story location did not resolve — print THIS and nothing else for this stage:}
+## ⚠️ Story Acceptance Mapping SKIPPED — location not found
+
+⚠️ **The story location did not resolve, so acceptance coverage is unmeasured — not zero.**
+- **User-story location** — expected at `aidlc-docs/inception/user-stories/`; the directory is absent from this workspace
+{IF the NFR location also failed:}
+- **NFR location** — expected at `aidlc-docs/inception/requirements/`; absent. Story-carried NFR criteria were not extracted; AP-derived NFR requirements are unaffected
+
+**Therefore unmeasured:** story-derived acceptance coverage. The Acceptance row of every coverage view will read 0 — that is an absence of **data**, not an absence of **tests**, and the two must not be read the same way.
+
+**Likely cause:** the stories exist somewhere this stage was not told to look. Confirm the workspace's story location.
+
+Per-input detail: `.governance/test/tge-state.md` → Observation Fidelity.
+```
+
+```markdown
+{IF skipped because the location resolved and is empty, or the user declined:}
+{Print nothing. Record the skip and its reason in the state file Progress table and proceed.}
+```
+
+```markdown
+{IF the stage ran:}
 ## 🟢 Story Acceptance Mapping Complete
 
 **Stories processed:** {n}
@@ -216,6 +266,10 @@ Register updated. Coverage stats will be recalculated in Stage 9.
 
 | Check | Pass Criteria |
 |-------|---------------|
+| **Skip cause classified** | If skipped: recorded as *location resolved and empty*, *location did not resolve*, or *declined by user* — never as a bare "no stories detected". ⚠️ **An unclassified skip is a FAIL**, because the three causes are indistinguishable downstream |
+| **Both declared locations assessed separately** | The user-story location and the NFR location each carry their own resolution result; one verdict for both is a FAIL |
+| **Degradation disclosed in all three destinations** | If either location failed to resolve: the coverage report artifact, the state file, **and** this stage's report each say so. State-file-only is a FAIL — that was the original defect |
+| **Zero is qualified** | If acceptance coverage is 0 because the location did not resolve, every surface showing that 0 states it is unmeasured, not untested |
 | All story files read | Every file in user-stories directory processed |
 | Criteria extracted | Each story has ≥1 criterion registered or linked |
 | Deduplication applied | No duplicate entries (overlapping with architecture-derived) |

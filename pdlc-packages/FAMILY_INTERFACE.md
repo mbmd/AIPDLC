@@ -1,4 +1,4 @@
-# FAMILY_INTERFACE.md — PDLC
+# FAMILY_INTERFACE.md — PDLC (Product Development Life Cycle)
 
 > **What this file is:** The public interface of the AI-* PDLC Family. Neighbors discover this family by finding this file. It declares which packages are seams (Tier 1 — bindable cross-family) and lists all members (Tier 2 — informational only). Gate detail lives in each package's gate contract (pointers below).
 
@@ -22,10 +22,10 @@ description: "Idea → governed code: the full product development journey from 
 
 | Package | Consumes Types | Gate Contract |
 |---------|---------------|---------------|
-| **AI-ILC** | `capability-input@^1` | `ai-ilc/ai-ilc-rules/core-workflow.md § Gate Contract` |
-| **AI-PILC** | `validated-business-case@^1` | `ai-pilc/ai-pilc-rules/core-workflow.md § Gate Contract` |
-| **AI-POLC** | `enterprise-okr@^1` | `ai-polc/ai-polc-rules/core-workflow.md § Gate Contract` |
-| **AI-PPM** | `initiative-portfolio@^1` | `ai-ppm/ai-ppm-rules/core-engine.md § Gate Contract` |
+| **AI-ILC** (Idea Life Cycle) | `capability-input@^1` | `ai-ilc/ai-ilc-rules/core-workflow.md § Gate Contract` |
+| **AI-PILC** (Project Initiation Life Cycle) | `validated-business-case@^1` | `ai-pilc/ai-pilc-rules/core-workflow.md § Gate Contract` |
+| **AI-POLC** (Product Ownership Life Cycle) | `enterprise-okr@^1` | `ai-polc/ai-polc-rules/core-workflow.md § Gate Contract` |
+| **AI-PPM** (Project Portfolio Management) | `initiative-portfolio@^1` | `ai-ppm/ai-ppm-rules/core-engine.md § Gate Contract` |
 
 > AI-POLC/AI-PPM seam-in added 2026-07-13 — closes gaps G1/G2 (SXLC AI-OKR → PDLC AI-POLC, SXLC AI-SIP → PDLC AI-PPM were asserted by SXLC's `FAMILY_BINDINGS.md` but had no matching PDLC-side declaration).
 
@@ -33,7 +33,7 @@ description: "Idea → governed code: the full product development journey from 
 
 | Package | Emits Type | Marker | Gate Contract |
 |---------|-----------|--------|---------------|
-| **AI-DWG** | `development-workspace@1` | `dwg-state.md` | `ai-dwg/ai-dwg-rules/core-workflow.md § Gate Contract` |
+| **AI-DWG** (Workspace Generator) | `development-workspace@1` | `dwg-state.md` | `ai-dwg/ai-dwg-rules/core-workflow.md § Gate Contract` |
 | **AI-PPM** | `portfolio-state@1` | `ppm-state.md` | `ai-ppm/ai-ppm-rules/core-engine.md § Gate Contract` |
 | **AI-PPM** | `delivery-feedback@1` | `ppm-state.md` | `ai-ppm/ai-ppm-rules/core-engine.md § Gate Contract` |
 
@@ -47,14 +47,14 @@ description: "Idea → governed code: the full product development journey from 
 |---------|---------|------|:----------:|
 | AI-ILC | Decide it | Interactive workflow (lifecycle) | internal (+ external seam-in) |
 | AI-PILC | Initiate it | Interactive workflow (lifecycle) | internal (+ external seam-in) |
-| AI-ADLC | Design it | Interactive workflow (lifecycle) | internal |
-| AI-UXD | Design UX | Interactive workflow (lifecycle) | internal |
+| AI-ADLC (Architecture Design Life Cycle) | Design it | Interactive workflow (lifecycle) | internal |
+| AI-UXD (UX Design) | Design UX | Interactive workflow (lifecycle) | internal |
 | AI-POLC | Own it | Interactive workflow (lifecycle) | internal (+ external seam-in) |
 | AI-DWG | Prepare it | One-time generator | internal (+ external seam-out) |
-| AI-GCE | Guard it | Adaptive governance engine | internal |
-| AI-TGE | Test it | Test governance engine | internal |
+| AI-GCE (Governance & Compliance Engine) | Guard it | Adaptive governance engine | internal |
+| AI-TGE (Test Governance Engine) | Test it | Test governance engine | internal |
 | AI-PPM | Govern it | Adaptive portfolio engine | internal (+ external seam-in + seam-out) |
-| AI-FLO | Route it | Active orchestration engine | internal |
+| AI-FLO (Flow Orchestrator) | Route it | Active orchestration engine | internal |
 
 ---
 
@@ -85,4 +85,4 @@ overlays: [AI-FLO, AI-DFE]
 
 ---
 
-*Part of the AIFLC Communication Fabric · Conforms to GATE_PROTOCOL.md protocolVersion 1.2.0*
+*Part of the AIFLC (AI Full Life Cycle) Communication Fabric · Conforms to GATE_PROTOCOL.md protocolVersion 1.2.0*

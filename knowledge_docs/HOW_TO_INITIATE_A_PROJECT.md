@@ -1,6 +1,6 @@
 # How to Initiate a Project
 
-**Purpose:** Practical guide for using AI-PILC to take a raw requirement or idea and transform it into a fully structured Project Initiation Package (PIP) — the foundation that every downstream package depends on.
+**Purpose:** Practical guide for using AI-PILC (Project Initiation Life Cycle) to take a raw requirement or idea and transform it into a fully structured Project Initiation Package (PIP) — the foundation that every downstream package depends on.
 
 ---
 
@@ -17,7 +17,7 @@ Project managers, product owners, or team leads who have a new initiative and ne
 - Some form of input — ANY of the following works:
   - A requirements document (any format)
   - A verbal description or meeting notes
-  - An Idea Brief from AI-ILC
+  - An Idea Brief from AI-ILC (Idea Life Cycle)
   - A brownfield context ("we're extending system X")
 
 **You do NOT need:**
@@ -152,10 +152,10 @@ Your PIP feeds the next packages in the chain:
 
 | Next Package | What It Reads from PIP |
 |-------------|----------------------|
-| **AI-ADLC** | Requirements, constraints, charter objectives, risk register, depth level |
-| **AI-POLC** | Requirements, stakeholder register, scope statement |
-| **AI-UXD** | Requirements, stakeholder register (for personas), scope |
-| **AI-PPM** | Charter, budget, timeline (for portfolio roll-up) |
+| **AI-ADLC (Architecture Design Life Cycle)** | Requirements, constraints, charter objectives, risk register, depth level |
+| **AI-POLC (Product Ownership Life Cycle)** | Requirements, stakeholder register, scope statement |
+| **AI-UXD (UX Design)** | Requirements, stakeholder register (for personas), scope |
+| **AI-PPM (Project Portfolio Management)** | Charter, budget, timeline (for portfolio roll-up) |
 
 The handoff is automatic — successor packages detect `pilc-state.md` and read what they need.
 

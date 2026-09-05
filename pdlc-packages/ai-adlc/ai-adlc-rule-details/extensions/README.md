@@ -101,6 +101,7 @@ Extensions are presented at the stage where their pattern becomes relevant:
 | Domain Storytelling | Stage 4/5 (System Context / Decomposition) | Narrative domain discovery; presented via a shared selector with Event Storming |
 | Wardley Mapping | Stage 6 (Technology Stack) | Build-vs-buy positioning is a technology-stack decision |
 | Threat Modeling (deep) | Stage 8 (Security & Identity) | Layers deep threat analysis on the always-run STRIDE baseline |
+| Team Topologies | Stage 5 (Container Design) | Team boundaries are decided against the decomposition — one team per context/service |
 
 ---
 
@@ -189,7 +190,7 @@ To create a custom extension:
 
 ## Extension Status (v1.1)
 
-All ten extensions are **complete and enforceable**:
+All eleven extensions are **complete and enforceable**:
 
 | Extension | Rules File | Status |
 |-----------|-----------|:------:|
@@ -203,6 +204,7 @@ All ten extensions are **complete and enforceable**:
 | `feature-flags/` | `feature-flags.md` | ✅ Complete |
 | `wardley-mapping/` | `wardley-mapping.md` | ✅ Complete |
 | `threat-modeling/` | `threat-modeling.md` | ✅ Complete |
+| `team-topologies/` | `team-topologies.md` | ✅ Complete |
 
 **Behavior when user opts in:**
 - Full rules file is loaded

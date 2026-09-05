@@ -20,7 +20,7 @@ type: audit
 
 ## Purpose
 
-Validates that the development workspace produced by AI-DWG is structurally complete, internally consistent, and ready for AI-GCE governance enforcement and AI-DLC v1 development. Checks steering file presence against what the Architecture Package justifies, folder structure alignment with C4 L3 component decomposition, configuration file consistency, provenance front-matter integrity, and downstream readiness for AI-GCE signal consumption.
+Validates that the development workspace produced by AI-DWG is structurally complete, internally consistent, and ready for AI-GCE governance enforcement and AI-DLC development. Checks steering file presence against what the Architecture Package justifies, folder structure alignment with C4 L3 component decomposition, configuration file consistency, provenance front-matter integrity, and downstream readiness for AI-GCE signal consumption.
 
 ## When to Invoke
 

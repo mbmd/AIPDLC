@@ -40,7 +40,7 @@ Progressive governance means introducing compliance rules in stages matched to t
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-GCE** | Three-tier model | Tier 1 (foundational, 5-8 rules) → Tier 2 (standard, +10-17 rules) → Tier 3 (advanced, +15-20 rules). Teams start minimal and graduate when ready. |
+| **AI-GCE (Governance & Compliance Engine)** | Three-tier model | Tier 1 (foundational, 5-8 rules) → Tier 2 (standard, +10-17 rules) → Tier 3 (advanced, +15-20 rules). Teams start minimal and graduate when ready. |
 | **AI-GCE** | Readiness signals | `.compliance-state.json` tracks compliance score, team stability, delivery cadence — objectively indicates when the team is ready for the next tier. |
 | **AI-GCE** | Grace periods | New tier activation includes advisory-only period (warnings, not blocks). Team sees new rules before they become blocking. |
 | **AI-GCE** | Category-by-category activation | Don't have to activate entire tiers — can add architecture rules without test rules, or API rules without deployment rules. |

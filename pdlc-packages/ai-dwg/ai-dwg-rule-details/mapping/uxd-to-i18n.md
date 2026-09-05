@@ -3,7 +3,7 @@
 
 ## Purpose
 
-Transforms the **internationalization, RTL, and localization tokens** produced by AI-UXD (the i18n/RTL conditional generation) into a prescriptive `i18n-standards.md` steering file. This governs how the build workspace handles multiple locales, text direction, and localizable values, so AI-DLC v1 builds i18n-ready interfaces from day one instead of retrofitting localization later (an expensive and error-prone path).
+Transforms the **internationalization, RTL, and localization tokens** produced by AI-UXD (the i18n/RTL conditional generation) into a prescriptive `i18n-standards.md` steering file. This governs how the build workspace handles multiple locales, text direction, and localizable values, so AI-DLC builds i18n-ready interfaces from day one instead of retrofitting localization later (an expensive and error-prone path).
 
 **Output:** `rules/i18n-standards.md`
 

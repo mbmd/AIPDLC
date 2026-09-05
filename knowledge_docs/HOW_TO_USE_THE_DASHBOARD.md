@@ -1,6 +1,6 @@
 # How to Use the Dashboard
 
-**Purpose:** Complete guide to running the AIFLC PDLC Dashboard — in the browser, in VS Code, or from any HTTP server. Covers setup, data population, troubleshooting common failures, and keeping data fresh.
+**Purpose:** Complete guide to running the AIFLC (AI Full Life Cycle) PDLC (Product Development Life Cycle) Dashboard — in the browser, in VS Code, or from any HTTP server. Covers setup, data population, troubleshooting common failures, and keeping data fresh.
 
 ---
 
@@ -54,7 +54,7 @@ The panel auto-refreshes when state files change. To force a refresh, close and 
 
 The standalone page resolves data through a fallback chain:
 
-1. **REGISTRY path** — fetches `REGISTRY.json` from the data root, reads the entry for `dashboard-data.json`, then fetches that file. This is the AI-DFE consumer contract path (works when served from workspace root with the data surface populated).
+1. **REGISTRY path** — fetches `REGISTRY.json` from the data root, reads the entry for `dashboard-data.json`, then fetches that file. This is the AI-DFE (Data Fabric Engine) consumer contract path (works when served from workspace root with the data surface populated).
 2. **Direct file fallback** — if REGISTRY fails (404, no entry), tries loading `dashboard-data.json` directly from the same directory as `index.html`.
 3. **Manual file picker** — if both fail, shows an empty state with a "Load data file…" button for manual JSON upload.
 
@@ -66,7 +66,7 @@ Before the standalone dashboard can show anything, it needs a `dashboard-data.js
 
 In your AI assistant session:
 ```
-DAT__ all
+DAT__ (data operations) all
 ```
 
 This gathers data from all packages, shapes it, and writes `dashboard-data.json` to your workspace's `data/` folder. Then copy it to the dashboard's `ui/` folder:
@@ -129,7 +129,7 @@ Then hard-refresh the browser (Ctrl+Shift+R / Cmd+Shift+R).
 
 ### Tabs Show "null" or Missing Panes (PO, Architect, UX)
 
-**Cause:** Those panes are populated by specific packages (AI-POLC → PO tab, AI-ADLC → Architect tab, AI-UXD → UX tab). If those packages haven't been run yet, their data is `null` and the pane is empty.
+**Cause:** Those panes are populated by specific packages (AI-POLC (Product Ownership Life Cycle) → PO tab, AI-ADLC (Architecture Design Life Cycle) → Architect tab, AI-UXD (UX Design) → UX tab). If those packages haven't been run yet, their data is `null` and the pane is empty.
 
 **Fix:** This is expected behavior — the dashboard degrades gracefully for packages not yet executed. Run the corresponding package, then refresh data:
 ```
@@ -149,7 +149,7 @@ DAT__ all
 **Cause:** The extension generates dashboard HTML from workspace state files. If no state files exist yet (no packages have been run), there's nothing to display.
 
 **Fix:**
-1. Run at least one package (e.g., AI-ILC or AI-PILC) to generate state files
+1. Run at least one package (e.g., AI-ILC (Idea Life Cycle) or AI-PILC (Project Initiation Life Cycle)) to generate state files
 2. Reopen the dashboard panel
 3. If state files exist but the panel is still blank, check the VS Code Developer Console (Help → Toggle Developer Tools) for errors
 

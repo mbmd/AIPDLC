@@ -40,10 +40,10 @@ API-contract-first means publishing a machine-readable contract (OpenAPI spec, G
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-ADLC** | Stage 10 — API Architecture | Dedicated stage that produces API contracts, versioning strategy, and error-handling standards BEFORE implementation. Gate prevents proceeding without defined interfaces. |
+| **AI-ADLC (Architecture Design Life Cycle)** | Stage 10 — API Architecture | Dedicated stage that produces API contracts, versioning strategy, and error-handling standards BEFORE implementation. Gate prevents proceeding without defined interfaces. |
 | **AI-ADLC** | ADR for API decisions | Technology choices (REST vs. GraphQL vs. gRPC), versioning approach (URL vs. header vs. content-type), and auth strategy each produce an ADR with consequences documented. |
-| **AI-DWG** | API standards steering file | Generates `api-standards.md` steering file from AI-ADLC's API architecture decisions — embedding contract-first rules into the development workspace so AI-DLC v1 enforces them during build. |
-| **AI-GCE** | API compliance rules | Derives enforcement hooks that block implementation without corresponding contract: no endpoint code without OpenAPI spec entry, no breaking changes without version bump, no undocumented error codes. |
+| **AI-DWG (Workspace Generator)** | API standards steering file | Generates `api-standards.md` steering file from AI-ADLC's API architecture decisions — embedding contract-first rules into the development workspace so AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) enforces them during build. |
+| **AI-GCE (Governance & Compliance Engine)** | API compliance rules | Derives enforcement hooks that block implementation without corresponding contract: no endpoint code without OpenAPI spec entry, no breaking changes without version bump, no undocumented error codes. |
 | **AI-ADLC** | Integration design (Stage 11) | Maps all integration points, data flows, and contract dependencies. Produces integration contracts that define exactly what crosses each boundary — not just "Service A calls Service B" but the full data shape, auth mechanism, and failure mode. |
 
 ---

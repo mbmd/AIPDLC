@@ -35,11 +35,11 @@ UPDATED STATE (affected files updated + team content intact)
 
 | Package | Mode | Reconciliation Context |
 |---------|------|----------------------|
-| **AI-DWG** | Mode 2 (Delta Reconciliation) | Architecture changed → update affected steering files |
+| **AI-DWG (Workspace Generator)** | Mode 2 (Delta Reconciliation) | Architecture changed → update affected steering files |
 | **AI-DWG** | Mode 3 (Brownfield Overlay) | Add governance to existing codebase without touching it |
-| **AI-GCE** | Re-derivation | Steering updated → re-derive affected rules/hooks |
-| **AI-TGE** | Architecture Reconciliation (Stage 10) | AP changed → update test register |
-| **AI-ADLC** | Brownfield extension | Load existing architecture, modify only new parts |
+| **AI-GCE (Governance & Compliance Engine)** | Re-derivation | Steering updated → re-derive affected rules/hooks |
+| **AI-TGE (Test Governance Engine)** | Architecture Reconciliation (Stage 10) | AP changed → update test register |
+| **AI-ADLC (Architecture Design Life Cycle)** | Brownfield extension | Load existing architecture, modify only new parts |
 
 ---
 

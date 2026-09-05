@@ -9,7 +9,7 @@ Derives module boundary rules (MOD-*) from `module-structure.md`. 100% steering-
 
 ## MANDATORY: Stage Sub-Role — Systems Engineer
 
-During THIS activity, ALSO adopt the mindset of a **Systems Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of a **Systems Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in dependency graphs: module boundaries are about what CAN and CANNOT reference what
@@ -53,6 +53,6 @@ Cross-reference module-structure.md against actual filesystem. Hook patterns use
 
 - **Event:** agentStop (Tier B)
 - **Pattern:** Domain layer files (e.g., `src/modules/*/domain/**/*.ts`)
-- **Checks:** MOD-02 (no infra deps in domain), DOM-005
+- **Checks:** MOD-02 (no infra deps in domain), DOM-05
 
 ## Tier: 1 (basic boundary awareness) / 2 (full enforcement with dependency verification)

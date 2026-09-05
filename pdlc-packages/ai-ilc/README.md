@@ -37,7 +37,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -45,13 +45,13 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -65,11 +65,11 @@ flowchart LR
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 > **AI-DFE** ([Data Fabric Engine](../ai-dfe/)) is a family-scoped **companion** — it gathers data from all packages and distributes structured JSON for dashboards and status roll-ups. It runs alongside the chain rather than as a linear step, so it is not shown as a chain row above.
 
@@ -90,12 +90,12 @@ AI-ILC is the **optional front door** of the AI-* PDLC Family — the "funnel be
 | **Input marker** | None (it is the front door) |
 | **Output marker** | `ilc-state.md` |
 | **Correlation key** | Mints an Idea Register ID; carries `projectId` when the idea targets an existing project |
-| **Capability emitted** | `idea-decision@1` (consumed by AI-PILC, AI-POLC, AI-PPM) |
+| **Capability emitted** | `idea-decision@1` (consumed by AI-PILC (Project Initiation Life Cycle), AI-POLC (Product Ownership Life Cycle), AI-PPM (Project Portfolio Management)) |
 
 **Simplified chain view** (see the diagram above for the full topology):
 
 ```
-AI-ILC → AI-PILC → AI-PPM → AI-FLO → AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-DLC v1
+AI-ILC → AI-PILC → AI-PPM → AI-FLO → AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-DLC
    ▲ you are here (optional front door)
 ```
 
@@ -117,7 +117,7 @@ AI-ILC answers **"is this idea worth starting, and where should it go?"** — it
 - **Consistent evaluation** — 7-criterion scoring with configurable rubric (two-source model)
 - **Value analysis** — articulates WHY an idea matters, not just whether it passes
 - **Impact-driven routing** — determines whether an approved idea is a new project, a big change, or a small feature
-- **Three brief types** — Approved Idea Brief (→ AI-PILC), Change Request Brief (→ AI-PILC change mgmt), Feature Brief (→ AI-DLC v1 backlog)
+- **Three brief types** — Approved Idea Brief (→ AI-PILC), Change Request Brief (→ AI-PILC change mgmt), Feature Brief (→ AI-DLC backlog)
 - **Audit trail from day one** — Decision Log + Idea Register; every choice recorded with rationale
 - **Adaptive depth** — Minimal / Standard / Comprehensive based on idea complexity
 - **Dynamic stage-based personas** — each stage activates the right expert voice with specialist sub-roles
@@ -140,7 +140,7 @@ AI-ILC answers **"is this idea worth starting, and where should it go?"** — it
 │  Does a project exist for this idea?         │
 ├──── NO ─────────────────────────────────────▶ AI-PILC (new project)
 ├──── YES + BIG change ───────────────────────▶ AI-PILC change management
-└──── YES + SMALL change ─────────────────────▶ AI-DLC v1 backlog (feature)
+└──── YES + SMALL change ─────────────────────▶ AI-DLC backlog (feature)
 ```
 
 "Big" = impacts scope, architecture, resources, or stakeholders beyond the team.
@@ -154,7 +154,7 @@ Routes are **intent-based, not package-dependent.** AI-ILC writes a semantic int
 |--------------|-----------------|-------------------------------|
 | `new-project` | AI-PILC | Brief is a portable document — usable with any project initiation process |
 | `change-request` | AI-PILC change management | Brief is a portable change request — usable with any change control process |
-| `feature` | AI-POLC (product backlog) | AI-DLC v1 backlog (or any backlog tool) |
+| `feature` | AI-POLC (product backlog) | AI-DLC backlog (or any backlog tool) |
 
 **You are never blocked.** If a target package isn't installed, the brief still works as a standalone document you can feed into whatever process you use. The routing intent is metadata — the brief itself carries all the context.
 
@@ -162,7 +162,7 @@ Routes are **intent-based, not package-dependent.** AI-ILC writes a semantic int
 
 ## Activation
 
-**Explicit key:** type `_ILC_` in any prompt to activate AI-ILC unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-ILC`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
+**Explicit key:** type `_ILC_` in any prompt to activate AI-ILC unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` (report active package) reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-ILC`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
 
 ---
 
@@ -364,14 +364,14 @@ AI-ILC participates in the family's **lens seam** — cross-cutting modes that, 
 | **Automation Lens** | Automated / Manual | `_AUTOLENS_` | Records the idea's automation posture |
 | **Agentic** (AI ∩ Automation) | derived — both on | — | Records the idea's derived *agentic posture* (composed from the AI + automation postures — no separate prompt) |
 
-Downstream, AI-PILC promotes these into formal modes, AI-DWG provisions the scaffolding, and AI-GCE / AI-TGE govern and test lens-tagged features via Layer-3 agents (`AIG__`/`ATG__`, `AIQ__`/`ATQ__`).
+Downstream, AI-PILC (Project Initiation Life Cycle) promotes these into formal modes, AI-DWG (Workspace Generator) provisions the scaffolding, and AI-GCE (Governance & Compliance Engine) / AI-TGE (Test Governance Engine) govern and test lens-tagged features via Layer-3 agents (`AIG__` (AI Governance) /`ATG__` (Automation Governance), `AIQ__` (AI Quality) /`ATQ__` (Automation Quality)).
 
 ---
 
 ## What AI-ILC Does NOT Do
 
 - Initiate projects (that's AI-PILC)
-- Design architecture (that's AI-ADLC)
+- Design architecture (that's AI-ADLC (Architecture Design Life Cycle))
 - Write code or tests
 - Manage a multi-project portfolio (v1.0 = single project per workspace)
 - Perform full feasibility studies (lightweight impact assessment only)

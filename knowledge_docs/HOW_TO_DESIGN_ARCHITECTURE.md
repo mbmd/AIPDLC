@@ -1,6 +1,6 @@
 # How to Design Architecture
 
-**Purpose:** Practical guide for using AI-ADLC to transform project requirements into a complete, development-ready Architecture Package (AP) — the structural blueprint that AI-DWG uses to generate your workspace.
+**Purpose:** Practical guide for using AI-ADLC (Architecture Design Life Cycle) to transform project requirements into a complete, development-ready Architecture Package (AP) — the structural blueprint that AI-DWG (Workspace Generator) uses to generate your workspace.
 
 ---
 
@@ -15,7 +15,7 @@ Technical leads, solution architects, or senior developers who need to design a 
 **You need:**
 - AI-ADLC installed in your AI workspace (see `ai-adlc/setup/INSTALL.md`)
 - Input — ANY of the following:
-  - A PIP from AI-PILC (ideal — richest context)
+  - A PIP from AI-PILC (Project Initiation Life Cycle) (ideal — richest context)
   - A requirements document + project charter
   - A verbal description of what you're building
   - An existing architecture you're extending (brownfield)
@@ -154,8 +154,8 @@ Your AP feeds downstream packages:
 | Next Package | What It Reads from AP |
 |-------------|---------------------|
 | **AI-DWG** | All architecture artifacts → generates workspace structure, steering files, governance templates |
-| **AI-GCE** | (via AI-DWG's steering files) architectural constraints → derives enforcement rules |
-| **AI-POLC** | Architecture boundaries → informs story decomposition and technical dependencies |
+| **AI-GCE (Governance & Compliance Engine)** | (via AI-DWG's steering files) architectural constraints → derives enforcement rules |
+| **AI-POLC (Product Ownership Life Cycle)** | Architecture boundaries → informs story decomposition and technical dependencies |
 
 The handoff is automatic — AI-DWG detects `adlc-state.md` and reads the AP.
 

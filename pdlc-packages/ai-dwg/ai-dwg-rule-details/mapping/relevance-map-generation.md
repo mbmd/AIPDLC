@@ -50,8 +50,11 @@ Slugify module, epic, and wireframe names to a common form:
 - `EPIC-001_Employee-Onboarding` → `employee-onboarding`
 - `WF-01_Employee-Onboarding` → `employee-onboarding`
 
-### Step 2: Match by normalized name
-When normalized names align across module ↔ epic ↔ wireframe → **auto-map** (high confidence).
+### Step 2: Match by ID (preferred) or normalized name (fallback)
+**Preferred — ID-based join (when the `team-topologies` feature is active):** module → `BC-*` (from the AP component-design / `team-context-registry`), epic → `Bounded Context` (`BC-*`), UX flow → `BC-*`/`TEAM-*` tag. Join deterministically on the shared identity — no guessing.
+**Fallback — normalized name:** when no identity is present, when normalized names align across module ↔ epic ↔ wireframe → **auto-map** (high confidence). This is the legacy behavior, unchanged.
+
+> **Team-scoped in a multi-workspace generation.** When `workspaceTopology ∈ {per-team, hybrid}`, the relevance map is generated **per L3 workspace, scoped to that team's modules only** — a developer in `TEAM-{slug}`'s workspace sees mappings for its modules, never other teams'. In a single workspace, the map covers all modules as today.
 
 ### Step 3: Fallback for non-aligned
 When a module has no clear epic/wireframe match (names don't align) → emit the row with a `<!-- VERIFY: manual curation needed -->` marker and best-guess candidates.
@@ -110,8 +113,8 @@ DWG generates the relevance map ONCE (canonical, in `rules/`); adapters translat
 
 ## Transformation Rules
 
-### Rule 1: Auto-Map by Normalized Name
-Module ↔ epic ↔ wireframe matched on slugified name. High-confidence matches are auto-filled.
+### Rule 1: Join by ID When Present, Name Otherwise
+When the `team-topologies` feature is active, join module ↔ epic ↔ wireframe deterministically on the shared `BC-*`/`TEAM-*` identity. When no identity exists, fall back to slugified-name matching (legacy). In a multi-workspace generation the map is **team-scoped** (only this team's modules).
 
 ### Rule 2: Flag Uncertain Rows
 No clear match → `<!-- VERIFY: manual curation needed -->` + best-guess candidates. Never force a wrong mapping.

@@ -1,4 +1,4 @@
-# How the AI-DWG Generation Engine Works
+# How the AI-DWG (Workspace Generator) Generation Engine Works
 
 **Purpose:** Explains how AI-DWG reads an Architecture Package and transforms it into a ready-to-code development workspace — the internal mechanics of its mapping engine, conditional generation, extension awareness, and reconciliation mode.
 
@@ -6,7 +6,7 @@
 
 ## What AI-DWG Does
 
-AI-DWG is a one-time generator that compiles architecture decisions into an operational development environment. It reads every artifact from AI-ADLC's Architecture Package and produces steering files, project structure, configuration, and operational documents — all populated with project-specific rules derived from architecture decisions.
+AI-DWG is a one-time generator that compiles architecture decisions into an operational development environment. It reads every artifact from AI-ADLC (Architecture Design Life Cycle)'s Architecture Package and produces steering files, project structure, configuration, and operational documents — all populated with project-specific rules derived from architecture decisions.
 
 ```
 ARCHITECTURE PACKAGE (from AI-ADLC)
@@ -34,7 +34,7 @@ ARCHITECTURE PACKAGE (from AI-ADLC)
 └─────────────────────────────────────────────────────────────┘
         │
         ▼
-DEVELOPMENT WORKSPACE (ready for AI-DLC v1)
+DEVELOPMENT WORKSPACE (ready for AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle))
 ├── .kiro/steering/ (19+ steering files)
 ├── Operational docs (7 files)
 ├── Planning templates (3 files)
@@ -102,7 +102,7 @@ Verification ensures nothing was lost in translation:
 
 ### Step 5: OUTPUT — Present Summary
 
-Generation results are summarized: file counts, conditional files included/skipped, and next steps (run AI-GCE, begin AI-DLC v1).
+Generation results are summarized: file counts, conditional files included/skipped, and next steps (run AI-GCE (Governance & Compliance Engine), begin AI-DLC).
 
 ---
 

@@ -9,7 +9,7 @@ Derives role isolation and segregation of duties rules (GOV-ROLE-*) from `role-i
 
 ## MANDATORY: Stage Sub-Role — Security Architect
 
-During THIS activity, ALSO adopt the mindset of a **Security Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of a **Security Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in segregation of duties: the core security principle is that no single person should control all steps of a critical process
@@ -105,11 +105,13 @@ For each CODEOWNERS entry, generate ownership verification rules:
 
 ## Hook Mapping
 
-| Hook | Event | Rules Enforced |
+| Hook / Agent | Event | Rules Enforced |
 |------|-------|----------------|
-| `segregation-check.json` | postTaskExecution | GOV-ROLE-004/005/006/007 |
-| `post-task-governance.json` | postTaskExecution | GOV-ROLE-BASELINE-01 (author ≠ approver reminder) |
-| `pre-pr-checklist.json` | userTriggered | GOV-ROLE-013 (CODEOWNER approval), GOV-ROLE-009 (self-approval blocked) |
+| `segregation-check.json` | postTaskExecution | `GOV-ROLE-004` (Session Owner ≠ Reviewer) |
+| `post-task-governance.json` | postTaskExecution | `GOV-ROLE-BASELINE-01` (author ≠ approver reminder) |
+| `PRC__` pre-PR checklist agent | userTriggered | `GOV-ROLE-013` (CODEOWNER approval) |
+
+> **Three corrections here — this mapping cited four IDs the generator never produces.** `segregation-check` listed `GOV-ROLE-004/005/006/007`; only **`004`** is produced (the enriched set is `001/003/004/010/013/016/017/019/023/024/025/CUSTOM` + `BASELINE-01/02/03`), so `005/006/007` were invented, plausible only because the Tier Assignment table asserts a `001–031` **range** — and a range is not a set of produced rules. `pre-pr-checklist` was a retired **hook** (now the `PRC__` agent) and additionally cited **`GOV-ROLE-009`**, which does not exist. If author-is-not-approver enforcement needs an ID beyond `004`, produce it as a real rule with a statement first; do not cite a range endpoint as though every number inside it were emitted.
 
 ---
 

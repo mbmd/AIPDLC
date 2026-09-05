@@ -114,6 +114,23 @@ On request (`status` or `route map`), generate the visual:
 
 ---
 
+### Step 7: Emit Data-Refresh Signals (to AI-DFE)
+
+After the position scan, emit a data-refresh signal for each entity that **advanced** in this pass, per `SIGNAL_CONTRACT.md` (`data-refresh-signal@1.0`). This keeps the DFE data surface fresh without the user running `DAT__`.
+
+For each entity that ADVANCED:
+
+1. **Read the granularity policy** — `dfeRefreshGranularity` from this family's FLO overlay ("Data Refresh Signal Policy"):
+   - `off` → skip (no signal for this family).
+   - `gate-only` **(default)** → emit only if the marker `status` changed to `complete`.
+   - `stage-advance` → emit on any `stage`/`status` field change.
+2. **Write the signal file** — `{family}-ws/data/signals/flo-refresh-{epoch-ms}.signal.md` with the envelope from `SIGNAL_CONTRACT.md` §3 (`signalType: data-refresh`, `family`, `source: AI-FLO`, `timestamp`, `entity`, `package`, `event: gate-complete | stage-advance`, `marker`). Source the `{epoch-ms}` / `timestamp` from a shell command (never a hosted time tool).
+3. **Log it** in `routing-log.md`: `| {seq} | {ts} | {entity} | — | DFE | Signal | {event} | Auto | data-refresh |`.
+
+> **Fire-and-forget.** FLO does NOT wait for DFE, does NOT switch to or activate DFE — the signal file IS the entire handoff. `data/signals/` is FLO's sole declared write-inbox (DFE stays the sole writer of data products; SIGNAL_CONTRACT.md §2). If `data/signals/` is absent, create it on first write.
+
+---
+
 ## Drift Detection (On Resume)
 
 When FLO resumes after being offline:

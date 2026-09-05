@@ -118,4 +118,22 @@ driftRouting:
 
 ---
 
+## Data Refresh Signal Policy
+
+Governs whether FLO emits data-refresh signals to AI-DFE when a PDLC project advances (per `ai-dfe-rule-details/contracts/SIGNAL_CONTRACT.md`). Read by FLO Position-Tracking Step 7 + Handoff Step 5b.
+
+```yaml
+dfeRefreshGranularity: stage-advance    # gate-only | stage-advance | off
+```
+
+**PDLC = `stage-advance`.** PDLC's early packages (AI-ILC, AI-PILC, AI-POLC) update their `*-state.md` `stage` field at each internal gate, so `stage-advance` gives the dashboard **real-time funnel progression** (e.g., ideas moving through the ILC funnel) rather than only a final "complete" tick. Each signal still triggers only a **scoped** refresh of the one advancing package, and DFE dedups same-package/same-timestamp signals, so the extra frequency stays cheap.
+
+| Value | FLO emits when… |
+|-------|-----------------|
+| `gate-only` | a marker `status` changes to `complete` |
+| `stage-advance` **(PDLC)** | any `stage`/`status` field change within a running package |
+| `off` | never |
+
+---
+
 *PDLC overlay for AI-FLO | Loaded when family: PDLC detected | Author: Maheri*

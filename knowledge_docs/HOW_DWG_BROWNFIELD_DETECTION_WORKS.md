@@ -1,4 +1,4 @@
-# How AI-DWG Brownfield Detection Works
+# How AI-DWG (Workspace Generator) Brownfield Detection Works
 
 **Purpose:** Explains how AI-DWG's Mode 3 (Brownfield Overlay) detects an existing codebase's structure, conventions, and governance gaps — then generates governance artifacts that integrate non-destructively alongside what already exists.
 
@@ -143,7 +143,7 @@ When BOTH an AP and existing code are present:
 | PostgreSQL | PostgreSQL (in docker-compose) | Aligned — generate data steering matching config |
 | Microservices | Monolithic structure | Major drift — flag in gap report, generate steering for current state with migration notes |
 
-**Resolution rule:** Steering files govern the codebase AS IT IS, with explicit notes where architecture intent differs from current state. AI-GCE then enforces on new code toward the architectural intent.
+**Resolution rule:** Steering files govern the codebase AS IT IS, with explicit notes where architecture intent differs from current state. AI-GCE (Governance & Compliance Engine) then enforces on new code toward the architectural intent.
 
 ---
 
@@ -179,8 +179,8 @@ When BOTH an AP and existing code are present:
 
 After brownfield overlay:
 - **AI-GCE** reads the brownfield-aware steering and uses the baseline pattern (enforce forward, baseline existing)
-- **AI-TGE** detects existing tests during its brownfield assessment stage and maps them against architectural requirements
-- **AI-DLC v1** sessions get full project context via `PROJECT_INSTRUCTIONS.md` (grounded in actual codebase state)
+- **AI-TGE (Test Governance Engine)** detects existing tests during its brownfield assessment stage and maps them against architectural requirements
+- **AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle)** sessions get full project context via `PROJECT_INSTRUCTIONS.md` (grounded in actual codebase state)
 
 ---
 

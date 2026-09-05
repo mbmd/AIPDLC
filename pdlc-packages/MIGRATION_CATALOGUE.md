@@ -1,7 +1,7 @@
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under the Apache License, Version 2.0. See LICENSE. Attribution required - see NOTICE. -->
-# PDLC — Migration Catalogue (Artifact Feature Migrations)
+# PDLC (Product Development Life Cycle) — Migration Catalogue (Artifact Feature Migrations)
 
-> **What this is.** The list of *output-feature improvements* the family upgrade agent (`UPG__`) can retrofit into an existing `pdlc-ws/` workspace. When a PDLC package gains a new output feature, the feature is added here so workspaces created by an earlier version can be brought up to the current feature set without re-running the workflows.
+> **What this is.** The list of *output-feature improvements* the family upgrade agent (`UPG__` (Family Upgrade)) can retrofit into an existing `pdlc-ws/` workspace. When a PDLC package gains a new output feature, the feature is added here so workspaces created by an earlier version can be brought up to the current feature set without re-running the workflows.
 >
 > **Who reads it.** The `UPG__` family upgrade agent (`family-upgrade-agent.md`). Installed once per workspace (create-if-absent) by whichever PDLC package the user installs.
 >
@@ -36,6 +36,8 @@ For each **installed** package (detected by the presence of `.aiflc/pdlc/ai-{cod
 | **M7** | Automation-LENS `data-schema/` automation fields + `Lens_Status.md` | all 8 lens-aware packages (ILC, PILC, POLC, UXD, ADLC, DWG, GCE, TGE) | Active |
 | **M8** | Agentic intersection-facet support (derived `agenticProfile`) | co-tagged features in ILC, PILC, POLC, UXD, ADLC, DWG | Active |
 | **M9** | Workspace HTML publishing (browsable shadow site) | whole workspace (tool-level) | Active |
+| **M10** | Build-method migration (bring a workspace to another build method's output shape) | DWG, GCE, TGE | Active |
+| **M11** | Team-topology workspace-set (single → per-team multi-workspace, opt-in) | ADLC, POLC, UXD, DWG, GCE | Active |
 
 ### Ownership handling (applies to every migration)
 
@@ -89,7 +91,7 @@ All transforms are **additive** — wrap existing code text in a link, add an an
 
 **Feature.** Artifacts produced by AI-LENS-aware packages carry `aiFeature` front-matter tags (per `AI_LENS_PROTOCOL.md` §4) so AI features are threaded across the lifecycle and discoverable by `DAT__`.
 
-**Applies to.** Packages that produce artifacts which can be AI-tagged: AI-ILC (Idea Brief), AI-PILC (PIP + Decision_Log), AI-POLC (epics/stories), AI-UXD (UXP interaction designs), AI-ADLC (ADRs + component designs), AI-DWG (generated workspace + `.ai-lens/manifest.json`).
+**Applies to.** Packages that produce artifacts which can be AI-tagged: AI-ILC (Idea Life Cycle) (Idea Brief), AI-PILC (Project Initiation Life Cycle) (PIP + Decision_Log), AI-POLC (Product Ownership Life Cycle) (epics/stories), AI-UXD (UX Design) (UXP interaction designs), AI-ADLC (Architecture Design Life Cycle) (ADRs + component designs), AI-DWG (Workspace Generator) (generated workspace + `.ai-lens/manifest.json`).
 
 **Detection (is it pending?).** Check whether the workspace's `management_framework/Decision_Log.md` contains an AI-LENS mode row (any row with "AI-LENS" or "AI Lens mode" in the Decision column). If no such row exists AND the project has AI features (any `aiFeature: true` front-matter in `backlog/epics/` or a `.ai-lens/manifest.json`), the mode record was never formally captured → **M3 is pending** for PILC. For POLC: check `backlog/epics/*.md` for epics with AI-related content but missing `aiFeature` front-matter → pending. For DWG: check whether `.ai-lens/manifest.json` exists in the generated workspace → if absent and AI features exist upstream → pending.
 
@@ -105,9 +107,9 @@ All transforms are **additive** — wrap existing code text in a link, add an an
 
 ## M4 — AI-LENS `data-schema/` AI fields
 
-**Feature.** Each package's `data-schema/` includes an `aiLens` sub-object so AI-DFE's existing `DAT__` can gather the AI-feature thread into the traceability JSON (per `AI_LENS_PROTOCOL.md` §6.2).
+**Feature.** Each package's `data-schema/` includes an `aiLens` sub-object so AI-DFE's (Data Fabric Engine) existing `DAT__` (data operations) can gather the AI-feature thread into the traceability JSON (per `AI_LENS_PROTOCOL.md` §6.2).
 
-**Applies to.** All 8 lens-aware packages: AI-ILC, AI-PILC, AI-POLC, AI-UXD, AI-ADLC, AI-DWG, AI-GCE, AI-TGE.
+**Applies to.** All 8 lens-aware packages: AI-ILC, AI-PILC, AI-POLC, AI-UXD, AI-ADLC, AI-DWG, AI-GCE (Governance & Compliance Engine), AI-TGE (Test Governance Engine).
 
 **Detection (is it pending?).** For each installed package, read `{pkg}-data.schema.json` and check for the presence of an `"aiLens"` key in `data.properties`. If absent → **M4 is pending** for that package.
 
@@ -222,6 +224,45 @@ All transforms are **additive** — wrap existing code text in a link, add an an
 **Idempotency.** `HTM__` is fully idempotent — every run rebuilds the shadow from the current Markdown. Once the config/shadow exist, detection reports not-pending, so re-running the migration is a safe no-op (beyond an optional refresh).
 
 **Ownership handling.** The shadow (`.publish/pdlc-html/`) is `[gen]` — tool-owned and disposable, apply directly. `.publish/pdlc.config.yaml` is `[hyb]` — create-if-absent, never overwrite user edits. No `pdlc-ws/` `.md` source is ever touched (SSOT-Shadow).
+
+---
+
+## M10 — Build-method migration (bring a workspace to another build method's output shape)
+
+**Feature.** A workspace generated under one build method can be brought to another build method's output shape without re-running the design chain.
+
+**Applies to.** AI-DWG (emits or stamps the surfaces), AI-GCE (re-derives enforcement), AI-TGE (re-targets its coverage check).
+
+**Detection — is it pending?** Compare the build-method value recorded in `.governance/workspace-manifest.yaml` against the surfaces actually present on disk:
+- Value is `aidlc` but no `aidlc/spaces/*/memory/` directory exists → **pending**
+- Value is `spec-driven-speckit` but no `.specify/memory/constitution.md` exists → **pending**
+- Value is `freestyle` or `manual` but a build-method surface is present without an obsolescence stamp → **pending**
+- Field is absent entirely → this is a pre-field legacy workspace; ask the team for the value, then re-evaluate
+
+**Transform.** Run AI-DWG in reconciliation mode, confirm the build method at the Config Gate (per §16 Decision 2), emit the target surface, stamp the superseded one, bump the baseline version, and regenerate the manifest. Then run AI-GCE re-derivation to switch enforcement format, preserving custom rules.
+
+**Idempotency.** Detection compares recorded value against files present, so a completed migration reports not-pending. Re-running is a safe no-op.
+
+**Ownership handling.** The manifest and bootstrap record are generated — apply directly. The behavioural-rules files and the constitution are hybrid — preview and confirm, because the team and v2's learning loop both write there. Spec folders and source code are user-owned — never touched.
+
+---
+
+## M11 — Team-topology workspace-set (single → per-team multi-workspace, opt-in)
+
+**Feature.** A project designed with the AI-ADLC `team-topologies` extension (a `TEAM-*`/`BC-*`/`SVC-*` identity in `team-context-registry.md`) can be regenerated as a **per-team workspace set** — a Layer-2 control plane (`{slug}-management/`: set-manifest + authoritative contract registry + roll-up) plus N clean Layer-3 per-team workspaces (`{slug}-workspaces/{team}/`), instead of one monorepo workspace. **Fully opt-in and default-safe:** a workspace stays single unless the team explicitly chooses per-team at AI-DWG Config Gate Q4. The split is **team-granular, never per-service.**
+
+**Applies to.** AI-ADLC (mints the identity), AI-POLC (first-class `Owning Team`/`Bounded Context` epic fields), AI-UXD (BC-*/TEAM-* tags), AI-DWG (emits the set), AI-GCE (cross-workspace GOV-TT roll-up).
+
+**Detection — is it pending?** Only relevant when the upgrade is *wanted* (opt-in, never forced):
+- The AP has `team-topologies` active + ≥2 teams in `team-context-registry.md`, AND the workspace is still a single monorepo (`.governance/workspace-manifest.yaml` has no `setMembership` and no sibling `{slug}-management/`), AND the team requests per-team topology → **pending (offered, not auto-applied)**.
+- No `team-topologies` identity, or one team owns everything, or the team keeps the single workspace → **not pending** (single workspace is a valid, supported end state).
+- Epic files carry `Owning Team`/`Bounded Context` as old free-text "Context-Aware Notes" rather than first-class fields → sub-migration: promote to first-class fields (POLC template alignment) before slicing.
+
+**Transform.** Run AI-DWG in reconciliation mode, answer Config Gate Q4 = per-team (or hybrid) + physical layout (subfolder/polyrepo); DWG partitions the tri-input by `TEAM-*` (`mapping/team-workspace-partitioning.md`), generates each L3 workspace (existing single-workspace shape, scoped) + `TEAM_CHARTER.md` + team-scoped relevance map + read-only pinned contracts, and builds the L2 control plane (set-manifest + authoritative contract registry + roll-up scaffold + set-context-map). AI-GCE then derives the set-level rules (GOV-TT-008/009/010) and the cross-workspace roll-up.
+
+**Idempotency.** Detection compares the topology recorded in the manifest (`workspaceTopology` + presence of `setMembership`/`{slug}-management/`) against what exists on disk, so a completed migration reports not-pending. Re-running is a safe no-op. Reverting to single is a separate, explicit choice (not auto-applied).
+
+**Ownership handling.** The set-manifest, authoritative contract registry, per-member manifests, and `TEAM_CHARTER.md` are generated — apply directly. Canonical `rules/` are byte-identical across members (guardrail-sync); team-specific `<!-- custom -->` rules are hybrid — preserved. Source code and spec folders are user-owned — never touched. Design-system tokens + accessibility baseline are shared across all members (never carved up per team).
 
 ---
 

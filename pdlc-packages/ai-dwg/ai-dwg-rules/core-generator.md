@@ -10,7 +10,7 @@ inclusion: manual
 
 ## AI-DWG: AI-Driven Workspace Generator
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
 **Purpose:** Compose a ready-to-code development workspace from one or more design-time peer inputs — Architecture Package (AP from AI-ADLC), Product Backlog Package (PBP from AI-POLC), and/or UX Design Package (UXP from AI-UXD). Any non-empty subset of {ADLC, POLC, UXD} is a valid starting point. The generator produces rules, project instructions, repository structure, configuration files, planning templates, and operational documents — scoped to the input clusters actually present and the target AI platform(s). DWG is **build-method-agnostic**: the workspace serves AI-DLC, spec-driven (Spec Kit), and freestyle builds alike.
@@ -96,6 +96,23 @@ All subsequent rule detail file references are relative to whichever rule detail
 
 Load the per-mode and per-category detail files (`flows/*`, `mapping/*`, `reconciliation/*`, `rendering/*`, `baseline/*`, `templates/*`) on demand as each mode and cluster is reached.
 
+---
+
+<!-- BEGIN WORKFLOW-DISCIPLINE v1 (synced from WORKFLOW_DISCIPLINE_CONTRACT.md — do not edit inline) -->
+## Workflow Discipline
+
+This package's workflow is authoritative — do not improvise it. (Full rules:
+"Workflow Discipline (Enforced)" in the session orchestrator.)
+
+- **Read before you execute.** Load this package's core + the relevant rule-detail
+  file before performing any stage. Never generate its outputs from memory.
+- **Trace to source.** Every deliverable derives from this package's templates,
+  rule-detail files, or the user's own input — never unstated "best practice."
+- **No unilateral deviation.** Do not skip, reorder, combine, or auto-progress past
+  a gate on your own initiative; the user may direct these — confirm and log them.
+  Every gate needs explicit user approval.
+<!-- END WORKFLOW-DISCIPLINE -->
+
 **Baseline & rendering — load during their steps:**
 - `baseline/baseline-generation.md` — governed-element extraction + `baseline-manifest.yaml` + versioning + archive
 - `baseline/workspace-manifest-generation.md` — `.governance/workspace-manifest.yaml` (discovery contract for GCE/TGE/FLO)
@@ -129,7 +146,7 @@ Every generated file must enable day-1 productivity. A developer joining the pro
 - Do NOT use "should" or "consider" in steering files — binary MUST/MUST NOT only
 - Do NOT generate files that no one will read — every file must have a clear consumer (AI, tool, or human)
 - Do NOT overwrite team customizations during reconciliation — detect `<!-- custom -->` markers and preserve
-- Do NOT include planning-phase content in the generated workspace — **the generated workspace is for building software with AI-DLC v1 + AI-GCE + AI-TGE**. References to AI-ILC, AI-PILC, AI-POLC, AI-UXD, AI-PPM, or AI-FLO have NO meaning to a developer using AI-DLC; those packages ran in the planning workspace before generation. Their contributions are baked into the steering rules as source provenance (front-matter `source:` field), not as active participants. Never generate content that assumes the dev team knows or cares about the planning chain.
+- Do NOT include planning-phase content in the generated workspace — **the generated workspace is for building software with AI-DLC + AI-GCE + AI-TGE**. References to AI-ILC, AI-PILC, AI-POLC, AI-UXD, AI-PPM, or AI-FLO have NO meaning to a developer using AI-DLC; those packages ran in the planning workspace before generation. Their contributions are baked into the steering rules as source provenance (front-matter `source:` field), not as active participants. Never generate content that assumes the dev team knows or cares about the planning chain.
   - **Exception — Build-phase reference artefacts:** The following are NOT planning content; they are build-phase reference that developers need in the IDE and MUST be carried into the generated workspace when present:
     - POLC: Elaborated user stories (INVEST with G/W/T ACs), Definition of Ready, PO Charter, Prioritization Register
     - ADLC: Constraint Register, Architecture Decision Records
@@ -186,7 +203,7 @@ ADLC, POLC, and UXD are **equal-impact peers**. No input is privileged. DWG acce
 | **POLC** (product) | `info/vision.md` + `backlog/DEFINITION_OF_DONE.md` + `backlog/DEFINITION_OF_READY.md` + planning templates + `backlog/scope-and-risks.md` + `backlog/traceability-matrix.md` + `backlog/value-metrics.md` + `backlog/epics-and-backlog.md` + `backlog/epics/` (full story files if Tier 2) + `backlog/user-stories.md` (index, if Tier 2) + `backlog/po-charter.md` + `backlog/prioritization-register.md` |
 | **UXD** (UX) | `design-system.md` + `frontend-standards.md` + `ux/ui-implementation-spec.md` + accessibility baseline relay + `navigation-structure.md` + `design-qa.md` + `content-guidelines.md` + `theming.md` (if multi-brand/mode) + `i18n-standards.md` (if multi-locale) + `ux/wireframes/` (screen specs, if present) + `ux/user-flows/` (interaction flows, if present) + `ux/personas/` (if present) + `ux/journey-maps/` (if present) |
 
-**Minimum-Input Rule:** at least ONE of {ADLC, POLC, UXD} MUST be present. Any single one is valid. DWG MUST disclose the quality impact of each absent input (which clusters can't be produced, what AI-DLC v1 will lack) and require explicit user approval before proceeding with reduced coverage — acknowledged degradation, never silent. The **src folder structure** being ADLC-gated is not dominance: it's the same as `design-system.md` being UXD-gated and `vision.md` being POLC-gated — every output traces to one input cluster; no input is privileged.
+**Minimum-Input Rule:** at least ONE of {ADLC, POLC, UXD} MUST be present. Any single one is valid. DWG MUST disclose the quality impact of each absent input (which clusters can't be produced, what AI-DLC will lack) and require explicit user approval before proceeding with reduced coverage — acknowledged degradation, never silent. The **src folder structure** being ADLC-gated is not dominance: it's the same as `design-system.md` being UXD-gated and `vision.md` being POLC-gated — every output traces to one input cluster; no input is privileged.
 
 > **Pre-mode gate (runs before ANY mode):** peer-input selection + quality-impact disclosure, installed-but-not-run completion offer, and cross-input conflict surfacing all live in `flows/input-selection-and-conflict.md`. Detection + parsing detail lives in `common/ap-reading-guide.md`.
 
@@ -215,6 +232,8 @@ ADLC, POLC, and UXD are **equal-impact peers**. No input is privileged. DWG acce
 
 **Guaranteed output:** The full output table (30+ guaranteed files scoped by present inputs), contract principles (9 rules), and runtime directory structure live in → `common/output-contract.md`. Load that file during generation/validation to verify completeness.
 
+> **⚠️ AI-DLC build method (`buildProfile: aidlc`):** a second FROZEN contract governs the conditional `aidlc/` output surface — the `aidlc/` tree (behavioural rules, per-agent knowledge, code KB), sensor manifests, and the bootstrap record. Load `common/aidlc-v2-output-contract.md` whenever generating under `buildProfile: aidlc`. It is the interface AI-GCE and AI-TGE build against, and it is FROZEN (contract-change deliberation to alter).
+
 **Key guarantees (always present regardless of inputs):** `rules/workspace-rules.md` (identity + Project ID), `WORKSPACE_CONTEXT_MAP.md` (discovery index), `.governance/workspace-manifest.yaml` (consumer discovery contract), per-document baseline stamps, baseline archive on the planning side.
 
 > After generation or reconciliation, DWG signals AI-GCE (`workspace-generated` / `steering-files-updated`). The full DOWNSTREAM SIGNAL formats live in `reconciliation/downstream-signaling.md`.
@@ -242,7 +261,7 @@ The **shared core** (~95% of output — `rules/`, `backlog/`, `architecture/`, `
 
 ## CONFIG GATE (Runs Before Mode Execution)
 
-After mode is determined but **before** mode execution begins, DWG MUST run the Config Gate — two questions that lock the generation parameters:
+After mode is determined but **before** mode execution begins, DWG MUST run the Config Gate — the questions that lock the generation parameters (Q4 is offered only when the architecture justifies it):
 
 ```
 CONFIG GATE:
@@ -272,9 +291,28 @@ CONFIG GATE:
       → Brownfield detect-and-adapt: if .governance/engine/ already has content,
         DWG reports "companions already present" and skips (no re-provision;
         use UPG__ for version bumps)
+
+  Q4: "Workspace topology?"   (OFFERED ONLY when the architecture justifies it — see gate below)
+      (a) Single workspace / monorepo              ← DEFAULT (today's behavior, unchanged)
+      (b) Per-team workspaces (multi-workspace / polyrepo)
+      (c) Hybrid (monorepo core + extracted team workspaces)
+      → OFFER Q4 only when ALL hold:
+          • ADLC is a present peer input, AND
+          • Stage-5 decomposition (Q-DEC-02) ∈ {service-oriented, microservices, hybrid}, AND
+          • ≥ 2 TEAMS with ownership data (NOT ≥ 2 services)
+      → GRANULARITY IS ALWAYS TEAM-LEVEL, never per service. A team owns 1..N
+        services/contexts; they all stay as modules inside that team's ONE workspace.
+      → team-topologies extension ACTIVE → strongly recommend (b); split one workspace
+        per stream-aligned team from the Team Topology Map / team-context-registry.
+      → team-topologies absent but team-ownership data present (MS-01 "Owning Team" /
+        CODEOWNERS / DDD-08 team-per-context) → offer (b), split per team from that data.
+      → No team-ownership data, OR one team owns everything, OR modular monolith
+        → single workspace, silent no-op. NEVER fall back to a per-service split.
+      → Sub-question when (b)/(c): physical layout = subfolder (monorepo-of-workspaces) | polyrepo (separate repos)
+      → Full logic + justification gate: flows/workspace-topology-selection.md
 ```
 
-DWG does NOT ask "how will this be built?" — that's a downstream choice. The build-method advisory (below) informs without asking.
+DWG does NOT ask "how will this be built?" — that's a downstream choice. The build-method advisory (below) informs without asking. Q4 is a **structural** choice (workspace isolation), not a build-method gate; the default (a) leaves the two-axis model `output = f(peer inputs, platform targets)` unchanged for everyone who does not opt in.
 
 ### Workspace Metadata (Written to `rules/workspace-rules.md` + `.governance/workspace-manifest.yaml`)
 
@@ -286,6 +324,8 @@ platformTargets: [kiro, claude-code]
 companionProvision: {yes | no | gce-only | tge-only}   # from Q3; drives companion-bootstrap
 dwgBuildVersion: v1.1
 buildProfile: {spec-driven | aidlc | freestyle}   # derived governance signal (omit for manual/AI-assisted → Standard mode) — DWG output identical regardless; AI-GCE reads it for cadence
+workspaceTopology: {single | per-team | hybrid}   # from Q4; default single. per-team/hybrid → multi-workspace generation (Phase 3). Single = today's output, unchanged.
+physicalLayout: {subfolder | polyrepo}   # from Q4 sub-question; only meaningful when workspaceTopology ≠ single
 ```
 
 ---
@@ -327,6 +367,37 @@ The rendering step runs AFTER mapping/generation produces canonical content, and
 4. Generate PLATFORM_NOTES.md for any below-full-capability target
 5. Record platformTargets in .governance/workspace-manifest.yaml
 ```
+
+---
+
+## BUILD-METHOD SUBSYSTEM (Keys off `buildProfile`)
+
+Parallel to the renderer, and a **new sibling subsystem** — not an eighth renderer category. The renderer keys off `platformTargets` and stays at seven categories, unchanged. The build-method subsystem keys off `buildProfile` and answers a different question: *does this build method need an extra output surface beyond the workspace?* Under `buildProfile: aidlc` it emits the `aidlc/` tree; under `spec-driven-speckit` it emits the SpecKit constitution; the other three methods emit no build-method surface.
+
+**Why a separate subsystem:** the renderer's invariant is that adapters are thin wiring that never contain original rule text. The `aidlc/` tree is freshly-derived content (prescriptive rule extracts + reference summaries), which breaks that invariant on its face — so it lives here, not in the renderer. Full rationale: `buildmethod/buildmethod-model.md` + compatibility design §16 Decision 1.
+
+### Build-Method Detail Files (Load During the Build-Method Step)
+
+The build-method step runs AFTER the renderer step (the `aidlc/` tree is tool-neutral except sensor manifests, which use the active adapter as a path-resolution service). Load `buildmethod/buildmethod-model.md` first, then the emitter for the resolved `buildProfile`:
+
+| `buildProfile` | Detail files to load | Emits |
+|----------------|---------------------|-------|
+| (model) | `buildmethod/buildmethod-model.md` | — (always load first) |
+| `aidlc` | `buildmethod/aidlc/emitter.md` → then `memory-mapping.md`, `knowledge-routing.md`, `documents-placement.md`, `codekb-seeding.md`, `sensor-manifests.md` | the full `aidlc/` tree (conforms to `common/aidlc-v2-output-contract.md`) + `.governance/aidlc-bootstrap.yaml` |
+| `spec-driven-speckit` | `buildmethod/speckit/emitter.md` → `constitution-mapping.md` | `.specify/memory/constitution.md` |
+| `spec-driven-kiro` · `freestyle` · `manual` | — | no build-method surface (the workspace / rules doc is the surface) |
+
+**Build-method step sequence:**
+```
+1. Read buildProfile from .governance/workspace-manifest.yaml
+2. Load buildmethod/buildmethod-model.md → dispatch on buildProfile
+3. IF aidlc: run buildmethod/aidlc/emitter.md (6-step emission per the frozen contract)
+   ELSE IF spec-driven-speckit: run buildmethod/speckit/emitter.md
+   ELSE: no build-method output
+4. Record seeded.* in .governance/aidlc-bootstrap.yaml (AI-GCE reads it)
+```
+
+> Everything the `aidlc/` emitter writes conforms to the FROZEN `common/aidlc-v2-output-contract.md`. That contract is the authority for paths, filenames, front-matter, the sensor-manifest field set, the code-KB seeded set, and the bootstrap schema.
 
 ---
 
@@ -377,7 +448,7 @@ Each mode's full step body lives in a detail file. Load it when the mode is dete
 
 AI-DWG generates ONLY what the present peer inputs justify — no steering for patterns the inputs don't contain. When **ADLC** is present: 19 always-generated tech steering files + up to 11 conditional files unlocked by AP signals (multi-tenancy doc → `multi-tenancy.md`; multi-version API → `api-versioning.md`; >3 integrations / distributed / Microservices or Resilience extension → `resilience-standards.md`; tracing tool / Microservices ext → `observability-tracing.md`; quantified latency SLOs → `performance-standards.md`; workflow component → `workflow-engine.md`; UI containers / BFF ext → `frontend-standards.md`; Event-Sourcing ext → `event-sourcing.md`; Feature-Flags ext → `feature-flags.md`; ADLC brownfield mode → `brownfield-patterns.md`). When **POLC** is present: the product cluster (vision, `backlog/` with DoD, DoR, planning templates, scope-and-risks, traceability-matrix, value-metrics, po-charter, prioritization-register, full story files in `backlog/epics/` if Tier 2). When **UXD** is present: the UX cluster (design-system, frontend-standards, `ux/ui-implementation-spec.md`, a11y relay, plus `ux/wireframes/`, `ux/user-flows/`, `ux/personas/`, `ux/journey-maps/` when present in UXP). Cross-cluster operational docs (PROJECT_INSTRUCTIONS, CONTRIBUTING, ONBOARDING, README, CICD_GUIDE, TEAM_AGREEMENTS, PR template, management_framework spine) are generated regardless of which inputs are present.
 
-> The full always/conditional tables (with source AP artifact + skip-if conditions), the POLC/UXD/cross-cluster output inventories, and the AI-DLC v1 input-document assembly all live in `common/process-overview.md`. Extension detection + enrichment logic lives there too + in `mapping/extension-*-enrichment.md`.
+> The full always/conditional tables (with source AP artifact + skip-if conditions), the POLC/UXD/cross-cluster output inventories, and the AI-DLC input-document assembly all live in `common/process-overview.md`. Extension detection + enrichment logic lives there too + in `mapping/extension-*-enrichment.md`.
 
 ---
 
@@ -468,4 +539,4 @@ The full runtime directory structure (maximum output with all three peer inputs 
 
 ---
 
-*AI-DWG v1.0.0 | Created By: Maheri | Inspired By: awslabs/aidlc-workflows (MIT-0) | Composes a ready-to-code development workspace from AI-ADLC / AI-POLC / AI-UXD peer inputs*
+*AI-DWG v1.1.0 | Created By: Maheri | Inspired By: awslabs/aidlc-workflows (MIT-0) | Composes a ready-to-code development workspace from AI-ADLC / AI-POLC / AI-UXD peer inputs*

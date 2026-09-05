@@ -17,6 +17,8 @@ The strategy is derived — not invented. It flows from what the architecture re
 
 ## Depth Adaptation
 
+> **This "depth" is AI-TGE's *test-governance depth* — NOT v2's test-strategy (merged item 22, ledger B13, design §8.6).** AI-TGE's depth controls **how much detail this engine produces** and which of its twelve stages run; it is auto-scored from five system-complexity factors and carries **no test-volume commitment**. AI-DLC v2's `test-strategy` (`minimal`/`standard`/`comprehensive`) controls **test volume** (tests per requirement/component) — a different concept that happens to share the three value names. **The two are never derived from each other.** In the `aidlc` bootstrap record they are two independent fields: `tge_governance_depth` (this engine's depth) vs `recommended_test_strategy` (v2's test volume). A complex system can score AI-TGE **Comprehensive** (fuller reports, more stages) while a team legitimately wants v2 test-volume **Minimal** — so a depth level here must never be written into v2's test-strategy field, or vice-versa. Generated output disambiguates: "test-governance depth" (this) vs "test volume strategy" (v2).
+
 | Depth | Strategy Scope | Document Length |
 |-------|---------------|:---------------:|
 | **Minimal** | Test pyramid ratios + tool list + coverage goals + entry/exit criteria. No test data strategy. No automation roadmap. 1-2 pages. | Short |
@@ -51,15 +53,15 @@ A good output at this stage sounds like:
 
 ### Step 1: Load Context
 
-Gather inputs for strategy derivation:
+Gather inputs for strategy derivation. **DW sources resolve via `manifest.paths.rules`** (`common/manifest-resolution.md`) — the filenames below are relative to the resolved rules root, never bare literals; an unresolved rules role is a disclosed `⚠️ Degraded` read, not a silent hardcoded fallback. TGE's own `.governance/test/` outputs are P3-fixed and not manifest-resolved.
 
 | Input | Source | What It Provides |
 |-------|--------|-----------------|
 | Test Register | Stage 3 output (`.governance/test/test-register.md`) | What tests are needed, their levels and types |
 | Brownfield Gap Map | Stage 4 output (if exists) | Current coverage baseline (what's already done) |
-| Tech Stack | DW `rules/tech-stack.md` | Available testing frameworks, languages, tools |
-| Testing Conventions | DW `rules/testing-strategy.md` (if exists) | Team's existing testing approach |
-| Module Structure | DW `rules/module-structure.md` (if exists) | Boundaries that define test scopes |
+| Tech Stack | DW `tech-stack.md` under `manifest.paths.rules` | Available testing frameworks, languages, tools |
+| Testing Conventions | DW `testing-strategy.md` under `manifest.paths.rules` (if exists) | Team's existing testing approach |
+| Module Structure | DW `module-structure.md` under `manifest.paths.rules` (if exists) | Boundaries that define test scopes |
 | Depth Level | State file | How detailed the strategy should be |
 
 ---

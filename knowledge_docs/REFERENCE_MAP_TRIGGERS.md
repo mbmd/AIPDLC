@@ -1,6 +1,6 @@
 # Reference Map: Conditional Generation Triggers
 
-**Purpose:** Complete lookup table of all conditional generation triggers in AI-DWG — which output files are generated conditionally, what their trigger condition is, and where to check.
+**Purpose:** Complete lookup table of all conditional generation triggers in AI-DWG (Workspace Generator) — which output files are generated conditionally, what their trigger condition is, and where to check.
 
 ---
 

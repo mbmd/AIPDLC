@@ -47,6 +47,20 @@ A good output at this stage sounds like:
 
 ## Step-by-Step Execution
 
+### Step 0: Read Observation Fidelity — BEFORE calculating anything
+
+Read `tge-state.md → Observation Fidelity`. This stage **reports** fidelity; it never assesses it (assessment belongs to Stage 1 and Stage 7).
+
+| Fidelity | What this stage does |
+|:--------:|----------------------|
+| **✅ Full** | Report normally. No banner, no markers. |
+| **⚠️ Degraded** | Compile the banner and the `### Observation Fidelity` subsection of `## Completeness & Downstream Resolution` into the report (Step 8), lead the summary with it (Step 9), and mark every affected figure. |
+| **❌ Unknown** | **Treat exactly as Degraded.** An unassessed run is never reported as a clean one (fail-closed rule F1). Banner states that fidelity was not assessed. |
+
+**Why this is Step 0 and not Step 8.** Every figure this stage produces may be derived from a substitute. Reading fidelity after the calculations would mean deciding what to qualify *after* deciding what to say, and the qualification would be applied by memory rather than by rule. Definition, the three canonical blocks, and the fail-closed rules: `common/observation-fidelity.md`.
+
+---
+
 ### Step 1: Calculate Base Metrics
 
 From the current test register:
@@ -168,7 +182,13 @@ Compare to previous coverage report:
 
 **Period:** {previous date} → {current date}
 **Velocity:** {n} tests added per sprint (average)
+{IF any cycle in this period was not ✅ Full:}
+⚠️ **This trend spans a degraded cycle** ({cycle} — {which input did not resolve}). The delta measures the change in **observation**, not only the change in **tests**.
 ```
+
+**MANDATORY — check every contributing cycle's fidelity, not just the current one.** Read the Fidelity column of `tge-state.md → Observation History` across the period.
+
+A trend is the figure most easily corrupted by degradation, and it corrupts in a **flattering** direction: when a degraded cycle is followed by a full one, coverage appears to jump because the engine started seeing entries it previously could not, and the report reads as progress nobody made. **NEVER present a cross-cycle delta as test progress when any contributing cycle was degraded.** Suppress the velocity figure and the forecast entirely in that case — a forecast extrapolated from a measurement artefact is worse than no forecast, because it carries a date.
 
 **Comprehensive depth — forecast:**
 ```markdown
@@ -212,12 +232,23 @@ List the most important missing tests:
 **Generated:** {ISO timestamp}
 **Engine:** AI-TGE v1.0.0
 **Mode:** {mode}
+**Observation Fidelity:** {✅ Full / ⚠️ Degraded / ❌ Unknown}
 **Depth:** {depth level}
 
+{IF fidelity is not ✅ Full — the banner goes HERE, above the Executive Summary:}
+> ⚠️ **DEGRADED OBSERVATION — these figures are incomplete.**
+> {n} of {N} declared inputs for {mode} mode did not resolve:
+> - **{input}** — expected at `{path}`; substituted with {substitute}
+>
+> **Therefore unmeasured:** {unmeasured consequence}
+> {IF ❌ Unknown:} Fidelity was not assessed for this cycle, so it is reported as degraded.
+>
+> Per-input detail: `.governance/test/tge-state.md` → Observation Fidelity.
+
 ## Executive Summary
-- **Overall coverage:** {n}% ({n}/{n} active entries)
+- **Overall coverage:** {n}%{⚠️ if degraded} ({n}/{n} active entries)
 - **Critical gaps:** {n} remaining
-- **Trend:** {↑ Improving / → Stable / ↓ Declining} ({±n}% since last report)
+- **Trend:** {↑ Improving / → Stable / ↓ Declining} ({±n}% since last report){⚠️ if any contributing cycle was degraded}
 - **Target:** {n}% (from test strategy)
 - **Gap to target:** {n}%
 
@@ -227,23 +258,63 @@ List the most important missing tests:
 {View 4: By Risk Level}
 {View 5: Trend — if prior data exists}
 {View 6: Top Gaps}
+
+{The mandatory Completeness section — ALWAYS emitted, per IMP-002, whatever the fidelity:}
+## Completeness & Downstream Resolution
+
+### Observation Fidelity — {✅ Full / ⚠️ Degraded / ❌ Unknown}
+{Per-input resolution table, copied from tge-state.md: input · expected at · resolved · substitute used · unmeasured consequence}
+
+### What This Report Measures Completely
+### What Is Partial — and Where It Gets Resolved
+{one row per unresolved input, naming the action that would resolve it}
+### What Is Out of Scope
 ```
 
+**IMP-002 is emitted on every run, not only degraded ones.** `common/artifact-sections.md` declares it BLOCKING for every artifact, and a completeness section that appears only when something is wrong is itself a signal — a reader learns to check whether the section exists rather than reading what it says. On a `✅ Full` run it states that every declared input resolved. Full structure: `templates/coverage-report.md`.
+
 Save to `.governance/test/coverage-report.md` (overwrites previous — each report is a current snapshot).
+
+**Marking rules — apply to every affected figure, not only the headline:**
+
+| Figure | Mark when |
+|--------|-----------|
+| Overall coverage | Fidelity is not `✅ Full` |
+| The Acceptance row of View 3 (By Test Level) | The user-story location did not resolve — the 0 there is unmeasured, not untested |
+| The Performance/NFR row of View 1 | The NFR location did not resolve |
+| Trend, velocity, forecast | Any contributing cycle was not `✅ Full` (Step 6) |
+| Any chart in the Visualization Pack | Its source data carries a marker — the caption states it |
+
+**The "What is unaffected" line is not optional padding.** A degraded report is still useful, and saying which views survived intact is what keeps it useful. A blanket warning over a whole report teaches a reader to discount all of it, including the parts that are exactly right.
 
 ---
 
 ### Step 9: Present Summary
 
 ```markdown
+{IF fidelity is not ✅ Full — this block comes FIRST, before any figure:}
+## ⚠️ Coverage Report Generated — DEGRADED
+
+⚠️ **DEGRADED OBSERVATION — the figures below are incomplete.**
+{n} of {N} declared inputs for {mode} mode did not resolve:
+- **{input}** — expected at `{path}`; substituted with {substitute}
+
+**Therefore unmeasured:** {unmeasured consequence}
+**Unaffected:** {which views are intact}
+
+---
+
+{THEN, or immediately if fidelity is ✅ Full:}
 ## 🟢 Coverage Report Generated
 
-**Overall:** {n}% coverage ({n}/{n} active requirements)
+**Overall:** {n}%{⚠️ if degraded} coverage ({n}/{n} active requirements)
 **Vs. target:** {n}% gap to {target}%
 **Critical gaps:** {n} remaining
-**Trend:** {direction} ({±n}% since last)
+**Trend:** {direction} ({±n}% since last){⚠️ if any contributing cycle was degraded}
 
 **Key insight:** {One sentence: what's the most important thing the team should know?}
+{IF degraded, the key insight names the degradation — it is the most important thing:}
+- Example: "Acceptance coverage reads 0% because the story location was not found, not because acceptance tests are missing — confirm where this workspace keeps its stories before reading any acceptance figure"
 - Example: "PaymentService is the biggest risk: 33% coverage with 3 Critical-risk gaps"
 - Example: "All Critical tests now exist — focus on High-priority integration tests"
 
@@ -290,6 +361,13 @@ Emit from coverage data. No new content introduced.
 
 | Check | Pass Criteria |
 |-------|---------------|
+| **Fidelity read before calculating** | Step 0 ran; the value is `✅ Full`, `⚠️ Degraded` or `❌ Unknown`, and `❌ Unknown` was handled as Degraded |
+| **Banner present in the artifact** | If fidelity is not `✅ Full`: the banner sits **above** the Executive Summary in `coverage-report.md`. A degraded report with unqualified figures is a FAIL |
+| **IMP-002 section present** | `## Completeness & Downstream Resolution` is emitted on **every** run with its `### Observation Fidelity` subsection populated — BLOCKING per `common/artifact-sections.md`, not conditional on degradation |
+| **Banner present in the summary** | If fidelity is not `✅ Full`: the in-session summary leads with it, before any figure |
+| **Every affected figure marked** | Overall coverage, the Acceptance row, the NFR row, and any chart whose source data is degraded each carry the marker — not the headline alone |
+| **Trend fidelity-checked across cycles** | Every contributing cycle's Fidelity value read from Observation History; velocity and forecast suppressed if any was not `✅ Full` |
+| **What is unaffected is stated** | A degraded report names which views remain intact, so the reader discounts the affected figures and not the whole report |
 | Calculations correct | Coverage % = (Exists + Failing) / Active × 100 |
 | Deprecated/Overridden excluded | Not counted in Active entries |
 | Multiple views provided | At least 3 views for Standard+, 2 for Minimal |

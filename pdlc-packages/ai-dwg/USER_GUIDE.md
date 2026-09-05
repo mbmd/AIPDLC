@@ -120,7 +120,7 @@ Generated output varies based on your tech stack:
 ## The Relationship with Connected Packages
 
 ```
-AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► Development Workspace ──► AI-GCE + AI-DLC v1
+AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG ──► Development Workspace ──► AI-GCE + AI-DLC
 ```
 
 > In the sequential flow (POLC→UXD→ADLC→DWG), all three peer inputs are guaranteed present by the time DWG starts. ADLC is the terminal predecessor.
@@ -195,7 +195,7 @@ and we added a new container for notifications.
 
 - NOT a lifecycle — it's a one-shot generator (with reconciliation for updates)
 - NOT architecture design (that's AI-ADLC)
-- NOT code generation (that's AI-DLC v1)
+- NOT code generation (that's AI-DLC)
 - NOT compliance enforcement (that's AI-GCE — which reads DWG's output)
 - NOT product backlog management (that's AI-POLC)
 - NOT a build tool or CI/CD system

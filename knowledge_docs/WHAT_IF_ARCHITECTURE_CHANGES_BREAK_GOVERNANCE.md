@@ -1,6 +1,6 @@
 # What If Architecture Changes Break Governance?
 
-**Scenario:** You changed the architecture (new ADR, removed a container, switched technology), ran reconciliation through AI-DWG → AI-GCE, and now governance is broken — conflicting rules, hooks that reference deleted steering, or compliance score crashed overnight.
+**Scenario:** You changed the architecture (new ADR, removed a container, switched technology), ran reconciliation through AI-DWG (Workspace Generator) → AI-GCE (Governance & Compliance Engine), and now governance is broken — conflicting rules, hooks that reference deleted steering, or compliance score crashed overnight.
 
 ---
 

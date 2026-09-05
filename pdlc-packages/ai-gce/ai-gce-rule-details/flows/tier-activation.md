@@ -9,9 +9,13 @@ The Mode 4 entry (purpose + trigger) lives in `core-engine.md` (the always-loade
 
 ---
 
+## Suspended under `buildProfile: aidlc` (ledger A13)
+
+> **When `buildProfile: aidlc`, Mode 4 tier *gating* is suspended** — AI-DLC v2 owns the lifecycle cadence, so AI-GCE does not hold a team at a tier or gate advancement. This flow's *hold/activate* behaviour does not run under `aidlc`. What is **retained** is the tier *assessment*: the coverage % and band are still computed and reported (advisory), just not gated. The gating-vs-assessment split is resolved once in `common/build-method-resolution.md`. Under every non-`aidlc` build method, this flow runs exactly as described below.
+
 ## When Triggered
 
-Mode 4 is triggered when a project is ready to advance from its current compliance tier to the next. It is NOT a new derivation — it is a progressive activation of rules and hooks that were deferred at initial generation time.
+Mode 4 is triggered when a project is ready to advance from its current compliance tier to the next (**non-`aidlc` build methods only** — see the suspension note above). It is NOT a new derivation — it is a progressive activation of rules and hooks that were deferred at initial generation time.
 
 **Trigger signals:**
 - User says "activate tier 2" / "activate next tier" / "upgrade compliance"

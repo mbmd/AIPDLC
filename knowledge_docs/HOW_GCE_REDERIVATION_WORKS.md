@@ -1,4 +1,4 @@
-# How AI-GCE Re-Derivation Works
+# How AI-GCE (Governance & Compliance Engine) Re-Derivation Works
 
 **Purpose:** Explains how AI-GCE selectively updates its rules and hooks when steering files change — the change detection, impact mapping, selective regeneration, and customization preservation mechanics of Mode 2.
 
@@ -6,7 +6,7 @@
 
 ## What Re-Derivation Is
 
-When architecture changes and AI-DWG reconciles the workspace (updating steering files), AI-GCE's existing rules and hooks may become stale. Re-derivation is the surgical update process that regenerates ONLY the affected artifacts while preserving everything else — including team customizations.
+When architecture changes and AI-DWG (Workspace Generator) reconciles the workspace (updating steering files), AI-GCE's existing rules and hooks may become stale. Re-derivation is the surgical update process that regenerates ONLY the affected artifacts while preserving everything else — including team customizations.
 
 ```
 STEERING FILE CHANGED (e.g., api-standards.md updated)

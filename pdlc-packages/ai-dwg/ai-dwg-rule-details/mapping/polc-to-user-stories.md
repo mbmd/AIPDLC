@@ -94,7 +94,7 @@ Scenario: {scenario name}
   When {action}
   Then {outcome}
 
-# Additional scenarios elaborated by AI-DLC v1 / AI-TGE during build.
+# Additional scenarios elaborated by AI-DLC / AI-TGE during build.
 ```
 
 ---
@@ -111,7 +111,7 @@ Each clause is copied exactly — it becomes a test step downstream.
 Stories are organized under their epic (IDs consistent with `polc-to-epics-backlog.md`).
 
 ### Rule 4: Thin Stories Are Flagged, Not Filled
-A story missing acceptance criteria gets `<!-- POLC story lacks acceptance criteria — AI-DLC v1/PO to complete -->`, not invented criteria.
+A story missing acceptance criteria gets `<!-- POLC story lacks acceptance criteria — AI-DLC/PO to complete -->`, not invented criteria.
 
 ---
 
@@ -130,7 +130,7 @@ A story missing acceptance criteria gets `<!-- POLC story lacks acceptance crite
 
 | Situation | Response |
 |-----------|----------|
-| POLC present, Tier 2 NOT activated | SKIP entirely; note deferral to AI-DLC v1 |
+| POLC present, Tier 2 NOT activated | SKIP entirely; note deferral to AI-DLC |
 | Acceptance format is not Given/When/Then | Carry POLC's format verbatim; adjust skeleton header accordingly |
 | Story has narrative but no criteria | Include story; flag missing criteria |
 | Story references unknown epic | Group under `Unassigned`; flag (also a traceability finding) |

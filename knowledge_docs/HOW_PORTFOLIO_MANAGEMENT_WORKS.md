@@ -1,6 +1,6 @@
-# How AI-PPM Portfolio Management Works
+# How AI-PPM (Project Portfolio Management) Portfolio Management Works
 
-**Purpose:** Explains how AI-PPM's adaptive Portfolio-layer engine governs MANY projects at once — registering them from upstream initiation packages, scoring strategic alignment, ranking them against each other, making admit/pause/retire decisions, dispatching authorizations down to the Project layer via AI-FLO, and aggregating roll-up telemetry into portfolio-level health views.
+**Purpose:** Explains how AI-PPM's adaptive Portfolio-layer engine governs MANY projects at once — registering them from upstream initiation packages, scoring strategic alignment, ranking them against each other, making admit/pause/retire decisions, dispatching authorizations down to the Project layer via AI-FLO (Flow Orchestrator), and aggregating roll-up telemetry into portfolio-level health views.
 
 ---
 
@@ -9,7 +9,7 @@
 AI-PPM is a continuous portfolio governance engine. It does not run a single project — it governs the SET of projects as one investment portfolio. It answers the questions no single-project package can: "Which projects should we run? In what order? Is the portfolio healthy across the board? Should anything stop?"
 
 ```
-MULTIPLE PIPs (from AI-PILC) + APPROVED IDEA BRIEFS (from AI-ILC)
+MULTIPLE PIPs (from AI-PILC (Project Initiation Life Cycle)) + APPROVED IDEA BRIEFS (from AI-ILC (Idea Life Cycle))
         │  (same-layer, direct marker read)
         ▼
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -26,7 +26,7 @@ PORTFOLIO REGISTER + CROSS-PROJECT PRIORITIZATION
         │
         ▼ (cross-layer, ONLY via AI-FLO)
 ┌─────────────────────────────────────────────────────────────────────┐
-│  PROJECT LAYER (AI-ADLC / AI-UXD / AI-POLC / AI-DWG / AI-DLC v1 / ...)  │
+│  PROJECT LAYER (AI-ADLC (Architecture Design Life Cycle) / AI-UXD (UX Design) / AI-POLC (Product Ownership Life Cycle) / AI-DWG (Workspace Generator) / AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) / ...)  │
 │                                                                      │
 │  FLO carries dispatch DOWN · FLO carries roll-up telemetry UP        │
 └─────────────────────────────────────────────────────────────────────┘
@@ -40,7 +40,7 @@ PORTFOLIO REGISTER + CROSS-PROJECT PRIORITIZATION
 
 **Identity spine:** AI-PPM governs the SET of projects — registering, ranking, authorizing, monitoring, and rebalancing the portfolio as a single governed entity. It answers: "Which projects should we run, in what order, and is the portfolio healthy?"
 
-**Inclusion rule:** If a concern is about *one project's internals* (scope, architecture, backlog, compliance) → out of scope (it belongs to a sibling: AI-PILC / AI-ADLC / AI-POLC / AI-GCE / AI-TGE). If a concern is about *the portfolio as a whole* (which projects, what priority, overall health, capacity across projects) → AI-PPM owns it.
+**Inclusion rule:** If a concern is about *one project's internals* (scope, architecture, backlog, compliance) → out of scope (it belongs to a sibling: AI-PILC / AI-ADLC / AI-POLC / AI-GCE (Governance & Compliance Engine) / AI-TGE (Test Governance Engine)). If a concern is about *the portfolio as a whole* (which projects, what priority, overall health, capacity across projects) → AI-PPM owns it.
 
 **Layer position:** AI-PPM sits at the top of the **Portfolio layer** (scope = MANY projects), alongside AI-ILC and AI-PILC. The Project layer (scope = ONE project) lives below it, on the far side of the AI-FLO routing edge.
 

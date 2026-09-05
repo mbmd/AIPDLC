@@ -85,6 +85,23 @@ Only ONE stage detail file is active at a time.
 
 ---
 
+<!-- BEGIN WORKFLOW-DISCIPLINE v1 (synced from WORKFLOW_DISCIPLINE_CONTRACT.md — do not edit inline) -->
+## Workflow Discipline
+
+This package's workflow is authoritative — do not improvise it. (Full rules:
+"Workflow Discipline (Enforced)" in the session orchestrator.)
+
+- **Read before you execute.** Load this package's core + the relevant rule-detail
+  file before performing any stage. Never generate its outputs from memory.
+- **Trace to source.** Every deliverable derives from this package's templates,
+  rule-detail files, or the user's own input — never unstated "best practice."
+- **No unilateral deviation.** Do not skip, reorder, combine, or auto-progress past
+  a gate on your own initiative; the user may direct these — confirm and log them.
+  Every gate needs explicit user approval.
+<!-- END WORKFLOW-DISCIPLINE -->
+
+---
+
 ## MANDATORY: Welcome Message
 
 Display ONCE on first interaction (when no `flo-state.md` exists):
@@ -223,7 +240,7 @@ FLO runs three phases; step bodies live in detail files (load one at a time). Ea
 | | Fan-out / fan-in | Resolve multi-target dispatch + fan-in readiness | `route/fan-out-fan-in.md` |
 | | Handoff execution | Update position, log the hop, announce | `route/handoff-execution.md` |
 | | Holds & overrides | `hold` / `release` / `override` / `force` / `dismiss` | `route/exceptions-overrides.md` |
-| **3 Monitor** | Position tracking *(continuous)* | Watch marker changes; detect stalls | `monitor/position-tracking.md` |
+| **3 Monitor** | Position tracking *(continuous)* | Watch marker changes; detect stalls; **emit data-refresh signals to AI-DFE** (fire-and-forget, per `SIGNAL_CONTRACT.md`; granularity from the FLO overlay) | `monitor/position-tracking.md` |
 | | Health / conflicts / alerts *(continuous)* | Detect C1–C10 (incl. drift gate block); surface alerts proactively | `monitor/health-conflicts-alerts.md` |
 | | Roll-up & relay | Compile portfolio roll-ups on request | `monitor/roll-up-relay.md` |
 

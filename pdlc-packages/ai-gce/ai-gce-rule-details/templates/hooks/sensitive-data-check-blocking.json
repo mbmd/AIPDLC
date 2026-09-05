@@ -1,0 +1,23 @@
+{
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
+  "name": "Sensitive Data & Secret Detection (BLOCKING)",
+  "version": "1.0.0",
+  "description": "Tier A blocking variant (PreToolUse, exit 2 on violation): stops a write that would place a hardcoded secret or PII on disk BEFORE it lands. The one genuine blocking hook — a secret on disk can be committed, pushed and mirrored before any gate opens, and that exposure is irreversible, so a gate-fired sensor is too late. Emitted ONLY when the recorded enforcement strength for secrets/PII is `block` AND the platform supports a pre-write blocking hook (strength-to-mechanism.md). Where the platform cannot block pre-write, the advisory sibling sensitive-data-check.json is emitted instead and the limitation is disclosed in PLATFORM_NOTES.md.",
+  "when": {
+    "type": "PreToolUse",
+    "matcher": "fs_write|str_replace|fs_append",
+    "patterns": ["{DERIVE: application code patterns from tech-stack.md + module-structure.md — e.g., src/**/*.cs, src/**/*.ts, src/**/*.json — PLUS root config files: *.env, appsettings*.json, *.yaml. NEVER bare **/*.ext. See common/hook-preamble.md for Layer 2 runtime filter.}"]
+  },
+  "then": {
+    "type": "command",
+    "command": "{DERIVE: the platform's pre-write secret/PII scan command. On exit 2 the write is BLOCKED and stderr is shown to the user; exit 0 allows the write. The check logic is IDENTICAL to the advisory variant's — same patterns (connection strings with passwords; API keys/tokens sk-/xoxb-/ghp_/glpat-/key-/token-; hardcoded credential pairs; private keys/certs; JWT secrets) and the same PII-in-logs check against observability-sensitive.md. See common/hook-preamble.md for the package-territory exclusion (EXIT 0 SILENTLY for excluded zones — never block a package-infrastructure file). Rule IDs: SEC-BASELINE-01 (secrets) + SEC-20/21/22 (PII classes).}",
+    "blocking": true,
+    "exitCodeSemantics": "exit 2 = block the write (violation found, stderr forwarded); exit 0 = allow (compliant or excluded zone)"
+  },
+  "complianceLog": {
+    "note": "On every fire, append to compliance-log/events/{today-date}.jsonl a CHECK event: {\"timestamp\":\"{ISO-8601-UTC}\",\"type\":\"check\",\"id\":\"chk-{date}-{time}-{seq}\",\"hook\":\"sensitive-data-check-blocking\",\"trigger\":\"PreToolUse\",\"ruleId\":\"SEC-BASELINE-01\",\"ruleSeverity\":\"critical\",\"result\":\"{pass|blocked}\",\"message\":\"{finding}\",\"sessionDedup\":true}. A blocked write logs result=blocked. Logging is non-negotiable even on block (Rule 5).",
+    "sessionDedup": true
+  }
+}

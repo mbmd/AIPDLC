@@ -113,7 +113,7 @@ AI-UXD has bidirectional relationships:
 ```
 AI-UXD ──(personas/journeys)──► AI-POLC (value-based prioritization)
 AI-UXD ──(tokens/components/accessibility)──► AI-DWG (workspace generation)
-AI-DLC v1 ──(runtime feedback)──► AI-UXD (design iteration)
+AI-DLC ──(runtime feedback)──► AI-UXD (design iteration)
 ```
 
 | Direction | What Flows | When |
@@ -227,7 +227,7 @@ for a healthcare application with strict accessibility requirements.
 ## What AI-UXD Is NOT
 
 - NOT a design tool replacement (doesn't replace Figma, Sketch, or XD)
-- NOT code generation (that's AI-DLC v1)
+- NOT code generation (that's AI-DLC)
 - NOT product backlog management (that's AI-POLC)
 - NOT architecture design (that's AI-ADLC)
 - NOT visual mockup creation — it produces specifications, not pixel-perfect visuals

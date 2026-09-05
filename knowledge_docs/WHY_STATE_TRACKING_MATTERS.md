@@ -40,10 +40,10 @@ State tracking means maintaining a persistent record of workflow progress, decis
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-PILC** | `pilc-state.md` | Tracks: current phase/stage, completed stages with timestamps, decisions made, depth level, output structure. Any session can resume exactly where the last one stopped. |
-| **AI-ADLC** | `adlc-state.md` | Tracks: phases, stages, enabled extensions, ADR register, input mode, architecture workbook state. |
-| **AI-POLC** | `polc-state.md` | Tracks: backlog elaboration progress, prioritization state, acceptance criteria coverage. |
-| **AI-GCE** | `.compliance-state.json` | Tracks: current tier, compliance score, audit history, baseline data, tier readiness signals. |
+| **AI-PILC (Project Initiation Life Cycle)** | `pilc-state.md` | Tracks: current phase/stage, completed stages with timestamps, decisions made, depth level, output structure. Any session can resume exactly where the last one stopped. |
+| **AI-ADLC (Architecture Design Life Cycle)** | `adlc-state.md` | Tracks: phases, stages, enabled extensions, ADR register, input mode, architecture workbook state. |
+| **AI-POLC (Product Ownership Life Cycle)** | `polc-state.md` | Tracks: backlog elaboration progress, prioritization state, acceptance criteria coverage. |
+| **AI-GCE (Governance & Compliance Engine)** | `.compliance-state.json` | Tracks: current tier, compliance score, audit history, baseline data, tier readiness signals. |
 | **All packages** | State-before-transition rule | State file is updated BEFORE presenting the next stage. If session crashes between stages, state reflects last completed gate — enabling clean resume. |
 | **All packages** | Cold resume guarantee | State file contains EVERYTHING needed to resume. Zero prior context required. New session + new model = perfect continuation. |
 

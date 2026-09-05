@@ -9,9 +9,9 @@
 ```
 WEEK 0        WEEK 1-2       WEEK 2-4        WEEK 4-5       WEEK 5+         ONGOING
 ──────        ────────       ────────        ────────       ──────         ────────
-AI-ILC        AI-PILC        AI-POLC →       AI-DWG         AI-GCE         AI-DLC v1
-(optional)    (initiate)     AI-UXD →        (generate)     + AI-TGE       (build)
-                             AI-ADLC                        (govern)
+AI-ILC (Idea Life Cycle)        AI-PILC (Project Initiation Life Cycle)        AI-POLC (Product Ownership Life Cycle) →       AI-DWG (Workspace Generator)         AI-GCE (Governance & Compliance Engine)         AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle)
+(optional)    (initiate)     AI-UXD (UX Design) →        (generate)     + AI-TGE (Test Governance Engine)       (build)
+                             AI-ADLC (Architecture Design Life Cycle)                        (govern)
 
 Output:       Output:        Output:         Output:        Output:        Output:
 Idea Brief    PIP            PBP + UXP + AP  Workspace      Governance     Working
@@ -164,7 +164,7 @@ The Project layer runs sequentially — each package completes its primary outpu
 
 ## Phase 6: Development (Ongoing)
 
-**Package:** AI-DLC v1 (Amazon's AI-DLC v1, not ours)
+**Package:** AI-DLC (Amazon's AI-DLC, not ours)
 **Project state:** Everything in place — build with full support.
 
 | What Exists | What's Decided |
@@ -172,11 +172,11 @@ The Project layer runs sequentially — each package completes its primary outpu
 | Steering + hooks + rules + test register + backlog | Everything — now execute |
 
 **What happens:**
-- AI-DLC v1 uses steering files (architecture constraints in every session)
+- AI-DLC uses steering files (architecture constraints in every session)
 - Hooks fire on code changes (naming, security, boundaries enforced)
 - Stories from AI-POLC's PBP are consumed
 - Tests written against AI-TGE's register (accountability tracked)
-- AI-POLC ⇄ AI-DLC v1 exchange backlog/acceptance
+- AI-POLC ⇄ AI-DLC exchange backlog/acceptance
 - AI-TGE observes: tracks coverage, scores gaps
 - AI-GCE audits periodically: compliance score trending
 

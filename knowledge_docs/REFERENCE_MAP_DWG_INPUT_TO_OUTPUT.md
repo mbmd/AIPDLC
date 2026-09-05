@@ -1,6 +1,6 @@
-# Reference Map: AI-DWG Input → Destination Workspace
+# Reference Map: AI-DWG (Workspace Generator) Input → Destination Workspace
 
-**Purpose:** Complete lookup table of what AI-DWG reads from each design-time peer input (AI-ADLC, AI-POLC, AI-UXD) and exactly where the result lands in the generated development workspace. Use this to answer "if I run AI-DWG with these inputs, what files will I get and where?"
+**Purpose:** Complete lookup table of what AI-DWG reads from each design-time peer input (AI-ADLC (Architecture Design Life Cycle), AI-POLC (Product Ownership Life Cycle), AI-UXD (UX Design)) and exactly where the result lands in the generated development workspace. Use this to answer "if I run AI-DWG with these inputs, what files will I get and where?"
 
 ---
 
@@ -17,7 +17,7 @@ AI-DWG is a **convergence-point generator**. It accepts any non-empty subset of 
 **Key rules:**
 - **One input → one output cluster.** Every generated file traces to exactly one peer input. If that input is absent, its cluster is skipped (with a quality-impact disclosure to you before generation).
 - **Conditional within a cluster.** Even when an input is present, some outputs only appear if the input actually contains the relevant artefact (e.g. theming only if the design defined multiple brands or dark mode).
-- **Paths shown are relative to the generated dev-workspace root.** Steering files land in `.kiro/steering/`; AI-DLC v1 input documents and operational docs land at the workspace root.
+- **Paths shown are relative to the generated dev-workspace root.** Steering files land in `.kiro/steering/`; AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) input documents and operational docs land at the workspace root.
 
 ---
 
@@ -41,13 +41,13 @@ Present when `adlc-state.md` is detected.
 | Infrastructure → observability | `.kiro/steering/observability-logging.md` + `observability-sensitive.md` | Steering | Always |
 | Infrastructure → CI/CD | CI/CD config files | Config | Always |
 | Infrastructure → environment | Environment config files | Config | Always |
-| Quality attributes | `.kiro/steering/testing-strategy.md` | Steering | Conditional (skipped if AI-TGE is activated — TGE owns it) |
+| Quality attributes | `.kiro/steering/testing-strategy.md` | Steering | Conditional (skipped if AI-TGE (Test Governance Engine) is activated — TGE owns it) |
 | Quality attributes (performance) | `.kiro/steering/performance-standards.md` | Steering | Conditional (performance-critical) |
 | Integration patterns | `.kiro/steering/resilience-standards.md` | Steering | Conditional (≥3 integrations or Resilience extension) |
 | Multi-tenancy ADR | `.kiro/steering/multi-tenancy.md` | Steering | Conditional (multi-tenant) |
 | Module ownership | `CODEOWNERS` | Config | Always |
-| Tech stack + quality + UXP frontend | `technical-environment.md` | AI-DLC v1 input doc | Always (root) |
-| Security rules + a11y baseline + testing | `aidlc-rules/extensions/` | AI-DLC v1 input bundle | Always (root) |
+| Tech stack + quality + UXP frontend | `technical-environment.md` | AI-DLC input doc | Always (root) |
+| Security rules + a11y baseline + testing | `aidlc-rules/extensions/` | AI-DLC input bundle | Always (root) |
 | Active AI-ADLC v1.1 extension (DDD / Microservices / Event Sourcing / Feature Flags) | Extension-specific steering + structure | Steering + scaffold | Conditional (extension active in AP) |
 
 ---
@@ -58,7 +58,7 @@ Present when `polc-state.md` is detected.
 
 | PBP Source Artifact | Destination File | Type | Always / Conditional |
 |---------------------|------------------|------|----------------------|
-| Product vision (+ UXP personas/journeys if UXD present) | `vision.md` | AI-DLC v1 input doc | Always (when POLC present) |
+| Product vision (+ UXP personas/journeys if UXD present) | `vision.md` | AI-DLC input doc | Always (when POLC present) |
 | Definition of Ready / Done | `DEFINITION_OF_DONE.md` | Quality doc | Always |
 | Roadmap + release plan | Planning templates (`sprint-planning.md`, `session-planning.md`) | Templates | Always |
 | Risk register + assumption log | `.kiro/steering/scope-and-risks.md` | Steering | Always |
@@ -77,8 +77,8 @@ Present when `uxd-state.md` is detected.
 |---------------------|------------------|------|----------------------|
 | Design system + design tokens | `.kiro/steering/design-system.md` | Steering | Always (when UXD present) |
 | Component / state / pattern inventory | `.kiro/steering/frontend-standards.md` | Steering | Always (also generated if ADLC has UI containers) |
-| Wireframe spec + user flows | `ui-implementation-spec.md` | AI-DLC v1 input doc | Always (root) |
-| Accessibility baseline (WCAG target) | Relay → AI-GCE `accessibility-compliance` rule + a11y section in `frontend-standards.md` | Relay + steering | Always |
+| Wireframe spec + user flows | `ui-implementation-spec.md` | AI-DLC input doc | Always (root) |
+| Accessibility baseline (WCAG target) | Relay → AI-GCE (Governance & Compliance Engine) `accessibility-compliance` rule + a11y section in `frontend-standards.md` | Relay + steering | Always |
 | Personas + user journeys | Enrichment to `vision.md` Target Users section | Enrichment | Conditional (POLC also present) |
 | Information architecture (site map, navigation, taxonomy, search) | `.kiro/steering/navigation-structure.md` | Steering | Conditional (UXP has IA) |
 | Design QA framework (drift rules, severity) | `.kiro/steering/design-qa.md` (+ relay → AI-GCE `design-fidelity` rule) | Steering + relay | Conditional (UXP has Design QA framework) |
@@ -114,9 +114,9 @@ These are produced no matter which inputs are present (a minimal workspace is al
 │   ├── i18n-standards.md             (IF UXD + multi-locale)
 │   ├── design-qa.md                  (IF UXD + Design QA)
 │   └── scope-and-risks.md            (IF POLC)
-├── vision.md                ← AI-DLC v1 Vision Document (IF POLC)
-├── technical-environment.md ← AI-DLC v1 Technical Environment Document (IF ADLC)
-├── ui-implementation-spec.md← AI-DLC v1 UI spec (IF UXD)
+├── vision.md                ← AI-DLC Vision Document (IF POLC)
+├── technical-environment.md ← AI-DLC Technical Environment Document (IF ADLC)
+├── ui-implementation-spec.md← AI-DLC UI spec (IF UXD)
 ├── traceability-matrix.md   ← (IF POLC + traceability)
 ├── value-metrics.md         ← (IF POLC + value/KPIs)
 ├── epics-and-backlog.md     ← (IF POLC + epics)
@@ -124,7 +124,7 @@ These are produced no matter which inputs are present (a minimal workspace is al
 ├── user-stories.md          ← (IF POLC Tier 2)
 ├── examples/acceptance/     ← Given/When/Then skeletons (IF POLC Tier 2)
 ├── DEFINITION_OF_DONE.md    ← (IF POLC or ADLC)
-├── aidlc-rules/extensions/  ← AI-DLC v1 extension bundle (IF ADLC security + UXD a11y)
+├── aidlc-rules/extensions/  ← AI-DLC extension bundle (IF ADLC security + UXD a11y)
 ├── CODEOWNERS               ← (IF ADLC)
 ├── src/                     ← source structure from C4 L3 (IF ADLC)
 └── [operational docs, configs, PR template]   (always)

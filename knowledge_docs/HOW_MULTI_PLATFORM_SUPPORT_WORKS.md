@@ -1,247 +1,194 @@
 # How Multi-Platform Support Works
 
-**Purpose:** Explains how AI-* Family packages work across different AI coding platforms — the uniform placement model, per-platform orchestrator deployment, Claude Code's extended integration (skills + slash commands), and what's universal vs. what adapts per platform.
+**Purpose:** Explains how AI-* Family packages work across different AI coding platforms (Kiro, Cursor, Windsurf, GitHub Copilot, Cline, and others) — the abstraction layer, platform-specific adapters, and what's universal vs. platform-dependent.
 
 ---
 
 ## The Platform-Agnostic Design
 
-AI-* packages are **platform-agnostic markdown workflows**. The content — cores, rule-details, templates, state files, gate contracts — is identical regardless of which AI platform executes it. Only TWO things differ per platform:
-
-1. **Where the session orchestrator lands** (each platform's native auto-load slot).
-2. **Platform-specific extras** (Claude Code gets slash commands and a skill; Kiro gets deployed agents).
-
-Everything else — the package home, the family workspace, the fabric trio — is uniform.
+AI-* packages are designed as **platform-agnostic markdown workflows**. The content (rules, stages, templates) is identical regardless of which AI platform executes it. Only the LOADING MECHANISM differs per platform.
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
-│  UNIFORM LAYER (same across ALL platforms)                            │
-│                                                                       │
-│  .aiflc/{family}/                                                     │
-│  ├── ai-{pkg}-rules/core-*.md          (package cores)                │
-│  ├── ai-{pkg}-rule-details/            (stage-specific rules)         │
-│  ├── FAMILY_BINDINGS.md                (fabric routing graph)         │
-│  ├── GATE_PROTOCOL.md                  (gate matching algorithm)      │
-│  └── FAMILY_INTERFACE.md               (seam surface)                 │
-│                                                                       │
-│  {family}-ws/                                                         │
-│  ├── ideas/ projects/ portfolio/ data/ tools/                         │
-│  └── .ai-family-manifest.json                                         │
-└──────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│  UNIVERSAL LAYER (same across all platforms)                         │
+│                                                                      │
+│  ├── Core workflow files (orchestration logic)                       │
+│  ├── Detail files (stage-specific rules)                             │
+│  ├── Templates (output formats)                                      │
+│  ├── Chain contracts (handoff mechanics)                             │
+│  └── State files (session continuity)                                │
+└─────────────────────────────────────────────────────────────────────┘
         │
-        ▼  (thin adapter: orchestrator placement + platform extras)
-┌──────┐ ┌──────────┐ ┌──────────┐ ┌───────┐ ┌─────────────┐ ┌─────────┐
-│ Kiro │ │ Amazon Q │ │  Cursor  │ │ Cline │ │ Claude Code │ │ Copilot │
-└──────┘ └──────────┘ └──────────┘ └───────┘ └─────────────┘ └─────────┘
+        ▼  (thin adapter layer)
+┌──────┐ ┌──────┐ ┌──────────┐ ┌────────┐ ┌───────┐ ┌─────────┐
+│ Kiro │ │Cursor│ │ Windsurf │ │ Copilot│ │ Cline │ │ Generic │
+└──────┘ └──────┘ └──────────┘ └────────┘ └───────┘ └─────────┘
 ```
 
 ---
 
-## What's Universal (Works Everywhere, Unchanged)
+## What's Universal (Works Everywhere)
 
 | Capability | Platform Dependency |
 |-----------|:-------------------:|
-| Package cores (workflow orchestration) | None — pure markdown in `.aiflc/{family}/` |
-| Rule-details (stage-specific rules + templates) | None — same location on every platform |
-| State files (session continuity) | None — file-based, in `{family}-ws/` |
-| Chain contracts and gate matching | None — Communication Fabric is file-based |
+| Workflow logic (stages, gates, decisions) | None — pure markdown |
+| Templates (output formats) | None — pure markdown |
+| State files (session continuity) | None — file-based |
+| Chain contracts (marker detection) | None — file-based |
 | Role/persona adoption | None — prompt-based |
-| Depth levels (Minimal / Standard / Comprehensive) | None — logic-based |
-| Output generation (PIP, AP, PBP, UXP, DW) | None — file creation into `{family}-ws/` |
-| Family workspace skeleton | None — identical on every platform |
-| Fabric trio (FLO/DFE routing) | None — deployed identically |
-| Activation keys (`_PILC_`, `_ADLC_`, etc.) | None — text-based, recognized by the orchestrator |
-| Data fabric (AI-DFE gather/shape/distribute) | None — operates on `{family}-ws/data/` |
+| Depth levels (Minimal/Standard/Comprehensive) | None — logic-based |
+| Output generation (PIP, AP, DW) | None — file creation |
 
 ---
 
-## What Adapts Per Platform (The Thin Adapter)
+## What's Platform-Specific (Adapter Layer)
 
-| Capability | What changes |
-|-----------|--------------|
-| **Session orchestrator slot** | The one always-loaded file lands in a different native location per platform |
-| **Package agents** | Kiro: deployed to `.kiro/agents/`. Others: shortcut-rules blocks pasted per INSTALL.md |
-| **Hook enforcement (AI-GCE)** | Kiro: native `.kiro/hooks/` execution. Others: CI/pre-commit translation |
-| **Claude Code extras** | Slash commands (`.claude/commands/{family}/`) + skill (`.claude/skills/{family}/`) |
-
----
-
-## Per-Platform Details
-
-### Session Orchestrator Placement
-
-The installer deploys the orchestrator into each platform's native auto-load slot:
-
-| Platform | Orchestrator Path | Auto-Load Mechanism |
-|----------|-------------------|---------------------|
-| **Kiro** | `.kiro/steering/session-orchestrator-{family}.md` | All files in `.kiro/steering/` auto-load |
-| **Amazon Q Developer** | `.amazonq/rules/{family}/session-orchestrator.md` | Rules folder auto-loads |
-| **Cursor** | `.cursor/rules/{family}-session-orchestrator.mdc` | Rules folder auto-loads |
-| **Cline** | `.clinerules/{family}-session-orchestrator.md` | Root rules file auto-loads |
-| **Claude Code** | `CLAUDE_{FAMILY}_ORCHESTRATOR.md` | Imported via root `CLAUDE.md` (`@` import) |
-| **GitHub Copilot** | `.github/copilot-instructions-{family}-orchestrator.md` | Copilot instructions auto-load |
-
-The orchestrator content is functionally identical across platforms — only the filename, path, and (for Cursor) the `.mdc` extension differ. Claude Code gets a parallel variant that uses `Read` directives instead of `#hashtag` steering syntax (since Claude Code has no hashtag file-reference).
+| Capability | Platform Mechanism |
+|-----------|-------------------|
+| **Auto-loading rules at session start** | Platform-specific config file |
+| **Steering files (AI-DWG (Workspace Generator) output)** | `.kiro/steering/` (Kiro) vs. equivalent per platform |
+| **Hooks (AI-GCE (Governance & Compliance Engine) output)** | `.kiro/hooks/` (Kiro) vs. alternative enforcement per platform |
+| **Agents (AI-GCE output)** | `.kiro/agents/` (Kiro) vs. equivalent automation per platform |
+| **File-match inclusion** | Kiro feature (conditional steering based on active file) |
 
 ---
 
-### Kiro (Full Support — Reference Implementation)
+## Platform Adapter Details
+
+### Kiro (Full Support — Primary Target)
 
 | Feature | Implementation |
 |---------|---------------|
-| Package home | `.aiflc/{family}/` (uniform) |
-| Orchestrator | `.kiro/steering/session-orchestrator-{family}.md` (auto-loaded) |
-| Hook enforcement | `.kiro/hooks/*.json` (event-driven, fires on IDE events) |
-| Agents | `.kiro/agents/*.md` (auto-deployed by installer; shortcut-triggered) |
-| File-match steering | Supported (conditional loading based on active file) |
+| Rule loading | `.kiro/steering/*.md` (auto-loaded every session) |
+| Hook enforcement | `.kiro/hooks/*.json` (event-driven automation) |
+| Agents | `.kiro/agents/*.md` (process governance agents) |
+| File-match steering | Front-matter `inclusion: fileMatch` with pattern |
+| Manual inclusion | Front-matter `inclusion: manual` (user provides via #) |
 
-Kiro is the only platform where AI-GCE's hooks fire natively on IDE events and agents activate via typed shortcuts. This makes it the reference implementation for the full governance layer.
+**Full AI-GCE output works natively** — hooks fire on IDE events, agents activate at workflow milestones.
 
----
-
-### Amazon Q Developer (Full Workflow Support)
+### Claude Code (Most Important Secondary Platform)
 
 | Feature | Implementation |
 |---------|---------------|
-| Package home | `.aiflc/{family}/` (uniform) |
-| Orchestrator | `.amazonq/rules/{family}/session-orchestrator.md` |
-| Hook enforcement | Not native — use CI/pre-commit as enforcement alternative |
-| Agents | Shortcut-rules blocks per package INSTALL.md |
+| Rule loading | `CLAUDE.md` in workspace root (auto-loaded every session) |
+| Hook enforcement | ❌ Not available — no event system. Use `CLAUDE.md` enforcement appendix + CI |
+| Agents | ❌ Not available — no shortcut triggers. Paste agent prompt manually or include in `CLAUDE.md` |
+| Steering | `CLAUDE.md` (primary) + file reads from workspace (detail files) |
+| State files | ✅ Full support — Claude Code reads/writes workspace files |
+| On-demand loading | ✅ Full support — Claude Code reads files when instructed by core workflow |
 
-All workflow packages execute identically to Kiro. The orchestrator routes to cores on demand.
+**What works natively:** All workflow packages (AI-PILC (Project Initiation Life Cycle), AI-ADLC (Architecture Design Life Cycle), AI-ILC (Idea Life Cycle), AI-POLC (Product Ownership Life Cycle), AI-UXD (UX Design), AI-PPM (Project Portfolio Management), AI-FLO (Flow Orchestrator)), the generator (AI-DWG), and AI-GCE's rule generation all execute as expected. The core-workflow becomes `CLAUDE.md` and detail files are read on demand.
 
----
+**What doesn't work:** Event-driven hooks and agent shortcuts. Claude Code has no IDE event bus — it cannot intercept file saves, detect tool use, or fire triggers automatically. AI-GCE will generate the `.kiro/hooks/` folder, but those files are documentation artifacts only.
 
-### Cursor (Full Workflow Support)
+**Workaround for enforcement:** Append a "Governance Rules — Always Check" section to `CLAUDE.md` that lists the most critical rules from `.governance/rules/`. Claude will voluntarily follow them on every response. Not as strong as event-driven hooks, but covers 60-70% of the enforcement value.
 
-| Feature | Implementation |
-|---------|---------------|
-| Package home | `.aiflc/{family}/` (uniform) |
-| Orchestrator | `.cursor/rules/{family}-session-orchestrator.mdc` |
-| Hook enforcement | Not native — use CI/pre-commit |
-| Agents | Shortcut-rules blocks per package INSTALL.md |
-
-Cursor's `.mdc` extension is the only file-format difference. The orchestrator content is the same.
-
----
-
-### Cline (Full Workflow Support)
+### Cursor
 
 | Feature | Implementation |
 |---------|---------------|
-| Package home | `.aiflc/{family}/` (uniform) |
-| Orchestrator | `.clinerules/{family}-session-orchestrator.md` |
-| Hook enforcement | Not native — use CI/pre-commit |
-| Agents | Shortcut-rules blocks per package INSTALL.md |
+| Rule loading | `.cursorrules` file or `.cursor/rules/*.md` |
+| Hook enforcement | Not native — use pre-commit hooks or CI checks instead |
+| Agents | Not native — use custom command patterns |
+| Steering | Include in `.cursorrules` or project-level rules folder |
 
----
+**Adaptation:** AI-GCE generates `.kiro/hooks/` by default. For Cursor users, these translate to guidelines in `.cursorrules` + CI enforcement.
 
-### Claude Code (Full Workflow + Extended Integration)
-
-| Feature | Implementation |
-|---------|---------------|
-| Package home | `.aiflc/{family}/` (uniform) |
-| Orchestrator | `CLAUDE_{FAMILY}_ORCHESTRATOR.md` (imported via root `CLAUDE.md`) |
-| Hook enforcement | Not native — append governance rules to `CLAUDE.md` + CI |
-| Agents | Shortcut-rules blocks; also via slash commands (below) |
-| **Slash commands** | `.claude/commands/{family}/*.md` → `/{family}:<key>` in chat |
-| **Skill registration** | `.claude/skills/{family}/SKILL.md` → Claude auto-discovers the family |
-
-**Claude Code entry point:** Claude Code auto-loads only a real `CLAUDE.md` (no glob). The installer appends a marker-guarded `@import` line to your root `CLAUDE.md` that pulls in the orchestrator. If you don't have a `CLAUDE.md`, the installer creates one.
-
-**Slash commands:** The installer generates one command per installed package (e.g. `/pdlc:pilc`, `/pdlc:adlc`) plus destination agent shortcuts (e.g. `/pdlc:dat`, `/pdlc:fhc`). Each command `Read`s the canonical core from `.aiflc/{family}/` — zero workflow duplication.
-
-**Skill registration:** The installer copies the family's `SKILL.md` to `.claude/skills/{family}/SKILL.md` and appends a pointer to the orchestrator. Claude auto-discovers skills by folder — so multiple families coexist cleanly.
-
----
-
-### GitHub Copilot (Partial — Workspace-Level Only)
+### Windsurf
 
 | Feature | Implementation |
 |---------|---------------|
-| Package home | `.aiflc/{family}/` (uniform) |
-| Orchestrator | `.github/copilot-instructions-{family}-orchestrator.md` |
-| Hook enforcement | GitHub Actions + branch protection |
-| Agents | Not available natively |
+| Rule loading | `.windsurfrules` file |
+| Hook enforcement | Not native — CI/pre-commit alternative |
+| Steering | Include in `.windsurfrules` |
 
-Copilot's instructions mechanism is workspace-level only. All workflow packages function, but governance enforcement requires GitHub Actions rather than IDE-native hooks.
+### GitHub Copilot
+
+| Feature | Implementation |
+|---------|---------------|
+| Rule loading | `.github/copilot-instructions.md` |
+| Hook enforcement | GitHub Actions + branch protection rules |
+| Steering | Instructions file + repository-level settings |
+
+### Cline
+
+| Feature | Implementation |
+|---------|---------------|
+| Rule loading | `.clinerules` file |
+| Hook enforcement | Not native — pre-commit + CI |
+| Steering | Include in `.clinerules` |
+
+### Generic (Any AI Assistant)
+
+| Feature | Implementation |
+|---------|---------------|
+| Rule loading | Include core file in system prompt or project context |
+| Hook enforcement | External tooling (pre-commit, CI/CD, linters) |
+| Steering | Project documentation that the AI reads |
+
+---
+
+## The Installation Guide Pattern
+
+Every package includes `setup/INSTALL.md` with:
+1. **Prerequisites** for all platforms
+2. **Platform-specific sections** (6 platforms + Universal)
+3. **Dual-OS commands** (PowerShell for Windows, Bash for macOS/Linux)
+4. **Verification steps** (confirm the AI loaded the rules)
+5. **Coexistence notes** (running multiple packages)
+
+This ensures consistent installation experience regardless of platform choice.
 
 ---
 
 ## Governance Portability
 
-AI-GCE generates governance artifacts designed for Kiro but translatable:
+AI-GCE's output (hooks, rules, agents) is designed for Kiro but translatable:
 
 | AI-GCE Output | Kiro | Other Platforms |
-|---------------|------|-----------------|
-| `.kiro/hooks/*.json` | Native hook execution (event-driven) | Translate to pre-commit hooks or CI checks |
-| `.kiro/agents/*.md` | Native agent triggers (shortcut-activated) | Include as documentation / paste shortcut-rules blocks |
+|--------------|------|-----------------|
+| `.kiro/hooks/*.json` | Native hook execution | Translate to pre-commit hooks or CI checks |
+| `.kiro/agents/*.md` | Native agent triggers | Include as documentation / manual checklists |
 | `.governance/rules/*.md` | Referenced by hooks | Documentation + manual/CI enforcement |
 | `.compliance-state.json` | Read by hooks for tier logic | Read by scripts for CI gate decisions |
 
-**Key principle:** The RULES are portable (markdown). The ENFORCEMENT mechanism varies. A team on Cursor gets the same rules as a team on Kiro — enforced differently (CI instead of IDE hooks).
-
----
-
-## Platform Capabilities Matrix
-
-| Capability | Kiro | Amazon Q | Cursor | Cline | Claude Code | Copilot |
-|-----------|:----:|:--------:|:------:|:-----:|:-----------:|:-------:|
-| Workflow packages (all 11) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Session orchestrator | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Activation keys | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| State files & chain handoff | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Family workspace outputs | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Data fabric (AI-DFE) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Communication Fabric (gates) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Event-driven hooks (AI-GCE) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Agent shortcuts (native) | ✅ | ❌ | ❌ | ❌ | ⚠️ via `/` | ❌ |
-| Slash commands | — | — | — | — | ✅ | — |
-| Skill registration | — | — | — | — | ✅ | — |
-| Automatic compliance logging | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Re-derivation triggers (auto) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-
-**Summary:** All 11 workflow packages, the chain, and the data fabric work identically on every platform. Only IDE-event enforcement (hooks, automatic agents, compliance logging) is Kiro-exclusive — because only Kiro has a hook runtime that intercepts IDE events.
+**Key principle:** The RULES are portable (markdown). The ENFORCEMENT mechanism varies. A team on Cursor gets the same rules as a team on Kiro — just enforced differently (CI instead of IDE hooks).
 
 ---
 
 ## Choosing a Platform
 
-| If You Need | Recommended |
-|-------------|-------------|
-| Full governance enforcement (hooks fire on saves/commits) | Kiro |
-| Workflow packages + manual governance | Any platform |
-| Slash-command shortcuts for package activation | Claude Code |
-| CI-based enforcement (not IDE-based) | Any platform + CI pipeline |
-| Team uses multiple AI tools | Install on each; use CI for enforcement; family workspace is shared |
+| If You Need | Recommended Platform |
+|-------------|---------------------|
+| Full AI-GCE enforcement (hooks, agents) | Kiro |
+| IDE-native governance with hook firing | Kiro |
+| Workflow packages only (no live enforcement) | Any platform |
+| CI-based enforcement (not IDE-based) | Any platform + CI integration |
+| Team uses multiple AI tools | Install rules in each; use CI for enforcement |
 
 ---
 
-## Multi-Family Coexistence Across Platforms
+## Known Limitations (Honest Disclosure)
 
-The uniform home (`.aiflc/{family}/`) and family-scoped orchestrator filenames mean multiple families install cleanly on any platform:
+Not all platforms are equal. Here's what **doesn't work** outside Kiro:
 
-- Kiro: `.kiro/steering/session-orchestrator-pdlc.md` + `session-orchestrator-balc.md`
-- Claude Code: `.claude/skills/pdlc/SKILL.md` + `.claude/skills/balc/SKILL.md`
-- Cursor: `.cursor/rules/pdlc-session-orchestrator.mdc` + `balc-session-orchestrator.mdc`
+| Feature | Why It's Kiro-Only |
+|---------|-------------------|
+| Event-driven hooks (fileEdited, agentStop, preToolUse) | Only Kiro has a hook runtime that intercepts IDE events and executes JSON hook definitions |
+| Agent shortcut triggers (`SDC__` (Session Discipline), `CRV__`, etc.) | Only Kiro reads `.kiro/agents/*.md` and activates them via typed shortcuts |
+| Automatic compliance logging | Hooks write JSONL on execution — no hook execution = no automatic log entries |
+| Re-derivation triggers | Mode 2 fires automatically when steering files change — only possible with fileEdited hooks |
+| Tier state machine (automatic progression) | `.compliance-state.json` is read by hooks — without hooks, tier logic is manual |
 
-Each family is fully isolated — installing one never touches another.
+**What this means in practice:**
+- **9 of 10 packages** (all except AI-GCE's enforcement layer) work identically on every platform
+- **AI-GCE on non-Kiro platforms** generates valid governance rules but can't auto-enforce them. Enforcement becomes advisory (the AI follows rules if instructed) or requires CI/CD translation
+- **No code change fixes this** — it's an infrastructure gap in competing platforms, not a gap in the packages
 
----
+**Planned fix:** Idea 011 (Platform-Portable Governance Adapters) will add a translation layer that emits enforcement in each platform's native format. Target: AI-GCE v1.1.
 
-## Additional Platforms (Expected to Work, Not Yet Validated)
-
-The following AI assistants are expected to work (they support workspace-level rules files) but are not yet installer-validated:
-
-- Windsurf (via `.windsurfrules`)
-- Augment Code
-- Tabnine
-- JetBrains AI Assistant
-- Sourcegraph Cody
-- Continue
-- Aider
-
-For these, use the "Universal" install instructions in each package's INSTALL.md: copy the orchestrator content into the platform's native rules file, point it at `.aiflc/{family}/`, and the workflow packages function normally.
+For the full cross-platform compatibility matrix, see `PLATFORM_CAPABILITIES.md`.
 
 ---
 
@@ -251,10 +198,7 @@ For these, use the "Universal" install instructions in each package's INSTALL.md
 |----------|----------|
 | How Package Installation Works | `knowledge_docs/HOW_PACKAGE_INSTALLATION_WORKS.md` |
 | How Steering File Loading Works | `knowledge_docs/HOW_STEERING_FILE_LOADING_WORKS.md` |
-| How Package Activation & Isolation Works | `knowledge_docs/HOW_PACKAGE_ACTIVATION_ISOLATION_WORKS.md` |
 | How GCE Derivation Pipeline Works | `knowledge_docs/HOW_GCE_DERIVATION_PIPELINE_WORKS.md` |
 | How to Adopt Governance on a Project | `knowledge_docs/HOW_TO_ADOPT_GOVERNANCE_ON_A_PROJECT.md` |
 
----
-
-*Knowledge Document | Created: 2026-06-12 | Updated: 2026-08-10 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-12 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

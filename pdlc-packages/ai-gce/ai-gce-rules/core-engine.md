@@ -10,7 +10,7 @@ inclusion: manual
 
 ## AI-GCE: AI-Driven Governance & Compliance Engine
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
 **Purpose:** Read an AI-DWG development workspace — which encodes all architecture and governance decisions from AI-ADLC — and derive a tailored compliance enforcement layer: rules, hooks, audit agent, and logging infrastructure. Works on both fresh (greenfield) and existing (brownfield) codebases.
@@ -95,6 +95,23 @@ All subsequent rule detail file references are relative to whichever rule detail
 
 Load the per-mode and per-category detail files (`flows/*`, `generators/*`, `re-derivation/*`, `drift/*`, `templates/*`) on demand as each mode and rule category is reached.
 
+---
+
+<!-- BEGIN WORKFLOW-DISCIPLINE v1 (synced from WORKFLOW_DISCIPLINE_CONTRACT.md — do not edit inline) -->
+## Workflow Discipline
+
+This package's workflow is authoritative — do not improvise it. (Full rules:
+"Workflow Discipline (Enforced)" in the session orchestrator.)
+
+- **Read before you execute.** Load this package's core + the relevant rule-detail
+  file before performing any stage. Never generate its outputs from memory.
+- **Trace to source.** Every deliverable derives from this package's templates,
+  rule-detail files, or the user's own input — never unstated "best practice."
+- **No unilateral deviation.** Do not skip, reorder, combine, or auto-progress past
+  a gate on your own initiative; the user may direct these — confirm and log them.
+  Every gate needs explicit user approval.
+<!-- END WORKFLOW-DISCIPLINE -->
+
 **Drift governance — load when detecting/installing drift detection:**
 - `drift/drift-detection-engine.md` — detect/classify/tag/verify algorithm (manifest-driven discovery)
 - `drift/element-comparators.md` — per-element-type detection strategies
@@ -116,7 +133,7 @@ Load the per-mode and per-category detail files (`flows/*`, `generators/*`, `re-
 
 ## MANDATORY: Role Adoption
 
-When this engine is active, you MUST adopt the role of a **Compliance Officer + Platform Engineer + AI-DLC v1 Engineer** for the entire interaction — a governance specialist who designs automated, evidence-based enforcement that is silent when teams comply and unmistakable when they don't.
+When this engine is active, you MUST adopt the role of a **Compliance Officer + Platform Engineer + AI-DLC Engineer** for the entire interaction — a governance specialist who designs automated, evidence-based enforcement that is silent when teams comply and unmistakable when they don't.
 
 ### Mindset
 
@@ -156,7 +173,7 @@ This role applies to ALL work done while this engine is active. Do not revert to
 
 ## Adaptive Derivation Principle (Summary)
 
-AI-GCE has **zero manual configuration** — it reads the workspace and derives everything. It generates rules from **two sources that combine**: (1) **steering files** (project-specific, read from `rules/` + operational docs) and (2) **built-in baseline** (10 universal AI-DLC v1 methodology rules, always applied). Resolution: steering enriches baseline → steering can override baseline → silent steering means baseline-only → no steering at all still yields the 10-rule floor.
+AI-GCE has **zero manual configuration** — it reads the workspace and derives everything. It generates rules from **two sources that combine**: (1) **steering files** (project-specific, read from `rules/` + operational docs) and (2) **built-in baseline** (10 universal AI-DLC methodology rules, always applied). Resolution: steering enriches baseline → steering can override baseline → silent steering means baseline-only → no steering at all still yields the 10-rule floor.
 
 **Graceful degradation (OR-input):** AI-GCE works on any workspace with `rules/` — not only AI-DWG-generated ones. If steering is absent or sparse, the built-in baseline provides universal governance; AI-GCE never blocks on missing steering.
 
@@ -177,7 +194,8 @@ AI-GCE is contract-aware — it knows its predecessor's output format precisely.
 | **Predecessor** | AI-DWG (AI-Driven Workspace Generator) |
 | **Marker file** | `.governance/workspace-manifest.yaml` (primary discovery contract) · legacy fallback: `rules/workspace-rules.md` |
 | **Detection strategy** | 1. User provides workspace path explicitly → use it · 2. Assume current directory → check for `.governance/workspace-manifest.yaml` · 3. Scan sibling folders · 4. No manifest → legacy fallback (`rules/workspace-rules.md`) + warn "legacy workspace" · 5. Nothing → ask "Where is the AI-DWG workspace?" |
-| **Discovery** | Manifest-driven — read all paths/files by semantic role from `workspace-manifest.yaml` (`paths.rules`, `files.definitionOfDone`, `platformTargets`, `storyStyle`, `clusters`). NEVER hardcode paths. |
+| **Discovery** | Manifest-driven — read all paths/files by semantic role from `workspace-manifest.yaml` (`paths.rules`, `files.definitionOfDone`, `platformTargets`, `storyStyle`, `clusters`, `buildProfile`). NEVER hardcode paths. |
+| **Build-method resolution** | The 5-value `buildProfile` (`aidlc` / `spec-driven-speckit` / `spec-driven-kiro` / `freestyle` / `manual`) is read **once**, at the start of generation, via `common/build-method-resolution.md` — the single point that resolves how generation adapts (hook vs sensor, whether the compliance log + process agents are emitted, enforcement surface). No generator re-reads `buildProfile`. Missing manifest → treat as `manual` + warn (never assume `aidlc`). Authority for the `aidlc` adaptations: the frozen `aidlc-v2-output-contract.md` §7. |
 | **READ-ONLY on DWG output (P1)** | GCE reads DWG's files to derive governance; it NEVER modifies/moves/deletes them. GCE writes only its own `.governance/` + platform-appropriate hooks/agents. |
 | **Reads canonical, not adapter** | GCE reads `manifest.paths.rules` (canonical `rules/`), NOT `.kiro/steering/` (the Kiro adapter). |
 | **Brownfield detection** | If `rules/brownfield-patterns.md` exists → Mode 3 (Incremental Adoption) is available |
@@ -186,30 +204,35 @@ AI-GCE is contract-aware — it knows its predecessor's output format precisely.
 
 > The full list of steering files AI-GCE reads and what each derives, plus the operational-documents table (`PROJECT_INSTRUCTIONS.md`, `DEFINITION_OF_DONE.md`, `TEAM_AGREEMENTS.md`, `docker-compose.yml`, `CODEOWNERS`), lives in `common/process-overview.md` ("What AI-GCE Reads") + `common/workspace-reading-guide.md`.
 
-### I Produce (Consumed by: AI-DLC v1 — continuous companion)
+### I Produce (Consumed by: AI-DLC — continuous companion)
 
-AI-GCE runs as a **continuous compliance companion alongside AI-DLC v1** (the external build lifecycle), not a one-time sequential handoff. It derives its layer from the Development Workspace, then enforces governance continuously as AI-DLC v1 builds. All output is installed INTO the development workspace.
+AI-GCE runs as a **continuous compliance companion alongside AI-DLC** (the external build lifecycle), not a one-time sequential handoff. It derives its layer from the Development Workspace, then enforces governance continuously as AI-DLC builds. All output is installed INTO the development workspace.
 
 | Aspect | Specification |
 |--------|--------------|
-| **Successor** | AI-DLC v1 (external — Amazon's aidlc-workflows) |
+| **Successor** | AI-DLC (external — Amazon's aidlc-workflows) |
 | **Marker file** | `.governance/hooks/` folder exists with at least one `.json` hook file |
 | **Output location** | Installed into the user's development workspace (the AI-DWG output workspace) |
 
-**Guaranteed output (AI-DLC v1 can depend on these after AI-GCE runs):**
+**Guaranteed output (AI-DLC can depend on these after AI-GCE runs):**
 
 | Path | Content | Always Present? |
 |------|---------|:--------------:|
-| `.governance/hooks/session-discipline.json` | Spec-before-code enforcement | ✅ Always |
-| `.governance/hooks/pre-code-spec-check.json` | User story spec gate | ✅ Always |
-| `.governance/hooks/post-task-governance.json` | Post-task DoD check | ✅ Always |
-| `.governance/hooks/security-gate-check.json` | Security pattern enforcement | ✅ Always |
-| `.governance/hooks/naming-check.json` | Naming convention enforcement | ✅ Always |
-| `.governance/hooks/module-boundary-check.json` | Cross-boundary import detection | ✅ Always |
-| `.governance/hooks/migration-safety.json` | Database migration safety | ✅ Always |
-| `.governance/hooks/api-contract-check.json` | API contract before implementation | ✅ Always |
-| `.governance/hooks/coverage-check.json` | Test coverage enforcement | ✅ Always |
-| `.governance/hooks/sensitive-data-check.json` | PII/sensitive data logging detection | ✅ Always |
+| `.governance/hooks/pre-code-spec-check.json` | User story spec gate | ✅ Always (Tier 1) |
+| `.governance/hooks/api-contract-check.json` | API contract before implementation | ✅ Always (Tier 1) |
+| `.governance/hooks/security-gate-check.json` | Security pattern enforcement | ✅ Always (Tier 1) |
+| `.governance/hooks/migration-safety.json` | Database migration safety | ✅ Always (Tier 1) |
+| `.governance/hooks/sensitive-data-check.json` | Secrets + PII detection in code | ✅ Always (Tier 1) |
+| `.governance/hooks/post-task-governance.json` | Post-task architecture + DoD check | ✅ Always (Tier 2+) |
+| `.governance/hooks/segregation-check.json` | Author ≠ approver at a task boundary | ✅ Always (Tier 2+) |
+| `.governance/hooks/session-end-compliance.json` | **Consolidated `agentStop` sweep** — module boundaries + domain purity + coverage + naming in one pass, one report | ✅ Always (Tier 2+) |
+| `.governance/hooks/change-readiness-gate.json` | Change-management artifacts before Integration tasks | ✅ Always (Tier 3) |
+| `.governance/hooks/exception-expiry-check.json` | Expired rule bypasses | ✅ Always (Tier 3) |
+| `.governance/hooks/package-activation-guard.json` | Multi-package switch guard | ⚙️ Generated with `"enabled": false` — **present but not active** |
+| `.governance/hooks/naming-check.json` | Naming convention logic | 📄 **Reference only — NOT installed.** Its checks run in `session-end-compliance.json` |
+| `.governance/hooks/module-boundary-check.json` | Cross-boundary import logic | 📄 **Reference only — NOT installed.** As above |
+| `.governance/hooks/coverage-check.json` | Test coverage logic | 📄 **Reference only — NOT installed.** As above |
+| `.governance/hooks/domain-layer-purity.json` | Domain-layer purity logic | 📄 **Reference only — NOT installed.** As above |
 | `.governance/hooks/tenant-isolation-check.json` | Tenant data isolation | IF multi-tenancy steering exists |
 | `.governance/rules/` | Full rule set (markdown) | ✅ Always |
 | `.governance/agents/compliance-audit-agent.md` | Audit agent specification (`CAA__`) | ✅ Always |
@@ -226,6 +249,14 @@ AI-GCE runs as a **continuous compliance companion alongside AI-DLC v1** (the ex
 | `.governance/compliance-log/` | Logging schema + workflows | ✅ Always |
 | `.governance/COMPLIANCE_README.md` | "How compliance works in this project" | ✅ Always |
 | `.governance/PACKAGE_TERRITORIES.md` | Excluded-zone declarations for hook segregation | ✅ Always |
+
+> ### ⚠️ Reading the hook guarantees — three states, not one
+>
+> **`✅ Always` means generated AND installed.** `⚙️ enabled: false` means generated and present but not firing. **`📄 Reference only` means the file exists to document rule logic and is deliberately NOT installed** — its checks run inside `session-end-compliance.json`. A consumer that treats all three as "an active hook" will expect enforcement that is not there.
+>
+> **What this table used to promise, and why it mattered.** It guaranteed `session-discipline.json` as `✅ Always` **and** `session-discipline-agent.md` as `✅ Always` — the retired hook and the agent that replaced it, in the same table. It also guaranteed `naming-check`, `module-boundary-check` and `coverage-check` as always-present active hooks when all three had been consolidated into the session-end sweep and are not installed. So a downstream consumer reading this contract would have waited for four enforcement surfaces that never arrive, and `session-end-compliance.json` — the hook that actually performs three of those four checks — **was not in the table at all**.
+>
+> **Retired to agents, guaranteed as agents.** `session-discipline` (`SDC__`), `pre-pr-checklist` (`PRC__`), `periodic-audit` (`CAA__`) and `steering-quality-check` (`SQC__`) are process agents; find them in the agent rows below, never as hooks. `documentation-reminder` is not generated in any form — no generator produces a rule family for it.
 
 **For brownfield workspaces (Mode 3 output):**
 
@@ -303,13 +334,17 @@ Each mode's full step body lives in a detail file. Load it when the mode is dete
 
 ### Configuration Questions (Mode 1, asked once)
 
-Ask only if the workspace does NOT clearly answer these: (1) Is this a brownfield workspace? (default: auto-detected from `brownfield-patterns.md`); (2) Should hooks start in `askAgent`/warn mode or blocking mode? (default: `askAgent`). Do NOT ask about technology, modules, or which rules to enable — the workspace already contains the answers.
+Ask only if the workspace does NOT clearly answer these: (1) Is this a brownfield workspace? (default: auto-detected from `brownfield-patterns.md`); (2) The **enforcement strength** for the security-class checks — `warn` or `block` (default: `warn`). Do NOT ask about technology, modules, or which rules to enable — the workspace already contains the answers.
+
+> **The enforcement-strength question is now load-bearing (merged item 24b).** Previously it was asked and ignored (no template behind either answer). It is now recorded by `common/enforcement-strength-parameter.md` via the shared project-parameter intake primitive (CC-1), **scoped to the security-class set only** (P1), asked **only where the answer can be honoured** by the platform/build-method (P2), defaulting to `warn` (P3). The recorded value feeds `common/strength-to-mechanism.md` (item 24a), which selects the mechanism (the user picks strength; the engine picks mechanism). It never adds a bespoke gate (P4).
 
 ---
 
 ## Three-Tier Compliance Model (Summary)
 
 Every AI-GCE deployment follows a **three-tier progressive enforcement model** (applies to ALL projects, including greenfield): **Tier 1 (Day 0)** structure/naming/basic gates, score target 60-70% → **Tier 2 (Sprint 2+)** governance/roles/DevOps/steering quality, 80-90% → **Tier 3 (Pre-Release)** audit/security/change-management/full gates, 92%+. Enforcing 310+ rules on Day 0 creates noise with no value; teams build trust gradually.
+
+> **Under `buildProfile: aidlc`, tier *gating* is suspended but tier *assessment* is retained** (ledger A13). AI-DLC v2 owns the lifecycle cadence, so AI-GCE does not gate tier advancement — but it still computes and reports the coverage % and band as advisory information (the number no longer blocks anything). Only the gating teeth are removed; the assessment capability is preserved. Resolved once in `common/build-method-resolution.md`; under every non-`aidlc` build method both gating and assessment stay as described above.
 
 > The full tier diagram, readiness criteria, and the component × tier contents matrix live in `common/process-overview.md`. The activation flow lives in `flows/tier-activation.md`.
 
@@ -344,18 +379,21 @@ AI-GCE generates ONLY what the workspace justifies — enforcement is never gene
 ### Gate-Out — What AI-GCE GUARANTEES When Complete
 
 ```yaml
-emits-type: governance-engine@1
+emits-type: governance-engine@1        # UNCHANGED — no new capability type
 visibility: internal
 marker: gce-state.md
 payloadRoot: pdlc-ws/projects/{projectId}/gce/
 guarantees:
   - status == complete
   - projectId
-  - hookDefinitions            # governance hooks deployed
   - complianceChecks           # compliance rules active
   - auditScoring               # scoring model configured
   - driftDetection             # drift rules installed
+  - enforcementSurface         # which mechanism is present: hooks | sensors | both | docs-only
+  - hookDefinitions            # CONDITIONAL — present only when enforcementSurface includes hooks
 ```
+
+> **`enforcementSurface` + conditional `hookDefinitions` (INV-L2-022).** `hookDefinitions` was previously an **unconditional** guarantee. Under `buildProfile: aidlc` most checks become externally-dispatched v2 sensors, so hooks may be absent — an unconditional promise would be false. The guarantee is therefore **conditional** on `enforcementSurface` (`hooks` / `sensors` / `both` / `docs-only`), which a consumer reads to learn what it can rely on rather than assuming. This mirrors AI-DWG, which already declares its own `hookDefinitions` conditionally (`# governance hooks (if platform supports)`). The capability type stays `governance-engine@1` — the `@1` is the capability-contract version, unchanged. Full contract: `1.dev/pdlc/pdlc-packages/ai-dwg/ai-dwg-rule-details/common/aidlc-v2-output-contract.md` §7a Clause 2.
 
 ### Gate-In — What AI-GCE REQUIRES to Start
 
@@ -372,7 +410,7 @@ strictness-default: warn
 
 ### Visibility Note
 
-- `governance-engine` is `internal` — consumed alongside AI-TGE as a companion to AI-DLC v1.
+- `governance-engine` is `internal` — consumed alongside AI-TGE as a companion to AI-DLC.
 - Gate-in consumes only `internal` types; no external seam-in for AI-GCE.
 
 ---
@@ -385,11 +423,16 @@ When AI-GCE completes, this structure exists in the user's workspace (conditiona
 {project-root}/
 ├──.kiro/
 │   ├── steering/                       ← Unchanged (AI-DWG output) + optional compliance-*.md (Step 4b, fileMatch)
-│   └── hooks/                          ← GENERATED: ENFORCEMENT-GUIDE.md + 13 always hooks
-│       │                                 (session-discipline, pre-code-spec-check, api-contract-check,
-│       │                                 module-boundary-check, security-gate-check ←Tier A, naming-check,
-│       │                                 migration-safety ←Tier A, coverage-check, post-task-governance,
-│       │                                 sensitive-data-check ←Tier A, domain-layer-purity, documentation-reminder)
+│   └── hooks/                          ← GENERATED: ENFORCEMENT-GUIDE.md + 10 installed hooks
+│       │                                 Tier 1 (5): pre-code-spec-check, api-contract-check,
+│       │                                   security-gate-check ←Tier A, migration-safety ←Tier A,
+│       │                                   sensitive-data-check ←Tier A
+│       │                                 Tier 2 (3): post-task-governance, segregation-check,
+│       │                                   session-end-compliance ←consolidated agentStop sweep
+│       │                                 Tier 3 (2): change-readiness-gate, exception-expiry-check
+│       │                                 + package-activation-guard  ← generated, enabled: false
+│       │                                 + 4 reference-only, NOT installed: module-boundary-check,
+│       │                                   domain-layer-purity, coverage-check, naming-check
 │       └── [tenant-isolation-check / resilience-gate / tracing-check / event-sourcing-check]  ← conditional
 │
 ├──.compliance-state.json              ← GENERATED: tier tracking, readiness criteria, score history
@@ -410,4 +453,4 @@ When AI-GCE completes, this structure exists in the user's workspace (conditiona
 
 ---
 
-*AI-GCE v1.0.0 | Created By: Maheri | Inspired By: awslabs/aidlc-workflows (MIT-0) | Reads an AI-DWG workspace, derives a tailored compliance enforcement layer*
+*AI-GCE v1.1.0 | Created By: Maheri | Inspired By: awslabs/aidlc-workflows (MIT-0) | Reads an AI-DWG workspace, derives a tailored compliance enforcement layer*

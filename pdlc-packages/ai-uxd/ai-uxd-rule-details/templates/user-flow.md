@@ -16,6 +16,8 @@ ownership: hybrid
 | Persona | {owning persona} |
 | Journey | {source journey + stage reference} |
 | Type | {Task Flow / User Flow / Wireflow} |
+| Owning Team | {TEAM-slug — optional; set when the AI-ADLC team-topologies feature is active; else derived (see Traceability) or "n/a"} |
+| Bounded Context | {BC-slug — optional; set when the topology feature is active; else derived or "n/a"} |
 | Entry Point | {where/how user enters this flow} |
 | Success Exit | {what "done" looks like} |
 | Failure Exit | {what failure leads to} |
@@ -116,6 +118,9 @@ flowchart TD
 | Screens touched | {Screen_01, Screen_02, ...} |
 | Components used | {Button, Form Field, Modal, Toast, ...} |
 | Tokens relevant | {any tokens specifically critical to this flow} |
+| Owning Team / Bounded Context | {TEAM-* / BC-* — see Metadata} |
+
+> **Team/context attribution (hybrid — Q-D9).** When the `team-topologies` feature is active, set the `Owning Team` (`TEAM-*`) / `Bounded Context` (`BC-*`) tag natively from the AI-ADLC `team-context-registry`. When untagged, AI-DWG **derives** it via **persona → epic → BC/TEAM**: bridge this flow's persona/journey to the AI-POLC epic that back-references the persona, and inherit that epic's `Owning Team` / `Bounded Context`. This lets AI-DWG route each team its `ux/` slice. **Design-system tokens and the accessibility baseline are SHARED across all teams — never team-scoped** (a team never owns half the design system).
 
 ---
 

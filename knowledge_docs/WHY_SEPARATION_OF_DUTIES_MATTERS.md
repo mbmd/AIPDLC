@@ -40,9 +40,9 @@ Separation of duties means that the person who writes code cannot be the same pe
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-GCE** | GOV-01: Author ≠ Approver | Tier 1 (foundational) rule — active from day one. Hook blocks self-merge on any PR. |
+| **AI-GCE (Governance & Compliance Engine)** | GOV-01: Author ≠ Approver | Tier 1 (foundational) rule — active from day one. Hook blocks self-merge on any PR. |
 | **AI-GCE** | Role isolation rules | Derives role-based access rules from `role-isolation.md` steering file. Enforces who can approve what. |
-| **AI-DWG** | CODEOWNERS generation | Generates code ownership mapping from architecture — ensures appropriate reviewers are assigned per module. |
+| **AI-DWG (Workspace Generator)** | CODEOWNERS generation | Generates code ownership mapping from architecture — ensures appropriate reviewers are assigned per module. |
 | **AI-DWG** | `role-isolation.md` steering | Creates steering file defining team topology, ownership boundaries, and review requirements per component. |
 | **AI-GCE** | PR governance hooks | Enforces: minimum reviewer count, required reviewers for security-sensitive paths, description requirements. |
 | **AI-GCE** | Session governance | Prevents "vibe-coding" sessions where a developer implements without spec or review checkpoint. |

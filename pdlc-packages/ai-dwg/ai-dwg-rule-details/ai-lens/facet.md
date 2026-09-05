@@ -162,6 +162,16 @@ Generate an **AI feature manifest** inside the workspace that carries ALL contex
 
 The manifest is the **single source of truth** for dev-side agents. `AIG__` and `AIQ__` read this manifest; they never reach back across the hinge to the planning workspace. Everything they need is here.
 
+### Per-Team Lens Courier (multi-workspace only — Q-D7)
+
+When `workspaceTopology ∈ {per-team, hybrid}`, the courier delivers each AI feature to the **owning team's** workspace only. Each `aiFeature` carries the `epicId` of its epic, and that epic carries a first-class `Owning Team` (`TEAM-*`, from AI-POLC). So:
+
+- Route each feature's `.ai-lens/manifest.json` + AI scaffolding into `{slug}-workspaces/{owning-team}/` — a team with AI features gets the AI lens; a CRUD team does not.
+- The set-manifest records which team carries which lens (informational — the `members[]` view).
+- The manifest per L3 workspace contains ONLY that team's features (no cross-team lens leakage), consistent with the team-scoped partition.
+
+In a single workspace, the courier behaves exactly as today (one manifest, all features).
+
 ---
 
 ## Step 4: Mirror to `data-schema/`

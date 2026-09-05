@@ -26,7 +26,7 @@ type: process
 
 ## Purpose
 
-Validates that the Product Backlog Package (PBP) maintains structural integrity, value-based prioritization coherence, quality-bar (DoR/DoD) discipline, and traceability — so the backlog is defensible, healthy, and consumable by AI-DWG and AI-DLC v1. Runs on-demand when the user types `BLH__`. It checks the backlog *artifacts themselves*; it does not re-prioritize or author backlog content.
+Validates that the Product Backlog Package (PBP) maintains structural integrity, value-based prioritization coherence, quality-bar (DoR/DoD) discipline, and traceability — so the backlog is defensible, healthy, and consumable by AI-DWG and AI-DLC. Runs on-demand when the user types `BLH__`. It checks the backlog *artifacts themselves*; it does not re-prioritize or author backlog content.
 
 ---
 

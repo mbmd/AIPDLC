@@ -40,10 +40,10 @@ Naming conventions mean agreeing on a single, consistent pattern for how things 
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-DWG** | `naming-conventions.md` steering | Generates a naming conventions steering file derived from the chosen tech stack — specific patterns for the project's language and framework. |
-| **AI-GCE** | NAME-* enforcement rules | Derives naming rules from the steering file. Hooks fire in real-time when files, classes, or APIs violate the convention. |
+| **AI-DWG (Workspace Generator)** | `naming-conventions.md` steering | Generates a naming conventions steering file derived from the chosen tech stack — specific patterns for the project's language and framework. |
+| **AI-GCE (Governance & Compliance Engine)** | NAME-* enforcement rules | Derives naming rules from the steering file. Hooks fire in real-time when files, classes, or APIs violate the convention. |
 | **AI-GCE** | Tier 1 inclusion | Naming enforcement is a Tier 1 (foundational) rule — active from day one. Basic enough that no one objects, impactful enough to prevent drift. |
-| **AI-ADLC** | API naming in Stage 10 | API architecture stage defines URL structure, resource naming, and versioning pattern. Conventions are locked at design time. |
+| **AI-ADLC (Architecture Design Life Cycle)** | API naming in Stage 10 | API architecture stage defines URL structure, resource naming, and versioning pattern. Conventions are locked at design time. |
 | **AI-DWG** | Folder structure generation | Generated folder names follow the convention. Physical structure establishes the pattern by example. |
 
 ---

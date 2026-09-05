@@ -28,6 +28,11 @@ Single-source lookup for all governance agents active in this workspace.
 | GCE-AG-07 | change-management-agent | Process | `CMG__` | 3 | AI-GCE | Active | {date} |
 | GCE-AG-08 | dod-gate-agent | Process | `DOD__` | 2 | AI-GCE | Active | {date} |
 | GCE-AG-09 | pre-pr-checklist-agent | Process | `PRC__` | 2 | AI-GCE | Active | {date} |
+| GCE-AG-10 | drift-detect-agent | Audit | `DFT__` | 1 | AI-GCE | Active | {date} |
+| GCE-AG-11 | ai-governance-agent | Audit | `AIG__` | 2 | AI-GCE | Active (AI-LENS) | {date} |
+| GCE-AG-12 | automation-governance-agent | Audit | `ATG__` | 2 | AI-GCE | Active (Automation-LENS) | {date} |
+
+> **GCE-AG-11 / GCE-AG-12 are lens-facet agents** — active only when the corresponding lens is ON (`Lens_Status.md`: AI-LENS row = `AI-Powered` → `AIG__`; Automation-LENS row = `Automated` → `ATG__`). Seeded into the Layer-3 workspace by AI-DWG and dispatched by GCE's existing Command Dispatch. **GCE-AG-10 (drift-detect) was previously present in `core-engine.md` but missing from this table** — backfilled 2026-09-01 so the registry is contiguous through GCE-AG-12.
 
 ---
 
@@ -45,11 +50,12 @@ Single-source lookup for all governance agents active in this workspace.
 
 | Tier | Agents Available | Activation Criteria |
 |:----:|-----------------|---------------------|
-| 1 | GCE-AG-01, GCE-AG-02, GCE-AG-03 | From first generation |
+| 1 | GCE-AG-01, GCE-AG-02, GCE-AG-03, GCE-AG-10 | From first generation |
 | 2 | + GCE-AG-04, GCE-AG-05, GCE-AG-06, GCE-AG-08, GCE-AG-09 | Sprint completed, CI exists, ≥2 contributors, score ≥70% |
 | 3 | + GCE-AG-07 | Release candidate, deployment target, score ≥85%, no Critical remediations |
+| Lens | + GCE-AG-11 (`AIG__`), GCE-AG-12 (`ATG__`) | Independent of tier — active whenever the matching lens is ON (`Lens_Status.md`) |
 
-Current workspace tier: Read `.compliance-state.json` → `"complianceTier"` field.
+Current workspace tier: Read `.compliance-state.json` → `"complianceTier"` field. Lens agents are gated by `Lens_Status.md`, not by tier.
 
 ---
 
@@ -65,6 +71,9 @@ Current workspace tier: Read `.compliance-state.json` → `"complianceTier"` fie
 | `SQC__` | steering-quality-agent | Audit (after steering edit) |
 | `CMG__` | change-management-agent | Process (before release) |
 | `DOD__` | dod-gate-agent | Process (before "done") |
+| `DFT__` | drift-detect-agent | Audit (drift detection; session-end + on demand) |
+| `AIG__` | ai-governance-agent | Audit (AI-LENS — when AI-LENS is ON) |
+| `ATG__` | automation-governance-agent | Audit (Automation-LENS — when Automation-LENS is ON) |
 
 ---
 

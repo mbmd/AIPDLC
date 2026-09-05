@@ -210,7 +210,7 @@ If multiple packages are active in the same session, findings are tagged with wh
 | Report findings immediately when you notice them | Context is freshest right after the stage completes |
 | Use severity honestly | Critical = workflow can't proceed; Low = cosmetic |
 | Include "suggested fix" when you can | Speeds up resolution significantly |
-| Note chain impacts | "This will also affect AI-DWG's mapping" helps maintainers prioritize |
+| Note chain impacts | "This will also affect AI-DWG (Workspace Generator)'s mapping" helps maintainers prioritize |
 | One finding per report | Keeps things traceable and individually actionable |
 
 ---

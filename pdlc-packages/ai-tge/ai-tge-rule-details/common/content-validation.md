@@ -298,3 +298,120 @@ When multiple TGE artifacts reference each other:
 | State statistics | Recalculated from artifacts (never manually maintained) |
 
 **Rule:** State file statistics are DERIVED from artifacts, not the other way around. If state says "Coverage: 58%" but register calculation shows 62%, update state (register is authoritative).
+
+---
+
+## Artifact Content Rules (IMP-001–005, 015, 016, 019)
+
+> Added 2026-08-15 from user-workspace field validation. These are **BLOCKING** rules — an artifact fails validation without compliance.
+
+### IMP-001: Self-Explanatory Quantitative Artifacts
+
+Every artifact containing quantitative analysis (scores, rankings, matrices, assessments) MUST include a **"What This Analysis Means"** section placed AFTER the document title/introductory blockquote but BEFORE the first numbered section (`## 1. ...`).
+
+The section MUST include:
+1. **Plain-language summary** — what the numbers mean in business terms
+2. **Concrete example** — one specific finding from the analysis explained simply
+3. **Business implications** — what action or decision the analysis supports
+
+**Blocking:** Artifact fails validation if quantitative analysis is present but no interpretation section exists at the top.
+
+---
+
+### IMP-002: Completeness & Downstream Resolution
+
+Every artifact MUST include a **"Completeness & Downstream Resolution"** section (placed after the main content, before Glossary/Sources) that answers three questions:
+
+1. **What's complete here?** — which aspects are fully covered in this document
+2. **What's partial and why?** — what is shown as representative samples vs exhaustive, and the rationale
+3. **Where/when does each gap get resolved?** — downstream package/stage that fills each gap (with package code + stage reference)
+
+**Blocking:** Artifact fails validation without this section.
+
+---
+
+### IMP-003: Back-Propagate "Gap Filled" Status
+
+After each stage writes its artifact, scan all earlier-stage artifacts in the same package for "Completeness & Downstream Resolution" sections that reference the just-completed stage. Update those references:
+- FROM: "Where gaps get filled → {Package} Stage N"
+- TO: "✅ Completed — see `{artifact-path}`"
+
+Stale "where gaps get filled" references pointing to already-completed stages are a **validation failure**.
+
+**Post-gate check:** After each gate approval, verify no earlier artifact references the just-completed stage as "pending."
+
+---
+
+### IMP-004: Human-Readable Package Key Expansion
+
+First mention of any package code in an artifact MUST include a parenthetical plain-language description.
+
+**Pattern:** `AI-{XXX} ({Human-Readable Purpose})`
+
+**Examples:**
+- `AI-AAG (Governance & Handoff)` — not just `AI-AAG`
+- `AI-INT (Integration Architecture)` — not just `AI-INT`
+- `TALC (Technology Architecture Life Cycle)` — not just `TALC`
+
+Subsequent mentions in the same document may use the bare code after first-use expansion.
+
+**Blocking:** First-use bare codes without expansion are a validation failure.
+
+---
+
+### IMP-005: Mandatory Glossary Section
+
+Every artifact MUST include a **"Glossary"** section at the bottom of the document (before Sources Used or doc signature/footer). The glossary MUST:
+
+1. Appear as the last major section before Sources/footer
+2. Contain a table with **Term** and **Meaning** columns
+3. Cover ALL abbreviations (e.g., K8s, mTLS, GPU, RAG, SWOT) and domain-specific technical terms used in the document
+4. Be tailored to each document's actual content — not a generic copy-paste
+
+**Blocking:** Artifact fails validation without a document-specific glossary.
+
+---
+
+### IMP-015: Rank-Score Consistency
+
+In any table with both a **Rank** column and a numeric **Score/Significance** column:
+
+1. Rank MUST be in **descending score order** (highest score = rank 1)
+2. If a dependency or business override changes the rank, an explicit **override column or footnote** MUST explain WHY (e.g., "GATE-ZERO prerequisite", "Blocked by #1")
+3. **Equal scores** MUST use tied ranks (e.g., 1, 1, 1, 4 — not 1, 2, 3, 4)
+
+**Blocking:** Rank/score mismatch without documented justification is a validation failure.
+
+---
+
+### IMP-016: Key-Reference Traceability (CRITICAL)
+
+Every reference to a key (`OBJ-01`, `CAP-05`, `REQ-D-03`, `THEME-02`, `SD-001`, `GAP-04`, etc.) in any artifact MUST be a markdown link pointing to the source document where that key is formally defined.
+
+**Pattern:** `[KEY-ID](relative-path-to-source#anchor)`
+
+**Rules:**
+1. Every register/definition document MUST define anchors for every key (`<a id="key-id"></a>`)
+2. Every reference to a key in any other artifact MUST be a markdown link to the source anchor
+3. **Bare key codes without links are NOT acceptable** in final artifacts — only in draft state
+4. Each stage's post-write checklist must include a "Link Validation" step verifying all keys are linked
+
+**Key prefixes requiring anchors and links:** `OBJ-`, `THEME-`, `SD-`, `CAP-`, `REQ-`, `REQ-D-`, `REQ-T-`, `CC`, `CON-`, `GAP-`, `DEBT-`, `RDR-`, `ST-`, `SO-`, `WO-`, `WT-`, `INFRA-`, `SEC-`, `RES-`, `GPU-`
+
+**Blocking (CRITICAL):** Bare key references without links are a validation failure.
+
+---
+
+### IMP-019: Column Legend for Register-Style Tables
+
+Every **register-style table** (4+ columns with an ID/identifier column or technical register structure) MUST be followed immediately by a blockquote column legend.
+
+The legend MUST:
+1. Be inside a `>` blockquote
+2. Start with `**Column Legend:**`
+3. Contain a two-column table (Column / Description)
+4. Describe ALL columns including value-set meanings (e.g., "Priority: Critical = must resolve before deployment, High = must resolve before production")
+
+**Excluded:** Simple key-value tables (Field/Value format) and prose checklists.
+
+**Blocking:** Register-style tables without a column legend are a validation failure.

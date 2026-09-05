@@ -12,13 +12,17 @@ ownership: generated
 
 A custom agent specification that scans a project for compliance against all applicable rules, produces a scored report, maintains the dashboard, and tracks trends.
 
+**Replaces:** `periodic-audit.json` hook (userTriggered) — per, an on-demand full scan is a process milestone a person invokes, so it is an agent rather than an event handler.
+
+> **Why this line was missing.** The conversion was recorded only in `templates/hooks/ENFORCEMENT-GUIDE.md` — a **consuming** file — and never here in the template that performed it. Meanwhile `pre-pr-checklist-agent.md` wrongly claimed the same retired hook. So the fact existed, in the wrong place, attached to the wrong agent. **A conversion is recorded in the artifact that replaced the thing**, which is the only place a reader looking at this agent would think to check.
+
 ---
 
 ## Trigger
 
 - **Shortcut:** `CAA__` (typed anywhere in a prompt)
 - **Post-tier-activation:** After Mode 4 completes
-- **Pre-phase-transition:** Before moving to next AI-DLC v1 phase
+- **Pre-phase-transition:** Before moving to next AI-DLC phase
 - **On schedule:** Team-configured cadence (e.g., weekly)
 
 ---

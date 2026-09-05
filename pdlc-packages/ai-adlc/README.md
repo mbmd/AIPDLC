@@ -29,7 +29,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -37,13 +37,13 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -57,11 +57,11 @@ flowchart LR
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 > **AI-DFE** ([Data Fabric Engine](../ai-dfe/)) is a family-scoped **companion** — it gathers data from all packages and distributes structured JSON for dashboards and status roll-ups. It runs alongside the chain rather than as a linear step, so it is not shown as a chain row above.
 
@@ -83,8 +83,8 @@ AI-ADLC is the **third step of the Project layer** — the terminal design step 
 |--------|---------|
 | **Layer** | Project |
 | **Position** | Third in the Project-layer sequence (POLC → UXD → ADLC → DWG); terminal design step |
-| **Predecessor** | AI-PILC (PIP); AI-POLC (PBP) and AI-UXD (UXP) when chained |
-| **Direct successors** | AI-DWG (consumes the AP to generate the workspace); AI-TGE (reads the AP to derive tests) |
+| **Predecessor** | AI-PILC (AI-Driven Project Initiation Life Cycle — PIP); AI-POLC (AI-Driven Product Ownership Life Cycle — PBP) and AI-UXD (AI-Driven UX Design — UXP) when chained |
+| **Direct successors** | AI-DWG (AI-Driven Workspace Generator — consumes the AP to generate the workspace); AI-TGE (AI-Driven Test Governance Engine — reads the AP to derive tests) |
 | **Reads (input)** | PIP (`pilc-state.md`) or standalone requirements; optionally PBP (`polc-state.md`) and UXP (`uxd-state.md`) |
 | **Produces (output)** | Architecture Package (AP) under `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/architecture/` |
 | **Output marker** | `adlc-state.md` |
@@ -95,11 +95,11 @@ AI-ADLC is the **third step of the Project layer** — the terminal design step 
 **Simplified chain view** (see the diagram above for the full topology):
 
 ```
-AI-PILC → [ AI-POLC → AI-UXD → AI-ADLC → AI-DWG ] → AI-DLC v1
+AI-PILC → [ AI-POLC → AI-UXD → AI-ADLC → AI-DWG ] → AI-DLC
                                 ▲ you are here (terminal design step)
 ```
 
-AI-ADLC answers **"how is this built — structure, technology, and the decisions behind them?"** It defines the file-ownership boundaries (DDD) that flow **DEFINE → GENERATE → ENFORCE** (AI-ADLC → AI-DWG → AI-GCE). It does not generate the workspace (AI-DWG), enforce the design (AI-GCE), or write code (AI-DLC v1). Feedback loops let it push cost/risk bands back to AI-POLC and constraints back to AI-UXD.
+AI-ADLC answers **"how is this built — structure, technology, and the decisions behind them?"** It defines the file-ownership boundaries (DDD) that flow **DEFINE → GENERATE → ENFORCE** (AI-ADLC → AI-DWG → AI-GCE). It does not generate the workspace (AI-DWG), enforce the design (AI-GCE), or write code (AI-DLC). Feedback loops let it push cost/risk bands back to AI-POLC and constraints back to AI-UXD.
 
 ### Standalone vs. chained
 
@@ -107,7 +107,7 @@ AI-ADLC answers **"how is this built — structure, technology, and the decision
 - **Chained (upstream).** It reads `pilc-state.md` for the PIP and, in the sequential model, enriches from `polc-state.md` (backlog priorities) and `uxd-state.md` (UI architecture needs).
 - **Chained (downstream).** On completion it writes `adlc-state.md` and the AP; AI-DWG generates the workspace from it and AI-TGE derives the test strategy.
 - **Brownfield-aware.** Existing-system integration is a first-class intake mode, not an afterthought.
-- **Extensions on demand.** Ten advanced architecture patterns activate only when the system justifies them (see Extensions below) — each becomes a set of blocking, verified constraints once enabled.
+- **Extensions on demand.** Eleven advanced architecture patterns activate only when the system justifies them (see Extensions below) — each becomes a set of blocking, verified constraints once enabled.
 
 ---
 
@@ -160,7 +160,7 @@ A complete Architecture Package containing:
 
 ## Activation
 
-**Explicit key:** type `_ADLC_` in any prompt to activate AI-ADLC unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-ADLC`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
+**Explicit key:** type `_ADLC_` in any prompt to activate AI-ADLC unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` (report active package) reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-ADLC`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
 
 ---
 
@@ -380,9 +380,12 @@ ai-adlc/
     │   ├── threat-modeling/
     │   │   ├── threat-modeling.opt-in.md
     │   │   └── threat-modeling.md
-    │   └── wardley-mapping/
-    │       ├── wardley-mapping.opt-in.md
-    │       └── wardley-mapping.md
+    │   ├── wardley-mapping/
+    │   │   ├── wardley-mapping.opt-in.md
+    │   │   └── wardley-mapping.md
+    │   └── team-topologies/
+    │       ├── team-topologies.opt-in.md
+    │       └── team-topologies.md
     └── templates/
         ├── adr-template.md
         ├── adr-saga-pattern.md
@@ -396,6 +399,8 @@ ai-adlc/
         ├── integration-architecture.md
         ├── component-design.md
         ├── multi-tenancy.md
+        ├── team-topology-map.md
+        ├── team-context-registry.md
         └── architecture-workbook.md
 ```
 
@@ -415,7 +420,7 @@ ai-adlc/
 
 ## Patterns, Methodologies & Frameworks Covered
 
-AI-ADLC operationalizes **senior architecture practice** — progressive, decision-driven system design. Its **core** always applies the methodologies below; ten **advanced patterns** are opt-in extensions (catalogued in the next section) that activate only when the architecture justifies them. AI-ADLC aligns with these bodies of knowledge and adapts them to an AI-assisted, human-gated workflow; it does not certify against any of them.
+AI-ADLC operationalizes **senior architecture practice** — progressive, decision-driven system design. Its **core** always applies the methodologies below; eleven **advanced patterns** are opt-in extensions (catalogued in the next section) that activate only when the architecture justifies them. AI-ADLC aligns with these bodies of knowledge and adapts them to an AI-assisted, human-gated workflow; it does not certify against any of them.
 
 | Framework / body of knowledge | What AI-ADLC applies | Where it stops (scope boundary) |
 |---|---|---|
@@ -423,8 +428,8 @@ AI-ADLC operationalizes **senior architecture practice** — progressive, decisi
 | **Architecture Decision Records** (Nygard) | A formal ADR for every major decision — context, options considered, decision, consequences — sequentially numbered | It records and justifies decisions; runtime enforcement of them is AI-GCE |
 | **Quality attributes / NFRs** (constraint-first) | Security, scalability, availability, performance, and tenancy treated as first-class constraints that recommendations may never exceed | Not a formal ISO/IEC 25010 audit — it designs to constraints, it doesn't score them |
 | **Multi-tenancy, security & identity architecture** | Isolation patterns, trust boundaries, and the identity model as dedicated, ADR-backed decision stages | In-depth threat modeling is the opt-in Threat Modeling extension |
-| **Data · API · integration architecture** | Schema strategy, contract-first API design, and integration topology as specifications | Specs only — implementation is the build (AI-DLC v1) |
-| **10 advanced patterns** (opt-in extensions) | DDD tactical, Event Storming, Domain Storytelling, Microservices, BFF, Event Sourcing/CQRS, Resilience, Feature Flags, Wardley Mapping, Threat Modeling (STRIDE) — each a set of blocking, verified rules once enabled | Each stays dormant unless opted in; see the Extensions section below |
+| **Data · API · integration architecture** | Schema strategy, contract-first API design, and integration topology as specifications | Specs only — implementation is the build (AI-DLC) |
+| **11 advanced patterns** (opt-in extensions) | DDD tactical, Event Storming, Domain Storytelling, Microservices, BFF, Event Sourcing/CQRS, Resilience, Feature Flags, Wardley Mapping, Threat Modeling (STRIDE), Team Topologies — each a set of blocking, verified rules once enabled | Each stays dormant unless opted in; see the Extensions section below |
 
 The boundary: AI-ADLC produces the **Architecture Package** (design + ADRs + diagrams) and defines the file-ownership boundaries that flow **DEFINE → GENERATE → ENFORCE** (AI-ADLC → AI-DWG → AI-GCE). It does not generate the workspace, enforce compliance, or build code.
 
@@ -440,7 +445,7 @@ AI-ADLC designs the **architecture** side of the family's cross-cutting lenses �
 | **Automation Lens** | Automated / Manual | `_AUTOLENS_` | Designs the automation architecture facet |
 | **Agentic** (AI ∩ Automation) | derived — both on | — | Designs the agent architecture — tool-use, reasoning-loop, memory, and evaluation |
 
-Downstream, AI-DWG provisions the scaffolding and AI-GCE / AI-TGE govern and test the tagged features via Layer-3 agents (`AIG__`/`ATG__`, `AIQ__`/`ATQ__`). *(This is distinct from the opt-in architecture extensions below — the lenses are cross-cutting modes, not per-project pattern add-ons.)*
+Downstream, AI-DWG provisions the scaffolding and AI-GCE / AI-TGE govern and test the tagged features via Layer-3 agents (`AIG__` (AI Governance) /`ATG__` (Automation Governance), `AIQ__` (AI Quality) /`ATQ__` (Automation Quality)). *(This is distinct from the opt-in architecture extensions below — the lenses are cross-cutting modes, not per-project pattern add-ons.)*
 
 ---
 
@@ -462,6 +467,7 @@ AI-ADLC supports an extension system for advanced architectural patterns. Extens
 | `domain-storytelling/` | Domain Storytelling (discovery) | DST-01 → DST-10 | Narrative discovery (actor → activity → work object); alternative/complement to Event Storming |
 | `wardley-mapping/` | Wardley Mapping | WDL-01 → WDL-08 | Build-vs-buy positioning; value-chain × evolution (Stage 6) |
 | `threat-modeling/` | Threat Modeling — Deep | THM-01 → THM-10 | High-security systems; STRIDE DFD, attack trees, risk rating (Stage 8) |
+| `team-topologies/` | Team Topologies | TT-01 → TT-10 | 2+ teams; team boundaries, interaction modes, Conway alignment, TEAM-*/BC-*/SVC-* identity (Stage 5) |
 
 Each extension provides: numbered rules with verification criteria, anti-patterns, ADR triggers, stage-completion checklists, and reusable templates.
 
@@ -516,7 +522,7 @@ See `LICENSE` and `NOTICE` in this directory for full terms.
 
 **Copyright:** © 2026 Mohammad Maheri
 
-> **Note:** AI-DLC v1 (Development Life Cycle) is NOT part of the AI-* Family — it is a separate AWS product ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) licensed under MIT-0.
+> **Note:** AI-DLC (Development Life Cycle) is NOT part of the AI-* Family — it is a separate AWS product ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) licensed under MIT-0.
 
 ---
 

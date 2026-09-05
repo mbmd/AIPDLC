@@ -1,4 +1,4 @@
-# FAMILY_BINDINGS.md — PDLC
+# FAMILY_BINDINGS.md — PDLC (Product Development Life Cycle)
 
 > **⚠️ GENERATED — Do not edit manually.**
 > Derived from: package gate contracts + cross-family flow definitions.
@@ -43,28 +43,28 @@ AI-DFE ◄── (reads all markers + each package's SOURCE_MAP — data-fabric 
 <!-- BEGIN-GENERATED:internal-edges -->
 | # | From | Emits Type | To | Consumes Type | Kind | Via Marker |
 |---|------|-----------|-----|---------------|------|------------|
-| I-01 | AI-ILC | `idea-decision@1` | AI-PILC | `idea-decision@^1` | forward | `ilc-state.md` |
-| I-02 | AI-ILC | `idea-decision@1` | AI-PPM | `idea-decision@^1` | forward | `ilc-state.md` |
-| I-03 | AI-PILC | `project-initiation@1` | AI-POLC | `project-initiation@^1` | forward | `pilc-state.md` |
+| I-01 | AI-ILC (Idea Life Cycle) | `idea-decision@1` | AI-PILC (Project Initiation Life Cycle) | `idea-decision@^1` | forward | `ilc-state.md` |
+| I-02 | AI-ILC | `idea-decision@1` | AI-PPM (Project Portfolio Management) | `idea-decision@^1` | forward | `ilc-state.md` |
+| I-03 | AI-PILC | `project-initiation@1` | AI-POLC (Product Ownership Life Cycle) | `project-initiation@^1` | forward | `pilc-state.md` |
 | I-04 | AI-PILC | `project-initiation@1` | AI-PPM | `project-initiation@^1` | forward | `pilc-state.md` |
-| I-05 | AI-PILC | `project-initiation@1` | AI-UXD | `project-initiation@^1` | forward | `pilc-state.md` |
-| I-06 | AI-PILC | `project-initiation@1` | AI-ADLC | `project-initiation@^1` | forward | `pilc-state.md` |
+| I-05 | AI-PILC | `project-initiation@1` | AI-UXD (UX Design) | `project-initiation@^1` | forward | `pilc-state.md` |
+| I-06 | AI-PILC | `project-initiation@1` | AI-ADLC (Architecture Design Life Cycle) | `project-initiation@^1` | forward | `pilc-state.md` |
 | I-07 | AI-POLC | `product-backlog@1` | AI-UXD | `product-backlog@^1` | forward | `polc-state.md` |
 | I-08 | AI-POLC | `product-backlog@1` | AI-ADLC | `product-backlog@^1` | forward | `polc-state.md` |
-| I-09 | AI-POLC | `product-backlog@1` | AI-DWG | `product-backlog@^1` | forward | `polc-state.md` |
+| I-09 | AI-POLC | `product-backlog@1` | AI-DWG (Workspace Generator) | `product-backlog@^1` | forward | `polc-state.md` |
 | I-10 | AI-UXD | `ux-design@1` | AI-POLC | `ux-design@^1` | feedback | `uxd-state.md` |
 | I-11 | AI-UXD | `ux-design@1` | AI-ADLC | `ux-design@^1` | forward | `uxd-state.md` |
 | I-12 | AI-UXD | `ux-design@1` | AI-DWG | `ux-design@^1` | forward | `uxd-state.md` |
 | I-13 | AI-ADLC | `architecture-design@1` | AI-POLC | `architecture-design@^1` | feedback | `adlc-state.md` |
 | I-14 | AI-ADLC | `architecture-design@1` | AI-UXD | `architecture-design@^1` | feedback | `adlc-state.md` |
 | I-15 | AI-ADLC | `architecture-design@1` | AI-DWG | `architecture-design@^1` | forward | `adlc-state.md` |
-| I-16 | AI-DWG | `development-workspace@1` | AI-GCE | `development-workspace@^1` | forward | `dwg-state.md` |
-| I-17 | AI-DWG | `development-workspace@1` | AI-TGE | `development-workspace@^1` | forward | `dwg-state.md` |
+| I-16 | AI-DWG | `development-workspace@1` | AI-GCE (Governance & Compliance Engine) | `development-workspace@^1` | forward | `dwg-state.md` |
+| I-17 | AI-DWG | `development-workspace@1` | AI-TGE (Test Governance Engine) | `development-workspace@^1` | forward | `dwg-state.md` |
 <!-- END-GENERATED:internal-edges -->
 
-> **AI-FLO is a wildcard observer, not a capability edge.** It consumes `"*"` (all types) as routing triggers — it reads every marker to track positions but forms no capability-typed edge. It is excluded from the edge table by design.
+> **AI-FLO (Flow Orchestrator) is a wildcard observer, not a capability edge.** It consumes `"*"` (all types) as routing triggers — it reads every marker to track positions but forms no capability-typed edge. It is excluded from the edge table by design.
 
-> **AI-DFE is also a wildcard observer, not a capability edge.** Like AI-FLO, it consumes `"*"` (all markers, plus each package's `SOURCE_MAP.md`) as gather triggers and forms no capability-typed edge. It **emits** `data-surface@1` (internal visibility) — consumed by tools/dashboards via `{family}-ws/data/REGISTRY.json`, not by sibling packages — so it appears in the chain summary as a data overlay but is excluded from the internal edge table by design.
+> **AI-DFE (Data Fabric Engine) is also a wildcard observer, not a capability edge.** Like AI-FLO, it consumes `"*"` (all markers, plus each package's `SOURCE_MAP.md`) as gather triggers and forms no capability-typed edge. It **emits** `data-surface@1` (internal visibility) — consumed by tools/dashboards via `{family}-ws/data/REGISTRY.json`, not by sibling packages — so it appears in the chain summary as a data overlay but is excluded from the internal edge table by design.
 
 ### Fan-In Gates (from intra routing-policy)
 
@@ -143,4 +143,4 @@ AI-DFE ◄── (reads all markers + each package's SOURCE_MAP — data-fabric 
 
 ---
 
-*Generated 2026-06-18 (regenerated 2026-08-10 with forward/feedback edge classification) · Source: gate contracts (9 dev-tree packages; AI-FLO + AI-DFE cloned at assemble) + CROSS_FAMILY_FLOWS.md (6 PDLC flows: 4 in / 2 out) · Generator v1.1.0 · Part of the AIFLC Communication Fabric*
+*Generated 2026-06-18 (regenerated 2026-08-10 with forward/feedback edge classification) · Source: gate contracts (9 dev-tree packages; AI-FLO + AI-DFE cloned at assemble) + CROSS_FAMILY_FLOWS.md (6 PDLC flows: 4 in / 2 out) · Generator v1.1.0 · Part of the AIFLC (AI Full Life Cycle) Communication Fabric*

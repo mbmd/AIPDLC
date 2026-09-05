@@ -6,23 +6,17 @@
 
 ## What Steering Files Are
 
-Steering files are markdown documents placed in `.kiro/steering/` that provide context, rules, and constraints to every AI session in a workspace. They are the runtime bridge between architectural decisions (made during AI-ADLC/AI-DWG) and session-level AI behavior.
+Steering files are markdown documents placed in `.kiro/steering/` that provide context, rules, and constraints to every AI session in a workspace. They are the runtime bridge between architectural decisions (made during AI-ADLC (Architecture Design Life Cycle)/AI-DWG (Workspace Generator)) and session-level AI behavior.
 
 ```
 .kiro/steering/
-├── session-orchestrator-pdlc.md   ← Always loaded (routes to package cores on demand)
-├── workspace-rules.md             ← Always loaded (project-wide context — AI-DWG output)
-├── tech-stack.md                  ← Always loaded (technology constraints)
-├── api-standards.md               ← Always loaded (API rules)
-├── security-rules.md              ← Always loaded (security constraints)
-└── frontend-standards.md          ← File-match: loaded when editing frontend code
-
-.aiflc/pdlc/
-├── ai-pilc-rules/core-workflow.md      ← Manual: loaded when orchestrator routes to AI-PILC
-├── ai-pilc-rule-details/               ← Read on demand by the core
-├── ai-adlc-rules/core-workflow.md      ← Manual: loaded when orchestrator routes to AI-ADLC
-├── ai-adlc-rule-details/               ← Read on demand by the core
-└── ...
+├── workspace-rules.md         ← Always loaded (project-wide context)
+├── tech-stack.md              ← Always loaded (technology constraints)
+├── api-standards.md           ← Always loaded (API rules)
+├── security-rules.md          ← Always loaded (security constraints)
+├── ai-pilc-rules.md           ← File-match: loaded when working in ai-pilc/
+├── ai-adlc-rules.md           ← File-match: loaded when working in ai-adlc/
+└── persona-cto-architect.md   ← Manual: loaded when user invokes #persona-cto-architect
 ```
 
 ---
@@ -123,8 +117,6 @@ When AI-DWG runs, it produces steering files with appropriate loading modes:
 | `multi-tenancy.md` | Always (conditional generation) | Only generated if architecture includes tenancy |
 | `frontend-standards.md` | File-match (`src/frontend/**`) | Only when editing frontend code |
 
-These steering files are generated into the AI-DWG-produced workspace's `.kiro/steering/` folder (in the Layer-3 project workspace, not the Layer-2 design workspace where AI-DWG runs). They become the governance surface for the build phase.
-
 ---
 
 ## The Family Loading Model — One Orchestrator, Manual Cores
@@ -135,18 +127,18 @@ The family avoids this with a deliberate split:
 
 | Artifact | Inclusion | Loaded |
 |----------|-----------|--------|
-| Each package core (`{package}-rules/core-*.md`) | `manual` | Only when you activate that package — by its key (e.g. `_POLC_`) or by referencing it with `#` |
+| Each package core (`{package}-rules/core-*.md`) | `manual` | Only when you activate that package — by its key (e.g. `_POLC_` (activate Product Ownership)) or by referencing it with `#` |
 | One `session-orchestrator.md` (deployed to `.kiro/steering/` — top level, so Kiro auto-loads it) | `auto` | Always — it is the family's single always-loaded steering file |
 
 The **session orchestrator** is a small (~120-line) router. On every session it:
-1. Reads your intent — an activation key (e.g. `_ADLC_`), a natural-language request, or "resume".
+1. Reads your intent — an activation key (e.g. `_ADLC_` (activate Architecture Design)), a natural-language request, or "resume".
 2. Loads exactly ONE package's core on demand.
 3. Keeps the rest dormant so the context window stays free.
 
 A fresh session therefore starts with a lightweight orchestrator rather than every package workflow, and only one package is ever active at a time.
 
 **Activating a package:**
-- Type its key (e.g. `_UXD_`) — the orchestrator routes to that package.
+- Type its key (e.g. `_UXD_` (activate UX Design)) — the orchestrator routes to that package.
 - Or describe what you want ("work on the backlog") — the orchestrator maps intent to the right package.
 - Or say "resume" — the orchestrator scans your `*-state.md` files and reloads the in-progress package.
 
@@ -223,4 +215,4 @@ Steering sets the CONTEXT. Hooks enforce AUTOMATICALLY. Agents provide ACTIVE GO
 | How GCE Derivation Pipeline Works | `knowledge_docs/HOW_GCE_DERIVATION_PIPELINE_WORKS.md` |
 | How to Prepare a Development Workspace | `knowledge_docs/HOW_TO_PREPARE_A_DEVELOPMENT_WORKSPACE.md` |
 
-*Knowledge Document | Created: 2026-06-12 | Updated: 2026-08-10 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-12 | Updated: 2026-06-24 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

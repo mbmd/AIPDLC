@@ -99,9 +99,9 @@ If your state file is gone and a SUCCESSOR package tries to detect your output:
 
 | Successor | Behavior Without Marker |
 |-----------|------------------------|
-| AI-ADLC looking for `pilc-state.md` | Falls back to standalone mode — asks for requirements directly |
-| AI-DWG looking for `adlc-state.md` | Falls back to standalone mode — asks for architecture docs |
-| AI-GCE looking for workspace marker | Scans for `.kiro/steering/` directly (alternative detection) |
+| AI-ADLC (Architecture Design Life Cycle) looking for `pilc-state.md` | Falls back to standalone mode — asks for requirements directly |
+| AI-DWG (Workspace Generator) looking for `adlc-state.md` | Falls back to standalone mode — asks for architecture docs |
+| AI-GCE (Governance & Compliance Engine) looking for workspace marker | Scans for `.kiro/steering/` directly (alternative detection) |
 
 **Recovery:** Recreate the state file (even minimal) and place it in the output folder. Successor will find it on next scan.
 

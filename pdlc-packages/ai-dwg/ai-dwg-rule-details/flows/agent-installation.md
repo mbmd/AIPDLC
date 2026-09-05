@@ -37,6 +37,18 @@ The orchestration logic for installing the AI-DWG governance agent into the dest
 
 AI-DWG installs its own agent independently. No dependency on AI-GCE or any other package being present. If other packages run later, they will detect and preserve the AI-DWG entries via marker-based ownership.
 
+## Per-Member Installation in a Workspace Set (per-team/hybrid topology)
+
+When `workspaceTopology ∈ {per-team, hybrid}` (Config Gate Q4), each of the N Layer-3 member workspaces is a full workspace that needs its own agent install. Run this installation **once per member**:
+
+- Enumerate members from the Layer-2 `workspace-set-manifest.yaml` (`members[].workspace`).
+- For **each** member, apply the Installation Logic above against that member's root (`{slug}-workspaces/{team}/`): copy `workspace-integrity-agent.md` into its `.kiro/agents/`, append the shortcut block to its `rules/workspace-rules.md`, and create/append its `.governance/AGENT_REGISTRY.md` + `AGENT-GUIDE.md`. Marker-based idempotency applies per member.
+- The **family upgrade agent** (`UPG__`, PDLC-UPG-01) is installed **once per member** as well (each member is a self-contained workspace a developer opens separately, so each needs its own upgrade path). The `MIGRATION_CATALOGUE.md` family artifact is likewise available per member.
+- The **Layer-2 control plane** (`{slug}-management/`) is a management surface, not a dev workspace — it receives no dev-side agent install. (Cross-workspace governance is AI-GCE's roll-up, read from L2.)
+- **Single workspace (default):** one install target, as specified above — unchanged.
+
+Mode-transparent: the loop reads `physicalLayout` only to resolve each member's path vs. repo URL; the install logic is identical.
+
 ## Post-Install Confirmation
 
 ```

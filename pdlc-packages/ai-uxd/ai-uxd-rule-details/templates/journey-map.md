@@ -16,6 +16,8 @@ ownership: hybrid
 | Persona | {name + link to persona doc} |
 | Goal | {what they're trying to achieve} |
 | Type | {Core / Onboarding / Recovery / Return} |
+| Owning Team | {TEAM-slug — optional; set when the AI-ADLC team-topologies feature is active; else derived via the AI-POLC handoff (see Traceability) or "n/a"} |
+| Bounded Context | {BC-slug — optional; set when the topology feature is active; else derived or "n/a"} |
 | Starting Trigger | {what initiates this journey} |
 | End State (Success) | {what "done" looks like} |
 | End State (Failure) | {what failure looks like} |
@@ -74,6 +76,9 @@ ownership: hybrid
 | Screens involved | {list of screens from wireframe inventory} |
 | Components critical to this journey | {key components} |
 | AI-POLC handoff | {opportunity → epic/story mapping} |
+| Owning Team / Bounded Context | {TEAM-* / BC-* — see Metadata} |
+
+> **Team/context attribution (hybrid — Q-D9).** When the `team-topologies` feature is active, set the `Owning Team` (`TEAM-*`) / `Bounded Context` (`BC-*`) tag natively from the AI-ADLC `team-context-registry`. When untagged, derive it via the **AI-POLC handoff** above: the opportunity → epic mapping gives the epic, and the epic's `Owning Team` / `Bounded Context` is inherited (persona → epic → BC/TEAM). AI-DWG uses this to route each team its `ux/` slice. **Design-system tokens and the accessibility baseline stay SHARED across all teams — never team-scoped.**
 
 ---
 

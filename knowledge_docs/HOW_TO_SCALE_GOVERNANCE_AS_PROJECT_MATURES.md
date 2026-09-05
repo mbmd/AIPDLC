@@ -1,6 +1,6 @@
 # How to Scale Governance as a Project Matures
 
-**Purpose:** Practical guide for progressing through AI-GCE's three governance tiers — when to activate each tier, how to assess readiness, how to handle the transition, and how to avoid the common failure of either too-fast or too-slow progression.
+**Purpose:** Practical guide for progressing through AI-GCE (Governance & Compliance Engine)'s three governance tiers — when to activate each tier, how to assess readiness, how to handle the transition, and how to avoid the common failure of either too-fast or too-slow progression.
 
 ---
 
@@ -176,7 +176,7 @@ For teams that master Tier 3:
 | Extension | What It Adds | Activate When |
 |-----------|-------------|--------------|
 | Custom rules | Project-specific enforcement not in standard tiers | Recurring manual reviews catch the same issue |
-| Cross-project governance | Portfolio-level consistency rules (AI-PPM) | Organization has multiple projects needing alignment |
+| Cross-project governance | Portfolio-level consistency rules (AI-PPM (Project Portfolio Management)) | Organization has multiple projects needing alignment |
 | Compliance certification prep | SOC 2, ISO 27001, HIPAA-specific rules | Certification timeline approaching |
 | Advanced metrics | Governance effectiveness scoring, trend analysis | Leadership wants quantified improvement data |
 

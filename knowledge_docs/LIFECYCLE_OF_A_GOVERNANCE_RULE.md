@@ -1,6 +1,6 @@
 # Lifecycle of a Governance Rule
 
-**Purpose:** Traces the complete lifecycle of an AI-GCE governance rule from birth to retirement — every state transition, what triggers each transition, and who decides.
+**Purpose:** Traces the complete lifecycle of an AI-GCE (Governance & Compliance Engine) governance rule from birth to retirement — every state transition, what triggers each transition, and who decides.
 
 ---
 

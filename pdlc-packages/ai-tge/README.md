@@ -2,7 +2,7 @@
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
 **License:** Apache 2.0 with Attribution Addendum — See `LICENSE` and `NOTICE`
@@ -32,7 +32,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -40,13 +40,13 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -60,11 +60,11 @@ flowchart LR
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 > **AI-DFE** ([Data Fabric Engine](../ai-dfe/)) is a family-scoped **companion** — it gathers data from all packages and distributes structured JSON for dashboards and status roll-ups. It runs alongside the chain rather than as a linear step, so it is not shown as a chain row above.
 
@@ -72,46 +72,46 @@ flowchart LR
 
 ## Where AI-TGE Sits in the Chain
 
-AI-TGE is a **continuous companion**, not a forward chain step — the family's first companion package. It runs **alongside AI-DLC v1** (the build), together with AI-GCE, inside the AI-DWG-generated development workspace. It reads what the architecture promised and what the build is doing, derives a test-governance layer, and continuously tracks whether what was designed is getting tested.
+AI-TGE is a **continuous companion**, not a forward chain step — the family's first companion package. It runs **alongside AI-DLC** (the build), together with AI-GCE, inside the AI-DWG-generated development workspace. It reads what the architecture promised and what the build is doing, derives a test-governance layer, and continuously tracks whether what was designed is getting tested.
 
 | Aspect | AI-TGE |
 |--------|---------|
 | **Layer** | Project — a continuous companion (runs in the dev workspace, alongside the build) |
-| **Position** | Alongside AI-DLC v1 (not a sequential design step); sibling of AI-GCE |
-| **Predecessors** | AI-ADLC (AP — the commitments to test) and AI-DWG (the workspace); observes AI-DLC v1 |
-| **Runs with** | AI-DLC v1 (the build) and AI-GCE (its sibling companion) |
-| **Reads (input)** | AP (`adlc-state.md`), DW (`.governance/workspace-manifest.yaml` / `rules/`), AI-DLC v1 state (`aidlc-docs/`), and existing tests (brownfield) |
+| **Position** | Alongside AI-DLC (not a sequential design step); sibling of AI-GCE |
+| **Predecessors** | AI-ADLC (AI-Driven Architecture Design Life Cycle — AP, the commitments to test) and AI-DWG (AI-Driven Workspace Generator — the workspace); observes AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) |
+| **Runs with** | AI-DLC (the build) and AI-GCE (its sibling companion) |
+| **Reads (input)** | AP (`adlc-state.md`), DW (`.governance/workspace-manifest.yaml` / `rules/`), AI-DLC state (`aidlc-docs/`), and existing tests (brownfield) |
 | **Produces (output)** | A test-governance layer under `.governance/test/` — strategy, register, coverage report, debt scorecard, defect log (+ quality dashboard) |
 | **Output marker** | `tge-state.md` (in `.governance/test/`) |
 | **Correlation key** | Reads the `projectId` and stamps it into every coverage/defect record |
-| **Capability emitted** | `test-strategy@1` (internal — companion to AI-DLC v1) |
+| **Capability emitted** | `test-strategy@1` (internal — companion to AI-DLC) |
 | **Capability consumed** | `development-workspace@1` (AI-DWG) + `architecture-design@1` (AI-ADLC) |
 
 **Simplified chain view** (see the diagram above for the full topology):
 
 ```
-… AI-ADLC → AI-DWG → AI-DLC v1  (build)
+… AI-ADLC → AI-DWG → AI-DLC (build)
                        ├── AI-GCE  (guards, alongside)
                        └── AI-TGE  ← you are here (tests, alongside)
 ```
 
-AI-TGE answers **"do tests exist for what we designed, and which missing tests matter most?"** It **governs test accountability** — deriving the tests that MUST exist from architectural commitments, tracking what actually gets tested, and risk-scoring every gap. It never writes or runs test code (that's AI-DLC v1's build-and-test), and it is distinct from AI-GCE (code compliance) — see the Boundary Statement and Differences from AI-GCE below.
+AI-TGE answers **"do tests exist for what we designed, and which missing tests matter most?"** It **governs test accountability** — deriving the tests that MUST exist from architectural commitments, tracking what actually gets tested, and risk-scoring every gap. It never writes or runs test code (that's AI-DLC's build-and-test), and it is distinct from AI-GCE (code compliance) — see the Boundary Statement and Differences from AI-GCE below.
 
 ### Standalone vs. chained
 
-- **Standalone.** It never requires the full chain — four auto-detected input modes: an AP alone yields architecture-derived strategy; existing tests alone yield a brownfield assessment; a running AI-DLC v1 alone yields observation-only tracking.
+- **Standalone.** It never requires the full chain — four auto-detected input modes: an AP alone yields architecture-derived strategy; existing tests alone yield a brownfield assessment; a running AI-DLC alone yields observation-only tracking.
 - **Chained.** With AP + DW + `aidlc-docs` present it runs full Strategy + Observation — deriving the register from commitments and tracking coverage as the build proceeds.
 - **Delegation-on-activation.** When AI-TGE is active it **owns** `testing-strategy.md` (AI-DWG defers it); if AI-TGE is absent, AI-DWG produces a basic one from the architecture's quality attributes.
 - **Graceful degradation (OR-input).** Each input is additive enrichment — its absence reduces scope but never halts the engine.
-- **Platform-aware.** Its two report-only agents (`TGV__`, `CVR__`) render per platform; auto-execution/shortcuts are strongest on Kiro, advisory elsewhere.
+- **Platform-aware.** Its two always-on report-only agents (`TGV__` (Test Governance), `CVR__` (Coverage Review)) — plus two lens quality agents when a lens is ON (`AIQ__` AI-LENS, `ATQ__` Automation-LENS) — render per platform; auto-execution/shortcuts are strongest on Kiro, advisory elsewhere.
 
 ---
 
 ## What is AI-TGE?
 
-AI-TGE is an injectable test governance engine that reads architecture decisions (from AI-ADLC) and a development workspace (from AI-DWG), derives a structured test governance layer — strategy, register, coverage tracking, risk scoring — and continuously observes AI-DLC v1 execution to maintain test accountability.
+AI-TGE is an injectable test governance engine that reads architecture decisions (from AI-ADLC) and a development workspace (from AI-DWG), derives a structured test governance layer — strategy, register, coverage tracking, risk scoring — and continuously observes AI-DLC execution to maintain test accountability.
 
-It is the first **companion package** in the AI-* Family. Unlike sequential packages that sit in a linear handoff chain, AI-TGE runs **alongside** AI-DLC v1 together with AI-GCE as a continuous quality engine. It does not produce output for a downstream package — it feeds findings back into project quality.
+It is the first **companion package** in the AI-* Family. Unlike sequential packages that sit in a linear handoff chain, AI-TGE runs **alongside** AI-DLC together with AI-GCE as a continuous quality engine. It does not produce output for a downstream package — it feeds findings back into project quality.
 
 **Metaphor:** A test governance inspector. It reads everything the architecture promised — API contracts, security decisions, integration maps, component designs — and builds a register of tests that MUST exist to verify those promises were kept. Then it watches the build, tracking what gets tested and what doesn't, scoring the risk of every gap.
 
@@ -167,7 +167,7 @@ All artifacts are generated under `.governance/test/` in the workspace root:
 ### Observation Phase (Track what gets tested)
 
 ```
-🟢 Stage 7:  State Observation       →  Watch AI-DLC v1 progress, update register
+🟢 Stage 7:  State Observation       →  Watch AI-DLC progress, update register
 🟢 Stage 8:  Story Acceptance Mapping →  Map acceptance criteria to tests (conditional)
 🟢 Stage 9:  Coverage Reporting      →  Multi-view coverage analysis
 🟢 Stage 10: Architecture Reconciliation →  Detect AP changes, propose updates (conditional)
@@ -183,12 +183,12 @@ AI-TGE adapts to what exists. It never requires the full chain to have run.
 
 | Mode | What Exists | Behavior |
 |------|------------|----------|
-| **Full Chain** | AP + DW + aidlc-docs (AI-DLC v1 running) | Full strategy + observation |
+| **Full Chain** | AP + DW + aidlc-docs (AI-DLC running) | Full strategy + observation |
 | **Architecture Only** | AP (from AI-ADLC) but no DW or DLC | Strategy mode only — derive register from AP |
 | **Brownfield** | Existing project with existing tests (no AP) | Assessment mode — map tests, identify gaps |
-| **Observation Only** | Active AI-DLC v1 with aidlc-docs but no prior TGE run | Jump to observation — register as you go |
+| **Observation Only** | Active AI-DLC with aidlc-docs but no prior TGE run | Jump to observation — register as you go |
 
-**Standalone Usage (OR-input):** AI-TGE never blocks on a missing predecessor. AP alone produces architecture-derived strategy. Existing tests alone produce brownfield assessment. Running AI-DLC v1 alone produces observation-only tracking. Each input is additive enrichment — its absence reduces scope but never halts the engine. You do NOT need to run AI-PILC, AI-ADLC, or AI-DWG first if you have existing code with tests to assess.
+**Standalone Usage (OR-input):** AI-TGE never blocks on a missing predecessor. AP alone produces architecture-derived strategy. Existing tests alone produce brownfield assessment. Running AI-DLC alone produces observation-only tracking. Each input is additive enrichment — its absence reduces scope but never halts the engine. You do NOT need to run AI-PILC, AI-ADLC, or AI-DWG first if you have existing code with tests to assess.
 
 ---
 
@@ -241,7 +241,7 @@ AI-TGE supports multi-session workflows:
 
 ## Activation
 
-**Explicit key:** type `_TGE_` in any prompt to activate AI-TGE unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-TGE`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
+**Explicit key:** type `_TGE_` in any prompt to activate AI-TGE unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` (report active package) reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-TGE`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
 
 ---
 
@@ -306,7 +306,7 @@ An AI assistant can install AI-TGE by parsing and executing the block below. All
 # AIFLC INSTALL MANIFEST — AI-TGE
 package: AI-TGE
 family: pdlc                       # package home:.aiflc/pdlc/
-version: 1.0.0
+version: 1.1.0
 runtime: none                      # pure Markdown; no deps, no build
 role: layer-3-companion            # normally provisioned by AI-DWG; direct install for standalone/brownfield
 source_root: pdlc-packages/        # clone root of the AIPDLC repo
@@ -318,7 +318,7 @@ optional_inputs:
   - marker: adlc-state.md                         # AP — architectural commitments to test
   - marker:.governance/workspace-manifest.yaml   # AI-DWG discovery contract (primary)
   - marker: rules/workspace-rules.md              # legacy DW fallback
-  - marker: aidlc-docs/aidlc-state.md             # AI-DLC v1 build state (observation)
+  - marker: aidlc-docs/aidlc-state.md             # AI-DLC build state (observation)
 emits_capability: "test-strategy@1"
 output_marker: tge-state.md        # in.governance/test/
 output_dir:.governance/test/      # test-governance layer written into the target workspace root
@@ -388,7 +388,7 @@ For the full per-platform walkthrough, see [setup/INSTALL.md](./setup/INSTALL.md
 - A test writer (doesn't generate test code)
 - A CI/CD tool (doesn't connect to pipelines)
 - A replacement for AI-GCE (GCE governs code compliance; TGE governs test completeness)
-- A replacement for AI-DLC v1's Build-and-Test stage (that generates test instructions; TGE governs whether those instructions are sufficient)
+- A replacement for AI-DLC's Build-and-Test stage (that generates test instructions; TGE governs whether those instructions are sufficient)
 
 **AI-TGE IS:**
 - A test governance engine that knows what tests SHOULD exist
@@ -500,7 +500,7 @@ The table maps each to *what AI-TGE applies* and *where it stops*. AI-TGE **alig
 | **Commitment-based coverage** | Traceable "did we test what we designed?" — every register entry maps to an architectural promise or baseline rule | Not line-of-code coverage — it measures verification of commitments, not code % |
 | **Technical-debt governance** | A debt scorecard of prioritized missing tests, re-scored as context changes | It surfaces and ranks test debt; remediation (writing the tests) is the build's job |
 
-The hard boundary (see the Boundary Statement above): AI-TGE **governs — it does not write or run tests**. It is not a test runner, a test-code generator, or a CI/CD tool, and it is complementary to (not a replacement for) AI-GCE (code compliance) or AI-DLC v1's build-and-test stage.
+The hard boundary (see the Boundary Statement above): AI-TGE **governs — it does not write or run tests**. It is not a test runner, a test-code generator, or a CI/CD tool, and it is complementary to (not a replacement for) AI-GCE (code compliance) or AI-DLC's build-and-test stage.
 
 ---
 
@@ -514,7 +514,7 @@ AI-TGE is the **quality end** of the family's lens system. Engine cores carry no
 | **Automation Lens** | `ATQ__` | Test quality for automation-lens features (`automationFeature` work) |
 | **Agentic** (AI ∩ Automation) | `AIQ__` + `ATQ__` (extended) | Adds agentic test depth — agent trajectory evaluation and step-cap tests |
 
-Modes originate upstream (set at AI-PILC in `Lens_Status.md`, tagged per-feature at AI-POLC); AI-TGE checks the tagged features. AI-GCE is the governance counterpart (`AIG__` / `ATG__`).
+Modes originate upstream (set at AI-PILC (Project Initiation Life Cycle) in `Lens_Status.md`, tagged per-feature at AI-POLC (Product Ownership Life Cycle)); AI-TGE checks the tagged features. AI-GCE is the governance counterpart (`AIG__` (AI Governance) / `ATG__` (Automation Governance)).
 
 ---
 
@@ -571,7 +571,7 @@ See `LICENSE` and `NOTICE` in this directory for full terms.
 
 **Copyright:** © 2026 Mohammad Maheri
 
-> **Note:** AI-DLC v1 (Development Life Cycle) is NOT part of the AI-* Family — it is a separate AWS product ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) licensed under MIT-0.
+> **Note:** AI-DLC (Development Life Cycle) is NOT part of the AI-* Family — it is a separate AWS product ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) licensed under MIT-0.
 
 ---
 

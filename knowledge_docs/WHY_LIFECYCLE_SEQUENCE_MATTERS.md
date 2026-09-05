@@ -1,6 +1,6 @@
 # Why the Lifecycle Sequence Matters
 
-**Purpose:** Explains why AIFLC's AI-* PDLC Family runs its packages in a specific order — *decide → initiate → own → design experience → design structure → generate workspace* — and what breaks when that order is rearranged. The sequence is not arbitrary: each package consumes the package before it, so the order is a dependency chain, not a preference.
+**Purpose:** Explains why AIFLC (AI Full Life Cycle)'s AI-* PDLC Family runs its packages in a specific order — *decide → initiate → own → design experience → design structure → generate workspace* — and what breaks when that order is rearranged. The sequence is not arbitrary: each package consumes the package before it, so the order is a dependency chain, not a preference.
 
 ---
 
@@ -9,17 +9,17 @@
 The AI-* PDLC Family executes as a forward sequence:
 
 ```
-Portfolio layer:   AI-ILC  →  AI-PILC        (decide it → initiate it)
+Portfolio layer:   AI-ILC (Idea Life Cycle)  →  AI-PILC (Project Initiation Life Cycle)        (decide it → initiate it)
                                   │
                           (portfolio admission + routing)
                                   │
-Project layer:     AI-POLC → AI-UXD → AI-ADLC → AI-DWG → build
+Project layer:     AI-POLC (Product Ownership Life Cycle) → AI-UXD (UX Design) → AI-ADLC (Architecture Design Life Cycle) → AI-DWG (Workspace Generator) → build
                    own it    design UX  design it  prepare it
 ```
 
 Each arrow is a real handoff: the producer's **output package** becomes the consumer's **input**. AI-POLC produces the Product Backlog Package; AI-UXD consumes it and produces the UX Design Package; AI-ADLC consumes both and produces the Architecture Package; AI-DWG consumes all three to generate the development workspace. The order encodes the dependency: you cannot design an experience for features you have not yet scoped, and you cannot architect a system whose experience you have not yet defined.
 
-This document focuses on the *single-project golden path*. Two family packages sit outside this line by design and are covered separately: **AI-PPM** is a continuous portfolio engine that reasons across many projects (it is not a station on one project's track), and **AI-FLO** is the router that *performs* each handoff (it is the mechanism, not a step). The companions **AI-GCE** and **AI-TGE** run alongside delivery rather than in the forward line.
+This document focuses on the *single-project golden path*. Two family packages sit outside this line by design and are covered separately: **AI-PPM (Project Portfolio Management)** is a continuous portfolio engine that reasons across many projects (it is not a station on one project's track), and **AI-FLO (Flow Orchestrator)** is the router that *performs* each handoff (it is the mechanism, not a step). The companions **AI-GCE (Governance & Compliance Engine)** and **AI-TGE (Test Governance Engine)** run alongside delivery rather than in the forward line.
 
 ---
 

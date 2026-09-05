@@ -37,7 +37,29 @@ The state file is always located at: `{workspace_root}/.governance/test/tge-stat
 | Architecture Package | {path or "not available"} | {Detected / Not found / User-provided} |
 | Development Workspace | {path or "not available"} | {Detected / Not found} |
 | aidlc-docs | {path or "not available"} | {Detected / Not found} |
+| User Stories | {path or "not available"} | {Detected / Not found} |
 | Existing Tests | {path or "not detected"} | {Detected / Not found} |
+
+> **Detection only.** A `Not found` row above is not a finding on its own — what each absence *costs* is recorded in Observation Fidelity immediately below. Resolution state is recorded once, here; consequences are recorded once, there.
+
+## Observation Fidelity
+
+| Field | Value |
+|-------|-------|
+| Fidelity | {✅ Full / ⚠️ Degraded / ❌ Unknown} |
+| Assessed At | {ISO 8601 timestamp or "not assessed"} |
+| Assessed By | Stage {1 / 7} |
+| Mode Assessed Against | {Full Chain / Architecture Only / Brownfield / Observation Only} |
+| Declared Inputs Resolved | {n} of {N} |
+
+### Per-Input Resolution
+
+| Input | Expected At | Resolved | Substitute Used | Unmeasured Consequence |
+|-------|-------------|:-------:|-----------------|------------------------|
+| Build state | {path or "not declared by this mode"} | {✅ / ❌ / n/a} | {— / modification-time heuristic} | {— / unit completion is inferred from file timestamps, not read} |
+| Unit-progress vocabulary | {source or "not declared by this mode"} | {✅ / ❌ / n/a} | {— / completions treated as generic} | {— / per-unit stage position unavailable} |
+| User-story location | {path or "not declared by this mode"} | {✅ / ❌ / n/a} | {— / Stage 8 skipped} | {— / story-derived acceptance coverage is zero, not complete} |
+| NFR location | {path or "not declared by this mode"} | {✅ / ❌ / n/a} | {— / story-carried NFR extraction skipped} | {— / NFR coverage reflects the Architecture Package only} |
 
 ## Register Stats
 
@@ -78,11 +100,11 @@ The state file is always located at: `{workspace_root}/.governance/test/tge-stat
 
 ## Observation Log
 
-| # | Timestamp | Event | Action Taken |
-|---|-----------|-------|-------------|
-| 1 | {ISO timestamp} | Unit {X} completed | Registered {N} required tests |
-| 2 | {ISO timestamp} | Coverage check requested | Report generated: {N}% |
-| 3 | {ISO timestamp} | AP change detected | Reconciliation triggered |
+| # | Timestamp | Fidelity | Event | Action Taken |
+|---|-----------|:--------:|-------|-------------|
+| 1 | {ISO timestamp} | {✅ / ⚠️ / ❌} | Unit {X} completed | Registered {N} required tests |
+| 2 | {ISO timestamp} | {✅ / ⚠️ / ❌} | Coverage check requested | Report generated: {N}% |
+| 3 | {ISO timestamp} | {✅ / ⚠️ / ❌} | AP change detected | Reconciliation triggered |
 
 ## Risk Score Summary
 
@@ -119,8 +141,12 @@ The state file is always located at: `{workspace_root}/.governance/test/tge-stat
 ### Step 2: Load State
 
 1. Read the complete state file
-2. Parse: engine status, input sources, register stats, progress, observation log
+2. Parse: engine status, input sources, **observation fidelity**, register stats, progress, observation log
 3. Identify the current active stage and phase
+
+**MANDATORY — a loaded fidelity value is historical, never current.** The workspace may have changed between sessions: a directory that resolved last week may be gone. So on every resume, **reset Fidelity to `❌ Unknown`** and carry the loaded value forward only as the previous cycle's record. It becomes `✅ Full` again only by a fresh assessment at Stage 1 or Stage 7 that positively resolves every declared input.
+
+**NEVER inherit `✅ Full` across a session boundary.** By fail-closed rule F1 the reset value reads as degraded until re-assessed, so a resumed session that presents figures before re-assessing presents them qualified — which is the correct and safe direction. Definition and both fail-closed rules: `common/observation-fidelity.md`.
 
 ### Step 3: Load Context
 
@@ -128,6 +154,7 @@ Unlike lifecycle packages that only need position, AI-TGE requires **governance 
 
 | Context to Load | Why |
 |----------------|-----|
+| Previous observation fidelity | Determines whether the loaded register stats may be presented unqualified. Loaded as history and reset to `❌ Unknown` (Step 2) — read it before quoting any figure |
 | Register stats (total/covered/missing) | Needed for any coverage query |
 | AP source location | Needed for reconciliation checks |
 | Depth level | Determines which stages and features are active |
@@ -143,7 +170,7 @@ Before presenting resumption summary, detect changes:
    - If changed → flag reconciliation needed
 2. **New test files?** Scan test directories for files newer than `Last Updated`
    - If found → flag coverage update needed
-3. **AI-DLC v1 progressed?** Check `aidlc-state.md` for new completed units
+3. **AI-DLC progressed?** Check `aidlc-state.md` for new completed units
    - If progressed → flag observation cycle needed
 
 ### Step 5: Present Resumption Summary
@@ -151,16 +178,22 @@ Before presenting resumption summary, detect changes:
 ```
 🔄 AI-TGE Session Resumed
 
+{IF the previous cycle's recorded fidelity was ⚠️ Degraded — this block comes FIRST, before any figure:}
+⚠️ The last observation ran DEGRADED — {n} of {N} declared inputs did not resolve.
+   • {role} — expected at {path}; substituted with {substitute}
+   Unmeasured as a result: {consequence}
+   The figures below carry that limitation. Detail: .governance/test/tge-state.md → Observation Fidelity
+
 📋 Mode: {mode}
 📍 Current Position: {phase} Phase — Stage {n} ({stage_name})
 📅 Last Activity: {last_updated}
 ✅ Strategy Phase: {Complete / In Progress / Not Started}
 👁️ Observation Phase: {Active / Not Started / N/A}
 
-📊 Register Status:
+📊 Register Status (as of {last_updated} — not re-verified this session):
    • Commitments tracked: {N}
    • Tests required: {N}
-   • Tests existing: {N} ({coverage}%)
+   • Tests existing: {N} ({coverage}%{⚠️ if the last cycle was degraded})
    • Tests missing: {N}
    • Critical gaps: {N}
 
@@ -168,7 +201,7 @@ Before presenting resumption summary, detect changes:
 ⚡ Changes Since Last Session:
    • {AP modified — reconciliation recommended}
    • {N new test files detected — coverage update needed}
-   • {N units completed in AI-DLC v1 — observation needed}
+   • {N units completed in AI-DLC — observation needed}
 
 Shall I:
 (a) Continue from where we left off (Stage {n}: {stage_name})
@@ -178,6 +211,8 @@ Shall I:
 (e) Show current debt scorecard
 (f) Show full register status
 ```
+
+> **Why the resume path qualifies rather than declares.** Fidelity was reset to `❌ Unknown` in Step 2, so at this moment the engine has assessed nothing — it is quoting the previous cycle. That is **staleness, not degradation**, and the two are reported differently on purpose. The full degradation banner fires only on a **fresh** assessment (Stage 7, or Stage 1 on a first run). Firing it on every resume would make it routine, and a banner that appears every time is a banner nobody reads — which would reproduce the exact silence it exists to break.
 
 ### Step 6: Confirm Position
 
@@ -199,6 +234,7 @@ Wait for user response before proceeding.
 
 State MUST be updated:
 - After every stage completion
+- **After every fidelity assessment or re-assessment** — written before any figure derived from it
 - After every register update (new test registered, status changed)
 - After every observation cycle
 - After coverage report generation
@@ -225,6 +261,8 @@ If session ended mid-stage:
 
 **Key principle:** Strategy outputs are durable (don't re-derive if already approved). Observation outputs are volatile (always regenerate from current state).
 
+**Observation fidelity is volatile too, and it is never inherited.** Re-running an observation cycle re-resolves every declared input, because a location that resolved in the last cycle may be absent in this one. Treating fidelity as durable would let a stale `✅ Full` vouch for a workspace that has since changed — which is the same class of defect as a silent fallback, one layer up.
+
 ---
 
 ## Multi-Session Patterns for Test Governance
@@ -236,7 +274,7 @@ If session ended mid-stage:
 | **Reconciliation session** | AP changed; update register | Focused: trigger Stage 10, review delta, approve changes |
 | **Defect triage** | Multiple defects to log and analyze | Batch: trigger Stage 11 multiple times, then Stage 12 for re-scoring |
 | **Sprint boundary** | End of sprint, assess test debt | Run Stages 9+12: coverage report + debt reassessment |
-| **Post-build review** | AI-DLC v1 completed all units; final governance report | Full observation cycle: Stages 7-9, comprehensive coverage report |
+| **Post-build review** | AI-DLC completed all units; final governance report | Full observation cycle: Stages 7-9, comprehensive coverage report |
 
 ---
 
@@ -254,7 +292,7 @@ The Observation phase operates differently from Strategy:
 | User says "check coverage" | 7 (detect changes) → 9 (report) |
 | User says "reconcile" | 10 (AP delta) → 12 (re-score) |
 | User reports defect | 11 (log) → 12 (re-score) |
-| AI-DLC v1 unit completes (detected) | 7 (observe) → 8 (map stories if new) → 9 (report) |
+| AI-DLC unit completes (detected) | 7 (observe) → 8 (map stories if new) → 9 (report) |
 | Sprint boundary / periodic check | 7 → 8 → 9 → 12 (full cycle) |
 | AP modification detected | 10 → 9 → 12 (reconcile → report → re-score) |
 

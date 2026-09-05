@@ -271,6 +271,19 @@ This is a nudge + a recorded hand-off, not a saga design. **Event-sourced system
 
 ---
 
+### Step 8c: Team Topology Offer (opt-in extension)
+
+**Execute IF:** the decomposition (Q-DEC-02) is **service-oriented, microservices, or hybrid** AND the system will be built by **two or more teams**. **Skip IF:** modular monolith, single deployable, or one team owns everything — a fast no-op (team ownership stays implicit via CODEOWNERS + one-team-per-service).
+
+Stage 5 is where "one team per service/context" first becomes real, so this is where the team topology is offered. Present the **Team Topologies** extension opt-in (`extensions/team-topologies/team-topologies.opt-in.md`):
+
+- **Yes** → load `extensions/team-topologies/team-topologies.md`; model the team topology (TT-01..10), and produce `team-topology-map.md` + the authoritative `team-context-registry.md` that mints the shared `TEAM-*`/`BC-*`/`SVC-*` identity. Record `Enabled Extensions += team-topologies` + the team roster in `adlc-state.md`. Composes with `ddd-tactical` (DDD-08 context map) and `microservices` (MS-01 one-team-per-service).
+- **No** → team ownership stays implicit (DDD-08's "team ownership per context" checkbox + MS-01's one-team-per-service note); no `TEAM-*`/`BC-*`/`SVC-*` identity is minted. Downstream per-team workspace generation (AI-DWG) will fall back to CODEOWNERS / MS-01 ownership data if present, and to a single workspace otherwise.
+
+This is a nudge + a recorded hand-off, not the topology design itself (that lives in the extension). The identity minted here is the deterministic join key AI-POLC, AI-UXD, and AI-DWG slice on downstream.
+
+---
+
 ### Step 9: Update State File
 
 Store the container list in state (used by all subsequent stages):

@@ -1,7 +1,7 @@
 # AI-GCE — User Guide
 
 **Package:** AI-GCE (AI-Driven Governance & Compliance Engine)
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Audience:** Tech Leads, DevOps Engineers, Engineering Managers, Compliance Officers, Team Leads
 
 ---
@@ -112,7 +112,7 @@ Even with no steering files, the baseline provides meaningful governance. Steeri
 AI-DWG ──► Development Workspace ──► AI-GCE ──► Compliance Layer
                                                        │
                                                        ▼
-                                                  AI-DLC v1 (build)
+                                                  AI-DLC (build)
                                                   (enforced continuously)
 ```
 
@@ -121,7 +121,7 @@ AI-DWG ──► Development Workspace ──► AI-GCE ──► Compliance Lay
 | DWG → GCE | Development workspace with steering files (input for derivation) |
 | GCE → DLC | Compliance hooks and agents (active during development) |
 
-AI-GCE runs alongside AI-DLC v1 as a continuous quality engine. It doesn't block development — it guards it.
+AI-GCE runs alongside AI-DLC as a continuous quality engine. It doesn't block development — it guards it.
 
 ---
 
@@ -211,7 +211,7 @@ We're past Sprint 2 and ready for expanded enforcement.
 - NOT architecture design (that's AI-ADLC)
 - NOT workspace generation (that's AI-DWG)
 - NOT test governance (that's AI-TGE)
-- NOT code implementation (that's AI-DLC v1)
+- NOT code implementation (that's AI-DLC)
 - NOT a CI/CD tool — it generates rules that CI/CD can also check
 
 AI-GCE is the **Compliance Guardian** — it answers *"Is the team following the architecture and process decisions we already made?"*
@@ -233,4 +233,4 @@ See `setup/INSTALL.md` for detailed platform instructions.
 
 ---
 
-*AI-GCE v1.0.0 | Part of [AIFLC](../../README.md) — the AI-* PDLC Family*
+*AI-GCE v1.1.0 | Part of [AIFLC](../../README.md) — the AI-* PDLC Family*

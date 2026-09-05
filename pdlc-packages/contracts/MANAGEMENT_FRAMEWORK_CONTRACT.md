@@ -4,7 +4,7 @@
 **Date:** 2026-07-11
 **Status:** POINTER + PDLC-specific supplement.
 
-> **The canonical contract now lives at the family root:** `../MANAGEMENT_FRAMEWORK_CONTRACT.md` (propagated verbatim from the shared canonical `ai-packagebuilder/governance/MANAGEMENT_FRAMEWORK_CONTRACT.md`, v2.0.0). All shared behavior — scope model, detection-by-marker, contribution behavior, register set, ID protocol, lessons capture (`LRN__`), boundaries — is defined there and is uniform across every AIFLC family.
+> **The canonical contract now lives at the family root:** `../MANAGEMENT_FRAMEWORK_CONTRACT.md` (a verbatim copy of the shared cross-family governance contract, v2.0.0). All shared behavior — scope model, detection-by-marker, contribution behavior, register set, ID protocol, lessons capture (`LRN__`), boundaries — is defined there and is uniform across every AIFLC family.
 >
 > This file remains only to (a) preserve existing relative links that point at `contracts/MANAGEMENT_FRAMEWORK_CONTRACT.md`, and (b) hold the **PDLC-specific elaborations** below that do not apply to other families.
 

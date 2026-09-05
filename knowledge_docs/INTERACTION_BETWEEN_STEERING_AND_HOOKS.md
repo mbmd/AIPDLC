@@ -11,7 +11,7 @@ STEERING FILE (the source of truth)
     │
     ├── AI session READS it directly (advisory enforcement)
     │
-    └── AI-GCE DERIVES hooks from it (automated enforcement)
+    └── AI-GCE (Governance & Compliance Engine) DERIVES hooks from it (automated enforcement)
             │
             └── HOOK fires on IDE events (blocking/advisory enforcement)
 ```

@@ -40,6 +40,7 @@ Call this agent **during the Observation phase** — after coverage reports are 
 ## Consequences of Skipping
 
 **Immediate impact:**
+- **A degraded observation ships as a clean report** → the team acts on figures derived from a substitute for an input that never resolved. This is the most expensive failure this agent prevents, because the report looks right
 - Coverage percentages may include deprecated/overridden entries → inflated confidence
 - New gaps introduced by reconciliation go unnoticed → critical tests never prioritized
 - Debt scorecard stale → team works on Medium-risk gaps while Critical ones grow
@@ -57,6 +58,7 @@ If you skipped `CVR__` and coverage decisions were already made:
 
 1. Run `CVR__` now — it reads current `.governance/test/` state and validates against the latest coverage report
 2. For each issue found:
+   - **Undisclosed degradation:** Establish which declared inputs did not resolve, then re-read every figure the substitute touched as a **lower bound**, not a measurement. Re-issue the corrected report with the banner. ⚠️ Do **not** simply re-run the observation cycle and accept the new numbers — if the input still does not resolve, the second run degrades identically and the figures agree with each other while both being wrong
    - **Inflated coverage:** Recalculate excluding Deprecated/Overridden; communicate corrected % to team
    - **Missing gap detection:** Run gap analysis against current register; flag new entries added since last review
    - **Stale debt scores:** Trigger Stage 12 (Debt Reassessment) to re-score all missing tests with current factors
@@ -67,6 +69,22 @@ If you skipped `CVR__` and coverage decisions were already made:
    - Communicate correction to decision-makers with revised risk assessment
 
 ## Checks Performed
+
+### Category F: Observation Fidelity (F1–F7) — run FIRST
+
+**Why first.** Fidelity qualifies every figure the other eighteen checks examine. A coverage number that passes an integrity check and was derived from a substitute is internally consistent and still wrong, so fidelity is established before anything else is judged. Definition and the two fail-closed rules: `common/observation-fidelity.md` · governing invariant `INV-L2-021`.
+
+| ID | Check | Pass Criteria |
+|----|-------|---------------|
+| F1 | Fidelity recorded | `tge-state.md → Observation Fidelity` holds `✅ Full`, `⚠️ Degraded` or `❌ Unknown`. ⚠️ **A missing, blank or absent block is a FAIL** — absence is a violation, not a pass |
+| F2 | Unknown handled as degraded | If fidelity is `❌ Unknown`, every consuming surface treats it as degraded. A clean-looking report on an unassessed run is a FAIL |
+| F3 | Three-destination disclosure | If fidelity is not `✅ Full`: the banner is present in `coverage-report.md`, the fidelity block is populated in `tge-state.md`, **and** the in-session report led with it. **Two of three is a FAIL** |
+| F4 | Affected figures marked | Overall coverage, the Acceptance row of the by-test-level view, the Performance/NFR row, and any chart drawn from degraded data each carry the marker — the headline alone is a FAIL |
+| F5 | Trend fidelity-checked across cycles | Velocity, direction and forecast are suppressed — not estimated — if any cycle contributing to the period was not `✅ Full` |
+| F6 | Per-cycle fidelity retained | Every Observation History row carries its cycle's fidelity value, so a degraded cycle stays visible after the next cycle overwrites the current-state block |
+| F7 | No false-positive degradation | Inputs the selected mode does not declare are recorded `n/a`, never `❌`. A `⚠️ Degraded` verdict caused by an undeclared input is a FAIL in the **opposite** direction and is just as damaging — it teaches the team to ignore the marker |
+
+> **F7 exists because over-warning destroys the mechanism.** A banner that appears on runs that were never degraded is indistinguishable, to a reader, from a banner that means something. The check protects the signal, not just the truth.
 
 ### Category G: Gap Analysis (G1–G4)
 
@@ -115,15 +133,17 @@ If you skipped `CVR__` and coverage decisions were already made:
 ### Summary
 | Category | Checks | Pass | Fail |
 |----------|:------:|:----:|:----:|
+| F — Observation Fidelity | 7 | {n} | {n} |
 | G — Gap Analysis | 4 | {n} | {n} |
 | P — Progress | 4 | {n} | {n} |
 | D — Debt Movement | 4 | {n} | {n} |
 | I — Integrity | 3 | {n} | {n} |
-| **Total** | **15** | **{n}** | **{n}** |
+| **Total** | **22** | **{n}** | **{n}** |
 
 ### Coverage Snapshot
 | Metric | Value |
 |--------|-------|
+| **Observation Fidelity** | {✅ Full / ⚠️ Degraded / ❌ Unknown} |
 | Tests Required | {N} |
 | Tests Existing | {N} |
 | Tests Missing | {N} |
@@ -143,11 +163,14 @@ If you skipped `CVR__` and coverage decisions were already made:
 | Velocity (tests/sprint) | {N} | {N} | {↑/↓/→} |
 
 ### Verdict
-{PASS — all 15 checks pass / FAIL — {n} issues found, {n} critical}
+{PASS — all 22 checks pass / FAIL — {n} issues found, {n} critical}
+
+⚠️ **Any Category F failure caps the verdict at FAIL regardless of the other categories.** A report whose fidelity is unrecorded or undisclosed cannot be validated by checks that assume its figures mean what they say.
 ```
 
 ## Related
 
+- **AI-TGE `common/observation-fidelity.md`** — the fidelity definition, the two fail-closed rules, and the canonical disclosure blocks Category F verifies
 - **AI-TGE core-engine.md** — master orchestration defining the observation flow (Stages 7–12)
 - **AI-TGE `common/two-source-model.md`** — baseline + AP-derived resolution rules
 - **AI-TGE `common/test-taxonomy.md`** — ISTQB classification reference

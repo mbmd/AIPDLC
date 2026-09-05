@@ -1,0 +1,15 @@
+{
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
+  "name": "Frontend & Accessibility Check",
+  "version": "1.0.0",
+  "description": "Conditional (only if frontend-standards.md exists) · Tier B (agentStop): After a session completes, verifies component patterns, accessibility (WCAG) requirements, and state-management rules.",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "## Package Territory Check (MANDATORY — evaluate FIRST)\nBefore performing any checks below, verify each file's path in your scan.\n\nEXCLUDED ZONES (package infrastructure — NOT compliance subjects):\n• .kiro/hooks/ — AI-GCE hook infrastructure\n• .kiro/steering/ — AI-DWG/AI-GCE steering infrastructure\n• .kiro/agents/ — AI-GCE agent infrastructure\n• .governance/ — AI-GCE governance rules/agents/logs\n• compliance-log/ — AI-GCE audit trail\n• project-initiation/ — AI-PILC output\n• architecture/ — AI-ADLC output\n• management_framework/ — Shared governance spine\n• docs/compliance-* — AI-GCE generated dashboards\n• templates/ — AI-DWG planning templates\n\nFor each file in your scan: if its path starts with ANY of the above prefixes, SKIP it silently. Only check files outside excluded zones.\n\n---\n\nCheck .compliance-state.json → currentPhase. Apply phase-appropriate rules only.\n\nReview frontend component code touched during this session. Each numbered check names the rule ID it enforces; log that ID in the event below:\n\n1. COMPONENT PATTERNS [FE-01]: Components follow the structure/composition patterns stated in frontend-standards.md.\n2. ACCESSIBILITY [FE-02]: Interactive elements meet the stated WCAG requirements (labels, roles, keyboard access, contrast where checkable statically).\n3. STATE MANAGEMENT [FE-03]: State is managed per the stated approach — no ad-hoc global mutation outside the sanctioned store.\n\nOnly enforce a rule if frontend-standards.md actually generated it (no steering = no rule). If frontend-standards.md is absent from the workspace, this hook is not generated at all.\n\nIf frontend/accessibility gaps are found, warn with the FE-* rule ID and the expected standard.\nIf all rules pass, confirm compliance silently.\n\n## Compliance Logging\nAfter completing all checks, append to `compliance-log/events/{today-date}.jsonl` — ONE event per rule checked, and `ruleId` MUST be the actual rule ID from the check above, NEVER a literal placeholder:\n{\"timestamp\": \"{ISO-8601-UTC}\", \"type\": \"check\", \"id\": \"chk-{date}-{time}-{seq}\", \"hook\": \"frontend-a11y-check\", \"trigger\": \"agentStop\", \"ruleId\": \"{the ID from the checked rule, e.g. FE-01}\", \"ruleSeverity\": \"{severity}\", \"result\": \"{pass|fail|warn}\", \"message\": \"{finding}\"}\nLog ONE event per rule checked."
+  }
+}

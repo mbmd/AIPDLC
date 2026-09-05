@@ -39,7 +39,8 @@ During THIS stage, ALSO adopt the mindset of a **Risk Analyst**. This does NOT r
 - Do NOT simply copy previous scores — reassessment means RE-evaluation
 - Do NOT ignore defect data — a defect in Component X means X's missing tests are now higher priority
 - Do NOT present flat scores without context — explain WHY something moved up or down
-- Do NOT skip this stage because "nothing changed" — at minimum, Change Frequency scores update based on git activity
+- Do NOT skip this stage because "nothing changed" — at minimum, Change Frequency scores update based on git activity **where that evidence is available**
+- Do NOT treat a carried-forward Change Frequency as a re-derived one — if no activity evidence resolved, say so (Step 2); a stale factor multiplies into every composite that depends on it and silently reorders the debt queue
 
 ### Quality Check
 A good output at this stage sounds like:
@@ -68,13 +69,28 @@ From current register, select all scoring targets:
 
 Before re-scoring, collect factors that may have changed:
 
-| Evidence Source | What It Affects | How |
-|----------------|----------------|-----|
-| **Recent defects** (defect log) | Architectural Risk ↑ | Defect in Component X confirms risk is real, not theoretical |
-| **Code changes** (git activity or DLC state) | Change Frequency ↑↓ | Active development → higher frequency; stable → lower |
-| **New dependencies** (reconciliation additions) | Blast Radius ↑ | New consumers of a component increase blast radius |
-| **Team changes** | Logic Complexity perception | New team members on complex code → harder to catch bugs |
-| **Sprint context** | All factors | About to release → higher urgency for everything |
+| Evidence Source | Internal or external? | What It Affects | How |
+|----------------|:--------------------:|----------------|-----|
+| **Recent defects** (defect log) | internal | Architectural Risk ↑ | Defect in Component X confirms risk is real, not theoretical |
+| **Code changes** (git activity or DLC state) | ⚠️ **external** | Change Frequency ↑↓ | Active development → higher frequency; stable → lower |
+| **New dependencies** (reconciliation additions) | internal | Blast Radius ↑ | New consumers of a component increase blast radius |
+| **Team changes** | internal | Logic Complexity perception | New team members on complex code → harder to catch bugs |
+| **Sprint context** | internal | All factors | About to release → higher urgency for everything |
+
+#### The one external evidence source, and what to do when it is unavailable
+
+Every source above except one is derived from artifacts AI-TGE owns. **Change Frequency is the exception** — it needs git history or build state, and neither is guaranteed: a shallow clone carries no history, a workspace may have no version control at all, and the build state may not resolve (Stage 7's declared input, resolved via `manifest.files.buildState` — `common/manifest-resolution.md`).
+
+| Situation | Behaviour | Fidelity |
+|---|---|:---:|
+| Git history or build state available | Re-derive Change Frequency from observed activity | unaffected |
+| **Neither available** | **Carry the previous cycle's Change Frequency forward unchanged** — do not guess, do not default to a middle value, and do **not** silently drop the factor from the product | **⚠️ Degraded** |
+
+**When carried forward, record:** input = *Change Frequency evidence (git activity or build state)* · substitute = *previous cycle's score carried forward* · unmeasured = **the debt ranking is carried forward, not recalculated — a component that entered active development this cycle is still ranked as though it had not.**
+
+⚠️ **Why this factor matters more than its size suggests.** The four factors **multiply**: composite = Architectural Risk × Blast Radius × Logic Complexity × Change Frequency. A stale Change Frequency therefore does not shift one number slightly — it propagates through every composite that depends on it, and the composite is what **orders the debt scorecard**. The scorecard is the team's work queue, so a silently-assumed factor decides what gets tested next. That is why this is disclosed rather than absorbed (`common/observation-fidelity.md` · `INV-L2-021`).
+
+**Mark the affected rows.** Any entry whose Change Frequency was carried forward gets `⚠️` on its composite in the scorecard, and the scorecard states that its ordering is partly carried forward rather than freshly derived.
 
 ---
 
@@ -87,10 +103,12 @@ Apply the same four-factor model (from Stage 6), updated with current evidence:
 | Architectural Risk | {n} | {evidence if changed} | {n} | {±n or "—"} |
 | Blast Radius | {n} | {evidence if changed} | {n} | {±n or "—"} |
 | Logic Complexity | {n} | {evidence if changed} | {n} | {±n or "—"} |
-| Change Frequency | {n} | {evidence if changed} | {n} | {±n or "—"} |
+| Change Frequency | {n} | {evidence if changed / ⚠️ **carried forward — no activity evidence available**} | {n} | {±n or "—"} |
 
 **Recalculate composite:** New composite = product of updated factors.
 **Reassign bucket** if threshold crossed.
+
+⚠️ **A composite containing a carried-forward factor is marked, not silently recomputed.** Write `{composite}⚠️` and keep the *Current Evidence* cell honest — *"carried forward"* is evidence of nothing having been observed, which is a different statement from *"—"* (observed, unchanged). Those two are the pair this stage must not collapse.
 
 ---
 
@@ -241,6 +259,10 @@ The engine remains in Observation phase indefinitely — it runs each time AI-TG
 
 | Check | Pass Criteria |
 |-------|---------------|
+| **Activity-evidence availability established** | Git history or build state either resolved, or its absence recorded per Step 2. ⚠️ **A Change Frequency score derived from no evidence is a FAIL** — carried forward is acceptable, invented is not |
+| **Carried-forward factors marked** | Every composite containing a carried-forward Change Frequency carries `⚠️`, and its *Current Evidence* cell reads *"carried forward"* rather than `—` |
+| **Ranking provenance stated** | If any factor was carried forward, the debt scorecard states that its ordering is partly carried forward rather than freshly derived — the scorecard is the work queue, so its provenance is not optional |
+| **Degradation disclosed in all three destinations** | If activity evidence did not resolve: the coverage report artifact, the state file, **and** this stage's report each say so. Two of three is a FAIL |
 | All targets re-scored | Every Missing/Failing entry has current 4-factor score |
 | Evidence considered | Recent defects, code changes, reconciliation factored in |
 | Movements highlighted | Any bucket change explicitly noted with reason |

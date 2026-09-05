@@ -6,7 +6,7 @@
 **Authored under:** `#persona-process-designer` (lead) + `#persona-compliance-governance` (support)
 **Status:** CANONICAL — this is the single source of truth for the AIFLC governance spine across **all** families. Each family carries a verbatim copy at its family root (`1.dev/{family}/MANAGEMENT_FRAMEWORK_CONTRACT.md`), propagated by the sync script (never hand-copied). Mirrors the GATE_PROTOCOL propagation model.
 
-> **Lineage.** Generalized from the PDLC-local contract v1.3.0 (project-scoped). v2.0.0 makes the contract **scope-agnostic** so every family — product (PDLC), enterprise-architecture (BALC, DALC, …), and strategy (SFLC, SXLC) — carries one uniform governance spine. See `ai-packagebuilder/sessions-open-items/02-in-progress/management-framework-uniformity/MANAGEMENT_FRAMEWORK_UNIFORMITY_DESIGN.md` for the design record.
+> **Lineage.** Generalized from the PDLC-local contract v1.3.0 (project-scoped). v2.0.0 makes the contract **scope-agnostic** so every family — product (PDLC), enterprise-architecture (BALC, DALC, …), and strategy (SFLC, SXLC) — carries one uniform governance spine.
 
 ---
 
@@ -263,9 +263,9 @@ The Lessons Learned register is populated by two mechanisms, present in every fa
 
 ## 13. Propagation
 
-- **Canonical:** this file (`ai-packagebuilder/governance/MANAGEMENT_FRAMEWORK_CONTRACT.md`).
-- **Per-family copy:** `1.dev/{family}/MANAGEMENT_FRAMEWORK_CONTRACT.md` (verbatim), written by `sync-governance-contract-to-families.ps1` and refreshed at `DEV__ promote`. Never hand-copied.
-- **PDLC note:** the historical `1.dev/pdlc/contracts/MANAGEMENT_FRAMEWORK_CONTRACT.md` becomes a pointer stub to the root copy.
+- **Canonical:** this contract is the single source of truth for the AIFLC governance spine across all families.
+- **Per-family copy:** each family carries a verbatim copy at its family root (`{family}/MANAGEMENT_FRAMEWORK_CONTRACT.md`), kept in sync with the canonical. Never hand-copied.
+- **Within a family:** any historical package-local copy resolves to the family-root copy so there is one authoritative contract per family.
 
 ---
 

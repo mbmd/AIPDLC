@@ -17,7 +17,7 @@ inclusion: manual
 **Methodology Alignment:** Scrum Product Ownership / SAFe Lean Portfolio / WSJF / Impact Mapping / Story Mapping / INVEST / MoSCoW
 **Interaction Model:** Human-in-the-loop at every phase gate; adaptive depth per product complexity.
 
-> **Identity Spine:** AI-POLC turns business intent into a prioritized, value-justified product backlog, and is the single source of truth for *what gets built, in what order, and why*. **Inclusion rule:** answers *what / why / in what order* → POLC scope; answers *how / when-built / is-it-compliant* → out of scope (AI-DLC v1 / AI-DWG / AI-GCE). Full boundary table: `common/process-overview.md`.
+> **Identity Spine:** AI-POLC turns business intent into a prioritized, value-justified product backlog, and is the single source of truth for *what gets built, in what order, and why*. **Inclusion rule:** answers *what / why / in what order* → POLC scope; answers *how / when-built / is-it-compliant* → out of scope (AI-DLC / AI-DWG / AI-GCE). Full boundary table: `common/process-overview.md`.
 
 > **This file is the always-loaded dispatcher.** It carries the activation rules, behavioral mandates, chain contract, and the stage INDEX. The step-by-step instructions for each stage live in on-demand detail files under the resolved rule-details directory (see "Rule Details Loading"). **Before executing any stage, load that stage's detail file.**
 
@@ -72,7 +72,7 @@ The workflow adapts to the product context, not the other way around. The AI ass
 
 **Depth Levels:** **Minimal** (clear intent, small product, low stakeholder density → streamlined PBP with essential governance) · **Standard** (normal complexity, some gaps → full PBP with all core features) · **Comprehensive** (enterprise product, heavy compliance, multi-team, high uncertainty → detailed governance with full traceability and extensions). Depth is set at Stage 1 and can change mid-workflow. Full model + 13 context factors + input modes (incl. brownfield): `foundation/workspace-detection.md` + `common/process-overview.md`.
 
-**Tier model (a load decision):** **Tier 1** (full PO governance) is always active. **Tier 2** (INVEST stories + Given/When/Then AC) is **off by default in chain mode** (AI-DLC v1 elaborates stories) and user-activated standalone or on explicit request. POLC does not leave this to a hidden default — at the **Stage 5 gate** it explicitly asks the user whether to keep Tier 2 off or turn it on (Q-5T), and the choice is toggleable on the fly at any stage. When active, load `tier2/story-elaboration.md`, ask the story-format question, and add story-level outputs to each epic at Stage 5. **Opt-in extensions** (Advanced Discovery, Full Traceability, Full Risk, Value & Metrics, Full Product Docs, Quality Review, MVP/MMP) load their `extensions/*.opt-in.md` on trigger keywords — full table + activation/composition rules: `extensions/README.md`.
+**Tier model (a load decision):** **Tier 1** (full PO governance) is always active. **Tier 2** (INVEST stories + Given/When/Then AC) is **off by default in chain mode** (AI-DLC elaborates stories) and user-activated standalone or on explicit request. POLC does not leave this to a hidden default — at the **Stage 5 gate** it explicitly asks the user whether to keep Tier 2 off or turn it on (Q-5T), and the choice is toggleable on the fly at any stage. When active, load `tier2/story-elaboration.md`, ask the story-format question, and add story-level outputs to each epic at Stage 5. **Opt-in extensions** (Advanced Discovery, Full Traceability, Full Risk, Value & Metrics, Full Product Docs, Quality Review, MVP/MMP) load their `extensions/*.opt-in.md` on trigger keywords — full table + activation/composition rules: `extensions/README.md`.
 
 ---
 
@@ -92,6 +92,23 @@ All detail-file references below are relative to the resolved directory. **Befor
 - `common/content-validation.md` — content validation + provenance front-matter requirements
 - `common/reference-linking.md` — emit codes defined in another generated file as clickable relative links (Tier 1: object files; Tier 2: register-row `<a id>` anchors); older output retrofit via `UPG__`
 - `common/contextual-prose-accompaniment.md` — ensure explanatory prose around cross-reference keys is self-sufficient at a glance (5 patterns, depth-scaled); complements reference-linking
+
+---
+
+<!-- BEGIN WORKFLOW-DISCIPLINE v1 (synced from WORKFLOW_DISCIPLINE_CONTRACT.md — do not edit inline) -->
+## Workflow Discipline
+
+This package's workflow is authoritative — do not improvise it. (Full rules:
+"Workflow Discipline (Enforced)" in the session orchestrator.)
+
+- **Read before you execute.** Load this package's core + the relevant rule-detail
+  file before performing any stage. Never generate its outputs from memory.
+- **Trace to source.** Every deliverable derives from this package's templates,
+  rule-detail files, or the user's own input — never unstated "best practice."
+- **No unilateral deviation.** Do not skip, reorder, combine, or auto-progress past
+  a gate on your own initiative; the user may direct these — confirm and log them.
+  Every gate needs explicit user approval.
+<!-- END WORKFLOW-DISCIPLINE -->
 
 ---
 
@@ -126,7 +143,7 @@ Every product decision must be value-justified, stakeholder-accountable, and tra
 - Do NOT prioritize by loudest voice or recency bias — use the declared prioritization model
 - Do NOT produce stories without acceptance criteria (even in Tier 1 governance mode, epics need epic-level AC)
 - Do NOT confuse project governance (AI-PILC territory) with product governance — this package owns the "what/why/order," not the "when/budget/resources"
-- Do NOT prescribe implementation approach — that is AI-DLC v1's domain; define the WHAT, never the HOW
+- Do NOT prescribe implementation approach — that is AI-DLC's domain; define the WHAT, never the HOW
 - Do NOT skip the traceability link — every item must connect upward to a goal and downward to an acceptance bar
 - Do NOT auto-progress past a gate without explicit user approval
 
@@ -188,7 +205,7 @@ The canonical registry — **lenses + `intersection-facets`**, activation values
 
 ## MANDATORY: Chain Contract
 
-AI-POLC is contract-aware — first package in the Project-layer sequential chain; its PBP feeds AI-UXD and AI-DWG, and it exchanges backlog/acceptance with AI-DLC v1 throughout delivery.
+AI-POLC is contract-aware — first package in the Project-layer sequential chain; its PBP feeds AI-UXD and AI-DWG, and it exchanges backlog/acceptance with AI-DLC throughout delivery.
 
 ### I Read (Detection by Marker)
 
@@ -198,12 +215,12 @@ AI-POLC is contract-aware — first package in the Project-layer sequential chai
 | AI-ADLC | `pdlc-ws/projects/*/architecture/adlc-state.md` | Architecture decisions, tech constraints, brownfield flag, bounded contexts, **feasibility/cost-risk bands** (relative effort/complexity + tech-risk flags → re-prioritization) |
 | AI-UXD | `pdlc-ws/projects/*/ux/uxd-state.md` | Personas, journeys, user research findings |
 | AI-ILC | `ilc-state.md` (Route=feature) | Feature briefs for backlog intake — **extract idea ID as `derivedFrom` source** |
-| AI-DLC v1 | `aidlc-docs/` | Bolt completions, blockers, velocity data |
+| AI-DLC | `aidlc-docs/` | Bolt completions, blockers, velocity data |
 | Spine | `{project_root}/management_framework/MANAGEMENT_FRAMEWORK.md` | Existing governance entries for traceability linking |
 
 > Scan the default multi-project layout first, then legacy; use the active-project flow (`pdlc-ws/projects/PROJECTS.md` ★) when multiple projects exist. **Adopt** the Project ID — never re-mint. **Traceability obligation (Traceability Contract §7):** auto-populate `derivedFrom` in `polc-state.md` from the originating idea/feature ID (inherit from `pilc-state.md` when chained); every epic/story in `epics/` SHOULD carry a `derivedFrom` link.
 
-### I Produce (Successor: AI-UXD / AI-DWG, ⇄ AI-DLC v1)
+### I Produce (Successor: AI-UXD / AI-DWG, ⇄ AI-DLC)
 
 - **Output root:** `{project_root}/backlog/`. **Marker:** `polc-state.md`. The spine is a sibling at the project root.
 - **Guaranteed files:** `polc-state.md`, `product-vision.md`, `po-charter.md`, `roadmap.md`, `epics/` (one file per epic), `prioritization-register.md`, `release-plan.md`, `definition-of-ready.md`, `definition-of-done.md`, `product-risk-register.md`, `traceability-matrix.md`, `stakeholder-map.md`, `release-notes-governance.md`, `PBP_README.md`, plus `management_framework/` POLC-* entries.
@@ -214,10 +231,10 @@ AI-POLC is contract-aware — first package in the Project-layer sequential chai
 | Event | Mechanism | Consumer |
 |-------|-----------|----------|
 | PBP ready | `polc-state.md` status = `ready` | AI-DWG |
-| Reprioritization | Priority list updated in `polc-state.md` | AI-DLC v1 (at bolt boundary) |
+| Reprioritization | Priority list updated in `polc-state.md` | AI-DLC (at bolt boundary) |
 | DoR/DoD change | `POLC-C-NNN` in spine + version bump in state | AI-DWG re-derives |
 
-> Full forward/return exchange with AI-DLC v1 (direct via files, indirect via AI-DWG steering, what DLC returns): `operations/acceptance-feedback.md` ("The Exchange").
+> Full forward/return exchange with AI-DLC (direct via files, indirect via AI-DWG steering, what DLC returns): `operations/acceptance-feedback.md` ("The Exchange").
 
 ### Drift Intake (governance back-flow)
 AI-POLC implements the `drift-intake@1.0` interface (`contracts/DRIFT_INTAKE_CONTRACT.md`) for the **product** domain (acceptance criteria, story/epic scope, features, value metrics). It **pulls** drift (asks AI-FLO → reads the drift body from AI-GCE's register read-only → digests → Conform/Amend/Waive), writes the disposition to its OWN artifacts (epics / `traceability-matrix.md` / `polc-state.md`) + emits a `digest-ready` signal; AI-DWG later bakes it into the next baseline and AI-GCE closes it. POLC never writes the drift register or the baseline (INV-L4-006). Full decision logic: `drift-intake/intake-digest.md`.
@@ -249,7 +266,7 @@ Six phases, 16 stages. Each stage produces a primary deliverable; phases 1–5 e
 
 **Phase focus:** 🔵 FOUNDATION = establish the PO practice · 🟠 STRATEGY = plan the product (vision→epics→priority→releases) · 🟢 GOVERNANCE = define the product quality bar · 🟣 STAKEHOLDERS = communication & external docs · 🚀 ASSEMBLY = package the PBP for handoff · 🔁 OPERATIONS = continuous product ownership across the product's life.
 
-**Operations behavior by mode:** Standalone → Stages 14–16 form a repeating cadence POLC drives. Chain with AI-DLC v1 → Stages 14–16 are re-entry points the user opens to accept work, reprioritize, or process feedback. **Phase gates:** never auto-progress past a gate without explicit user approval.
+**Operations behavior by mode:** Standalone → Stages 14–16 form a repeating cadence POLC drives. Chain with AI-DLC → Stages 14–16 are re-entry points the user opens to accept work, reprioritize, or process feedback. **Phase gates:** never auto-progress past a gate without explicit user approval.
 
 ---
 

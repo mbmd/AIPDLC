@@ -322,7 +322,7 @@ services:
       - frontend
       - backend
     depends_on:
-      # application containers added during AI-DLC v1
+      # application containers added during AI-DLC
     profiles:
       - full
 

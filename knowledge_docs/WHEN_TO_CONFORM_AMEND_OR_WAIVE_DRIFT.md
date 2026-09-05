@@ -6,7 +6,7 @@
 
 ## The Decision You're Facing
 
-AI-GCE has detected drift: a governed element in your approved baseline (an architecture choice, a data model, a UX rule, a product decision) no longer matches reality in the workspace. It logged the divergence and routed it to whoever owns that domain. Now that package — you, in the disposer's seat — must decide **one** of three things:
+AI-GCE (Governance & Compliance Engine) has detected drift: a governed element in your approved baseline (an architecture choice, a data model, a UX rule, a product decision) no longer matches reality in the workspace. It logged the divergence and routed it to whoever owns that domain. Now that package — you, in the disposer's seat — must decide **one** of three things:
 
 - **Conform** — the design is right; fix reality.
 - **Amend** — reality is right; change the design.
@@ -59,7 +59,7 @@ Did someone INTEND to change the design?
 
 - **Ceremony:** High. This changes the design of record, so it needs a gate/approval and a decision record. In the architecture domain, an Amend to a technology choice, component boundary, or API contract **always** produces an ADR (context → options → decision → consequences) — an architectural change without a decision record isn't allowed.
 - **What you write:** update the source design artifact, add/replace the governing decision record, emit "digest ready" with the changed element and rationale.
-- **How it closes:** AI-DWG bakes the change into the next baseline version; GCE re-measures against the *new* element and confirms they match.
+- **How it closes:** AI-DWG (Workspace Generator) bakes the change into the next baseline version; GCE re-measures against the *new* element and confirms they match.
 
 **Example:** the API design declares path-based versioning, the code uses header-based, and the team confirms header-based is now the intended standard → **Amend**: update the API design doc, write the versioning ADR, signal ready; the baseline moves; the entry closes.
 

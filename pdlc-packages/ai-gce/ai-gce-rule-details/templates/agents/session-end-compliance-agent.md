@@ -10,7 +10,11 @@ ownership: generated
 
 ## Purpose
 
-A consolidated session-end sweep that runs ALL advisory compliance checks in a single pass after a development session. Replaces individual `agentStop` hooks (module-boundary, domain-layer-purity, coverage, naming, steering-quality, documentation-reminder) with one agent that produces one report.
+A consolidated session-end sweep that runs ALL advisory compliance checks in a single pass after a development session, producing one report instead of several.
+
+**Consolidates four `agentStop` checks:** module boundaries (`MOD-01/02/03`), domain-layer purity (`DOM-05` + `MOD-02`), test coverage (`GOV-CICD-002/003`), and naming conventions (`NC-01`…`NC-08`). Their four `.json` templates are **retained as reference documentation of the rule logic and are NOT installed as hooks** — this agent is where those checks actually run.
+
+> **Scope corrected.** This previously claimed six hooks, adding `steering-quality` and `documentation-reminder`. Neither belongs here: **steering quality is the `SQC__` agent** (reviewed when someone asks, not on every session close), and **`documentation-reminder` is not generated in any form** — no generator produces a rule family for it, so this agent could never have run its check. Claiming a hook you do not replace leaves its real disposition unrecorded, and in `steering-quality-check`'s case **two agents claimed it**.
 
 **Why an agent (not just a hook prompt):** The user can disable the hook and invoke this agent manually via `SEC__` whenever they choose — same checks, same report, user-controlled timing.
 
@@ -89,7 +93,7 @@ For each modified file in domain layer paths:
 
 1. **No infrastructure dependencies:** Domain MUST NOT import DB clients, HTTP clients, framework-specific types, or ORM entities.
 2. **Domain depends only on itself + shared kernel.**
-3. If violation found: identify the specific dependency and suggest the inversion pattern. (Rule: DOM-005, severity: critical)
+3. If violation found: identify the specific dependency and suggest the inversion pattern. (Rule: DOM-05, severity: critical)
 
 ---
 
@@ -207,4 +211,4 @@ After completing all checks, append ONE summary event to `compliance-log/events/
 
 ---
 
-*Agent template for AI-GCE v1.0.0 | Shortcut: SEC__ | Replaces: 4-6 individual agentStop hooks*
+*Agent template for AI-GCE v1.0.0 | Shortcut: SEC__ | Consolidates 4 individual agentStop checks: module-boundary-check · domain-layer-purity · coverage-check · naming-check*

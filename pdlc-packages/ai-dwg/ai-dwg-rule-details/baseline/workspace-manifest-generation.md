@@ -58,6 +58,13 @@ platformTargets: [kiro, claude-code]
 generatedOn: {ISO-timestamp}
 buildProfile: {spec-driven | aidlc | freestyle}   # ACTIVE — build discipline (self-describing); OMITTED for manual/AI-assisted → GCE uses its Standard mode. NOT the timing multiplier (that stays on the POLC planning surface)
 
+# ─── Workspace-Set Membership (present ONLY in a multi-workspace / per-team generation) ───
+# Back-pointer to the Layer-2 control plane. Omitted entirely for a single workspace.
+setMembership:                       # omit for workspaceTopology: single
+  team: TEAM-{slug}                  # the team this L3 workspace belongs to
+  setManifest: ../../{slug}-management/workspace-set-manifest.yaml   # the L2 authoritative index
+  physicalLayout: {subfolder | polyrepo}
+
 # ─── Folder Locations (look up by role, never hardcode) ───
 paths:
   rules: rules/
@@ -160,6 +167,9 @@ Populate `buildProfile` with the **build discipline**, projected from the captur
 
 ### Rule 6: Adapters Reflect Selected Platforms
 The `adapters:` block lists ONLY the platforms selected at Config Gate Q2. Multi-target → multiple entries.
+
+### Rule 7: Set Membership Only in Multi-Workspace Generation
+Include the `setMembership:` block ONLY when `workspaceTopology ∈ {per-team, hybrid}` (Config Gate Q4). It back-points each L3 per-team workspace to its team (`TEAM-*`) and to the Layer-2 `workspace-set-manifest.yaml`. **Omit entirely for a single workspace** (backward-compatible — today's manifest is unchanged). The set-manifest itself is a Layer-2 artifact (`baseline/workspace-set-manifest-generation.md`), never written inside an L3 workspace.
 
 ---
 

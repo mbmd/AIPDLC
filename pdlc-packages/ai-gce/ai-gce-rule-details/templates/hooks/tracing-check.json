@@ -1,0 +1,15 @@
+{
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
+  "name": "Distributed Tracing Check",
+  "version": "1.0.0",
+  "description": "Conditional (only if observability-tracing.md exists) · Tier B (agentStop): After a session completes, verifies span naming, required instrumentation points, and trace-context propagation.",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "## Package Territory Check (MANDATORY — evaluate FIRST)\nBefore performing any checks below, verify each file's path in your scan.\n\nEXCLUDED ZONES (package infrastructure — NOT compliance subjects):\n• .kiro/hooks/ — AI-GCE hook infrastructure\n• .kiro/steering/ — AI-DWG/AI-GCE steering infrastructure\n• .kiro/agents/ — AI-GCE agent infrastructure\n• .governance/ — AI-GCE governance rules/agents/logs\n• compliance-log/ — AI-GCE audit trail\n• project-initiation/ — AI-PILC output\n• architecture/ — AI-ADLC output\n• management_framework/ — Shared governance spine\n• docs/compliance-* — AI-GCE generated dashboards\n• templates/ — AI-DWG planning templates\n\nFor each file in your scan: if its path starts with ANY of the above prefixes, SKIP it silently. Only check files outside excluded zones.\n\n---\n\nCheck .compliance-state.json → currentPhase. Apply phase-appropriate rules only.\n\nReview instrumentation code touched during this session. Each numbered check names the rule ID it enforces; log that ID in the event below:\n\n1. SPAN NAMING [TRACE-01]: Spans follow the naming convention stated in observability-tracing.md.\n2. INSTRUMENTATION POINTS [TRACE-02]: Required instrumentation points (entry handlers, external calls, boundaries) are present.\n3. CONTEXT PROPAGATION [TRACE-03]: Trace context is propagated across service and async boundaries.\n\nOnly enforce a rule if observability-tracing.md actually generated it (no steering = no rule). If observability-tracing.md is absent from the workspace, this hook is not generated at all.\n\nIf tracing gaps are found, warn with the TRACE-* rule ID and the expected convention.\nIf all rules pass, confirm compliance silently.\n\n## Compliance Logging\nAfter completing all checks, append to `compliance-log/events/{today-date}.jsonl` — ONE event per rule checked, and `ruleId` MUST be the actual rule ID from the check above, NEVER a literal placeholder:\n{\"timestamp\": \"{ISO-8601-UTC}\", \"type\": \"check\", \"id\": \"chk-{date}-{time}-{seq}\", \"hook\": \"tracing-check\", \"trigger\": \"agentStop\", \"ruleId\": \"{the ID from the checked rule, e.g. TRACE-01}\", \"ruleSeverity\": \"{severity}\", \"result\": \"{pass|fail|warn}\", \"message\": \"{finding}\"}\nLog ONE event per rule checked."
+  }
+}

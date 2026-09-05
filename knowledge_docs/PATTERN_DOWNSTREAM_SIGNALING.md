@@ -32,11 +32,11 @@ DOWNSTREAM PACKAGE re-derives/reconciles ONLY affected artifacts
 
 | From | To | Signal Event | What Changes |
 |------|----|-------------|-------------|
-| **AI-ADLC** | AI-DWG | Architecture artifact updated (ADR revised, container added/removed) | AP files changed → workspace reconciliation needed |
-| **AI-DWG** | AI-GCE | Steering files updated during reconciliation | Steering changed → rule/hook re-derivation needed |
-| **AI-DWG** | AI-TGE | Steering + structure updated | Architecture commitments changed → test register update needed |
-| **AI-POLC** | AI-DWG | Backlog structure changed (new epics, DoR updated) | PBP changed → workspace enrichment refresh |
-| **AI-UXD** | AI-POLC | Personas/journeys updated | UXP changed → backlog reprioritization context |
+| **AI-ADLC (Architecture Design Life Cycle)** | AI-DWG (Workspace Generator) | Architecture artifact updated (ADR revised, container added/removed) | AP files changed → workspace reconciliation needed |
+| **AI-DWG** | AI-GCE (Governance & Compliance Engine) | Steering files updated during reconciliation | Steering changed → rule/hook re-derivation needed |
+| **AI-DWG** | AI-TGE (Test Governance Engine) | Steering + structure updated | Architecture commitments changed → test register update needed |
+| **AI-POLC (Product Ownership Life Cycle)** | AI-DWG | Backlog structure changed (new epics, DoR updated) | PBP changed → workspace enrichment refresh |
+| **AI-UXD (UX Design)** | AI-POLC | Personas/journeys updated | UXP changed → backlog reprioritization context |
 
 ---
 
@@ -147,7 +147,7 @@ Apply when:
 - [ ] Surgical updates are preferable to full rebuilds
 
 Don't apply when:
-- The handoff is one-time (AI-PILC → AI-POLC: PIP doesn't change after handoff)
+- The handoff is one-time (AI-PILC (Project Initiation Life Cycle) → AI-POLC: PIP doesn't change after handoff)
 - Downstream doesn't cache/derive from upstream (no staleness risk)
 - Full rebuild is trivial (cost of re-derivation ≈ cost of targeted update)
 

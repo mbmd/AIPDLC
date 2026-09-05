@@ -36,7 +36,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -44,13 +44,13 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -64,11 +64,11 @@ flowchart LR
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 > **AI-DFE** ([Data Fabric Engine](../ai-dfe/)) is a family-scoped **companion** — it gathers data from all packages and distributes structured JSON for dashboards and status roll-ups. It runs alongside the chain rather than as a linear step, so it is not shown as a chain row above.
 
@@ -82,8 +82,8 @@ AI-POLC is the **first step of the Project layer** — the start of the sequenti
 |--------|---------|
 | **Layer** | Project |
 | **Position** | First in the Project-layer sequence (POLC → UXD → ADLC → DWG) |
-| **Predecessor** | AI-PILC (PIP); optionally AI-ILC feature briefs |
-| **Direct successors** | AI-UXD (personas/journeys build on the backlog) and AI-DWG (consumes DoR/DoD + prioritization); exchanges backlog/acceptance with AI-DLC v1 throughout the build |
+| **Predecessor** | AI-PILC (AI-Driven Project Initiation Life Cycle — PIP); optionally AI-ILC (AI-Driven Idea Life Cycle) feature briefs |
+| **Direct successors** | AI-UXD (AI-Driven UX Design — personas/journeys build on the backlog) and AI-DWG (AI-Driven Workspace Generator — consumes DoR/DoD + prioritization); exchanges backlog/acceptance with AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) throughout the build |
 | **Reads (input)** | PIP (`pilc-state.md`); optionally AP (`adlc-state.md`), UXP (`uxd-state.md`), feature briefs (`ilc-state.md`) |
 | **Produces (output)** | Product Backlog Package (PBP) under `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/backlog/` |
 | **Output marker** | `polc-state.md` |
@@ -94,18 +94,18 @@ AI-POLC is the **first step of the Project layer** — the start of the sequenti
 **Simplified chain view** (see the diagram above for the full topology):
 
 ```
-AI-PILC → [ AI-POLC → AI-UXD → AI-ADLC → AI-DWG ] → AI-DLC v1
+AI-PILC → [ AI-POLC → AI-UXD → AI-ADLC → AI-DWG ] → AI-DLC
             ▲ you are here (the Project layer starts here)
 ```
 
-AI-POLC owns **what / why / in what order** — never **how** it's built (AI-DLC v1), **when / budget / resources** (AI-PILC), or **is-it-compliant** (AI-GCE/TGE). It also runs a two-way exchange with the build: it feeds the backlog and definition-of-done down, and processes acceptance and runtime feedback coming back.
+AI-POLC owns **what / why / in what order** — never **how** it's built (AI-DLC), **when / budget / resources** (AI-PILC), or **is-it-compliant** (AI-GCE (Governance & Compliance Engine) /AI-TGE (Test Governance Engine)). It also runs a two-way exchange with the build: it feeds the backlog and definition-of-done down, and processes acceptance and runtime feedback coming back.
 
 ### Standalone vs. chained
 
 - **Standalone.** Give it a product brief or an existing backlog and it produces a full PBP — vision, roadmap, epics, prioritization, DoR/DoD — with no other package present.
 - **Chained (upstream).** It detects `pilc-state.md` / `adlc-state.md` / `uxd-state.md` and enriches from each (business intent, technical feasibility bands, personas/journeys) without re-entry.
-- **Chained (downstream).** On completion it writes `polc-state.md` and the PBP; AI-UXD and AI-DWG detect the marker, and AI-DLC v1 consumes the backlog during delivery.
-- **Story elaboration is a load decision.** Tier 2 (INVEST stories + Given/When/Then) is **off by default in chain mode** (AI-DLC v1 elaborates stories); turn it on for standalone use or PO-quality pre-elaboration.
+- **Chained (downstream).** On completion it writes `polc-state.md` and the PBP; AI-UXD and AI-DWG detect the marker, and AI-DLC consumes the backlog during delivery.
+- **Story elaboration is a load decision.** Tier 2 (INVEST stories + Given/When/Then) is **off by default in chain mode** (AI-DLC elaborates stories); turn it on for standalone use or PO-quality pre-elaboration.
 - **Cross-family (optional).** It can consume an `enterprise-okr@1` seam so a strategy family's OKRs cascade into the product backlog.
 
 ---
@@ -131,7 +131,7 @@ AI-POLC owns **what / why / in what order** — never **how** it's built (AI-DLC
 ### Story Elaboration (Tier 2 — User-Activated)
 
 - **INVEST-compliant stories** with Given/When/Then acceptance criteria
-- Off by default in chain mode (AI-DLC v1 handles story creation)
+- Off by default in chain mode (AI-DLC handles story creation)
 - Activate for standalone use or PO-quality pre-elaboration
 
 ### Extensions (Opt-In)
@@ -176,7 +176,7 @@ pdlc-ws/projects/
 
 ## Activation
 
-**Explicit key:** type `_POLC_` in any prompt to activate AI-POLC unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-POLC`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
+**Explicit key:** type `_POLC_` in any prompt to activate AI-POLC unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` (report active package) reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-POLC`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
 
 ---
 
@@ -324,7 +324,7 @@ ai-polc/
 2. **Traceable** — every item links upward to a goal and downward to an acceptance bar
 3. **Governed** — decisions are logged, priorities have rationale, changes are tracked
 4. **Adaptive** — depth adapts to product complexity; context factors shape behavior
-5. **Workspace-mediated** — rules reach AI-DLC v1 through steering files, not direct integration
+5. **Workspace-mediated** — rules reach AI-DLC through steering files, not direct integration
 6. **Source-driven** — derive from user input; never fabricate scope
 
 ---
@@ -335,15 +335,15 @@ AI-POLC operationalizes **disciplined product ownership** — turning business i
 
 | Framework / body of knowledge | What AI-POLC applies | Where it stops (scope boundary) |
 |---|---|---|
-| **Scrum product ownership** | The PO discipline — one prioritized backlog, PO charter & authority, DoR/DoD quality bar, refinement & acceptance | Not Scrum team process (sprints, standups) or delivery — that's the team + AI-DLC v1 |
+| **Scrum product ownership** | The PO discipline — one prioritized backlog, PO charter & authority, DoR/DoD quality bar, refinement & acceptance | Not Scrum team process (sprints, standups) or delivery — that's the team + AI-DLC |
 | **SAFe Lean Portfolio** (patterns) | Epics, value streams, economic (WSJF-style) prioritization, MVP/MMP release slicing | Not full SAFe (no ARTs, PI planning, team-level agile) |
 | **Value-based prioritization — WSJF / MoSCoW / value-effort** | An explicit, recorded prioritization model that ranks the backlog with rationale | It ranks and justifies; it does not estimate implementation effort or schedule delivery |
 | **Impact Mapping · Jobs-to-be-Done · OKRs** | Discovery and goal decomposition (goal → epic → acceptance) plus success metrics (opt-in extensions) | Not experiment execution or live metric instrumentation (build-time) |
 | **User Story Mapping** (Patton) | Journey backbone, walking skeleton, release-slice seeding (opt-in extension) | Not UX design itself — personas, journeys, and flows are AI-UXD |
-| **INVEST + Given/When/Then** | Story quality and testable acceptance criteria (Tier 2 — user-activated; off by default in chain mode) | In chain mode, story elaboration defers to AI-DLC v1 unless Tier 2 is on |
+| **INVEST + Given/When/Then** | Story quality and testable acceptance criteria (Tier 2 — user-activated; off by default in chain mode) | In chain mode, story elaboration defers to AI-DLC unless Tier 2 is on |
 | **Definition of Ready / Done** | An explicit quality bar that flows downstream to AI-DWG and AI-GCE | It sets the bar; enforcement at build/compliance time is AI-GCE / AI-TGE |
 
-The identity line holds the boundary: AI-POLC owns **what gets built, in what order, and why** — not the *how* (AI-DLC v1), the *when / budget / resources* (AI-PILC), or *is-it-compliant* (AI-GCE / AI-TGE).
+The identity line holds the boundary: AI-POLC owns **what gets built, in what order, and why** — not the *how* (AI-DLC), the *when / budget / resources* (AI-PILC), or *is-it-compliant* (AI-GCE / AI-TGE).
 
 ---
 
@@ -357,7 +357,7 @@ AI-POLC is the **per-feature origin point** for the family's cross-cutting lense
 | **Automation Lens** | Automated / Manual | `_AUTOLENS_` | Tags features `automationFeature` (AUTO-NNN) and adds automation acceptance criteria |
 | **Agentic** (AI ∩ Automation) | derived — both on | — | Runs an agentic-opportunity scan; on confirm sets the derived `agenticProfile` on qualifying features |
 
-Downstream, AI-DWG provisions the matching scaffolding and AI-GCE / AI-TGE govern and test the tagged features via Layer-3 agents (`AIG__`/`ATG__`, `AIQ__`/`ATQ__`).
+Downstream, AI-DWG (Workspace Generator) provisions the matching scaffolding and AI-GCE / AI-TGE govern and test the tagged features via Layer-3 agents (`AIG__` (AI Governance) /`ATG__` (Automation Governance), `AIQ__` (AI Quality) /`ATQ__` (Automation Quality)).
 
 ---
 
@@ -372,7 +372,7 @@ for my product.
 Context:
 - Product: {your product name}
 - Input: {PIP available / Architecture Package / standalone vision}
-- Mode: {chain with AI-DLC v1 / standalone}
+- Mode: {chain with AI-DLC / standalone}
 
 Please start the AI-POLC workflow.
 ```

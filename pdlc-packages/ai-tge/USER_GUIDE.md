@@ -1,18 +1,18 @@
 # AI-TGE — User Guide
 
 **Package:** AI-TGE (AI-Driven Test Governance Engine)
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Audience:** QA Leads, Test Architects, Test Engineers, Senior Developers, Engineering Leads
 
 ---
 
 ## What is AI-TGE?
 
-AI-TGE is an injectable test governance engine that reasons and writes as a senior QA engineer / test architect. It reads architecture decisions (from AI-ADLC) and a development workspace (from AI-DWG), derives a structured test governance layer — strategy, register, coverage tracking, risk scoring — and continuously observes AI-DLC v1 execution to maintain test accountability. It does NOT write or run tests; it governs whether the right tests exist and surfaces the risk of every gap.
+AI-TGE is an injectable test governance engine that reasons and writes as a senior QA engineer / test architect. It reads architecture decisions (from AI-ADLC) and a development workspace (from AI-DWG), derives a structured test governance layer — strategy, register, coverage tracking, risk scoring — and continuously observes AI-DLC execution to maintain test accountability. It does NOT write or run tests; it governs whether the right tests exist and surfaces the risk of every gap.
 
 **In one sentence:** AI-TGE is the continuous quality companion that answers *what must be tested, whether it has been, and how much the gaps cost*.
 
-It is the first **companion package** in the AI-* Family. Unlike sequential packages that hand off in a linear chain, AI-TGE runs *alongside* AI-DLC v1 together with AI-GCE as a continuous quality engine — it is not a stage you pass through.
+It is the first **companion package** in the AI-* Family. Unlike sequential packages that hand off in a linear chain, AI-TGE runs *alongside* AI-DLC together with AI-GCE as a continuous quality engine — it is not a stage you pass through.
 
 ---
 
@@ -22,7 +22,7 @@ It is the first **companion package** in the AI-* Family. Unlike sequential pack
 |----------|---------------------|
 | Starting a build with an architecture in hand | Derive test requirements from every architectural commitment before a line is written |
 | Inheriting a codebase with patchy tests | Map existing tests to commitments, expose uncovered and orphaned tests |
-| AI-DLC v1 is actively building | Observe progress, register what should be tested, track coverage as units complete |
+| AI-DLC is actively building | Observe progress, register what should be tested, track coverage as units complete |
 | Need to know which gaps matter most | Risk-score every missing test by impact and blast radius, not by raw count |
 | Architecture changed mid-build | Reconcile the register — register new tests, deprecate removed ones, flag changed contracts |
 | Reporting quality to stakeholders | Produce a commitment-based coverage view and quality dashboard, not just a line-coverage number |
@@ -45,10 +45,10 @@ AI-TGE detects what you already have and adapts — it never requires the full c
 
 | What You Have | Mode | Behavior |
 |---------------|------|----------|
-| AP + DW + `aidlc-docs/` (AI-DLC v1 running) | Full Chain | Richest context — full strategy derivation + continuous observation |
+| AP + DW + `aidlc-docs/` (AI-DLC running) | Full Chain | Richest context — full strategy derivation + continuous observation |
 | Architecture Package only (from AI-ADLC) | Architecture Only | Strategy mode only — derive the register directly from the AP |
 | Existing project with existing tests (no AP) | Brownfield | Assessment mode — map existing tests, identify gaps, prioritize |
-| Active AI-DLC v1 with `aidlc-docs/` but no prior TGE run | Observation Only | Jump straight to observation — register what should be tested as you go |
+| Active AI-DLC with `aidlc-docs/` but no prior TGE run | Observation Only | Jump straight to observation — register what should be tested as you go |
 
 **Detection order:** check for `.governance/test/tge-state.md` (resume) → check for the AP marker `adlc-state.md` (full chain or architecture-only) → check for `aidlc-docs/` (observation possible) → check for existing test directories (brownfield) → if none found, ask what you have.
 
@@ -77,7 +77,7 @@ Tracks WHAT gets tested as features are built. Runs autonomously — informs, do
 
 | Stage | What Happens | When |
 |-------|-------------|------|
-| 7 — State Observation | Reads `aidlc-docs/aidlc-state.md`, checks whether completed units' required tests now exist, updates the register | As AI-DLC v1 completes units |
+| 7 — State Observation | Reads `aidlc-docs/aidlc-state.md`, checks whether completed units' required tests now exist, updates the register | As AI-DLC completes units |
 | 8 — Story Acceptance Mapping | (Conditional) Maps acceptance criteria from user stories to acceptance-test entries | When user stories exist |
 | 9 — Coverage Reporting | Multi-view coverage: by commitment, by component, by test type, by risk level | On request or after observation |
 | 10 — Architecture Reconciliation | (Conditional) Detects AP changes; registers new tests, deprecates removed, flags changed contracts | When the AP changed since last read |
@@ -86,13 +86,13 @@ Tracks WHAT gets tested as features are built. Runs autonomously — informs, do
 
 ---
 
-## The Relationship with AI-DLC v1
+## The Relationship with AI-DLC
 
-AI-TGE is a **continuous companion** to AI-DLC v1, not a one-shot handoff and not a sequential stage:
+AI-TGE is a **continuous companion** to AI-DLC, not a one-shot handoff and not a sequential stage:
 
 ```
 AI-ADLC (AP) ──┐
-AI-DWG (DW) ───┼──► AI-TGE ──(observes)──► AI-DLC v1 (build)
+AI-DWG (DW) ───┼──► AI-TGE ──(observes)──► AI-DLC (build)
                │        ▲                        │
                └────────┴──(test accountability)─┘
 ```
@@ -106,9 +106,9 @@ AI-DWG (DW) ───┼──► AI-TGE ──(observes)──► AI-DLC v1 (bu
 
 **Who does what:**
 - AI-TGE = *what* must be tested, *whether* it has been, and *how risky* the gaps are
-- AI-DLC v1 = *how* the software is built and its tests written
+- AI-DLC = *how* the software is built and its tests written
 - AI-TGE does NOT write test code, execute tests, or connect to CI/CD
-- AI-DLC v1 does NOT decide test sufficiency or score test debt
+- AI-DLC does NOT decide test sufficiency or score test debt
 
 **Runs alongside AI-GCE:** AI-GCE governs code/process compliance ("does the code follow the rules?"); AI-TGE governs test completeness ("do tests exist for what was designed?"). Complementary, non-overlapping.
 
@@ -215,7 +215,7 @@ I have an Architecture Package from AI-ADLC and a workspace from AI-DWG.
 **Architecture only (no workspace yet):**
 ```
 Using AI-TGE, derive test requirements from my architecture package.
-AI-DLC v1 hasn't started building yet.
+AI-DLC hasn't started building yet.
 ```
 
 **Brownfield (existing tests):**
@@ -227,7 +227,7 @@ Show me what's uncovered and rank the gaps by risk.
 **Observation (build in progress):**
 ```
 Using AI-TGE, check test coverage now.
-AI-DLC v1 just completed two more units.
+AI-DLC just completed two more units.
 ```
 
 ---
@@ -249,7 +249,7 @@ AI-DLC v1 just completed two more units.
 - NOT a test writer (doesn't generate test code)
 - NOT a CI/CD tool (doesn't connect to pipelines)
 - NOT a replacement for AI-GCE (GCE governs code compliance; TGE governs test completeness)
-- NOT a replacement for AI-DLC v1's Build-and-Test stage (that generates test instructions; TGE governs whether those instructions are sufficient)
+- NOT a replacement for AI-DLC's Build-and-Test stage (that generates test instructions; TGE governs whether those instructions are sufficient)
 
 AI-TGE is the **test governance companion** — it answers *what must be tested, whether it has been, and how much each gap costs*.
 
@@ -263,4 +263,4 @@ See `setup/INSTALL.md` for detailed platform instructions.
 
 ---
 
-*AI-TGE v1.0.0-beta.1 | Part of [AIFLC](../../README.md) — the AI-* PDLC Family*
+*AI-TGE v1.1.0 | Part of [AIFLC](../../README.md) — the AI-* PDLC Family*

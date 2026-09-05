@@ -150,7 +150,7 @@ When AI-ILC completes (Status = Routed), the state file becomes the **marker fil
 | Successor | Reads from `ilc-state.md` | Uses |
 |-----------|---------------------------|------|
 | AI-PILC | Route = `new-project` or `change-request` | Idea Name, Depth Level, Brief File path |
-| AI-DLC v1 | Route = `feature-backlog` | Idea Name, Brief File path |
+| AI-DLC | Route = `feature-backlog` | Idea Name, Brief File path |
 
 The state file is **read-only** after routing is complete. AI-ILC does not modify it further.
 

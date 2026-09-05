@@ -14,7 +14,7 @@ Change management means that modifications to established baselines (approved re
 
 1. **The scope that grew 300%.** The original charter said "customer portal with 5 features." After 6 months, it's 17 features. No single change was large — each was "just one more thing." No one tracked the cumulative impact. Budget exhausted at 60% of (revised) scope because no change impact was assessed.
 
-2. **The architecture that drifted.** ADR-003 says "monolithic deployment." Three months later, two teams have independently created separate services. No ADR revision, no impact assessment, no downstream notification. AI-DWG's steering files describe a monolith; the code is distributed. Governance enforces patterns that don't match reality.
+2. **The architecture that drifted.** ADR-003 says "monolithic deployment." Three months later, two teams have independently created separate services. No ADR revision, no impact assessment, no downstream notification. AI-DWG (Workspace Generator)'s steering files describe a monolith; the code is distributed. Governance enforces patterns that don't match reality.
 
 3. **The "agreed" agreement that nobody agreed to.** Team agreements say "PR reviews within 4 hours." Someone changed it to "24 hours" in a quiet commit. Half the team follows the old rule, half follows the new. Friction, missed SLAs, blame.
 
@@ -40,11 +40,11 @@ Change management means that modifications to established baselines (approved re
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-PILC** | Change Register (management framework) | Every change to requirements, scope, or project parameters is logged with impact assessment and approval status. Initialized at project start. |
-| **AI-ADLC** | ADR revision process | Architecture changes require a new ADR (or ADR revision) with: what changed, why, impact on downstream, migration path. No silent architecture drift. |
+| **AI-PILC (Project Initiation Life Cycle)** | Change Register (management framework) | Every change to requirements, scope, or project parameters is logged with impact assessment and approval status. Initialized at project start. |
+| **AI-ADLC (Architecture Design Life Cycle)** | ADR revision process | Architecture changes require a new ADR (or ADR revision) with: what changed, why, impact on downstream, migration path. No silent architecture drift. |
 | **AI-ADLC** | Architecture workbook | Open questions and assumption changes tracked in a living document. Changes to assumptions trigger re-evaluation of dependent decisions. |
 | **AI-DWG** | Mode 2: Delta Reconciliation | When architecture changes, reconciliation is explicit — AI-DWG shows exactly what workspace files are affected and proposes specific updates. |
-| **AI-GCE** | Re-derivation on change | Steering file changes trigger re-derivation. Governance always matches current decisions, not stale ones. Change propagation is automated. |
+| **AI-GCE (Governance & Compliance Engine)** | Re-derivation on change | Steering file changes trigger re-derivation. Governance always matches current decisions, not stale ones. Change propagation is automated. |
 | **AI-GCE** | Change governance hooks | PR hooks enforce: linked change request for scope changes, ADR reference for architecture changes, approval evidence for baseline modifications. |
 
 ---

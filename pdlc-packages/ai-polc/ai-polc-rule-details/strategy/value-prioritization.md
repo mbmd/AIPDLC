@@ -121,7 +121,7 @@ Document when the priority order should be revisited:
 | New feature brief from AI-ILC | Assess and insert into ranked list |
 | Approved change request from AI-PILC | Re-evaluate affected epics |
 | **AP feasibility / cost-risk update (AI-ADLC)** | **Re-score affected epics — fold the updated effort/complexity band into WSJF Job Duration (or value/effort); a "3× the cost" verdict can reorder the roadmap. This is the Architecture→Product cost loop (same-layer read of `adlc-state.md`).** |
-| Blocker from AI-DLC v1 | Move blocked epic down; pull alternative forward |
+| Blocker from AI-DLC | Move blocked epic down; pull alternative forward |
 | Market change / competitor move | Full re-prioritization session |
 | Sprint/increment review reveals new data | Selective re-score of affected epics |
 | {cadence}: every {N} sprints | Scheduled re-prioritization review |

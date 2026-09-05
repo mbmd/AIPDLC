@@ -127,7 +127,7 @@ projectId: {project_id}
 |----------|:-----------:|:------:|
 | AI-GCE (governance derivation) | {✅/❌} | {Ready to derive / Partial AP — limited derivation possible} |
 | AI-TGE (test derivation) | {✅/❌} | {Ready to derive / Partial AP} |
-| AI-DLC v1 (development) | {✅/❌} | {Day-1 ready / Setup needed} |
+| AI-DLC (development) | {✅/❌} | {Day-1 ready / Setup needed} |
 
 ---
 

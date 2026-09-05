@@ -1,6 +1,6 @@
 # How Drift Intake Works
 
-**Purpose:** Explains how the AI-* Family handles *midflight design drift* — when the code in a live workspace quietly diverges from the approved design baseline — through a single, closed reconciliation loop: AI-GCE detects and logs it, AI-FLO routes it by address, the owning design package digests it into a decision (Conform / Amend / Waive), AI-DWG bakes that decision into a new baseline, and AI-GCE closes it. One writer per step, reconciled through the baseline.
+**Purpose:** Explains how the AI-* Family handles *midflight design drift* — when the code in a live workspace quietly diverges from the approved design baseline — through a single, closed reconciliation loop: AI-GCE (Governance & Compliance Engine) detects and logs it, AI-FLO (Flow Orchestrator) routes it by address, the owning design package digests it into a decision (Conform / Amend / Waive), AI-DWG (Workspace Generator) bakes that decision into a new baseline, and AI-GCE closes it. One writer per step, reconciled through the baseline.
 
 ---
 
@@ -22,7 +22,7 @@ Drift intake is a shared discipline, not a package. Several packages each own ex
 |---------|------------------|--------|
 | **AI-GCE** | **Detector.** Measures reality against the baseline, classifies and tags each divergence, logs it to the drift register, and later closes it | the drift register |
 | **AI-FLO** | **Broker.** Holds the "which domain belongs to which package" map; hands each package the *address* of its drift | the routing log |
-| **AI-ADLC / AI-POLC / AI-UXD** | **Disposers.** Digest their domain's drift and decide Conform / Amend / Waive | their own artifacts |
+| **AI-ADLC (Architecture Design Life Cycle) / AI-POLC (Product Ownership Life Cycle) / AI-UXD (UX Design)** | **Disposers.** Digest their domain's drift and decide Conform / Amend / Waive | their own artifacts |
 | **AI-DWG** | **Re-baseliner.** Pulls each decision and bakes it into the next baseline version | the baseline |
 
 **Single-writer rule:** each artifact has exactly one writer. GCE writes the register, FLO writes the routing log, each design package writes its own output, DWG writes the baseline. No component ever writes another's artifact. That is what keeps the loop honest.

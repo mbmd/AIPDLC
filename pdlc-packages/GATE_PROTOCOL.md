@@ -12,7 +12,7 @@
 
 ## 1. Purpose
 
-This document defines the **universal gate and seam protocol** for the AIFLC Communication Fabric. It governs:
+This document defines the **universal gate and seam protocol** for the AIFLC (AI Full Life Cycle) Communication Fabric. It governs:
 
 - What a gate IS (the contract between producer and consumer)
 - How gates BEHAVE (the matching algorithm applied at every boundary)
@@ -111,7 +111,7 @@ strictness-default: warn
 
 **Universal floor (not re-declared per type):** Every marker MUST carry `status: complete` and a non-empty `entityId` to be eligible for matching at all. These are enforced by the **marker integrity pre-check (§18)** — they are not listed in per-type `mandatory` because they are universal to every feed, not specific to any capability type.
 
-**Wildcard consumers:** A package that consumes ALL types (e.g., AI-FLO the router) declares `consumes: [{ type: "*" }]` — it reads every marker as a routing trigger and declares no type-specific field requirements.
+**Wildcard consumers:** A package that consumes ALL types (e.g., AI-FLO (Flow Orchestrator) the router) declares `consumes: [{ type: "*" }]` — it reads every marker as a routing trigger and declares no type-specific field requirements.
 
 ### 4.3 Strictness Override
 
@@ -469,7 +469,7 @@ Intra-family hops (`internal` edges) are logged in FLO's `routing-log.md` — NO
 
 ## 17. Migration & Coexistence (G-H)
 
-> **CFA-19.** The 10 PDLC packages chain informally today (marker detection without formal gate contracts). The fabric introduces formal gates. Both must coexist during transition.
+> **CFA-19.** The 10 PDLC (Product Development Life Cycle) packages chain informally today (marker detection without formal gate contracts). The fabric introduces formal gates. Both must coexist during transition.
 
 ### 17.1 Coexistence Model
 
@@ -601,6 +601,155 @@ A marker can pass integrity but fail gate matching (valid but incompatible). A m
 | 1.3.0 | 2026-06-18 | **Minor gap resolutions (Phase 6, CFA-25): added §20** giving an explicit stance for G-K (trust boundary — untrusted foreign input + integrity check), G-L (one-to-many lineage — N markers via derivedFrom), G-M (glossary = §2), G-N (standalone-package — gate contract self-sufficient), G-O (fabric testing — deferred to family #2), G-P (protocolVersion interop — structural compatibility via §5 Step 1). |
 | 1.3.1 | 2026-06-27 | **Vocabulary addition (no protocol-mechanic change): +CT-11 `data-surface@1`** (AI-DFE, PDLC, internal visibility — not seam-capable). Registered for the AI-DFE build (Phase E fabric registration). Like CT-10 (`orchestration-state`/AI-FLO), AI-DFE is a wildcard observer that consumes `"*"` and forms no capability edge; `data-surface` is its emitted type, consumed by internal tools/dashboards via `REGISTRY.json`, not by sibling packages. Packages may keep pinning protocolVersion 1.2.0 (additive change, §5 Step 1 / G-P tolerance). |
 | 1.4.0 | 2026-07-10 | **Family-agnostic vocabulary (Appendix A de-enumerated).** Removed the hand-maintained global capability-type enumeration from Appendix A — it coupled every family through the shared, verbatim-synced protocol (each new type edited + re-synced this doc to all families), violating family self-containment (P5). Appendix A now defines only vocabulary **governance** (ownership, allocation, visibility, deprecation); **each family owns its types in its own `FAMILY_INTERFACE.md`**. Body refs updated (§9.2, §15.1/15.4, §18.1) to point at family interfaces. The build-time compatibility assessment now aggregates the known-type set from all families' `FAMILY_INTERFACE.md` tables instead of this doc. No matching-mechanic change — families pinning ≤1.3.1 remain valid (structural/doc change only). Prompted by SFLC/SXLC onboarding: their types live in their own interfaces, not here. |
+| 1.5.0 | 2026-08-13 | **§21 Draft-First Gate Model (CFA-26).** Every stage writes its artifact to disk BEFORE requesting approval. The user approves based on reviewing the actual document, not a chat summary. Only `approved` artifacts count as stage-complete; downstream MUST NOT consume `draft` artifacts. Adds `status`/`approvedOn` to provenance front-matter and `draftedOn`/`approvedOn` to state file `completedStages[]`. No matching-mechanic change — external consumers still see only `status: complete` markers. PDLC note: PDLC packages already implement this pattern ("Save to → Saved to `{file_path}`"); §21 formalizes it and adds the status lifecycle. |
+| 1.5.1 | 2026-08-13 | **§21.10 Interaction Scenarios & Q&A Lifecycle.** Codifies the four interaction patterns (autonomous, Q&A-then-produce, produce-with-gaps, post-review clarification) so Draft-First adapts to stages requiring user input before or after the draft. Adds `_[USER-INPUT-NEEDED: {description}]_` gap-marker convention. No mechanic change to §21.1–21.9 — purely additive scenario guidance. |
+
+---
+
+## 21. Draft-First Gate Model
+
+> **CFA-26.** Every package stage writes its artifact to disk BEFORE requesting approval. The user approves based on reviewing the actual document, not a chat summary. This is the DEFAULT gate behavior.
+
+### 21.1 Principle
+
+The gate operates in a **write-then-review** cycle. The AI completes its analytical work, writes the full artifact to disk with `status: draft`, then announces the file path and awaits user review. The user reads the actual document in their editor — not a summary in chat — and approves or requests changes.
+
+### 21.2 Lifecycle
+
+```
+AI work → write artifact (status: draft) → user reviews actual file →
+[revise loop if needed] → user approves → status: approved → gate passes
+```
+
+### 21.3 Artifact Status (front-matter)
+
+Every generated `.md` carries a `status` field in its provenance front-matter:
+
+```yaml
+---
+generatedBy: {package}
+generatedVersion: {version}
+source: {upstream}
+generatedOn: {ISO-date}
+ownership: generated | hybrid | user
+status: draft | approved
+approvedOn: {ISO-date}    # set when user approves
+---
+```
+
+- **`draft`** — written to disk, awaiting user review. Downstream stages MUST NOT consume a draft artifact.
+- **`approved`** — user has reviewed and confirmed. Workflow may advance; downstream packages may consume.
+
+### 21.4 State File Integration
+
+The package's state file (`*-state.md`) records per-stage artifact status:
+
+```yaml
+completedStages:
+  - stage: {N}
+    artifact: {path-to-artifact}
+    status: approved          # draft | approved
+    draftedOn: {ISO-8601}
+    approvedOn: {ISO-8601}
+```
+
+A stage is only "completed" when its artifact reaches `approved`. The workflow MUST NOT advance past a stage whose artifact is still `draft`.
+
+### 21.5 Chat Interaction Pattern
+
+After writing the draft artifact:
+
+```
+✅ Stage {N} — {Stage Name} complete (draft written).
+
+📄 Document: `{path-to-artifact}`
+
+Please review the document and confirm:
+- **Approve** — to finalize and advance to Stage {N+1}
+- **Request changes** — describe what to revise
+```
+
+**PDLC note:** PDLC packages may include a brief metric summary (3–5 bullets: key counts, scores, highlights) alongside the file path. This is permitted — the invariant is that the full document lives on disk and the user's approval is against the file, not the summary. A metric summary aids quick orientation before the user opens the file.
+
+### 21.6 Revision Loop
+
+While an artifact is in `draft` status:
+1. The user may request unlimited revisions.
+2. The AI updates the file in place (same path).
+3. After each revision, the AI re-announces: "Updated. Please review again."
+4. The artifact remains `draft` until the user explicitly approves.
+5. Approval keywords: "approved", "looks good", "proceed", "accept", "LGTM", or equivalent.
+
+### 21.7 Rules
+
+1. The artifact is written IMMEDIATELY on stage completion — no "approve to write" step.
+2. A `draft` artifact MUST NOT be consumed by a downstream stage or package.
+3. Only an `approved` artifact counts as "stage complete" in the state file.
+4. The user may request unlimited revisions while in draft — the AI updates the file in place.
+5. On approval, the AI updates the artifact's front-matter (`status: approved`, `approvedOn: {ISO-date}`) and the state file, then proceeds to the next stage.
+
+### 21.8 External Visibility
+
+- `draft` = internal to the producing package. The state marker shows `status: in-progress`.
+- `approved` = the stage is done. The state marker may show `status: complete` (if ALL stages are done).
+- Cross-family consumers (seam matching, §5) ONLY see `status: complete` markers — `draft` is invisible to them.
+- This does NOT introduce a new approval mechanism at seam boundaries (P7 preserved) — `draft/approved` is internal to the producing package's lifecycle.
+
+### 21.9 Relationship to §13 (Approval at Boundaries)
+
+§13 states gates validate, not authorize. §21 refines this: the per-stage gate's approval IS the user confirming the written document. The seam boundary still trusts `status: complete` — it neither sees nor checks individual stage drafts.
+
+### 21.10 Interaction Scenarios & Q&A Lifecycle
+
+Not every stage is a pure "AI produces autonomously, writes, user reviews." Many stages require user input BEFORE or AFTER the draft. The draft-first principle adapts to all scenarios — the invariant is: **the artifact is the deliverable, not the chat; the user's approval is always against the file.**
+
+#### Scenario A — Autonomous production
+
+The AI has all inputs (from prior stages / upstream packages). It produces the artifact, writes to disk, presents the path.
+
+```
+AI produces → writes draft → user reviews file → approves
+```
+
+#### Scenario B — Q&A then produce (most common)
+
+The AI needs user decisions or data before it can produce the artifact. It asks questions (via Q-blocks per `question-format-guide.md`), gathers answers, THEN writes.
+
+```
+AI asks questions → user answers → AI produces → writes draft → user reviews file → approves
+```
+
+The Q&A phase is normal stage execution — it is NOT the gate. The gate begins when the draft is written. "Stage completion" means "the AI has gathered sufficient input AND produced the artifact."
+
+#### Scenario C — Produce with gaps, ask post-draft
+
+The AI can produce most of the artifact but has gaps only the user can fill. It writes the draft with gaps marked `_[USER-INPUT-NEEDED: {what}]_`, asks the outstanding questions in chat, then updates the file in place once the user answers.
+
+```
+AI produces (partial) → writes draft (with gaps) → asks questions →
+user answers → AI updates file → user reviews file → approves
+```
+
+The artifact stays `draft` throughout. The gap markers make the incomplete sections visible in the file itself.
+
+#### Scenario D — User surfaces new information during review
+
+The user reviews the draft and provides new data or corrections the AI didn't have. The AI asks a clarifying question if needed, updates the file, re-announces.
+
+```
+AI writes draft → user reviews → user provides new info →
+AI asks clarification (if needed) → AI updates file → user re-reviews → approves
+```
+
+This is an extension of the §21.6 revision loop — revisions can be AI-initiated (asking a question) or user-initiated (providing corrections).
+
+#### Rules for all scenarios
+
+1. **The Q&A phase precedes OR follows the draft write — never replaces it.** Regardless of how many questions are asked, an artifact is always written to disk before the gate can pass.
+2. **A draft with gaps is still a draft.** Mark gaps with `_[USER-INPUT-NEEDED: {description}]_`. The file exists on disk; the user can see what's complete and what's pending.
+3. **The gate approval is always against the file.** Whether Q&A happened before, after, or both — the user's final "approve" confirms the artifact as written, not a chat message.
+4. **AI-initiated questions during draft are part of the revision loop.** The AI may ask questions after writing the draft. The artifact remains `draft` until all gaps are resolved AND the user approves.
+5. **No approval without a complete artifact.** The AI MUST NOT request gate approval while `_[USER-INPUT-NEEDED]_` markers remain in the file. Resolve all gaps first, then present for approval.
 
 ---
 

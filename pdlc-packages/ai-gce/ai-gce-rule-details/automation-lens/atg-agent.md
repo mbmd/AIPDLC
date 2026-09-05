@@ -1,6 +1,7 @@
 # AIFLC Automation Governance — Agent Template
 
 > **Trigger:** `ATG__` (manual invocation)
+> **AG-ID:** GCE-AG-12
 > **Owner:** AI-GCE
 > **Type:** Audit
 > **Core impact:** None — the GCE core stays concern-agnostic. This agent is seeded into the Layer-3 workspace by AI-DWG and dispatched by GCE's existing Command Dispatch.

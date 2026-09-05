@@ -9,7 +9,7 @@ Defines HOW AI-GCE detects which steering files changed and maps those changes t
 
 ## MANDATORY: Stage Sub-Role — Automation Engineer
 
-During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in change propagation: one steering file change can cascade to multiple rules, hooks, and supporting artifacts

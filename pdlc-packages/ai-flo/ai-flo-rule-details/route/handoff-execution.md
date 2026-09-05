@@ -91,6 +91,16 @@ After the handoff, check if any immediate follow-on is needed:
 | Target is AI-POLC and UXD personas are ready | Include persona handoff reference |
 | Project now at AI-DLC v1 | Companion packages (GCE/TGE) also activate |
 
+### Step 5b: Emit Data-Refresh Signal (source package)
+
+The source package just completed — its final output is ready to be gathered. Emit a signal so AI-DFE refreshes the **source** package's data *before* the target starts producing its own, per `SIGNAL_CONTRACT.md` (`data-refresh-signal@1.0`).
+
+1. Check `dfeRefreshGranularity` in this family's FLO overlay — if `off`, skip.
+2. Write `{family}-ws/data/signals/flo-refresh-{epoch-ms}.signal.md` for the **SOURCE** package (`event: gate-complete`), not the target being handed off to.
+3. **Dedup:** if Position Tracking Step 7 already emitted a signal for this same `package` + `timestamp`, skip the duplicate.
+
+> Fire-and-forget, same as Position Tracking Step 7 — FLO writes the file and continues; DFE consumes it on its next pass (or same-session if the destination hook is installed).
+
 ### Step 6: Completion Confirmation
 
 ```

@@ -1,4 +1,4 @@
-# How the AI-PILC Workflow Engine Works
+# How the AI-PILC (Project Initiation Life Cycle) Workflow Engine Works
 
 **Purpose:** Explains how AI-PILC guides a user from a raw requirement to a complete, professional Project Initiation Package (PIP) — the internal mechanics of its phase-gate workflow, state management, adaptive depth, and governance output.
 
@@ -27,7 +27,7 @@ RAW REQUIREMENT (any format)
 PROJECT INITIATION PACKAGE (PIP)
    • 12+ governance artifacts
    • 6 management registers
-   • State file for chain handoff to AI-ADLC
+   • State file for chain handoff to AI-ADLC (Architecture Design Life Cycle)
 ```
 
 ---
@@ -107,7 +107,7 @@ AI-PILC accepts input in five formats, adapting its behavior per mode:
 | B | Raw document (email, brief, notes) | Interpret, structure, and clarify |
 | C | Verbal description | Interview mode — ask structured questions to build requirements |
 | D | Brownfield extension | "What exists? What's changing? Extend-vs-replace decision?" |
-| E | AI-ILC brief (from predecessor) | Load approved idea as pre-structured input |
+| E | AI-ILC (Idea Life Cycle) brief (from predecessor) | Load approved idea as pre-structured input |
 
 ### 5. Structured Question Format
 

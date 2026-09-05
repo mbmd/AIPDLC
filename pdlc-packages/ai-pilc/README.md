@@ -28,7 +28,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -36,13 +36,13 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -56,11 +56,11 @@ flowchart LR
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 > **AI-DFE** ([Data Fabric Engine](../ai-dfe/)) is a family-scoped **companion** — it gathers data from all packages and distributes structured JSON for dashboards and status roll-ups. It runs alongside the chain rather than as a linear step, so it is not shown as a chain row above.
 
@@ -82,19 +82,19 @@ AI-PILC is the **first node** of the AI-* PDLC Family and lives in the **Portfol
 |--------|---------|
 | **Layer** | Portfolio |
 | **Position** | First node — the chain entry point |
-| **Optional predecessor** | AI-ILC (idea evaluation), detected via `ilc-state.md` |
-| **Direct successor** | AI-PPM (portfolio governance); if AI-PPM is absent, hands off directly to AI-POLC |
+| **Optional predecessor** | AI-ILC (AI-Driven Idea Life Cycle — idea evaluation), detected via `ilc-state.md` |
+| **Direct successor** | AI-PPM (AI-Driven Project Portfolio Management — portfolio governance); if AI-PPM is absent, hands off directly to AI-POLC (AI-Driven Product Ownership Life Cycle) |
 | **Reads (input)** | A raw requirement in any form, or an Approved Idea Brief from AI-ILC |
 | **Produces (output)** | Project Initiation Package (PIP) under `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/pip/` |
 | **Input marker (optional)** | `ilc-state.md` |
 | **Output marker** | `pilc-state.md` |
 | **Correlation key** | Mints `projectId` — the immutable, camelCase key every downstream package carries |
-| **Capability emitted** | `project-initiation@1` (consumed by AI-POLC, AI-UXD, AI-ADLC, AI-PPM) |
+| **Capability emitted** | `project-initiation@1` (consumed by AI-POLC (Product Ownership Life Cycle), AI-UXD (UX Design), AI-ADLC (Architecture Design Life Cycle), AI-PPM) |
 
 **Simplified chain view** (see the diagram above for the full topology):
 
 ```
-(AI-ILC) → AI-PILC → AI-PPM → AI-FLO → AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-DLC v1
+(AI-ILC) → AI-PILC → AI-PPM → AI-FLO → AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-DLC
              ▲ you are here
                        (AI-GCE + AI-TGE run alongside the build)
 ```
@@ -163,7 +163,7 @@ A complete Project Initiation Package containing:
 
 ## Activation
 
-**Explicit key:** type `_PILC_` in any prompt to activate AI-PILC unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-PILC`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
+**Explicit key:** type `_PILC_` in any prompt to activate AI-PILC unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` (report active package) reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-PILC`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
 
 ---
 
@@ -446,13 +446,13 @@ AI-PILC is where the family's cross-cutting **lens** modes are first promoted in
 | **Automation Lens** | Automated / Manual | `_AUTOLENS_` | Adds an automation feasibility view |
 | **Agentic** (AI ∩ Automation) | derived — both on | — | Adds agent feasibility (tool-integration, loop-cost realism) + an EU-AI-Act risk note, folded into the feasibility sections |
 
-Downstream, AI-POLC tags features per lens, AI-DWG provisions the scaffolding, and AI-GCE / AI-TGE govern and test lens-tagged features via Layer-3 agents (`AIG__`/`ATG__`, `AIQ__`/`ATQ__`).
+Downstream, AI-POLC tags features per lens, AI-DWG (Workspace Generator) provisions the scaffolding, and AI-GCE (Governance & Compliance Engine) / AI-TGE (Test Governance Engine) govern and test lens-tagged features via Layer-3 agents (`AIG__` (AI Governance) /`ATG__` (Automation Governance), `AIQ__` (AI Quality) /`ATQ__` (Automation Quality)).
 
 ---
 
-## Differences from AI-DLC v1
+## Differences from AI-DLC
 
-| Aspect | AI-DLC v1 | AI-PILC |
+| Aspect | AI-DLC | AI-PILC |
 |--------|--------|---------|
 | **Domain** | Software development | Project initiation (pre-execution) |
 | **Output** | Code + documentation | Project management deliverables |
@@ -516,7 +516,7 @@ See `LICENSE` and `NOTICE` in this directory for full terms.
 
 **Copyright:** © 2026 Mohammad Maheri
 
-> **Note:** AI-DLC v1 (Development Life Cycle) is NOT part of the AI-* Family — it is a separate AWS product ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) licensed under MIT-0.
+> **Note:** AI-DLC (Development Life Cycle) is NOT part of the AI-* Family — it is a separate AWS product ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) licensed under MIT-0.
 
 ---
 

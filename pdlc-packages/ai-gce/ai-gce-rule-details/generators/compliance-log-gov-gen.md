@@ -5,11 +5,13 @@
 
 Derives compliance log governance rules (GOV-LOG-*). These rules govern the compliance logging infrastructure itself — ensuring the audit trail maintains integrity.
 
+> **Under `buildProfile: aidlc` — read-and-persist, do not re-run (Improvement 8, ledger A1–A9).** The observability spine (silent-when-compliant, the permanent JSONL log, the drift register, score/rating/trend, the dashboard, the dual overall-vs-new-code score) is **kept in full** under `aidlc` — v2's per-work-item audit does not replace it. The **one** narrow change: where a check runs as a **v2 sensor**, AI-GCE reads v2's audit outcome and **persists the derived compliance event** (`source: aidlc-sensor`) rather than re-running the check and writing a second event. Rule 5 (every action logged) survives intact — nothing goes unlogged; an already-established outcome is recorded, not re-derived. The v2→AI-GCE audit-event mapping and the derived-event shape live in `common/observability-read-and-persist.md` (the item-19 build-method resolution point references it). Under non-`aidlc` build methods there are no v2 sensors, so every check re-runs as a hook and logs directly — unchanged.
+
 ---
 
 ## MANDATORY: Stage Sub-Role — Audit & Compliance Specialist
 
-During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in audit trail integrity: the compliance log is the EVIDENCE that governance is working — corrupting it invalidates the entire system

@@ -8,7 +8,7 @@
 
 ## Purpose
 
-AI-DLC v1 produces implementation docs (specs, tests, code docs). AI-POLC governs product-facing documentation: the external/stakeholder record. Without it, stakeholders don't know what was built; customers don't know what changed; marketing can't communicate new capabilities.
+AI-DLC produces implementation docs (specs, tests, code docs). AI-POLC governs product-facing documentation: the external/stakeholder record. Without it, stakeholders don't know what was built; customers don't know what changed; marketing can't communicate new capabilities.
 
 ---
 

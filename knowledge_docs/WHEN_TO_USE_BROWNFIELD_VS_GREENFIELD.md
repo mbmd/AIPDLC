@@ -32,11 +32,11 @@
 
 | Package | Greenfield Behavior |
 |---------|-------------------|
-| AI-PILC | "What do you want to build?" — full requirements capture from zero |
-| AI-ADLC | Design from blank slate — all C4 levels, all decisions fresh |
-| AI-DWG | Mode 1 (Full Generation) — generate everything: folders, steering, configs, CI |
-| AI-GCE | Full derivation, no baseline scan — all rules are new |
-| AI-TGE | Strategy derivation only — no existing tests to map |
+| AI-PILC (Project Initiation Life Cycle) | "What do you want to build?" — full requirements capture from zero |
+| AI-ADLC (Architecture Design Life Cycle) | Design from blank slate — all C4 levels, all decisions fresh |
+| AI-DWG (Workspace Generator) | Mode 1 (Full Generation) — generate everything: folders, steering, configs, CI |
+| AI-GCE (Governance & Compliance Engine) | Full derivation, no baseline scan — all rules are new |
+| AI-TGE (Test Governance Engine) | Strategy derivation only — no existing tests to map |
 
 ---
 

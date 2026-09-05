@@ -3,7 +3,7 @@
 
 ## Purpose
 
-Transforms the traceability linkage produced by AI-POLC (`governance/traceability.md`) into a living **traceability matrix** seed in the destination workspace. The matrix threads business intent → goal → epic → story → release so that AI-DLC v1 (during build) and AI-GCE (during enforcement) can verify that every unit of work traces to a justified product reason, and that no requirement is orphaned.
+Transforms the traceability linkage produced by AI-POLC (`governance/traceability.md`) into a living **traceability matrix** seed in the destination workspace. The matrix threads business intent → goal → epic → story → release so that AI-DLC (during build) and AI-GCE (during enforcement) can verify that every unit of work traces to a justified product reason, and that no requirement is orphaned.
 
 **Output:** `{workspace-root}/traceability-matrix.md`
 
@@ -69,7 +69,7 @@ projectId: "{project-id}"
 # Traceability Matrix
 
 > Every build artefact MUST trace to a row here. Unlinked work is a governance finding.
-> Maintained forward by AI-DLC v1 (adds implementation refs) and audited by AI-GCE.
+> Maintained forward by AI-DLC (adds implementation refs) and audited by AI-GCE.
 
 ## Forward Trace (Intent → Delivery)
 
@@ -106,7 +106,7 @@ Each row expresses a single forward path. A story serving two epics produces two
 Any epic without a parent goal, or story without a parent epic, goes in the **Unlinked Items** table with a suggested parent — never silently dropped.
 
 ### Rule 4: The Matrix Is Append-Forward
-AI-DLC v1 adds implementation/commit references downstream; AI-GCE audits. The seed must leave the `Status` column writable and not lock rows.
+AI-DLC adds implementation/commit references downstream; AI-GCE audits. The seed must leave the `Status` column writable and not lock rows.
 
 ---
 
@@ -115,7 +115,7 @@ AI-DLC v1 adds implementation/commit references downstream; AI-GCE audits. The s
 | Situation | Response |
 |-----------|----------|
 | POLC present, no traceability artefact | Generate scaffold with one row per epic (goal↔epic only); flag: "PBP lacks traceability.md — matrix seeded at epic level only" |
-| Tier 2 stories not elaborated (chain mode) | Leave `Story` column as `{deferred-to-AI-DLC v1}`; matrix still traces goal↔epic↔release |
+| Tier 2 stories not elaborated (chain mode) | Leave `Story` column as `{deferred-to-AI-DLC}`; matrix still traces goal↔epic↔release |
 | Goal referenced by epic but absent from vision | Unlinked finding: "epic references missing goal {id}" |
 | Depth = Minimal | Produce goal↔epic columns only; omit Story/Release columns |
 

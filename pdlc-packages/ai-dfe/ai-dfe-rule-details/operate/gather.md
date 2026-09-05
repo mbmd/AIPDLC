@@ -80,4 +80,5 @@ One `{pkg}-data.json` per package, staged for distribution (2.3).
 ## Notes
 
 - Gather reads raw sources ONLY. It never reads other `{pkg}-data.json` files (that's Layer 2's job).
+- **Multi-workspace set (per-team topology).** When AI-DWG generated a per-team set, a Layer-2 `workspace-set-manifest.yaml` lists the member L3 workspaces. DFE reads the set *down* (one gather pass per member, resolving each member's sources via the set-manifest — folder path in subfolder mode, repo URL in polyrepo mode) so the cross-lifecycle view spans the whole set. Each member still produces its own `{pkg}-data.json`; the set-manifest is the discovery contract that enumerates members. In a single workspace this is unchanged (one member). DFE reads down only — it never writes into an L3 workspace (Rule 8: DFE owns only `{family}-ws/data/`).
 - `$generatedOn` is the basis for monitoring (2.4) — set it to the time of this gather.

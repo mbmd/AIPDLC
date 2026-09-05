@@ -223,7 +223,7 @@ Here are the current architecture constraints: [describe existing system]
 - NOT product backlog management (that's AI-POLC)
 - NOT UX design (that's AI-UXD)
 - NOT compliance enforcement (that's AI-GCE)
-- NOT code implementation (that's AI-DLC v1)
+- NOT code implementation (that's AI-DLC)
 
 AI-ADLC is the **Architect's companion** — it answers *"How should this system be structured, and why?"*
 

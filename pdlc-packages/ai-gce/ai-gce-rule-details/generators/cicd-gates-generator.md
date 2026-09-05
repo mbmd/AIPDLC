@@ -9,7 +9,7 @@ Derives CI/CD quality gate rules (GOV-CICD-*) from `testing-strategy.md` and `gi
 
 ## MANDATORY: Stage Sub-Role — Automation Engineer
 
-During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in pipeline stages: every quality gate is a pass/fail checkpoint with measurable thresholds
@@ -60,13 +60,9 @@ A good output from this activity sounds like:
 
 ---
 
-## Hook: `coverage-check.json`
+## Enforced by
 
-- **Event:** agentStop (Tier B)
-- **Checks:** GOV-CICD-002/003 — coverage meets stated thresholds
+- **`coverage-check.json`** — 📄 reference-only template; its `GOV-CICD-002/003` checks run in the consolidated `session-end-compliance.json` sweep, not as a standalone installed hook
+- **`PRC__` pre-PR checklist agent** — covers `GOV-CICD-002/003/005` as part of PR readiness
 
-## Hook: `pre-pr-checklist.json` (shared)
-
-- **Checks:** GOV-CICD-001/002/003/005 as part of PR readiness
-
-## Tier: 2 (CI pipeline must exist — Tier 2 readiness criterion)
+> **Two corrections here.** The former `pre-pr-checklist.json` **hook** heading is gone — that check is the `PRC__` **agent** now. And its list cited **`GOV-CICD-001`, which this generator does not produce** — the produced set is `002/003/005/006/007` (+ the named baseline `GOV-CICD-BASELINE-02`). `001` had no producing row; it was referenced into the mapping and nowhere else. Cite only produced IDs; `coverage-check` is confined to `002/003` because those are the two the coverage sweep actually evaluates.

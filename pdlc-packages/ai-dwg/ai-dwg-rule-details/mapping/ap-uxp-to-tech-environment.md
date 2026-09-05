@@ -3,7 +3,7 @@
 
 ## Purpose
 
-Assembles the **Technical Environment Document** that AI-DLC v1 expects as one of its two primary human-authored inputs. This document answers "What tools and constraints define our build environment?" — combining technology decisions from AI-ADLC with frontend patterns from AI-UXD.
+Assembles the **Technical Environment Document** — architecture reference consumed as team context during the build (Kiro steering + AI-DLC's `aidlc-architect-agent/` knowledge system when `buildProfile = aidlc`). This document answers "What tools and constraints define our build environment?" — combining technology decisions from AI-ADLC with frontend patterns from AI-UXD.
 
 **Output:** `{workspace-root}/architecture/technical-environment.md`
 
@@ -20,9 +20,9 @@ Assembles the **Technical Environment Document** that AI-DLC v1 expects as one o
 During THIS activity, ALSO adopt the mindset of a **Systems Engineer**. This does NOT replace your primary role (DevOps/Platform Engineer + Senior Architect) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
-- Think in constraints — the Technical Environment Document tells AI-DLC v1 what it CAN and CANNOT use
+- Think in constraints — the Technical Environment Document tells the build agent what it CAN and CANNOT use
 - Be specific — "PostgreSQL 16" not "a relational database"; "React 18 with TypeScript" not "a modern frontend"
-- Include allow/disallow lists — AI-DLC v1 uses these to restrict tool selection during code generation
+- Include allow/disallow lists — used as constraints during code generation to restrict tool selection
 - Frontend patterns from UXD are equally authoritative as backend patterns from ADLC
 
 ### Anti-Patterns for This Activity
@@ -211,10 +211,10 @@ Reference: `examples/` directory contains starter patterns for:
 ### Key Rules
 
 1. **Specificity over generality.** "PostgreSQL 16.2" not "SQL database." "React 18.3 with TypeScript 5.4" not "modern frontend."
-2. **Allow/Disallow lists are AI-DLC v1 constraints.** AI-DLC v1 uses these to restrict its code generation — be explicit about what's forbidden.
+2. **Allow/Disallow lists are code-generation constraints.** Used to restrict code generation — be explicit about what's forbidden.
 3. **Frontend Patterns are first-class.** When UXD is present, the Frontend Patterns section is as detailed as Security Requirements. It's not a footnote.
 4. **Don't duplicate design-system.md.** Reference it ("See design-system.md for full token inventory") — don't copy all tokens into this file.
-5. **ADR references provide rationale.** Every major decision links to an ADR so AI-DLC v1 can understand WHY (helpful for edge cases during code generation).
+5. **ADR references provide rationale.** Every major decision links to an ADR so the build agent can understand WHY (helpful for edge cases during code generation).
 
 ---
 

@@ -131,7 +131,7 @@ Available at any point during the workflow:
 | **AI-POLC** | Personas + journey maps + JTBD | Stage 14 |
 | **AI-DWG** | Design system + tokens + component structure | Stage 15 |
 | **AI-GCE** | Accessibility baseline + component standards | Stage 15 |
-| **AI-DLC v1** (feedback) | Receives usability/accessibility signals | Post-implementation |
+| **AI-DLC** (feedback) | Receives usability/accessibility signals | Post-implementation |
 
 ---
 
@@ -160,3 +160,23 @@ flowchart TB
     S14 --> S15["Stage 15<br/>DWG/GCE Handoff"]
     S15 --> S16["Stage 16<br/>Package Assembly"]
 ```
+
+---
+
+### Workflow-Discipline Checklist (per stage)
+
+**Before starting a stage:**
+- [ ] Have I loaded this stage's rule-detail file (not working from memory)?
+- [ ] Was the previous stage approved by the user?
+- [ ] Is this the next stage in order (or a user-directed jump)?
+- [ ] Do I understand this stage's inputs and expected output?
+
+**While executing:**
+- [ ] Does every element trace to a package file, template, or the user's input?
+- [ ] Am I using the package's templates rather than inventing a format?
+- [ ] Am I avoiding improvised procedures and "best-practice" filler?
+
+**After completing a stage:**
+- [ ] Does the output match the package template / spec?
+- [ ] Have I updated the state file?
+- [ ] Have I obtained explicit user approval before the next stage?

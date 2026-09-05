@@ -66,7 +66,7 @@ quadrantChart
 |---------|--------|
 | New feature from AI-ILC | Assess and insert into ranked list |
 | Approved CR from AI-PILC | Re-evaluate affected epics |
-| Blocker from AI-DLC v1 | Move blocked item down; pull alternative |
+| Blocker from AI-DLC | Move blocked item down; pull alternative |
 | Market/competitor change | Full re-prioritization |
 | Scheduled review | Every {N} sprints |
 

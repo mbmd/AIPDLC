@@ -9,7 +9,7 @@ Derives steering file governance rules (GOV-STEER-*). UNIQUE: this category is s
 
 ## MANDATORY: Stage Sub-Role — Audit & Compliance Specialist
 
-During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think meta-governantly: these rules govern the governance infrastructure itself — ensuring steering files maintain their own quality
@@ -55,10 +55,9 @@ A good output from this activity sounds like:
 
 ---
 
-## Hook: `steering-quality-check.json`
+## Enforced by: the `SQC__` steering-quality agent (not a hook)
 
-- **Event:** agentStop (Tier B 🟡)
-- **Pattern:** `rules/**/*.md`
-- **Checks:** GOV-STEER-005/006/009 (quality, prescriptive language, no contradictions)
+- **Agent:** `steering-quality-agent.md` (`SQC__`, Tier 2) — steering quality is reviewed on demand at a milestone, not fired on every session close
+- **Checks:** `GOV-STEER-005` (quality), `GOV-STEER-009` (no contradictions)
 
-## Tier: 2 (steering quality enforcement needs established steering files)
+> **Two corrections here.** The former heading was `Hook: steering-quality-check.json`, but that hook was retired to the `SQC__` agent under this generator now names the agent it feeds. And the check list cited **`GOV-STEER-006`, which this generator does not produce** — its produced set is `001/002/003/005/009/010/011/017/018` + `BASELINE-01/02`. `006` was an invented ID sitting in this file's own mapping while absent from its own rules table, which is why reading a generator's mapping is not the same as reading what it produces. Cite only `005` and `009`; if a "prescriptive language" rule is wanted it must first be **produced** as a real `GOV-STEER-*` ID with a statement, not referenced into existence here.

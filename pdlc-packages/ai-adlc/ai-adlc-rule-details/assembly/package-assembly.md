@@ -364,7 +364,7 @@ Map bands to the product areas/epics when the AP can be aligned to them; otherwi
    1. Review package with Technical Lead and senior developers
    2. Resolve {n} open questions during first design sprint
    3. Run AI-DWG to generate the development workspace from this Architecture Package
-   4. Begin AI-DLC v1 construction phase using this architecture as input
+   4. Begin AI-DLC construction phase using this architecture as input
    5. ADR register continues to grow during development (new decisions arise)
 
 🔀 **Chain Navigation (what's next in the AI-* Family):**

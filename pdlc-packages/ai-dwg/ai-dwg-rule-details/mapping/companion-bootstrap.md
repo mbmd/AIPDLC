@@ -149,6 +149,17 @@ On reconciliation, DWG:
 - On approval: re-copy (overwrite `.governance/engine/ai-gce/`), bump `provisionedOn`, update `version`
 - The `UPG__` shortcut also triggers this check from the companion side
 
+### Rule 8: Per-Member Provisioning in a Workspace Set (per-team/hybrid topology)
+
+When `workspaceTopology ∈ {per-team, hybrid}` (Config Gate Q4), there are **N Layer-3 member workspaces**, each a full workspace that needs its own companions. This mapping runs **once per member**:
+
+- Enumerate members from the Layer-2 `workspace-set-manifest.yaml` (`members[].workspace` — a folder path in subfolder mode, a repo URL in polyrepo mode).
+- For **each** member, apply Rules 1–7 against that member's `{generated-workspace-root}` = `{slug}-workspaces/{team}/` — copy the selected companions into that member's `.governance/engine/`, populate its `GOVERNANCE_INDEX.md`, and record its `governance.provisioned` block in that member's per-member `workspace-manifest.yaml`. Respects Q3 + brownfield skip per member.
+- The **Layer-2 control plane** (`{slug}-management/`) does NOT get companion engines provisioned into it — it is a management surface, not a dev workspace. Its cross-workspace governance view is produced by AI-GCE's `cross-workspace-rollup` reading each member *down* (not by a companion engine living in L2).
+- **Single workspace (default):** exactly one target, as specified above — unchanged.
+
+Mode-transparent: the loop reads `physicalLayout` only to resolve each member's path vs. repo URL; the copy logic is identical.
+
 ---
 
 ## Interaction With Other Files

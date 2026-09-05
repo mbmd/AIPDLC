@@ -1,6 +1,6 @@
 # How to Prepare a Development Workspace
 
-**Purpose:** Practical guide for using AI-DWG to transform an Architecture Package into a ready-to-code development workspace — complete with steering files, governance structure, folder layout, and operational tooling that AI-DLC v1 (or any development workflow) consumes.
+**Purpose:** Practical guide for using AI-DWG (Workspace Generator) to transform an Architecture Package into a ready-to-code development workspace — complete with steering files, governance structure, folder layout, and operational tooling that AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) (or any development workflow) consumes.
 
 ---
 
@@ -14,9 +14,9 @@ Tech leads, DevOps engineers, or senior developers setting up a project's develo
 
 **You need:**
 - AI-DWG installed in your AI workspace (see `ai-dwg/setup/INSTALL.md`)
-- **Required:** An Architecture Package (AP) from AI-ADLC — or equivalent architecture documents
+- **Required:** An Architecture Package (AP) from AI-ADLC (Architecture Design Life Cycle) — or equivalent architecture documents
 - **Optional enrichment:**
-  - Product Backlog Package (PBP) from AI-POLC
+  - Product Backlog Package (PBP) from AI-POLC (Product Ownership Life Cycle)
   - UX Design Package (UXP) from AI-UXD
 
 **You do NOT need:**
@@ -173,7 +173,7 @@ For existing codebases, AI-DWG works differently:
 
 3. **Customize `TEAM_AGREEMENTS.md` after generation.** AI-DWG seeds it from architecture decisions, but real team agreements need team input. Edit the generated file — it has `ownership: hybrid` and your edits are preserved on re-derivation.
 
-4. **Don't skip `PROJECT_INSTRUCTIONS.md`.** This file gives every AI-DLC v1 session full project context. A rich project-instructions file means less repeated explanation in every chat session.
+4. **Don't skip `PROJECT_INSTRUCTIONS.md`.** This file gives every AI-DLC session full project context. A rich project-instructions file means less repeated explanation in every chat session.
 
 5. **Run Mode 2 when architecture changes.** If AI-ADLC revises an ADR or adds a container, run AI-DWG in Delta Reconciliation mode. It updates only affected steering files, preserving your customizations (the `<!-- custom -->` block pattern).
 
@@ -185,9 +185,9 @@ Your workspace feeds the final layer:
 
 | Next Package | What It Reads |
 |-------------|--------------|
-| **AI-GCE** | All `.kiro/steering/` files → derives enforcement rules + hooks |
-| **AI-TGE** | Testing steering + architecture → derives test governance |
-| **AI-DLC v1** | Steering files + hooks + project instructions → builds with governance |
+| **AI-GCE (Governance & Compliance Engine)** | All `.kiro/steering/` files → derives enforcement rules + hooks |
+| **AI-TGE (Test Governance Engine)** | Testing steering + architecture → derives test governance |
+| **AI-DLC** | Steering files + hooks + project instructions → builds with governance |
 
 AI-GCE detects the workspace by finding `.kiro/steering/workspace-rules.md` (the marker).
 

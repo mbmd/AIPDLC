@@ -1,6 +1,6 @@
 # How Hook Generation Works
 
-**Purpose:** Explains how AI-GCE reads steering files and generates automated enforcement hooks — the derivation logic, hook anatomy, event-to-rule mapping, and how hooks compose into a coherent governance layer.
+**Purpose:** Explains how AI-GCE (Governance & Compliance Engine) reads steering files and generates automated enforcement hooks — the derivation logic, hook anatomy, event-to-rule mapping, and how hooks compose into a coherent governance layer.
 
 ---
 

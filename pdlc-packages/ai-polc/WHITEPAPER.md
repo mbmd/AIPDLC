@@ -44,7 +44,7 @@ PIP + AP → FOUNDATION → STRATEGY → OPERATIONS → GOVERNANCE → ASSEMBLY 
 | Governance | Track velocity, manage stakeholders, review benefits | Dashboards, Stakeholder Reports, Benefits Log |
 | Assembly | Package all product ownership artifacts for handoff and continuity | Product Backlog Package (PBP) |
 
-AI-POLC runs **bidirectionally with AI-DLC v1** — it feeds stories into the build and receives delivery feedback back. It also exchanges with AI-UXD (personas/journeys inform UX research and vice versa).
+AI-POLC runs **bidirectionally with AI-DLC** — it feeds stories into the build and receives delivery feedback back. It also exchanges with AI-UXD (personas/journeys inform UX research and vice versa).
 
 ---
 
@@ -68,7 +68,7 @@ Every backlog item traces to a business objective or architectural commitment. N
 
 ### 2. Bidirectional with Build
 
-AI-POLC doesn't stop at "backlog created." It maintains a live feedback loop with AI-DLC v1 — stories flow into delivery, acceptance results flow back, and the PO is informed of progress, blockers, and scope risks in real time.
+AI-POLC doesn't stop at "backlog created." It maintains a live feedback loop with AI-DLC — stories flow into delivery, acceptance results flow back, and the PO is informed of progress, blockers, and scope risks in real time.
 
 ### 3. Systematic Prioritization
 
@@ -87,7 +87,7 @@ AI-POLC sits in the **Project layer**, parallel to AI-ADLC and AI-UXD. All three
 - **AI-UXD** provides design (how it looks/works)
 - **AI-POLC** provides backlog (what to build when, for whom, and why)
 
-During delivery, AI-POLC maintains a bidirectional relationship with AI-DLC v1 — the only package that talks back and forth with the build.
+During delivery, AI-POLC maintains a bidirectional relationship with AI-DLC — the only package that talks back and forth with the build.
 
 ---
 

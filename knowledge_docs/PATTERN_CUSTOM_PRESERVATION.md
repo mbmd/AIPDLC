@@ -31,11 +31,11 @@ RE-DERIVATION
 
 | Package | Files With Custom Preservation | What Teams Customize |
 |---------|-------------------------------|---------------------|
-| **AI-DWG** | `TEAM_AGREEMENTS.md` | Team working norms, meeting schedules, communication preferences |
+| **AI-DWG (Workspace Generator)** | `TEAM_AGREEMENTS.md` | Team working norms, meeting schedules, communication preferences |
 | **AI-DWG** | `DEFINITION_OF_DONE.md` | Team-specific quality criteria beyond generated ones |
 | **AI-DWG** | `.kiro/steering/workspace-rules.md` | Project-specific rules beyond architecture-derived ones |
 | **AI-DWG** | `PROJECT_INSTRUCTIONS.md` | Team context, onboarding notes, custom workflows |
-| **AI-GCE** | `.governance/COMPLIANCE_README.md` | Team-specific governance notes, override explanations |
+| **AI-GCE (Governance & Compliance Engine)** | `.governance/COMPLIANCE_README.md` | Team-specific governance notes, override explanations |
 | **AI-GCE** | Rule files (`.governance/rules/*.md`) | Team-added verification steps or context |
 
 ---

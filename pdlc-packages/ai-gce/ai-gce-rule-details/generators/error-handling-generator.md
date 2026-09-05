@@ -9,7 +9,7 @@ Derives error handling rules (ERR-*) from `error-handling.md`. 100% steering-der
 
 ## MANDATORY: Stage Sub-Role — Workspace Architect
 
-During THIS activity, ALSO adopt the mindset of a **Workspace Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of a **Workspace Architect**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in failure paths: every code path has a happy path AND an error path — both must be governed

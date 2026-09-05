@@ -22,12 +22,18 @@ The following shortcuts invoke AI-TGE governance agents. Type the shortcut anywh
 |----------|-------|-------------|:----:|
 | `TGV__` | `test-governance-agent` — Test Governance Validation | After Strategy phase, before Observation or team handoff | 1 |
 | `CVR__` | `coverage-review-agent` — Coverage Review | During Observation phase, after coverage report generation | 1 |
+| `AIQ__` | `ai-quality-agent` — AI Feature Quality & Drift | **Only when AI-LENS is ON** — after AI-feature work, before release, periodic drift | Lens |
+| `ATQ__` | `automation-quality-agent` — Automation Quality | **Only when Automation-LENS is ON** — after automation work, before release | Lens |
 
 ### Shortcut Rules
 
 1. **`TGV__` triggers Test Governance Validation.** When the user types `TGV__` anywhere in a prompt, invoke `.governance/agents/test-governance-agent.md` and execute its full check pass (20 checks across 5 categories). No clarification needed — treat `TGV__` as a direct command.
 
 2. **`CVR__` triggers Coverage Review.** When the user types `CVR__` anywhere in a prompt, invoke `.governance/agents/coverage-review-agent.md` and execute its coverage trend analysis (15 checks across 4 categories). No clarification needed — treat `CVR__` as a direct command.
+
+3. **`AIQ__` triggers AI Feature Quality & Drift** *(present only when AI-LENS is ON)*. When the user types `AIQ__` anywhere in a prompt, invoke `.governance/agents/aiq-agent.md` and execute its AI-feature quality/drift evaluation against the couriered `.ai-lens/manifest.json`. No clarification needed — treat `AIQ__` as a direct command.
+
+4. **`ATQ__` triggers Automation Quality** *(present only when Automation-LENS is ON)*. When the user types `ATQ__` anywhere in a prompt, invoke `.governance/agents/atq-agent.md` and execute its automation-feature quality + loop/idempotency verification against the couriered `.automation-lens/manifest.json`. No clarification needed — treat `ATQ__` as a direct command.
 
 ### When to Call
 

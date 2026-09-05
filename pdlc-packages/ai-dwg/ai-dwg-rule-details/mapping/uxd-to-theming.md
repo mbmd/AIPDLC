@@ -3,7 +3,7 @@
 
 ## Purpose
 
-Transforms the **multi-brand theming and dark-mode token architecture** produced by AI-UXD (`design/multi-brand-theming.md`) into a prescriptive `theming.md` steering file. This governs how themes (brands, color modes) are structured and switched in the build workspace, so AI-DLC v1 implements a token-driven theming system that matches the designed inheritance model rather than hardcoding per-theme styles.
+Transforms the **multi-brand theming and dark-mode token architecture** produced by AI-UXD (`design/multi-brand-theming.md`) into a prescriptive `theming.md` steering file. This governs how themes (brands, color modes) are structured and switched in the build workspace, so AI-DLC implements a token-driven theming system that matches the designed inheritance model rather than hardcoding per-theme styles.
 
 **Output:** `rules/theming.md`
 

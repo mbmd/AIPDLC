@@ -1,4 +1,4 @@
-# AIFLC · The AI-* PDLC Family — Whitepaper
+# AIFLC (AI Full Life Cycle) · The AI-* PDLC (Product Development Life Cycle) Family — Whitepaper
 
 **From Raw Requirement to Governed Code: An AI-Driven Software Delivery Chain**
 
@@ -26,9 +26,9 @@ Enterprise software projects fail the same way, over and over:
 
 ## The Solution
 
-AIFLC (AI Full Life Cycle) delivers the **AI-* PDLC Family** — a chain of injectable workflow packages that solve these problems in sequence. Each package trains an AI assistant to perform one discipline of software delivery — with human oversight at every decision point.
+AIFLC (AI Full Life Cycle) delivers the **AI-* PDLC (Product Development Life Cycle) Family** — a chain of injectable workflow packages that solve these problems in sequence. Each package trains an AI assistant to perform one discipline of software delivery — with human oversight at every decision point.
 
-The family spans **ten packages across two layers** — a Portfolio layer that reasons across many projects and a Project layer that executes one — joined by a router on the edge. Two of the ten are continuous engines rather than linear stages: **AI-FLO** (the router/orchestrator) and the quality companions **AI-GCE** and **AI-TGE**. Alongside the chain runs **AI-DFE**, a family-scoped data fabric that turns every package's output into a queryable data surface for dashboards and portfolio roll-ups.
+The family spans **ten packages across two layers** — a Portfolio layer that reasons across many projects and a Project layer that executes one — joined by a router on the edge. The Portfolio layer holds **AI-ILC** (AI-Driven Idea Life Cycle), **AI-PILC** (AI-Driven Project Initiation Life Cycle), and **AI-PPM** (AI-Driven Project Portfolio Management); the Project layer runs **AI-POLC** (AI-Driven Product Ownership Life Cycle), **AI-UXD** (AI-Driven UX Design), **AI-ADLC** (AI-Driven Architecture Design Life Cycle), and **AI-DWG** (AI-Driven Workspace Generator). Two of the ten are continuous engines rather than linear stages: **AI-FLO** (AI-Driven Flow Orchestrator — the router/orchestrator) and the quality companions **AI-GCE** (AI-Driven Governance & Compliance Engine) and **AI-TGE** (AI-Driven Test Governance Engine). Alongside the chain runs **AI-DFE** (AI-Driven Data Fabric Engine), a family-scoped data fabric that turns every package's output into a queryable data surface for dashboards and portfolio roll-ups.
 
 ```mermaid
 flowchart LR
@@ -46,7 +46,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -54,13 +54,13 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -74,11 +74,11 @@ flowchart LR
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 > **AI-DFE** is a family-scoped **companion**, not a chain row. It gathers each package's markdown output, shapes it into structured JSON, and serves it from one read-point (`REGISTRY.json`) so dashboards and portfolio roll-ups get clean machine-readable data without knowing where the raw files live. Like AI-FLO, it runs alongside the whole family rather than as a linear step.
 
@@ -156,7 +156,7 @@ Traditional approach:
 - 1-2 weeks: Workspace setup, coding standards, CI/CD config
 - Ongoing: Manual compliance reviews, code review enforcement, wiki maintenance
 
-With the AI-* PDLC Family:
+With the AI-* PDLC (Product Development Life Cycle) Family:
 - 1-3 days: AI-PILC produces a complete Project Initiation Package
 - 2-5 days: AI-ADLC produces a comprehensive Architecture Package
 - Minutes: AI-DWG generates the entire workspace
@@ -172,16 +172,16 @@ Each package is available independently. Pick the one that matches your starting
 
 | Starting Point | Package to Use |
 |----------------|----------------|
-| "I have an idea to evaluate" | [AI-ILC](../pdlc-packages/ai-ilc/) |
-| "I have a vague requirement" | [AI-PILC](../pdlc-packages/ai-pilc/) |
-| "I'm managing multiple projects" | [AI-PPM](../pdlc-packages/ai-ppm/) |
-| "I need a governed product backlog" | [AI-POLC](../pdlc-packages/ai-polc/) |
-| "I need UX design that reaches the code" | [AI-UXD](../pdlc-packages/ai-uxd/) |
-| "I have requirements, need architecture" | [AI-ADLC](../pdlc-packages/ai-adlc/) |
-| "I have architecture, need a workspace" | [AI-DWG](../pdlc-packages/ai-dwg/) |
-| "I have a workspace, need compliance" | [AI-GCE](../pdlc-packages/ai-gce/) |
-| "I need test governance and coverage accountability" | [AI-TGE](../pdlc-packages/ai-tge/) |
-| "I want my family output as queryable data" | [AI-DFE](../pdlc-packages/ai-dfe/) |
+| "I have an idea to evaluate" | [AI-ILC (Idea Life Cycle)](../pdlc-packages/ai-ilc/) |
+| "I have a vague requirement" | [AI-PILC (Project Initiation Life Cycle)](../pdlc-packages/ai-pilc/) |
+| "I'm managing multiple projects" | [AI-PPM (Project Portfolio Management)](../pdlc-packages/ai-ppm/) |
+| "I need a governed product backlog" | [AI-POLC (Product Ownership Life Cycle)](../pdlc-packages/ai-polc/) |
+| "I need UX design that reaches the code" | [AI-UXD (UX Design)](../pdlc-packages/ai-uxd/) |
+| "I have requirements, need architecture" | [AI-ADLC (Architecture Design Life Cycle)](../pdlc-packages/ai-adlc/) |
+| "I have architecture, need a workspace" | [AI-DWG (Workspace Generator)](../pdlc-packages/ai-dwg/) |
+| "I have a workspace, need compliance" | [AI-GCE (Governance & Compliance Engine)](../pdlc-packages/ai-gce/) |
+| "I need test governance and coverage accountability" | [AI-TGE (Test Governance Engine)](../pdlc-packages/ai-tge/) |
+| "I want my family output as queryable data" | [AI-DFE (Data Fabric Engine)](../pdlc-packages/ai-dfe/) |
 
 Each package includes platform-specific installation instructions for Kiro, Amazon Q Developer, Cursor, Cline, Claude Code, and GitHub Copilot.
 

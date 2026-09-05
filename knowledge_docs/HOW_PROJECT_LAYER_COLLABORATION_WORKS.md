@@ -1,6 +1,6 @@
 # How Project-Layer Collaboration Works
 
-**Purpose:** Explains how the three Project-layer packages — **AI-POLC** (product ownership), **AI-UXD** (user experience), and **AI-ADLC** (architecture) — relate, sequence, and feed each other before converging on **AI-DWG**. The AIFLC chain serializes these as **POLC → UXD → ADLC → DWG** for quality assurance, with feedback loops that provide iterative refinement without changing the forward sequence.
+**Purpose:** Explains how the three Project-layer packages — **AI-POLC (Product Ownership Life Cycle)** (product ownership), **AI-UXD (UX Design)** (user experience), and **AI-ADLC (Architecture Design Life Cycle)** (architecture) — relate, sequence, and feed each other before converging on **AI-DWG (Workspace Generator)**. The AIFLC (AI Full Life Cycle) chain serializes these as **POLC → UXD → ADLC → DWG** for quality assurance, with feedback loops that provide iterative refinement without changing the forward sequence.
 
 ---
 
@@ -203,7 +203,7 @@ The forward chain models the **downward feeds** strongly and the **upward feedba
 
 Run AI-ADLC early enough — even in advisory mode during discovery and definition — that these loops fire *before* the build, not after.
 
-**How the loops actually run:** because AI-POLC, AI-UXD, and AI-ADLC are all Project-layer packages, they exchange directly — each package reads its peers' state markers (`polc-state.md`, `uxd-state.md`, `adlc-state.md`) when it starts or resumes, and offers a non-destructive review when a peer's output changes after work already exists. No central router is involved for these same-layer loops (AI-FLO carries data *across* layers — Portfolio ↔ Project — not laterally between same-layer peers). So a late architecture constraint reaches AI-UXD because AI-UXD detects the updated `adlc-state.md` directly, and a cost/risk verdict reaches AI-POLC the same way.
+**How the loops actually run:** because AI-POLC, AI-UXD, and AI-ADLC are all Project-layer packages, they exchange directly — each package reads its peers' state markers (`polc-state.md`, `uxd-state.md`, `adlc-state.md`) when it starts or resumes, and offers a non-destructive review when a peer's output changes after work already exists. No central router is involved for these same-layer loops (AI-FLO (Flow Orchestrator) carries data *across* layers — Portfolio ↔ Project — not laterally between same-layer peers). So a late architecture constraint reaches AI-UXD because AI-UXD detects the updated `adlc-state.md` directly, and a cost/risk verdict reaches AI-POLC the same way.
 
 ---
 

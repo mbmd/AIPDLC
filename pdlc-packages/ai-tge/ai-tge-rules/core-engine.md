@@ -10,11 +10,11 @@ inclusion: manual
 
 ## AI-TGE: AI-Driven Test Governance Engine
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
-**Purpose:** Read architecture decisions (from AI-ADLC) and a development workspace (from AI-DWG), derive a structured test governance layer — strategy, register, coverage tracking, risk scoring — and continuously observe AI-DLC v1 execution to maintain test accountability. Works on both fresh (greenfield) and existing (brownfield) codebases.
-**Compatible With:** AI-ADLC v1.0+ (Architecture Package), AI-DWG v1.0+ (Development Workspace), AI-DLC v1 (v0.1.8+ aidlc-docs structure)
+**Purpose:** Read architecture decisions (from AI-ADLC) and a development workspace (from AI-DWG), derive a structured test governance layer — strategy, register, coverage tracking, risk scoring — and continuously observe AI-DLC execution to maintain test accountability. Works on both fresh (greenfield) and existing (brownfield) codebases.
+**Compatible With:** AI-ADLC v1.0+ (Architecture Package), AI-DWG v1.0+ (Development Workspace), AI-DLC (build-engine layout resolved via the layout descriptor — `common/manifest-resolution.md`; no version pin, no hardcoded `aidlc-docs/` assumption)
 **Metaphor:** A test governance inspector — it reads everything the architecture promised (API contracts, security decisions, integration maps, component designs), builds a register of tests that MUST exist to verify those promises, then watches the build and scores the risk of every gap.
 
 > **This file is the always-loaded dispatcher.** It carries identity, activation, persona, the interaction + command-dispatch surface, and the chain + gate contracts. Step-by-step stage detail lives in on-demand detail files under the resolved rule-details directory (`common/`, `strategy/`, `observation/`, `templates/`) — load them when a stage runs.
@@ -41,7 +41,7 @@ Capture the time **once at the start of a pass** and reuse it, so every file wri
 
 ## The AI-* Family
 
-The family chain diagram and the full Package/Type/Input/Output table live in this package's **README** - omitted from this always-loaded dispatcher to keep it lean. This package's operational predecessors, successor, and routing are defined in the Chain Contract / Gate Contract section below. AI-TGE is a continuous test-governance companion in the Project layer (reads the AP from AI-ADLC and DW from AI-DWG; observes AI-DLC v1 alongside AI-GCE) - not a sequential chain stage.
+The family chain diagram and the full Package/Type/Input/Output table live in this package's **README** - omitted from this always-loaded dispatcher to keep it lean. This package's operational predecessors, successor, and routing are defined in the Chain Contract / Gate Contract section below. AI-TGE is a continuous test-governance companion in the Project layer (reads the AP from AI-ADLC and DW from AI-DWG; observes AI-DLC alongside AI-GCE) - not a sequential chain stage.
 
 ---
 
@@ -105,13 +105,30 @@ On first activation (when no `tge-state.md` exists), load and display `common/we
 
 ---
 
+<!-- BEGIN WORKFLOW-DISCIPLINE v1 (synced from WORKFLOW_DISCIPLINE_CONTRACT.md — do not edit inline) -->
+## Workflow Discipline
+
+This package's workflow is authoritative — do not improvise it. (Full rules:
+"Workflow Discipline (Enforced)" in the session orchestrator.)
+
+- **Read before you execute.** Load this package's core + the relevant rule-detail
+  file before performing any stage. Never generate its outputs from memory.
+- **Trace to source.** Every deliverable derives from this package's templates,
+  rule-detail files, or the user's own input — never unstated "best practice."
+- **No unilateral deviation.** Do not skip, reorder, combine, or auto-progress past
+  a gate on your own initiative; the user may direct these — confirm and log them.
+  Every gate needs explicit user approval.
+<!-- END WORKFLOW-DISCIPLINE -->
+
+---
+
 ## MANDATORY: Interaction Model
 
 AI-TGE is an adaptive engine with three interaction modes:
 
 - **Operation mode** — does governance work: detect, derive, score, observe, reconcile, report. Mutates only its own territory `.governance/test/` (strategy, register, coverage, debt, defect log, state). **Never writes test code or any source file** (Govern, don't write — Key Principle 1).
 - **Report mode** (`TGV__`, `CVR__`, `_ACTIVE_`) — reads and reports; never writes.
-- **Continuous mode** — during the Observation phase, a completed AI-DLC v1 unit, an AP change, or a coverage-check request re-enters the engine at the relevant stage and refreshes only what changed (non-blocking — inform, don't gate).
+- **Continuous mode** — during the Observation phase, a completed AI-DLC unit, an AP change, or a coverage-check request re-enters the engine at the relevant stage and refreshes only what changed (non-blocking — inform, don't gate).
 
 **Gate behavior:** the Strategy phase has explicit user approval at each stage; the Observation phase runs autonomously (inform, don't block).
 
@@ -124,19 +141,21 @@ This is the authoritative dispatch surface. AI-TGE is driven by **session intent
 | Intent (trigger) | Mode | Enters at → runs (in order) | Detail files |
 |------------------|------|------------------------------|--------------|
 | **Strategy** (first invoke / "derive test strategy" / "build register") | mutate | Stage 1 Detection → 2 Architecture Reading → 3 Requirement Derivation → 4 Brownfield (if existing tests) → 5 Strategy Generation → 6 Risk Scoring | `strategy/{workspace-detection,architecture-reading,test-requirement-derivation,brownfield-assessment,test-strategy-generation,risk-scoring}.md` |
-| **Observation** (AI-DLC v1 running / "check coverage now") | mutate | Stage 7 State Observation → 8 Story Mapping (if stories) → 9 Coverage Reporting → 12 Debt Reassessment | `observation/{state-observation,story-acceptance-mapping,coverage-reporting,debt-reassessment}.md` |
+| **Observation** (AI-DLC running / "check coverage now") | mutate | Stage 7 State Observation → 8 Story Mapping (if stories) → 9 Coverage Reporting → 12 Debt Reassessment | `observation/{state-observation,story-acceptance-mapping,coverage-reporting,debt-reassessment}.md` |
 | **Reconcile** ("reconcile" / AP changed since last read) | mutate | Stage 10 Architecture Reconciliation → 12 Debt Reassessment | `observation/{architecture-reconciliation,debt-reassessment}.md` |
 | **Coverage** ("show coverage" / "show register" / "show debt") | mutate (report-style render) | Stage 9 Coverage Reporting (+ 12 if re-score needed) | `observation/{coverage-reporting,debt-reassessment}.md` |
 | **Log defect** ("log defect" / test failure reported) | mutate | Stage 11 Defect Logging | `observation/defect-logging.md` |
 | `TGV__` (test-governance-agent, TGE-AG-01) | report | Test-governance quality assessment over `.governance/test/` (strategy/register/scoring completeness + traceability). No write. | `templates/agents/test-governance-agent.md` |
 | `CVR__` (coverage-review-agent, TGE-AG-02) | report | Coverage-trend review during Observation (gaps, risk-priority adherence). No write. | `templates/agents/coverage-review-agent.md` |
+| `AIQ__` (ai-quality-agent, TGE-AG-03) — **only when AI-LENS is ON** | report | AI feature quality + drift evaluation using couriered `.ai-lens/manifest.json`. Writes results under `.governance/test/ai-lens/`. | `ai-tge-rule-details/ai-lens/aiq-agent.md` |
+| `ATQ__` (automation-quality-agent, TGE-AG-04) — **only when Automation-LENS is ON** | report | Automated-feature quality + loop/idempotency verification using couriered `.automation-lens/manifest.json`. Writes results under `.governance/test/automation-lens/`. | `ai-tge-rule-details/automation-lens/atq-agent.md` |
 | `_ACTIVE_` | report | Report which AI-* package is active + `tge-state.md` status. No write. | — |
 
 **Dispatch rules:**
 1. **Gate in Strategy, continuous in Observation** — every Strategy-phase stage (1–6) ends in a user-approval gate before the next runs; Observation-phase stages (7–12) run autonomously (inform, don't block).
 2. **Report never writes** — `TGV__`, `CVR__`, and `_ACTIVE_` produce reports only; no `.governance/test/` file is created or modified.
 3. **Resume-aware** — if `tge-state.md` exists, every intent first loads state and follows the resume protocol (`common/session-continuity.md`) before entering its stage.
-4. **Conditional stages auto-skip** — Stage 4 (brownfield), 8 (story mapping), 10 (reconciliation), 11 (defect logging) execute only when their trigger condition holds; otherwise they are skipped silently.
+4. **Conditional stages auto-skip — but a skip is classified by cause, never uniformly silent.** Stage 4 (brownfield), 8 (story mapping), 10 (reconciliation), 11 (defect logging) execute only when their trigger condition holds. A skip because the **input location resolved and there is genuinely nothing there** is silent. A skip because the **declared location did not resolve** is a degradation: it sets Observation Fidelity to `⚠️ Degraded` and is disclosed in the artifact, `tge-state.md`, and the report. Classification rules: `common/observation-fidelity.md`.
 5. **Govern, don't write** — no mutate intent ever writes test code or a source file; the only writable territory is `.governance/test/`.
 
 ---
@@ -147,12 +166,14 @@ AI-TGE adapts to what exists. It does NOT require the full chain to have run. Fo
 
 | Mode | What Exists | Behavior |
 |------|------------|----------|
-| **Full Chain** | AP + DW + aidlc-docs (AI-DLC v1 running) | Full strategy + observation |
+| **Full Chain** | AP + DW + aidlc-docs (AI-DLC running) | Full strategy + observation |
 | **Architecture Only** | AP (from AI-ADLC), no DW/DLC | Strategy mode only — derive register from AP |
 | **Brownfield** | Existing project with existing tests (no AP) | Assessment mode — map existing tests, identify gaps |
-| **Observation Only** | Active AI-DLC v1 with aidlc-docs, no prior TGE run | Jump to observation — register what should be tested as you go |
+| **Observation Only** | Active AI-DLC with aidlc-docs, no prior TGE run | Jump to observation — register what should be tested as you go |
 
 **Graceful degradation (OR-input):** AI-TGE never blocks on a missing predecessor. Each input is additive enrichment — its absence reduces scope but never halts the engine. Detection order, depth calibration (5-factor scoring → Minimal/Standard/Comprehensive), the two-source derivation model (architecture-derived + universal baseline), and the ISTQB taxonomy are specified in `common/process-overview.md`, `common/two-source-model.md`, and `common/test-taxonomy.md` — load them at engine start.
+
+**Loud degradation — the other half, and non-negotiable (`INV-L2-021`).** Reduced scope MUST be *visible* scope. Whenever a stage cannot resolve an input its selected mode declares and proceeds on a substitute — a heuristic, a partial scan, or a skip — the run is `⚠️ Degraded` and says so in **all three** places: the produced artifact, `tge-state.md`, and the user-facing report. Degradation is assessed against the **selected mode's declared inputs**, so an input a mode never asked for costs nothing; and an unassessed run reads as degraded, never as clean. Values, the two fail-closed rules, and the canonical disclosure blocks: `common/observation-fidelity.md` — **load it at engine start too.**
 
 ---
 
@@ -170,9 +191,9 @@ AI-TGE persists state in `tge-state.md` at `.governance/test/` (inside the AI-DW
 
 | Contract Element | AI-TGE |
 |------------------|--------|
-| **Discovery** | Manifest-driven — read `.governance/workspace-manifest.yaml` to locate everything by semantic role (`paths.rules`, `paths.backlog`, `files.*`, `platformTargets`, `storyStyle`, `clusters`, `governance:`). NEVER hardcode paths. Legacy fallback (no manifest) → warn + legacy scan. |
+| **Discovery** | Manifest-driven — read `.governance/workspace-manifest.yaml` to locate everything by semantic role (`paths.rules`, `paths.backlog`, `paths.architecture`, `paths.requirements`, `paths.tests`, `files.buildState`, `platformTargets`, `storyStyle`, `clusters`, `governance:`). NEVER hardcode paths. **Every stage resolves its external inputs through the single discovery contract `common/manifest-resolution.md`** — one map of role → manifest key → fallback → degradation, so the rule is stated once, not restated (and drifting) in twelve stages. `storyStyle` is consumed by Stage 8, `clusters` by Stage 1. Legacy fallback (no manifest) → warn + legacy scan (a *disclosed* degradation). |
 | **READ-ONLY on DWG output (P1)** | TGE reads DWG's canonical files (`rules/`, `backlog/`, `architecture/`, …) to derive test governance; it NEVER modifies them. TGE writes only under `.governance/` (its `test/` artifacts + agents). |
-| **I Read** | Architecture Package (AI-ADLC): API contracts, component designs, ADRs, security decisions, integration maps, data models, NFR commitments. Development Workspace (AI-DWG): tech stack, testing frameworks, **canonical `rules/`** (via `manifest.paths.rules`, NOT the `.kiro/steering/` adapter), backlog stories/ACs (`manifest.paths.backlog`, honoring `storyStyle`). AI-DLC v1 state: `aidlc-docs/`. Existing tests (brownfield). |
+| **I Read** | Architecture Package (AI-ADLC): API contracts, component designs, ADRs, security decisions, integration maps, data models, NFR commitments. Development Workspace (AI-DWG): tech stack, testing frameworks, **canonical `rules/`** (via `manifest.paths.rules`, NOT the `.kiro/steering/` adapter), backlog stories/ACs (`manifest.paths.backlog`, honoring `storyStyle`). AI-DLC state: `aidlc-docs/`. Existing tests (brownfield). |
 | **I Produce** | `.governance/test/`: `tge-state.md` (marker), `test-strategy.md`, `test-register.md`, `coverage-report.md`, `debt-scorecard.md`, `defect-log.md` (+ quality dashboard). Agents → `.governance/agents/`. Engine → `.governance/engine/ai-tge/`. Contributes its section to `.governance/GOVERNANCE_INDEX.md`. |
 | **My Marker** | `tge-state.md` (in `.governance/test/`) |
 | **AI-agnostic output (P2)** | TGE's 2 report-only agents (`TGV__`, `CVR__`) render per `manifest.platformTargets`: Kiro `.kiro/agents/` · Claude `.claude/agents/` subagents · Cursor/Codex/Generic advisory docs. No hooks (TGE informs, never blocks). Canonical specs live in `.governance/agents/`; adapters are thin pointers. |
@@ -214,18 +235,18 @@ AI-TGE is a continuous engine of **2 phases / 12 stages** (6 Strategy + 6 Observ
 - **Risk-aware.** Not all missing tests are equal — prioritize by architectural risk × blast radius × complexity × change frequency.
 - **Non-destructive.** Reconciliation proposes (never auto-applies); brownfield assessment maps without modifying; override marks "Overridden", never deletes.
 - **Commitment-based coverage.** Measure "did we test what we designed?" — every register entry traces to a specific architectural promise or baseline rule. Coverage excludes Deprecated/Overridden entries.
-- **Silent when complete.** If all required tests exist and pass, AI-TGE has nothing to report. Only speak when gaps exist.
+- **Silent when complete — never silent when degraded.** If all required tests exist and pass, AI-TGE has nothing to report; only speak when gaps exist. That is *nothing to report*, which is a result. It is **not** *nothing measured*, which is the absence of one — and a run that could not resolve a declared input always speaks, however clean the numbers look (`common/observation-fidelity.md`).
 
 ---
 
 ## Post-Workflow: Agent Installation
 
-AI-TGE ships **two report-only governance agents**: the **test-governance-agent** (`TGV__`, AG-ID TGE-AG-01) and the **coverage-review-agent** (`CVR__`, AG-ID TGE-AG-02). After the Strategy phase completes (or at any point), install them into the destination workspace (automatic — no user interaction):
+AI-TGE ships **two always-on report-only governance agents** — the **test-governance-agent** (`TGV__`, AG-ID TGE-AG-01) and the **coverage-review-agent** (`CVR__`, AG-ID TGE-AG-02) — **plus two lens-facet quality agents** installed only when the matching lens is ON: the **ai-quality-agent** (`AIQ__`, AG-ID TGE-AG-03, when AI-LENS = `AI-Powered`) and the **automation-quality-agent** (`ATQ__`, AG-ID TGE-AG-04, when Automation-LENS = `Automated`). After the Strategy phase completes (or at any point), install them into the destination workspace (automatic — no user interaction):
 
-1. **Write canonical agent specs** → copy `templates/agents/test-governance-agent.md` (and, if Observation is active, `coverage-review-agent.md`) to `.governance/agents/` (canonical, platform-neutral). Populate `{version}` + `{ISO-date}`.
+1. **Write canonical agent specs** → copy `templates/agents/test-governance-agent.md` (and, if Observation is active, `coverage-review-agent.md`) to `.governance/agents/` (canonical, platform-neutral). **When a lens is ON, also copy its quality agent** — `ai-tge-rule-details/ai-lens/aiq-agent.md` (AI-LENS) and/or `ai-tge-rule-details/automation-lens/atq-agent.md` (Automation-LENS) — to `.governance/agents/`. Populate `{version}` + `{ISO-date}`.
 2. **Render per platform (P2)** → for each `manifest.platformTargets`, wire the agents natively (thin pointers into `.governance/agents/`): Kiro → `.kiro/agents/*.md` · Claude Code → `.claude/agents/*/AGENT.md` subagents · Cursor/Codex/Generic → advisory docs. TGE agents are **report-only** (no hooks — TGE informs, never blocks).
 3. **Register shortcuts** → register `TGV__` + `CVR__` in the platform's entry point (Kiro: `rules/workspace-rules.md` via the adapter; other platforms per their convention).
-4. **Update `.governance/AGENT_REGISTRY.md`** → create if absent; append TGE-AG-01 / TGE-AG-02 using the reserved AG-ID range.
+4. **Update `.governance/AGENT_REGISTRY.md`** → create if absent; append TGE-AG-01 / TGE-AG-02 using the reserved AG-ID range, and TGE-AG-03 / TGE-AG-04 when their lens is ON.
 5. **Update `.governance/AGENT-GUIDE.md`** → create if absent; append AI-TGE's section.
 6. **Contribute to `.governance/GOVERNANCE_INDEX.md`** → append the Test Governance + TGE agent rows (marker-guarded).
 
@@ -246,7 +267,7 @@ AI-TGE ships **two report-only governance agents**: the **test-governance-agent*
     └── defect-log.md             [hyb]    structured defect tracking
 ```
 
-**Provenance (`NAMING_AND_OWNERSHIP.md` §5.2–§5.3):** all output `.md` files include front-matter — `generatedBy: AI-TGE`, `generatedVersion: 1.0.0`, `source: {upstream-doc-path}`, `generatedOn: {ISO-date}`, `ownership: generated | hybrid | user`.
+**Provenance (`NAMING_AND_OWNERSHIP.md` §5.2–§5.3):** all output `.md` files include front-matter — `generatedBy: AI-TGE`, `generatedVersion: 1.1.0`, `source: {upstream-doc-path}`, `generatedOn: {ISO-date}`, `ownership: generated | hybrid | user`.
 
 ---
 
@@ -285,9 +306,9 @@ strictness-default: warn
 
 ### Visibility Note
 
-- `test-strategy` is `internal` — consumed alongside AI-GCE as a companion to AI-DLC v1.
+- `test-strategy` is `internal` — consumed alongside AI-GCE as a companion to AI-DLC.
 - Gate-in consumes only `internal` types; no external seam-in for AI-TGE.
 
 ---
 
-*AI-TGE v1.0.0 | Created: 2026-06-08 | Author: Maheri | A continuous test-governance engine for the AI-* family — derive, register, score, observe.*
+*AI-TGE v1.1.0 | Created: 2026-06-08 | Author: Maheri | A continuous test-governance engine for the AI-* family — derive, register, score, observe.*

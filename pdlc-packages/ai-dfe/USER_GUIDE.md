@@ -78,6 +78,14 @@ Then run `DAT__ all` (or `DAT__ aggregate`). DFE discovers your demand from the 
 
 DFE uses discover-once, monitor-continuously. The first encounter with a package reads its full interface (expensive). After that, DFE only compares source-file timestamps against the last-generated time (cheap). It re-reads a package's interface only when its `SOURCE_MAP.md` or schema changes, on `DAT__ discover`, or on a schema-version mismatch.
 
+**Automatic refresh (no manual `DAT__` needed).** When AI-FLO is also installed, you rarely need to run `DAT__` by hand. As each package advances, FLO drops a lightweight signal into `pdlc-ws/data/signals/`; on its next pass DFE picks it up and refreshes just that package's data — so the dashboard stays current on its own. See `contracts/SIGNAL_CONTRACT.md`. You can inspect or force this at any time:
+
+- `DAT__ signals` — list pending refresh signals (package, event, age). Read-only.
+- `DAT__ signals --process` — process them all now (catch up immediately).
+- `DAT__ signals --clear` — discard stale pending signals without processing.
+
+Signals take priority; the timestamp check still runs afterward as a catch-all. If FLO isn't installed, nothing changes — DFE falls back to the timestamp check described above.
+
 ---
 
 ## 6. History & cleanup

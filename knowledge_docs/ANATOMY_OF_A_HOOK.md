@@ -1,6 +1,6 @@
 # Anatomy of a Hook
 
-**Purpose:** Field-by-field breakdown of AI-GCE hook files — what each field means, how events map to actions, and how to diagnose or create hooks manually.
+**Purpose:** Field-by-field breakdown of AI-GCE (Governance & Compliance Engine) hook files — what each field means, how events map to actions, and how to diagnose or create hooks manually.
 
 **Derived from:** Pattern: Conditional Generation + Pattern: Progressive Activation
 

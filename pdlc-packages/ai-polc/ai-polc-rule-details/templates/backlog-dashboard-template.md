@@ -159,7 +159,7 @@ projectId: {project_id}
 **Cross-package dependencies:**
 | Dependency | Source | Status |
 |-----------|--------|:------:|
-| {description} | {AI-ADLC/AI-UXD/AI-DLC v1} | {Resolved / Waiting / Blocked} |
+| {description} | {AI-ADLC/AI-UXD/AI-DLC} | {Resolved / Waiting / Blocked} |
 
 ---
 
@@ -207,7 +207,7 @@ When AI-POLC renders this dashboard:
 | Traceability | `traceability-matrix.md` |
 | Value/Effort | `prioritization-register.md` (WSJF scores) |
 | Release readiness | `release-plan.md` + story statuses |
-| Velocity | Sprint history (derived from AI-DLC v1 `aidlc-docs/`) |
+| Velocity | Sprint history (derived from AI-DLC `aidlc-docs/`) |
 
 ## Refresh Trigger
 

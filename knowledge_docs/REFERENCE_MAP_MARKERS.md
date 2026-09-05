@@ -8,12 +8,12 @@
 
 | # | Package Output | Marker File | Type | Detected By |
 |---|---------------|-------------|------|-------------|
-| 1 | AI-ILC | `ilc-state.md` | State file (lifecycle) | AI-PILC |
-| 2 | AI-PILC | `pilc-state.md` | State file (lifecycle) | AI-ADLC, AI-POLC, AI-UXD, AI-PPM |
-| 3 | AI-ADLC | `adlc-state.md` | State file (lifecycle) | AI-DWG, AI-TGE |
+| 1 | AI-ILC (Idea Life Cycle) | `ilc-state.md` | State file (lifecycle) | AI-PILC (Project Initiation Life Cycle) |
+| 2 | AI-PILC | `pilc-state.md` | State file (lifecycle) | AI-ADLC (Architecture Design Life Cycle), AI-POLC (Product Ownership Life Cycle), AI-UXD (UX Design), AI-PPM (Project Portfolio Management) |
+| 3 | AI-ADLC | `adlc-state.md` | State file (lifecycle) | AI-DWG (Workspace Generator), AI-TGE (Test Governance Engine) |
 | 4 | AI-POLC | `polc-state.md` | State file (lifecycle) | AI-DWG |
 | 5 | AI-UXD | `uxd-state.md` | State file (lifecycle) | AI-DWG, AI-POLC |
-| 6 | AI-DWG | `.kiro/steering/workspace-rules.md` | Generated file (not state) | AI-GCE, AI-TGE |
+| 6 | AI-DWG | `.kiro/steering/workspace-rules.md` | Generated file (not state) | AI-GCE (Governance & Compliance Engine), AI-TGE |
 | 7 | AI-GCE | `.kiro/hooks/` folder (≥1 `.json` file) | Folder presence | (end of chain — no successor) |
 | 8 | AI-TGE | `tge-state.md` | State file (hybrid) | (companion — no successor) |
 | 9 | Shared spine | `management_framework/MANAGEMENT_FRAMEWORK.md` | Governance doc | Any package checking for existing governance |

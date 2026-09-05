@@ -63,7 +63,7 @@ A good output at this stage sounds like:
 
 ### Step 1: Identify Test Directories
 
-From Stage 1 detection, locate all test-containing paths:
+**Resolve the existing-tests location via `manifest.paths.tests`** (`common/manifest-resolution.md`) first. Only when no manifest declares a tests root does the pattern set below apply as the **legacy fallback** — and a scan-derived inventory is then a disclosed `⚠️ Degraded` read ("existing-test inventory is a filesystem guess, not a declared location"), per `common/observation-fidelity.md`. From Stage 1 detection, locate all test-containing paths (manifest role first, patterns as fallback):
 
 | Pattern | Framework Association |
 |---------|---------------------|

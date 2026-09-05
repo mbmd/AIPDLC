@@ -73,7 +73,7 @@ The `projects/` structure is **mandatory in all conditions** — solo, single-pr
     │   │       │   └── GOVERNANCE_INDEX.md         ◄ entry point
     │   │       ├── rules/                      ◄ canonical steering (DWG-generated; GCE reads)
     │   │       ├── management_framework/       ◄ spine CARRIED FORWARD (Option A, §12)
-    │   │       └── src/ · tests/ · configs …   ◄ AI-DLC v1 builds here
+    │   │       └── src/ · tests/ · configs …   ◄ AI-DLC builds here
     │   │
     │   └── PRJ-{ABBREV2}-{slug2}/              ◄ another project, possibly at an earlier stage
     │       ├── management_framework/
@@ -215,6 +215,8 @@ The two state tiers both live **inside the project folder**, so a project is ful
 **Not a state tier:** the workspace registry (`PROJECTS.md`, §9) is a regenerable index + active pointer. **There is no per-package global state file.**
 
 ### 10.1 Delivery-Method Marker Fields (shared project parameter)
+
+> **Amendment (2026-09-03 — first registered parameter of the shared intake set):** the "captured once, inherited family-wide, never re-elicited downstream" pattern below is now generalized as the family-wide **project-parameter intake primitive** in `contracts/PROJECT_PARAMETER_INTAKE_CONTRACT.md` (`project-intake@1.0`). `deliveryMethod` is that contract's **first registered parameter and live reference implementation**; its storage authority remains **this section** (the per-project state markers). Other project-wide parameters (e.g. the AI-LENS `aiMode`, `questionMode`, `variant`, `familyFlow`) register there and follow the same ask-once resolution protocol, each naming its own storage authority. This section stays the storage authority for `deliveryMethod`; the intake contract unifies the resolution protocol across parameters.
 
 The **delivery method** — how the product is built (`manual | ai-assisted | ai-driven | hybrid`) and, when an AI method is chosen, the **AI tool** — is an **optional shared project parameter**, captured once and inherited family-wide via the state markers (never re-elicited downstream):
 

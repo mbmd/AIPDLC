@@ -31,7 +31,7 @@ inclusion: always
 
 <!-- end: AP-sourced -->
 
-## AI Role (During AI-DLC v1 Sessions)
+## AI Role (During AI-DLC Sessions)
 
 <!-- begin: AP-sourced -->
 

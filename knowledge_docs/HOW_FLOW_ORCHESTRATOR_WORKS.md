@@ -1,4 +1,4 @@
-# How AI-FLO Flow Orchestration Works
+# How AI-FLO (Flow Orchestrator) Flow Orchestration Works
 
 **Purpose:** Explains how AI-FLO acts as the edge router between the Portfolio and Project layers — detecting workspace topology, building a routing table, carrying dispatch decisions down, relaying status up, coordinating parallel fan-out/fan-in, and flagging conflicts — all while staying advisory and additive to the rest of the family.
 
@@ -11,7 +11,7 @@ AI-FLO is the nervous system of the AI-* Family. It turns a collection of indepe
 It answers: "Where is each project right now? What's the next hop? Is anything blocked, stalled, or in conflict?"
 
 ```
-PORTFOLIO LAYER (AI-PPM dispatch authorizations)
+PORTFOLIO LAYER (AI-PPM (Project Portfolio Management) dispatch authorizations)
         │
         ▼
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -25,7 +25,7 @@ PORTFOLIO LAYER (AI-PPM dispatch authorizations)
 └─────────────────────────────────────────────────────────────────────┘
         │
         ▼
-PROJECT LAYER (AI-ADLC, AI-UXD, AI-POLC → AI-DWG → AI-DLC v1)
+PROJECT LAYER (AI-ADLC (Architecture Design Life Cycle), AI-UXD (UX Design), AI-POLC (Product Ownership Life Cycle) → AI-DWG (Workspace Generator) → AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle))
         │
         ▲ (status relayed back up to AI-PPM)
 ```
@@ -38,8 +38,8 @@ PROJECT LAYER (AI-ADLC, AI-UXD, AI-POLC → AI-DWG → AI-DLC v1)
 
 Most packages live inside one layer. AI-FLO is different — it sits on the **edge** between two:
 
-- **Portfolio layer** (scope = MANY projects): AI-ILC, AI-PILC, AI-PPM
-- **Project layer** (scope = ONE project): AI-ADLC, AI-UXD, AI-POLC, AI-DWG, AI-GCE, AI-TGE, AI-DLC v1
+- **Portfolio layer** (scope = MANY projects): AI-ILC (Idea Life Cycle), AI-PILC (Project Initiation Life Cycle), AI-PPM
+- **Project layer** (scope = ONE project): AI-ADLC, AI-UXD, AI-POLC, AI-DWG, AI-GCE (Governance & Compliance Engine), AI-TGE (Test Governance Engine), AI-DLC
 
 This position is what lets AI-FLO enforce the layered-communication principle: cross-layer messages always travel through AI-FLO, while same-layer messages stay direct.
 
@@ -204,31 +204,6 @@ AI-FLO is optional. The family still works without it:
 
 AI-FLO *adds* coordination; it never becomes a dependency that breaks the chain when absent. Install it when you want automatic position tracking, dispatch relay, and conflict detection; skip it and the packages still hand off through their markers.
 
-### Fabric Trio Dependency
-
-AI-FLO reads its routing graph from three files deployed into the family home (`.aiflc/{family}/`) by the installer:
-
-| File | What FLO reads from it |
-|------|------------------------|
-| `FAMILY_BINDINGS.md` | Internal + external edges — **this is the routing table** |
-| `GATE_PROTOCOL.md` | The matching algorithm FLO executes on each hop |
-| `FAMILY_INTERFACE.md` | Seam discovery — which packages expose external capabilities |
-
-Without the fabric trio present, FLO returns **NOT READY** ("no bindings = no routing"). The installer deploys them automatically; if they're missing from a workspace, run the installer or copy them from the family source.
-
----
-
-## Agent Shortcuts
-
-AI-FLO ships two report-only agents (deployed by the installer into `.kiro/agents/` on Kiro; other platforms use shortcut-rules blocks):
-
-| Shortcut | Agent | What it does |
-|----------|-------|--------------|
-| `FHC__` | FLO Health Check | Answers "Is this workspace FLO-ready?" — checks fabric trio presence, topology mode, installed packages, flo-state.md existence |
-| `FIA__` | Flow Integrity Audit | Answers "Is FLO's state correct?" — deep verification of routing log consistency, position vs. marker agreement, stale entries, and orphan projects |
-
-Both are **read-only** — they report findings but never modify state. Run `FHC__` first in a new workspace to confirm readiness; run `FIA__` periodically to catch drift.
-
 ---
 
 ## Output Artifacts
@@ -257,4 +232,4 @@ Both are **read-only** — they report findings but never modify state. Run `FHC
 | How POLC Product Ownership Works | `knowledge_docs/HOW_POLC_PRODUCT_OWNERSHIP_WORKS.md` |
 | How to Run the Full Chain | `knowledge_docs/HOW_TO_RUN_THE_FULL_CHAIN.md` |
 
-*Knowledge Document | Created: 2026-06-13 | Updated: 2026-08-10 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-13 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

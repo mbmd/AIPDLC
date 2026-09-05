@@ -40,12 +40,12 @@ Governance automation means encoding organizational rules, compliance requiremen
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-GCE** | Automatic rule derivation | Reads the development workspace (steering files, architecture decisions) and DERIVES enforcement rules automatically. No manual rule-writing — governance emerges from architecture. |
+| **AI-GCE (Governance & Compliance Engine)** | Automatic rule derivation | Reads the development workspace (steering files, architecture decisions) and DERIVES enforcement rules automatically. No manual rule-writing — governance emerges from architecture. |
 | **AI-GCE** | Three-tier progressive model | Tier 1 (Foundational) → Tier 2 (Standard) → Tier 3 (Advanced). Teams start with essential rules and graduate as the project matures. Avoids the "all rules day one" overwhelm that causes teams to reject governance entirely. |
 | **AI-GCE** | Hook-based enforcement | Generates IDE hooks (`.kiro/hooks/`) that fire at development time — before commit, before PR, during code generation. Violations are caught at creation, not in review. |
-| **AI-GCE** | Re-derivation on architecture change | When AI-DWG reconciles the workspace (architecture changed), AI-GCE automatically re-derives affected rules. Governance stays aligned with architecture without manual intervention. |
+| **AI-GCE** | Re-derivation on architecture change | When AI-DWG (Workspace Generator) reconciles the workspace (architecture changed), AI-GCE automatically re-derives affected rules. Governance stays aligned with architecture without manual intervention. |
 | **AI-GCE** | Built-in baseline + project-specific overlay | Universal methodology rules (author ≠ approver, spec before code) apply regardless of project specifics. Project-specific rules layer on top. No project starts with zero governance. |
-| **AI-TGE** | Test governance engine | Enforces testing standards (coverage thresholds, test-type distribution, regression requirements) as automated checks. Quality gates are machine-verified, not honor-system. |
+| **AI-TGE (Test Governance Engine)** | Test governance engine | Enforces testing standards (coverage thresholds, test-type distribution, regression requirements) as automated checks. Quality gates are machine-verified, not honor-system. |
 
 ---
 

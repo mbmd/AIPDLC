@@ -5,11 +5,15 @@
 
 This file defines HOW to derive hook JSON files from steering content. It covers: which steering files produce which hooks, how to populate file patterns, debounce tier assignment, noise classification, compliance logging injection, and phase-awareness injection.
 
+> **Since merged item 23 — this is the *hook render* of the neutral intermediate, not the origin of hook JSON.** Generators emit a **format-neutral intermediate** (rule + check logic + glob — see `rendering/neutral-intermediate.md`); the **mechanism** axis (`buildProfile` → hook vs v2 sensor, via `common/build-method-resolution.md`) decides whether that intermediate becomes a hook at all. When the mechanism is `hook`, this file renders it; when the mechanism is `sensor` (under `aidlc`, for the sensor-convertible set), the sensor render (merged item 25) takes the same intermediate instead. The `checkLogic` + `glob` are identical either way — this file never re-derives a check, it renders the hook form of one. The secrets/PII check renders here as a hook under **every** build method (the one genuine hook⇄sensor pair).
+
+> **Secrets/PII has two hook variants (merged item 24c) — advisory and blocking.** `templates/hooks/sensitive-data-check.json` is the advisory (`askAgent`, `fileEdited`) form; `templates/hooks/sensitive-data-check-blocking.json` is the blocking (`PreToolUse`, exit-2-on-violation) form. Which one is emitted is decided by the recorded enforcement strength via `common/strength-to-mechanism.md` — `block` (where the platform supports pre-write blocking) → the blocking variant; `warn`, or a platform that cannot block pre-write → the advisory variant (with the limitation disclosed in `PLATFORM_NOTES.md`). Both carry **identical check logic**; only the action type and trigger differ. This is the one check where blocking must be a hook — a secret on disk is irreversibly exposed before any gate fires (a gate-fired sensor is too late).
+
 ---
 
 ## MANDATORY: Stage Sub-Role — Automation Engineer
 
-During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Think in event-driven automation: each hook is a trigger → condition → action pipeline that must fire at exactly the right moment
@@ -25,8 +29,21 @@ During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This
 
 ### Quality Check
 A good output from this activity sounds like:
-- "security-gate-check.json: event=fileEdited, debounce=Tier A, noise=🔴 Essential. Pattern: `src/modules/*/presentation/**/*.controller.ts`. Prompt cites SEC-001/003/010, includes phase-check, DX silence rule, and compliance logging suffix."
-- "ENFORCEMENT-GUIDE.md organizes 13 core hooks + 5 tier-gated + 6 conditional by activation tier. Removal guidance: session-discipline first (highest noise, lowest impact), NEVER remove security-gate-check."
+- "security-gate-check.json: event=fileEdited, debounce=Tier A, noise=🔴 Essential. Pattern: `src/modules/*/presentation/**/*.controller.ts`. Prompt cites SEC-01/02/03 + SEC-BASELINE-02, includes phase-check, DX silence rule, and compliance logging suffix."
+- "ENFORCEMENT-GUIDE.md organizes 10 installed hooks + 1 ships-disabled + 4 reference-only + 6 conditional by activation tier. Removal guidance: `session-end-compliance.json` first (advisory batch), NEVER remove security-gate-check."
+
+### MANDATORY: Cite rule IDs from the OWNING generator, never from a hook table
+
+Every rule ID in this file is **cited**, not produced. The generator that emits a rule alongside its statement is the owner, and the owner wins on every disagreement.
+
+| Rule | Why |
+|---|---|
+| **Read the owning generator's produced-rules table** — not another hook mapping, not this file's own history | Copying from a consuming table is what produced the eight wrong rows this inventory previously carried |
+| **Then reconcile that generator against itself** | Reading the owner is necessary but **not sufficient** — three generators cite IDs in their *hook-mapping* section that their own *produced-rules* table never emits. A rule ID is real only if some table states it **with a rule statement attached** |
+| **Match the family's padding exactly** | **Code-level families take two digits** — `SEC-01`, `DATA-02`, `MOD-01`, `DOM-05`, `NC-01`, `ERR-01`, `ARCH-01`. **Process/governance families take three** — `GOV-*`, `CM-001`, instantiated `PG-INCEP-001`. Baseline rules are always `{FAMILY}-BASELINE-{NN}`, two-digit |
+| **Never invent a family** | `NAME-*`, `TEAM-*`, `SPRINT-*`, `PR-*` and `GOV-DDD-*` **do not exist**. The real families are `NC-*`, `GOV-TT-*`, `GOV-SPRINT-*`, `GOV-PR-*`, and domain purity is `DOM-05` + `MOD-02` |
+
+⚠️ **Two error types, and only the first is caught by an existence check.** An ID that exists **nowhere** (`SEC-006`, `DATA-012`) fails immediately. An ID that **exists but belongs to another hook or another family** passes existence and is still wrong — `DATA-012/013/014` was a digit-perfect transposition of `GOV-DEVOPS-012/013/014` from a different generator's mapping for the *same* hook. Verify the **relationship**, not just the identifier.
 
 ---
 
@@ -39,11 +56,11 @@ For EACH hook to generate:
 3. DERIVE file patterns → from tech-stack.md + module-structure.md + folder scan
 4. ASSIGN debounce tier → Tier A (fileEdited) or Tier B (agentStop) or Other
 5. APPLY PATTERN SCOPING (Layer 1 — Package Territory Segregation):
-   • Read .governance/PACKAGE_TERRITORIES.md for excluded zones
+   • Read.governance/PACKAGE_TERRITORIES.md for excluded zones
    • Ensure derived file patterns do NOT structurally match any excluded zone
    • If hook needs broad coverage (e.g., secrets) → keep broad pattern BUT rely on Layer 2
    • Prefer: {module-root}/**/*.{ext} over **/*.{ext}
-   • NEVER use a bare **/*.{ext} that would match .kiro/, .governance/, compliance-log/,
+   • NEVER use a bare **/*.{ext} that would match.kiro/,.governance/, compliance-log/,
      project-initiation/, architecture/, docs/, management_framework/, or templates/
 6. PREPEND PACKAGE TERRITORY PREAMBLE (Layer 2 — Runtime Filter):
    • Load common/hook-preamble.md
@@ -61,33 +78,84 @@ For EACH hook to generate:
 
 ## Hook Inventory (What Gets Generated)
 
-### Always-Generated Hooks (13 core)
+> **Counts, stated once so they cannot drift.** **10 installed hooks** (5 at Tier 1, 3 at Tier 2, 2 at Tier 3) · **1 ships disabled** · **4 reference-only templates that are deliberately NOT installed** · **6 conditional** · **4 retired to agents** · **1 removed entirely**. **Twenty-one `.json` template files now exist — one for every hook this inventory declares** (the Tier 1–3 installed set, the ships-disabled optional, the four reference-only, and the six conditional). ♻️ *This read "Thirteen `.json` template files exist … the Tier 3 pair plus the six conditional hooks are generated without a reference template"; the eight that lacked one were authored 2026-09-01 (merged item 3) so every declared hook has documentation parity.* **A template is a worked example of the output, not a prerequisite** — every element of one is produced by the ten-step pipeline above, and the territory preamble is loaded from `common/hook-preamble.md` at step 6. **Having a template does NOT change a hook's disposition:** the four reference-only templates are still NOT installed (their checks run in `session-end-compliance.json`), the six conditional templates are still emitted only when their steering file exists, and the ships-disabled optional still ships `"enabled": false`. What changed is documentation coverage, not the install set.
 
-| Hook File | Event Type | Debounce | Noise | Source Steering | Rules Enforced |
+### Tier 1 — Always Installed (Day 0)
+
+| Hook File | Event Type | Debounce | Noise | Source Steering | Rules Enforced (owning generator) |
 |-----------|:----------:|:--------:|:-----:|----------------|----------------|
-| `session-discipline.json` | promptSubmit | — | 🟡 | session-governance.md | GOV-SESSION-002/007/008/009 |
-| `pre-code-spec-check.json` | preToolUse (write) | — | 🟠 | session-governance.md + project-governance.md | GOV-SESSION-001/003, PG-INCEP-001 |
-| `post-task-governance.json` | postTaskExecution | — | 🟠 | project-governance.md + DEFINITION_OF_DONE.md | PG-*, GOV-SESSION-005, ARCH-01 |
-| `api-contract-check.json` | fileCreated | — | 🟠 | api-standards.md | GOV-API-001 |
-| `security-gate-check.json` | fileEdited | Tier A | 🔴 | security-rules.md | SEC-001/003/010 |
-| `sensitive-data-check.json` | fileEdited | Tier A | 🔴 | observability-sensitive.md | SEC-006 (secrets), LOG-* (PII) |
-| `migration-safety.json` | fileEdited | Tier A | 🔴 | database-rules.md | DATA-012/013/014 |
-| `naming-check.json` | agentStop | Tier B | 🟡 | naming-conventions.md | NC-* |
-| `module-boundary-check.json` | agentStop | Tier B | 🟠 | module-structure.md | MOD-001/002 |
-| `domain-layer-purity.json` | agentStop | Tier B | 🟠 | domain-context.md + module-structure.md | DOM-005, GOV-DDD-005 |
-| `coverage-check.json` | agentStop | Tier B | 🟠 | testing-strategy.md | GOV-CICD-002/003 |
-| `pre-pr-checklist.json` | userTriggered | — | 🟠 | git-workflow.md + testing-strategy.md | GOV-PR-*, GOV-CICD-* |
-| `periodic-audit.json` | userTriggered | — | 🟠 | ALL rules | Full scan |
+| `pre-code-spec-check.json` | preToolUse (write) | — | 🟠 | session-governance.md + project-governance.md | `GOV-SESSION-001/003` · `PG-INCEP-001/002` *(session-governance-generator · phase-gates-generator)* |
+| `api-contract-check.json` | fileCreated | — | 🟠 | api-standards.md | `GOV-API-001` *(api-compliance-generator)* |
+| `security-gate-check.json` | fileEdited | Tier A | 🔴 | security-rules.md | `SEC-01/02/03` · `SEC-BASELINE-02` *(security-compliance-gen)* |
+| `migration-safety.json` | fileEdited | Tier A | 🔴 | database-rules.md + infrastructure decisions | `DATA-BASELINE-01/02` · `DATA-02/03` *(data-governance-generator)* · `GOV-DEVOPS-012/013/014` · `GOV-DEVOPS-BASELINE-02` *(devops-generator)* |
+| `sensitive-data-check.json` | fileEdited | Tier A | 🔴 | observability-sensitive.md | `SEC-BASELINE-01` · `SEC-20/21/22` *(security-compliance-gen)* · `SEC-PII-01/02/03` *(logging-generator)* ⚠️ see the duplicate-family note below |
 
-### Tier-Gated Hooks (installed at Tier 2+)
+### Tier 2 — Installed at Sprint 2+ (when readiness met)
 
-| Hook File | Event Type | Debounce | Noise | Tier | Source Steering |
-|-----------|:----------:|:--------:|:-----:|:----:|----------------|
-| `segregation-check.json` | postTaskExecution | — | 🟠 | 2 | role-isolation.md + CODEOWNERS |
-| `steering-quality-check.json` | agentStop | Tier B | 🟡 | 2 | (self-derived — GOV-STEER rules) |
-| `documentation-reminder.json` | agentStop | Tier B | 🟡 | 2 | project-governance.md |
-| `change-readiness-gate.json` | preTaskExecution | — | 🟠 | 3 | project-governance.md (CM-*) |
-| `exception-expiry-check.json` | userTriggered | — | 🟠 | 3 | compliance-log-governance |
+| Hook File | Event Type | Debounce | Noise | Source Steering | Rules Enforced (owning generator) |
+|-----------|:----------:|:--------:|:-----:|----------------|----------------|
+| `post-task-governance.json` | postTaskExecution | — | 🟠 | project-governance.md + DEFINITION_OF_DONE.md | `PG-*` for the current phase *(phase-gates-generator)* · `GOV-SESSION-003/012` *(session-governance-generator)* · `ARCH-01` *(architecture-compliance-gen)* · `GOV-ROLE-BASELINE-01` *(role-isolation-generator)* · `GOV-DEVOPS-005` *(devops-generator)* · `ERR-01` *(error-handling-generator)* |
+| `segregation-check.json` | postTaskExecution | — | 🟠 | role-isolation.md + CODEOWNERS | `GOV-ROLE-004` *(role-isolation-generator)* |
+| `session-end-compliance.json` | agentStop | Tier B | 🟠 | consolidated — see below | `MOD-01/02/03` *(module-boundary-generator)* · `DOM-05` *(domain-context-generator)* · `GOV-CICD-002/003` *(cicd-gates-generator)* · `NC-01`…`NC-08` *(naming-generator)* |
+
+> **`session-end-compliance.json` is the consolidated `agentStop` sweep.** It replaces four individual `agentStop` hooks with one pass and one report — cutting firings from four to one and prompt cost from four to one. The four individual templates are **retained as reference and NOT installed**; see the reference-only table below.
+
+### Tier 3 — Installed Pre-Release (when readiness met)
+
+| Hook File | Event Type | Debounce | Noise | Source Steering | Rules Enforced (owning generator) |
+|-----------|:----------:|:--------:|:-----:|----------------|----------------|
+| `change-readiness-gate.json` | preTaskExecution | — | 🟠 | project-governance.md | `CM-001/002/004/005/006/010` *(change-management-gen — **owner**)* · `PG-CONST-*` · `PG-INTEG-*` *(phase-gates-generator — references, does not re-declare)* |
+| `exception-expiry-check.json` | userTriggered | — | 🟠 | compliance-log-governance | `GOV-LOG-004/005/006` *(compliance-log-gov-gen)* |
+
+> **`change-readiness-gate` enforces the union of two families, and `change-management-gen.md` owns the declaration.** Two generators previously claimed this hook at the same event and tier with **disjoint** rule sets, and no file stated the union — so whichever generator a builder happened to read produced a hook enforcing half the intended set. Both families are genuinely produced, so this was a missing union rather than a wrong ID. `phase-gates-generator.md` now references this row instead of re-declaring it (single source of truth per family-hook pairing).
+
+### Optional — Family-Wide (opt-in, ships DISABLED)
+
+| Hook File | Event Type | Debounce | Noise | Source | Rules Enforced |
+|-----------|:----------:|:--------:|:-----:|--------|----------------|
+| `package-activation-guard.json` | promptSubmit | — | 🟡 | `TRIGGER_KEYS_REFERENCE.md` + each package core's Activation section | **None** — governs trigger-key switching, which sits outside the rule model |
+
+> Ships `"enabled": false`. Useful only where several AI-* packages share one workspace. `promptSubmit` is the noisiest event surface there is, so this is opt-in by design rather than by omission.
+
+### Reference-Only Templates — retained, NOT installed as hooks
+
+These four `.json` files are generated because they **document the rule logic**, and their checks are performed by `session-end-compliance.json` instead. **A validation check MUST NOT require them to be installed.**
+
+| Template File | Documents | Its checks run in |
+|-----------|-----------|-------------------|
+| `module-boundary-check.json` | `MOD-01/02/03` *(module-boundary-generator)* · `GOV-TT-002` *(team-topology-generator)* | `session-end-compliance.json` |
+| `domain-layer-purity.json` | `DOM-05` *(domain-context-generator)* · `MOD-02` *(module-boundary-generator)* | `session-end-compliance.json` |
+| `coverage-check.json` | `GOV-CICD-002/003` *(cicd-gates-generator)* | `session-end-compliance.json` |
+| `naming-check.json` | `NC-01`…`NC-08` *(naming-generator)* | `session-end-compliance.json` |
+
+### Retired to Process Agents — NOT generated as hooks
+
+Each conversion is recorded in the agent template that performed it. **These names must not reappear in any hook inventory, runtime tree, or completeness check.**
+
+| Former Hook | Now | Agent Template | Why an agent |
+|---|---|---|---|
+| `session-discipline.json` | `SDC__` | `session-discipline-agent.md` | Fired on **every** prompt — the highest-noise surface in the package |
+| `pre-pr-checklist.json` | `PRC__` | `pre-pr-checklist-agent.md` | A process milestone a human invokes, not an event |
+| `periodic-audit.json` | `CAA__` | `compliance-audit-agent.md` | On-demand full scan — inherently user-triggered |
+| `steering-quality-check.json` | `SQC__` | `steering-quality-agent.md` | Advisory quality review at a milestone |
+
+> **The timing that is given up, and where it went.** Retiring `session-discipline.json` kept the checks and lost the **interception** — an agent runs when invoked, so a violating prompt proceeds and is reviewed afterwards. That timing is recoverable via an opt-in `promptSubmit` hook shipping `"enabled": false`, on the `package-activation-guard` precedent.
+
+### Removed Entirely
+
+| Former Hook | Disposition |
+|---|---|
+| `documentation-reminder.json` | ❌ **Removed.** **No generator produces any rule family for it** — there is no `DOC-*`, `DOCS-*` or `GOV-DOC-*` family in the package, so it had consumers but no producer and could never cite a real rule ID. Its intent (docs updated after a feature) is carried by the `session-end-compliance` sweep. |
+
+> **Why an orphan hook is worse than a missing one.** It was declared, tier-assigned, debounce-classified, listed in a runtime tree as always-present, **and** separately declared retired — so every count that included it was wrong and every attempt to generate it would have produced a hook with no rule to cite.
+
+### ⚠️ Duplicate PII family — flagged, not resolved here
+
+`security-compliance-gen.md` produces **`SEC-20/21/22`** from `observability-sensitive.md`, and `logging-generator.md` produces **`SEC-PII-01/02/03`** for the same concern. Both are genuinely produced, so both are cited above rather than one being silently dropped. **Choosing a single family is a design change, not a citation fix**, and it is out of scope for this inventory pass — a hook citing one family while the other still generates rules would leave those rules unenforced and unrecorded.
+
+### ⚠️ Rules whose enforcement assignment is still open
+
+`SEC-10` (DTO validation), `SEC-11` (injection prevention) and `SEC-12` (CORS origins) are produced by `security-compliance-gen.md` and **assigned to no hook**. `security-gate-check.json`'s prompt substantively checks the first two — input validation and string-concatenation in queries — **without citing their IDs**, so those checks run and produce no attributable compliance event. They are deliberately **not** claimed in the table above: assigning them here would record enforcement that has not been designed, and all three are deterministically checkable and belong on a gate-fired surface. Leave them visible and unassigned until that surface exists.
 
 ### Conditional Hooks (only if steering file exists)
 
@@ -98,7 +166,7 @@ For EACH hook to generate:
 | `tracing-check.json` | observability-tracing.md exists | agentStop | Tier B | observability-tracing.md |
 | `event-sourcing-check.json` | event-sourcing.md exists | agentStop | Tier B | event-sourcing.md |
 | `frontend-a11y-check.json` | frontend-standards.md exists | agentStop | Tier B | frontend-standards.md |
-| `mcp-audit-log.json` | .kiro/settings/mcp.json configured | postToolUse (`^mcp_.*`) | — | MCP governance |
+| `mcp-audit-log.json` |.kiro/settings/mcp.json configured | postToolUse (`^mcp_.*`) | — | MCP governance |
 
 ---
 
@@ -177,7 +245,7 @@ Is this hook's pattern a bare wildcard (e.g., **/*.ts, **/*.json)?
 
 | Hook | ❌ NEVER Use | ✅ Use Instead | Why |
 |------|-------------|---------------|-----|
-| sensitive-data-check | `**/*.cs, **/*.ts, **/*.json` | `src/**/*.{ext}, *.env, appsettings*.json` | Excludes .kiro/, .governance/, compliance-log/ structurally |
+| sensitive-data-check | `**/*.cs, **/*.ts, **/*.json` | `src/**/*.{ext}, *.env, appsettings*.json` | Excludes.kiro/,.governance/, compliance-log/ structurally |
 | security-gate-check | `**/*Controller.cs` | `src/modules/*/presentation/**/*Controller.cs` | Already scoped — OK |
 | naming-check | (agentStop — no pattern) | N/A | Preamble filters infra files from scan |
 | domain-layer-purity | (agentStop — no pattern) | N/A | Preamble filters infra files from scan |
@@ -195,7 +263,7 @@ The `sensitive-data-check` hook legitimately needs to scan root config files (`.
 |-------|-------------------------|------------------------------|
 | NestJS | `src/**/*.ts`, `src/**/*.json` | `.kiro/`, `.governance/`, `compliance-log/`, root `*.json` |
 | Django | `{app}/**/*.py`, `{app}/**/migrations/*.py` | `.kiro/`, `.governance/`, `compliance-log/`, `docs/` |
-| .NET | `src/**/*.cs`, `src/**/*.json` | `.kiro/`, `.governance/`, `compliance-log/` |
+|.NET | `src/**/*.cs`, `src/**/*.json` | `.kiro/`, `.governance/`, `compliance-log/` |
 | Spring Boot | `src/**/*.java`, `src/main/resources/**` | `.kiro/`, `.governance/`, `compliance-log/` |
 | Generic | `src/**/*` | Everything outside `src/` |
 
@@ -255,7 +323,7 @@ Every hook prompt follows this structure:
 ### Phase Check (First Line)
 
 ```
-Check .compliance-state.json → currentPhase. Only enforce rules applicable to {applicable phases}.
+Check.compliance-state.json → currentPhase. Only enforce rules applicable to {applicable phases}.
 If this is a {earlier phase} project, skip silently.
 ```
 
@@ -319,62 +387,17 @@ OVERWRITE it (keep only the latest result). Add "sessionDedup": true to the even
 
 ## ENFORCEMENT-GUIDE Generation
 
-When generating `.governance/hooks/ENFORCEMENT-GUIDE.md`, organize hooks by tier:
+When generating `.governance/hooks/ENFORCEMENT-GUIDE.md`, **render `templates/hooks/ENFORCEMENT-GUIDE.md`** — do not compose the tier tables here.
 
-```markdown
-# Hook Enforcement Guide
+**Why this file no longer carries a draft.** It used to embed a full copy of the guide, which made **three** places in the package assert a hook inventory: this file's own tables above, the embedded draft, and the canonical template. All three drifted, and the draft was the least visible of them — it still listed `session-discipline`, `periodic-audit`, `pre-pr-checklist`, `steering-quality-check` and `documentation-reminder` as live hooks long after four became agents and one was removed, and it named a removal order whose first two entries no longer exist. **A third copy of a list is a third thing to keep true.**
 
-## Tier 1 — Active from Day 0
+The division of authority:
 
-| Hook | Type | Noise | What It Does |
-|------|------|:-----:|-------------|
-| session-discipline | promptSubmit | 🟡 | Enforces spec-before-code, never-vibe-code |
-| pre-code-spec-check | preToolUse | 🟠 | Warns if no spec/contract before implementation |
-| api-contract-check | fileCreated | 🟠 | Warns if controller created without OpenAPI contract |
-| periodic-audit | userTriggered | 🟠 | On-demand full compliance scan |
-| security-gate-check | fileEdited | 🔴 | Auth verification on endpoint files |
-| migration-safety | fileEdited | 🔴 | Rollback method required; no destructive ops |
+| Question | Authoritative source |
+|---|---|
+| Hook **or** agent — which mechanism does a check use? | **** + `generators/agents-from-steering.md` + the per-conversion record in each agent template |
+| Which hooks are **installed, and at which tier**? | **`templates/hooks/ENFORCEMENT-GUIDE.md`** |
+| Which **rule IDs** does a hook enforce? | The **owning generator** for each rule family — see the inventory tables above |
+| What gets **generated** and with what patterns? | This file (the derivation pipeline) |
 
-## Tier 2 — Activate at Sprint 2+ (when readiness met)
-
-| Hook | Type | Noise | What It Does |
-|------|------|:-----:|-------------|
-| post-task-governance | postTask | 🟠 | DDD + governance check after task completion |
-| segregation-check | postTask | 🟠 | Author ≠ reviewer reminder |
-| module-boundary-check | agentStop | 🟠 | Cross-module import detection |
-| coverage-check | agentStop | 🟠 | Test coverage threshold enforcement |
-| domain-layer-purity | agentStop | 🟠 | No infrastructure deps in domain |
-| naming-check | agentStop | 🟡 | File/class naming convention check |
-| steering-quality-check | agentStop | 🟡 | Steering file quality validation |
-| sensitive-data-check | fileEdited | 🔴 | PII/secrets in code detection |
-| documentation-reminder | agentStop | 🟡 | Docs update needed after feature |
-
-## Tier 3 — Activate Pre-Release (when readiness met)
-
-| Hook | Type | Noise | What It Does |
-|------|------|:-----:|-------------|
-| change-readiness-gate | preTask | 🟠 | CM artifacts must exist before Integration tasks |
-| exception-expiry-check | userTriggered | 🟠 | Flags expired rule bypasses |
-| pre-pr-checklist | userTriggered | 🟠 | Full PR readiness verification |
-
-## Conditional — Only if applicable
-
-| Hook | Condition | Type | What It Does |
-|------|-----------|------|-------------|
-| tenant-isolation-check | multi-tenancy.md | fileEdited 🔴 | Tenant entity inheritance check |
-| resilience-gate | resilience-standards.md | agentStop | Resilience pattern verification |
-| tracing-check | observability-tracing.md | agentStop | Span instrumentation check |
-| event-sourcing-check | event-sourcing.md | agentStop | Event store pattern compliance |
-| frontend-a11y-check | frontend-standards.md | agentStop | Accessibility verification |
-| mcp-audit-log | mcp.json configured | postToolUse | MCP tool invocation logging |
-
-## If Hooks Are Too Noisy
-
-Remove in this order (least impact first):
-1. session-discipline (fires on every prompt — highest noise)
-2. documentation-reminder (advisory only)
-3. steering-quality-check (advisory only)
-4. naming-check (advisory only)
-
-NEVER remove: security-gate-check, migration-safety, sensitive-data-check, tenant-isolation-check
-```
+**When the inventory changes, both this file's tables and the canonical template change together.** They answer different questions about the same set, so they cannot be allowed to disagree — and the guide's own generation step is the natural place to catch it.

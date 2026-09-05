@@ -1,6 +1,6 @@
 # Reference Map: Built-In Baseline Rules
 
-**Purpose:** Complete reference of all 10 universal baseline rules that AI-GCE enforces regardless of steering content — the methodology floor that every project gets even with zero steering files.
+**Purpose:** Complete reference of all 10 universal baseline rules that AI-GCE (Governance & Compliance Engine) enforces regardless of steering content — the methodology floor that every project gets even with zero steering files.
 
 ---
 
@@ -8,15 +8,15 @@
 
 | # | Rule ID | Rule Statement | Category | Tier | Source |
 |---|---------|---------------|----------|:----:|--------|
-| 1 | GOV-B01 | The author of a change MUST NOT be the sole approver of that change | Governance | 1 | AI-DLC v1 methodology (separation of duties) |
-| 2 | GOV-B02 | Implementation MUST be preceded by specification (spec-before-code) | Session | 1 | AI-DLC v1 methodology (structured sessions) |
+| 1 | GOV-B01 | The author of a change MUST NOT be the sole approver of that change | Governance | 1 | AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) methodology (separation of duties) |
+| 2 | GOV-B02 | Implementation MUST be preceded by specification (spec-before-code) | Session | 1 | AI-DLC methodology (structured sessions) |
 | 3 | GOV-B03 | Every pull request MUST have a description explaining what and why | Governance | 1 | Professional engineering practice |
 | 4 | GOV-B04 | Changes to established baselines MUST have documented rationale | Governance | 1 | Change management principle |
 | 5 | GOV-B05 | Significant decisions MUST be recorded with context and rationale | Governance | 1 | Decision traceability |
 | 6 | GOV-B06 | Direct pushes to main/master branch are PROHIBITED | Governance | 1 | Branch protection |
 | 7 | SEC-B01 | Secrets (API keys, passwords, tokens) MUST NOT appear in source code | Security | 1 | Security baseline |
 | 8 | SEC-B02 | User-provided input MUST be validated before processing | Security | 1 | Input safety (OWASP) |
-| 9 | SESSION-B01 | AI-assisted development sessions MUST follow structured discipline (not vibe-coding) | Session | 1 | AI-DLC v1 methodology |
+| 9 | SESSION-B01 | AI-assisted development sessions MUST follow structured discipline (not vibe-coding) | Session | 1 | AI-DLC methodology |
 | 10 | NAME-B01 | File and symbol naming MUST follow a consistent, documented convention | Quality | 1 | Codebase readability |
 
 ---

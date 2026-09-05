@@ -1,0 +1,15 @@
+{
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
+  "name": "Change Readiness Gate",
+  "version": "1.0.0",
+  "description": "Tier 3 (preTaskExecution): Before an Integration/Go-Live task begins, verifies change-management artifacts are in place. Skips silently during earlier phases.",
+  "when": {
+    "type": "preTaskExecution"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check .compliance-state.json → currentPhase. This gate ONLY enforces during the Integration and Go-Live phases. If the project is in Setup, Foundation, Inception or Construction, skip silently.\n\nA task is about to begin. Verify change-readiness before it proceeds. Each numbered check names the rule ID it enforces; log that ID in the event below:\n\n1. CHANGE MANAGEMENT PLAN [CM-001]: A change management plan exists before the Integration phase.\n2. STAKEHOLDER MAP [CM-002]: The stakeholder map covers all impacted groups.\n3. UAT TRACEABILITY [CM-004]: UAT scenarios trace to requirements.\n4. UAT SIGN-OFF [CM-005]: UAT sign-off is recorded per module.\n5. TRAINING [CM-006]: Role-based training is complete before go-live.\n6. ROLLBACK [CM-010]: Rollback criteria and procedure are documented per module.\n\nOnly enforce a rule if its source steering (project-governance.md) actually generated it — a rule absent from .governance/rules/ was intentionally not derived (no steering = no rule) and MUST NOT be treated as a violation. This gate also affirms the current phase's PG-CONST-* and PG-INTEG-* gate obligations where applicable (those rules are owned by phase-gates-generator and referenced here, not re-declared).\n\nReport findings as:\n- ✅ Passing rules (silent if all pass)\n- ⚠️ Warnings (artifact incomplete)\n- ❌ Violations (required artifact missing — resolve before the task proceeds)\n\nIf all applicable rules pass, confirm readiness silently.\n\n## Compliance Logging\nAfter completing all checks above, append a JSON event to `compliance-log/events/{today-date}.jsonl` (create the file if it doesn't exist) — ONE event per rule checked, and `ruleId` MUST be the actual rule ID from the check above, NEVER a literal placeholder. Format:\n{\"timestamp\": \"{ISO-8601-UTC}\", \"type\": \"check\", \"id\": \"chk-{date}-{time}-{seq}\", \"hook\": \"change-readiness-gate\", \"trigger\": \"preTaskExecution\", \"ruleId\": \"{the ID from the checked rule, e.g. CM-001}\", \"ruleSeverity\": \"{severity}\", \"result\": \"{pass|fail|warn}\", \"message\": \"{one-line-finding}\"}\nLog ONE event per rule checked."
+  }
+}

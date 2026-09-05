@@ -29,7 +29,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -37,15 +37,15 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
-AI-DWG is the **convergence point** between design and construction. It receives peer inputs from up to three design-time packages (AI-ADLC, AI-POLC, AI-UXD) — any non-empty subset — and composes the operational environment that AI-DLC v1 builds within and AI-GCE enforces against.
+AI-DWG is the **convergence point** between design and construction. It receives peer inputs from up to three design-time packages (AI-ADLC, AI-POLC, AI-UXD) — any non-empty subset — and composes the operational environment that AI-DLC builds within and AI-GCE enforces against.
 
 ---
 
@@ -222,7 +222,7 @@ impact disclose  mapping rules       per cluster         cluster
 | Event Sourcing | `event-sourcing.md` | Conditional (ADLC extension) |
 | Feature Flags | `feature-flags.md` | Conditional (ADLC extension) |
 | Brownfield | `brownfield-patterns.md` | Conditional (ADLC brownfield mode) |
-| AI-DLC v1 Input | `technical-environment.md` | Always |
+| AI-DLC Input | `technical-environment.md` | Always |
 
 Plus: **src folder structure** (derived from C4 L3), config files (`.gitignore`, `.editorconfig`, `CODEOWNERS`), and **`architecture/`** reference folder (`architecture/technical-environment.md`, `architecture/docker-compose.yml`, `architecture/constraint-register.md` if present, `architecture/architecture-decision-records.md` if present)
 
@@ -230,7 +230,7 @@ Plus: **src folder structure** (derived from C4 L3), config files (`.gitignore`,
 
 | Output | Purpose | Location |
 |--------|---------|----------|
-| `info/vision.md` | AI-DLC v1 Vision Document (executive summary, problem, success metrics, MVP IN/OUT, personas/journeys from UXD if present) | `info/` |
+| `info/vision.md` | AI-DLC Vision Document (executive summary, problem, success metrics, MVP IN/OUT, personas/journeys from UXD if present) | `info/` |
 | `backlog/DEFINITION_OF_DONE.md` | Quality criteria with product acceptance bar | `backlog/` |
 | `backlog/DEFINITION_OF_READY.md` | Sprint entry gate criteria | `backlog/` |
 | `backlog/scope-and-risks.md` | Scope boundary + risk register + assumptions | `backlog/` |
@@ -241,7 +241,7 @@ Plus: **src folder structure** (derived from C4 L3), config files (`.gitignore`,
 | `backlog/user-stories.md` | Story index/entry-point (IF Tier 2) | `backlog/` |
 | `backlog/po-charter.md` | PO authority/escalation reference (if in PBP) | `backlog/` |
 | `backlog/prioritization-register.md` | Build order rationale (if in PBP) | `backlog/` |
-| `templates/session-planning.md` | AI-DLC v1 session planning | `templates/` |
+| `templates/session-planning.md` | AI-DLC session planning | `templates/` |
 | `templates/sprint-planning.md` | Sprint structure and capacity | `templates/` |
 | `templates/estimation-guide.md` | Size estimation (S/M/L/XL) with multipliers | `templates/` |
 
@@ -251,7 +251,7 @@ Plus: **src folder structure** (derived from C4 L3), config files (`.gitignore`,
 |--------|---------|----------|
 | `design-system.md` | Steering file: design tokens, component rules, pattern inventory | `rules/` |
 | `frontend-standards.md` | Prescriptive UI patterns (or enriches ADLC-generated version if both present) | `rules/` |
-| `ux/ui-implementation-spec.md` | AI-DLC v1 UI codegen input (wireframes + components + flows) | `ux/` |
+| `ux/ui-implementation-spec.md` | AI-DLC UI codegen input (wireframes + components + flows) | `ux/` |
 | `ux/wireframes/` | Per-screen wireframe specifications (if present in UXP) | `ux/wireframes/` |
 | `ux/user-flows/` | Multi-step interaction choreography (if present in UXP) | `ux/user-flows/` |
 | `ux/personas/` | User profiles for implementation context (if present in UXP) | `ux/personas/` |
@@ -467,7 +467,7 @@ Each present peer input maps to specific workspace artifacts through its cluster
 
 ## What AI-DWG Does NOT Do
 
-- ❌ Generate application code (AI-DLC v1's job)
+- ❌ Generate application code (AI-DLC's job)
 - ❌ Set up CI/CD pipelines fully (produces skeleton; team configures)
 - ❌ Install dependencies (produces dependency file skeleton; team runs install)
 - ❌ Make architecture decisions (already made in AI-ADLC)
@@ -517,3 +517,23 @@ flowchart LR
     S3 --> S4["Validate"]
     S4 --> S5["Output"]
 ```
+
+---
+
+### Workflow-Discipline Checklist (per stage)
+
+**Before starting a stage:**
+- [ ] Have I loaded this stage's rule-detail file (not working from memory)?
+- [ ] Was the previous stage approved by the user?
+- [ ] Is this the next stage in order (or a user-directed jump)?
+- [ ] Do I understand this stage's inputs and expected output?
+
+**While executing:**
+- [ ] Does every element trace to a package file, template, or the user's input?
+- [ ] Am I using the package's templates rather than inventing a format?
+- [ ] Am I avoiding improvised procedures and "best-practice" filler?
+
+**After completing a stage:**
+- [ ] Does the output match the package template / spec?
+- [ ] Have I updated the state file?
+- [ ] Have I obtained explicit user approval before the next stage?

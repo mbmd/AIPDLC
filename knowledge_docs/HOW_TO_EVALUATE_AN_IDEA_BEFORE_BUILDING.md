@@ -1,6 +1,6 @@
 # How to Evaluate an Idea Before Building
 
-**Purpose:** Practical guide for using AI-ILC to take a raw idea and put it through structured evaluation — determining whether it's worth committing resources to, what its scope and risk profile look like, and whether to approve, defer, or reject before spending initiation effort.
+**Purpose:** Practical guide for using AI-ILC (Idea Life Cycle) to take a raw idea and put it through structured evaluation — determining whether it's worth committing resources to, what its scope and risk profile look like, and whether to approve, defer, or reject before spending initiation effort.
 
 ---
 
@@ -112,7 +112,7 @@ AI-ILC guides you through structured evaluation across multiple dimensions:
 **Decision options:**
 | Decision | Meaning | Next Step |
 |----------|---------|-----------|
-| **Approve** | Worth investing in | Proceeds to AI-PILC for full initiation |
+| **Approve** | Worth investing in | Proceeds to AI-PILC (Project Initiation Life Cycle) for full initiation |
 | **Defer** | Good idea, bad timing | Logged in register with re-evaluation date |
 | **Pivot** | Problem is real, solution needs rethinking | Return to Stage 3 with new approach |
 | **Reject** | Not worth pursuing | Documented with rationale (future reference) |
@@ -183,9 +183,9 @@ AI-ILC guides you through structured evaluation across multiple dimensions:
 | Decision | Where It Goes |
 |----------|--------------|
 | Approved | AI-PILC for full project initiation (Idea Brief feeds as input) |
-| Approved (feature-level) | AI-POLC for backlog entry (Feature Brief format) |
+| Approved (feature-level) | AI-POLC (Product Ownership Life Cycle) for backlog entry (Feature Brief format) |
 | Deferred | Idea Register with re-evaluation trigger date |
-| Multiple approved | AI-PPM for portfolio prioritization across initiatives |
+| Multiple approved | AI-PPM (Project Portfolio Management) for portfolio prioritization across initiatives |
 
 The handoff is via `ilc-state.md` — AI-PILC auto-detects the approved Idea Brief and uses it as input context, skipping questions already answered during evaluation.
 

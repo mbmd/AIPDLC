@@ -76,7 +76,11 @@ flowchart LR
 | drift-detect | `DFT__` | `.governance/agents/drift-detect-agent.md` |
 | test-governance | `TGV__` | `.governance/agents/test-governance-agent.md` |
 | coverage-review | `CVR__` | `.governance/agents/coverage-review-agent.md` |
-| … | … | … |
+| session-discipline · sprint-governance · code-review · steering-quality · change-management · dod-gate · pre-pr-checklist | `SDC__` · `SGV__` · `CRV__` · `SQC__` · `CMG__` · `DOD__` · `PRC__` | `.governance/agents/{name}-agent.md` |
+| ai-governance *(AI-LENS on)* | `AIG__` | `.governance/agents/aig-agent.md` |
+| automation-governance *(Automation-LENS on)* | `ATG__` | `.governance/agents/atg-agent.md` |
+| ai-quality *(AI-LENS on)* | `AIQ__` | `.governance/agents/aiq-agent.md` |
+| automation-quality *(Automation-LENS on)* | `ATQ__` | `.governance/agents/atq-agent.md` |
 
 Registry: `.governance/AGENT_REGISTRY.md` · Guide: `.governance/AGENT-GUIDE.md`
 

@@ -1,10 +1,10 @@
 # AIFLC AI Governance — Agent Template
 
 > **Trigger:** `AIG__` (manual invocation)
+> **AG-ID:** GCE-AG-11
 > **Owner:** AI-GCE
 > **Type:** Audit
-> **Core impact:** None — the GCE core stays AI-agnostic. This agent is invoked manually by the user.
-> **Dependency:** OI-200 (engine agnostic agent-hosting capability). Built against documented interface; final integration pending OI-200 delivery.
+> **Core impact:** None — the GCE core stays AI-agnostic. This agent is seeded into the Layer-3 workspace by AI-DWG and dispatched by GCE's existing Command Dispatch.
 
 ---
 
@@ -164,7 +164,7 @@ Results written to `.governance/ai-lens/`:
 | Version | Behavior |
 |---------|----------|
 | **v1 (current)** | Manual trigger only (`AIG__`). User invokes when ready. No auto-firing. |
-| **v2 (deferred)** | Auto-invocation on PR / pre-release gate. Requires OI-200 engine capability. |
+| **v2 (deferred)** | Auto-invocation on PR / pre-release gate. |
 
 ---
 
@@ -174,7 +174,7 @@ Results written to `.governance/ai-lens/`:
 - **AI-TGE `AIQ__`** — the evaluation counterpart (quality/drift; `AIG__` = governance)
 - **AI-DWG `.ai-lens/manifest.json`** — the couriered context this agent reads (incl. the `agentic` block)
 - **`agentic-lens/architecture/tool-use.md` + `reasoning-loop.md`** — the design rules the agentic check-set (Category 4) enforces
-- **OI-200** — engine agnostic agent-hosting capability (build dependency)
+- **Command Dispatch (`core-engine.md`)** — hosts and dispatches this agent (AG-ID `GCE-AG-11`); the engine-agnostic agent-hosting capability this agent was built against is now delivered
 
 ---
 

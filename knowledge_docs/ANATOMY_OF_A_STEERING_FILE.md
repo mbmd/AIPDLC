@@ -12,7 +12,7 @@ A steering file is a markdown document in `.kiro/steering/` that provides rules,
 
 ```markdown
 ---
-generatedBy: AI-DWG
+generatedBy: AI-DWG (Workspace Generator)
 generatedVersion: 1.0.0
 source: adlc-output/07_API_Architecture.md
 generatedOn: 2026-06-12
@@ -150,7 +150,7 @@ fileMatchPattern: "src/frontend/**"
 
 Loaded ONLY when a file matching the pattern is open. Saves context budget.
 
-**Examples:** `frontend-standards.md` (only when editing frontend), `ai-adlc-rules.md` (only when working in AI-ADLC package)
+**Examples:** `frontend-standards.md` (only when editing frontend), `ai-adlc-rules.md` (only when working in AI-ADLC (Architecture Design Life Cycle) package)
 
 ### `manual`
 
@@ -169,7 +169,7 @@ Loaded ONLY when user invokes via `#filename` in chat. For heavy reference mater
 ```
 STEERING FILE (source of truth for rules)
     │
-    ├── AI-GCE reads → derives RULES (.governance/rules/*)
+    ├── AI-GCE (Governance & Compliance Engine) reads → derives RULES (.governance/rules/*)
     │                 → derives HOOKS (.kiro/hooks/*)
     │                 → derives AGENTS (.kiro/agents/*)
     │

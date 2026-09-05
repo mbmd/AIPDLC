@@ -1,6 +1,6 @@
 # How to Manage a Product Backlog
 
-**Purpose:** Practical guide for using AI-POLC to build and operate a governed, value-prioritized product backlog — from product vision through epic decomposition, prioritization, release planning, and the ongoing back-and-forth with development. This is the operational companion to the mechanics doc: it answers "I need to manage a backlog, how do I actually use this?"
+**Purpose:** Practical guide for using AI-POLC (Product Ownership Life Cycle) to build and operate a governed, value-prioritized product backlog — from product vision through epic decomposition, prioritization, release planning, and the ongoing back-and-forth with development. This is the operational companion to the mechanics doc: it answers "I need to manage a backlog, how do I actually use this?"
 
 ---
 
@@ -15,8 +15,8 @@ Product owners, product managers, or team leads who own *what gets built, in wha
 **You need:**
 - AI-POLC installed in your AI workspace (see `ai-polc/setup/INSTALL.md`)
 - Input — ANY of the following works:
-  - A PIP from AI-PILC (ideal — gives you scope, goals, stakeholders, risks)
-  - An Architecture Package from AI-ADLC (adds technical constraints and bounded contexts)
+  - A PIP from AI-PILC (Project Initiation Life Cycle) (ideal — gives you scope, goals, stakeholders, risks)
+  - An Architecture Package from AI-ADLC (Architecture Design Life Cycle) (adds technical constraints and bounded contexts)
   - A UX Design Package from AI-UXD (adds personas and journeys for prioritization)
   - A verbal description of the product and its goals
   - An existing, ungoverned backlog you want to bring under discipline (brownfield)
@@ -36,10 +36,10 @@ Product owners, product managers, or team leads who own *what gets built, in wha
 | New product, blank backlog | Vision → epics → prioritized, release-sliced backlog with governance |
 | Inherited an ungoverned pile of tickets | Audits, gap-analyzes, and applies discipline progressively (brownfield) |
 | Mid-delivery reprioritization | Re-ranks by value, re-slices releases, records the rationale |
-| Handoff to a dev team | Produces a PBP with DoR/DoD and traceability ready for AI-DWG / AI-DLC v1 |
+| Handoff to a dev team | Produces a PBP with DoR/DoD and traceability ready for AI-DWG (Workspace Generator) / AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) |
 | Increment acceptance | Accepts completed work against DoD, processes feedback, reprioritizes |
 
-If you need *project* initiation (charter, budget, feasibility), that's AI-PILC. If you need *how to build*, that's AI-DLC v1. AI-POLC owns the **what / why / order**.
+If you need *project* initiation (charter, budget, feasibility), that's AI-PILC. If you need *how to build*, that's AI-DLC. AI-POLC owns the **what / why / order**.
 
 ---
 
@@ -113,7 +113,7 @@ AI-POLC adapts to what you already have. You don't change how you work — you j
 | Stage | What Happens | When You Re-Enter |
 |-------|-------------|-------------------|
 | 14. Backlog Operations | Refinement, story splitting, tech-debt trade-offs, stale-item cleanup | Before each sprint/increment |
-| 15. Acceptance & Feedback Loop | Accept completed work against DoD, process AI-DLC v1 feedback, reprioritize | After each increment |
+| 15. Acceptance & Feedback Loop | Accept completed work against DoD, process AI-DLC feedback, reprioritize | After each increment |
 | 16. Value & Metrics Engine | Track KPIs and benefits realization against original goals *(opt-in extension)* | Periodically (monthly/quarterly) |
 
 **No terminal gate.** Operations continues for the product's lifetime. Each session ends by persisting `polc-state.md`.
@@ -160,31 +160,31 @@ AI-POLC (DoR/DoD)  ──►  AI-DWG  ──►  Development Workspace
                                       └── session-governance.md   (refinement cadence)
 ```
 
-AI-DWG reads your PBP and encodes the quality bar into workspace steering files. From that point, any AI operating in the workspace (including AI-DLC v1) self-checks stories against your readiness bar and verifies work against your acceptance bar. You define the rule once; it's enforced everywhere downstream. If you later change DoR/DoD, AI-POLC logs a `POLC-C-NNN` change and bumps the version in `polc-state.md` so AI-DWG re-derives.
+AI-DWG reads your PBP and encodes the quality bar into workspace steering files. From that point, any AI operating in the workspace (including AI-DLC) self-checks stories against your readiness bar and verifies work against your acceptance bar. You define the rule once; it's enforced everywhere downstream. If you later change DoR/DoD, AI-POLC logs a `POLC-C-NNN` change and bumps the version in `polc-state.md` so AI-DWG re-derives.
 
 ---
 
 ## Tier 2 Story Elaboration — When to Turn It On
 
-By default, AI-POLC stops at the **epic** level (with epic-level acceptance criteria). Story elaboration — INVEST-compliant user stories with Given/When/Then acceptance criteria — is Tier 2, and it's **off by default in chain mode** because AI-DLC v1's Inception phase elaborates stories.
+By default, AI-POLC stops at the **epic** level (with epic-level acceptance criteria). Story elaboration — INVEST-compliant user stories with Given/When/Then acceptance criteria — is Tier 2, and it's **off by default in chain mode** because AI-DLC's Inception phase elaborates stories.
 
 | Your Context | Turn Tier 2 On? |
 |--------------|-----------------|
-| Chained with AI-DLC v1 (default) | No — let AI-DLC v1 elaborate; avoid duplicate work |
-| Standalone, no AI-DLC v1 | Yes — you need stories developers can pick up directly |
+| Chained with AI-DLC (default) | No — let AI-DLC elaborate; avoid duplicate work |
+| Standalone, no AI-DLC | Yes — you need stories developers can pick up directly |
 | You want PO-quality pre-elaboration before handoff | Yes — say "Elaborate stories for these epics" |
 
-Activating Tier 2 adds story-level outputs to each epic during Stage 5. The guiding principle: don't elaborate twice. Turn it on only when AI-DLC v1 isn't going to do it for you, or when you deliberately want the backlog pre-elaborated.
+Activating Tier 2 adds story-level outputs to each epic during Stage 5. The guiding principle: don't elaborate twice. Turn it on only when AI-DLC isn't going to do it for you, or when you deliberately want the backlog pre-elaborated.
 
 ---
 
-## The Back-and-Forth with AI-DLC v1 During Delivery
+## The Back-and-Forth with AI-DLC During Delivery
 
-AI-POLC and AI-DLC v1 are not a one-shot handoff — they're the only **bidirectional** exchange in the family. This is the rhythm of Phase 6.
+AI-POLC and AI-DLC are not a one-shot handoff — they're the only **bidirectional** exchange in the family. This is the rhythm of Phase 6.
 
 ```
-AI-POLC ──(prioritized epics + DoR/DoD + AC)──►  AI-DLC v1
-AI-POLC ◄──(completions, blockers, velocity)───  AI-DLC v1
+AI-POLC ──(prioritized epics + DoR/DoD + AC)──►  AI-DLC
+AI-POLC ◄──(completions, blockers, velocity)───  AI-DLC
 ```
 
 | Direction | What Flows | When |
@@ -198,7 +198,7 @@ What you do with the return signal in a Stage 15 session:
 - **Discovered complexity** → split the epic/story, re-estimate
 - **Velocity data** → adjust release slicing so the plan stays honest
 
-Because AI-DLC v1 isn't part of this family, the exchange is file-mediated: you bring DLC's output (`aidlc-docs/`) into a POLC session, and AI-POLC's reprioritization reaches DLC through the updated `prioritization-register.md` and a `POLC-C-NNN` change entry that DLC honors at the next bolt boundary.
+Because AI-DLC isn't part of this family, the exchange is file-mediated: you bring DLC's output (`aidlc-docs/`) into a POLC session, and AI-POLC's reprioritization reaches DLC through the updated `prioritization-register.md` and a `POLC-C-NNN` change entry that DLC honors at the next bolt boundary.
 
 ---
 
@@ -268,10 +268,10 @@ Your PBP feeds the rest of the chain:
 | Next Package | What It Reads from the PBP |
 |--------------|----------------------------|
 | **AI-DWG** | DoR/DoD, prioritization model, story/release structure → enriches workspace steering and milestones |
-| **AI-DLC v1** | Prioritized epics + acceptance criteria → Inception takes the top epic and elaborates it into work |
-| **AI-GCE** | (via AI-DWG steering) product quality rules → derives enforcement |
+| **AI-DLC** | Prioritized epics + acceptance criteria → Inception takes the top epic and elaborates it into work |
+| **AI-GCE (Governance & Compliance Engine)** | (via AI-DWG steering) product quality rules → derives enforcement |
 
-The handoff is automatic — AI-DWG detects `polc-state.md` with status `ready` and reads what it needs. From there, Phase 6 keeps the backlog alive through the bidirectional exchange with AI-DLC v1.
+The handoff is automatic — AI-DWG detects `polc-state.md` with status `ready` and reads what it needs. From there, Phase 6 keeps the backlog alive through the bidirectional exchange with AI-DLC.
 
 ---
 

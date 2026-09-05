@@ -40,10 +40,10 @@ Brownfield awareness means every tool, workflow, and governance package explicit
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-PILC** | Brownfield input mode | Detects "extending existing system" at Stage 2. Changes questions to: "What exists? What's changing? Extend vs. replace?" — fundamentally different intake. |
-| **AI-ADLC** | Brownfield architecture mode | Loads existing architecture, identifies ONLY the delta (new components, changed integrations). Doesn't redesign what already works. |
-| **AI-DWG** | Mode 3: Brownfield Overlay | Adds governance/steering to existing codebase WITHOUT touching existing code. Non-destructive. Adapts steering to actual folder structure. |
-| **AI-GCE** | Baseline + enforce-forward pattern | Records existing violations as baseline. Enforces only on new code. Prevents "everything broke on day one" while still improving over time. |
+| **AI-PILC (Project Initiation Life Cycle)** | Brownfield input mode | Detects "extending existing system" at Stage 2. Changes questions to: "What exists? What's changing? Extend vs. replace?" — fundamentally different intake. |
+| **AI-ADLC (Architecture Design Life Cycle)** | Brownfield architecture mode | Loads existing architecture, identifies ONLY the delta (new components, changed integrations). Doesn't redesign what already works. |
+| **AI-DWG (Workspace Generator)** | Mode 3: Brownfield Overlay | Adds governance/steering to existing codebase WITHOUT touching existing code. Non-destructive. Adapts steering to actual folder structure. |
+| **AI-GCE (Governance & Compliance Engine)** | Baseline + enforce-forward pattern | Records existing violations as baseline. Enforces only on new code. Prevents "everything broke on day one" while still improving over time. |
 | **AI-GCE** | Incremental adoption tiers | Starts with Tier 1 (minimal rules) so governance doesn't overwhelm an existing team's workflow. |
 | **All packages** | State file brownfield signal | `pilc-state.md` carries `Project Type: Brownfield Extension` forward through the chain. Every downstream package adapts its behavior. |
 

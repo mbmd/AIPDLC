@@ -86,7 +86,7 @@ Accessibility isn't a phase gate at the end — it's a baseline established duri
 AI-UXD sits in the **Project layer**, running in parallel with AI-ADLC and AI-POLC:
 - Produces **UX Design Package (UXP)** → feeds AI-DWG alongside AP and PBP
 - Exchanges with **AI-POLC** — personas/journeys flow to POLC; value goals focus UX research
-- Receives feedback from **AI-DLC v1** — runtime learnings inform design iteration
+- Receives feedback from **AI-DLC** — runtime learnings inform design iteration
 - Feeds **AI-GCE** — accessibility baseline becomes enforcement rules
 
 ---

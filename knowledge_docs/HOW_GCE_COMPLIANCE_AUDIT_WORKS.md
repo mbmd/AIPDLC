@@ -1,4 +1,4 @@
-# How AI-GCE Compliance Audit Works
+# How AI-GCE (Governance & Compliance Engine) Compliance Audit Works
 
 **Purpose:** Explains the internal mechanics of AI-GCE's compliance audit process — how it scans a workspace against active rules, calculates compliance scores, detects drift, produces audit reports, and maintains the audit trail for certification evidence.
 

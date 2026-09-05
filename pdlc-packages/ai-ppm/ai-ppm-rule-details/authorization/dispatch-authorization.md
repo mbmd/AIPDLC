@@ -62,10 +62,12 @@ For each authorized project, capture execution constraints:
 | Constraint | Source | Example |
 |---|---|---|
 | **Budget ceiling** | PIP Business Case / governance override | "Do not exceed $500K without re-authorization" |
-| **Timeline deadline** | PIP Charter / market window | "Must deliver MVP by Q3 2026" |
+| **Timeline deadline** | PIP Charter / market window | "Must deliver MVP by Q3 2026 (against the authorized delivery-method timeline)" |
 | **Team allocation** | Portfolio capacity decision | "Maximum 5 FTEs from Platform team" |
 | **Dependencies** | Cross-project from Stage 4 | "Cannot start DWG until Project X releases shared infra" |
 | **Reporting** | Portfolio governance cadence | "Monthly roll-up required via FLO" |
+
+> **Delivery-method-aware timeline (when reported).** If the project reports an AI delivery method with a dual timeline (manual baseline vs AI-method) via the roll-up (`monitoring/rollup-ingestion.md` → `planned_vs_baseline`), set the timeline ceiling against the **chosen-method** figure, with the manual baseline noted for transparency. A manual-only project (or one reporting no method) uses its single baseline. This keeps the enforced deadline consistent with the delivery method the project is actually using — never a stale manual baseline. This is *how code is produced* — distinct from the agile delivery methodology.
 
 ### Step 6.4: Produce Dispatch Authorization
 

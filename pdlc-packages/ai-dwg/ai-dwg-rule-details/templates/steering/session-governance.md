@@ -15,7 +15,7 @@ inclusion: always
 
 <!-- AI-DWG generated | source: Methodology decisions | date: {generation-date} -->
 
-# Session Governance (AI-DLC v1)
+# Session Governance (AI-DLC)
 
 ## Rules for AI-Assisted Development Sessions
 

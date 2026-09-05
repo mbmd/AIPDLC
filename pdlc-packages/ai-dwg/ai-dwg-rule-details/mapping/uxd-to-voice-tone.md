@@ -3,7 +3,7 @@
 
 ## Purpose
 
-Transforms the **voice & tone guidelines** produced by AI-UXD (`design/design-system-foundation.md` → voice & tone section, or a dedicated voice-tone artefact) into a prescriptive `content-guidelines.md` steering file. This governs all user-facing copy — labels, microcopy, error messages, empty states, notifications — so AI-DLC v1 writes interface text in the product's designed voice instead of generic developer phrasing.
+Transforms the **voice & tone guidelines** produced by AI-UXD (`design/design-system-foundation.md` → voice & tone section, or a dedicated voice-tone artefact) into a prescriptive `content-guidelines.md` steering file. This governs all user-facing copy — labels, microcopy, error messages, empty states, notifications — so AI-DLC writes interface text in the product's designed voice instead of generic developer phrasing.
 
 **Output:** `rules/content-guidelines.md`
 

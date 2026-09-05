@@ -68,7 +68,7 @@ The core (`core-engine.md`) and `ai-tge-rule-details/` are plain copies under `.
 ## Notes
 
 - The session orchestrator is always-loaded; the package core and rule-details load on demand.
-- AI-TGE coexists with other AI-* packages — each is family-scoped under `.aiflc/pdlc/`. It reads AP (AI-ADLC) + DW (AI-DWG) and observes AI-DLC v1; it reads existing steering files but never modifies them.
+- AI-TGE coexists with other AI-* packages — each is family-scoped under `.aiflc/pdlc/`. It reads AP (AI-ADLC) + DW (AI-DWG) and observes AI-DLC; it reads existing steering files but never modifies them.
 - Runtime output is written under `pdlc-ws/`, never at the workspace root.
 
 ---

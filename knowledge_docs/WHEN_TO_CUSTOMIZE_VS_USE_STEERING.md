@@ -85,7 +85,7 @@
 
 ### What happens after steering change:
 1. Edit the steering file
-2. AI-GCE re-derives affected rules and hooks
+2. AI-GCE (Governance & Compliance Engine) re-derives affected rules and hooks
 3. New governance reflects your change
 4. All generated files that source from that steering: updated on next re-derive
 

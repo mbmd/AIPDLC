@@ -30,7 +30,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -38,13 +38,13 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -58,11 +58,11 @@ flowchart LR
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 > **AI-DFE** ([Data Fabric Engine](../ai-dfe/)) is a family-scoped **companion** — it gathers data from all packages and distributes structured JSON for dashboards and status roll-ups. It runs alongside the chain rather than as a linear step, so it is not shown as a chain row above.
 
@@ -76,7 +76,7 @@ AI-PPM sits at the **top of the Portfolio layer** — the governance umbrella ov
 |--------|---------|
 | **Layer** | Portfolio (governance umbrella over the Project layer) |
 | **Position** | Top of the Portfolio layer — after AI-PILC, above everything in the Project layer |
-| **Reads — same layer (direct)** | AI-PILC (`pilc-state.md`) and AI-ILC (`ilc-state.md`) — registers projects and ideas |
+| **Reads — same layer (direct)** | AI-PILC (Project Initiation Life Cycle) (`pilc-state.md`) and AI-ILC (Idea Life Cycle) (`ilc-state.md`) — registers projects and ideas |
 | **Reads — cross layer (via AI-FLO)** | Per-project roll-up telemetry (progress, RAG, risk, budget, velocity, compliance, backlog health) — it **aggregates**, never recomputes |
 | **Produces** | Portfolio register, strategic-alignment map, prioritization scorecard, governance decisions, and dispatch authorizations (carried DOWN to the Project layer by AI-FLO) |
 | **Output location** | `pdlc-ws/portfolio/` |
@@ -88,7 +88,7 @@ AI-PPM sits at the **top of the Portfolio layer** — the governance umbrella ov
 **Simplified chain view** (see the diagram above for the full topology):
 
 ```
-AI-ILC → AI-PILC → AI-PPM → AI-FLO → AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-DLC v1
+AI-ILC → AI-PILC → AI-PPM → AI-FLO → AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-DLC
                       ▲ you are here (governs the SET; dispatches DOWN via AI-FLO)
 ```
 
@@ -125,16 +125,16 @@ AI-PPM answers **"which projects should we run, in what order, and is the portfo
 > **Cross-layer = through FLO. Same-layer = direct marker read.**
 
 - AI-PPM reads AI-PILC and AI-ILC directly (same Portfolio layer)
-- AI-PPM talks to Project-layer packages ONLY via AI-FLO
+- AI-PPM talks to Project-layer packages ONLY via AI-FLO (Flow Orchestrator)
 - FLO carries dispatch DOWN and roll-up telemetry UP
 
 ### No Duplication
 
 AI-PPM never recomputes what downstream packages already produce:
-- Per-project value scoring → AI-POLC
+- Per-project value scoring → AI-POLC (Product Ownership Life Cycle)
 - Per-project resource planning → AI-PILC
 - Per-project risk assessment → AI-PILC/POLC
-- Per-project compliance → AI-GCE/TGE
+- Per-project compliance → AI-GCE (Governance & Compliance Engine) /AI-TGE (Test Governance Engine)
 
 AI-PPM **aggregates** their data (via FLO) into portfolio-level views.
 
@@ -199,7 +199,7 @@ ai-ppm/
 
 ## Activation
 
-**Explicit key:** type `_PPM_` in any prompt to activate AI-PPM unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-PPM`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
+**Explicit key:** type `_PPM_` in any prompt to activate AI-PPM unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` (report active package) reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-PPM`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
 
 ---
 

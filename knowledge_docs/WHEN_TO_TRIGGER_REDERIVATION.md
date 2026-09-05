@@ -1,6 +1,6 @@
 # When to Trigger Re-Derivation
 
-**Decision:** Something changed in my project — do I need to re-run AI-DWG reconciliation and/or AI-GCE re-derivation? Or can I leave governance as-is?
+**Decision:** Something changed in my project — do I need to re-run AI-DWG (Workspace Generator) reconciliation and/or AI-GCE (Governance & Compliance Engine) re-derivation? Or can I leave governance as-is?
 
 **Derived from:** Pattern: Downstream Signaling + Pattern: Non-Destructive Reconciliation
 
@@ -13,7 +13,7 @@
 | ADR revised (tech stack, security, API strategy) | ✅ Yes | High — governance is stale |
 | New container/service added to architecture | ✅ Yes | High — new code has no rules |
 | Container removed from architecture | ✅ Yes | Medium — orphaned rules exist |
-| Extension activated in AI-ADLC | ✅ Yes | High — new constraints needed |
+| Extension activated in AI-ADLC (Architecture Design Life Cycle) | ✅ Yes | High — new constraints needed |
 | Extension deactivated | ✅ Yes | Medium — remove extension rules |
 | Team agreements changed | ⚠️ Maybe | Low — only if enforced by hooks |
 | Code refactored (no architecture change) | ❌ No | N/A — governance still applies |

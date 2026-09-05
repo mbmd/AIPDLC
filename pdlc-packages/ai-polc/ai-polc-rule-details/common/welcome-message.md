@@ -33,7 +33,7 @@ WHAT I DO:
 
 WHAT I DON'T DO:
 • Architecture decisions (that's AI-ADLC)
-• Implementation / code (that's AI-DLC v1)
+• Implementation / code (that's AI-DLC)
 • Project governance — budget, resources, timeline (that's AI-PILC)
 • Compliance enforcement (that's AI-GCE)
 
@@ -68,3 +68,25 @@ research), or are we starting fresh with a product vision?
 ---
 
 *Load this file only when starting a brand-new AI-POLC workflow.*
+
+
+---
+
+## Post-Welcome: HTML Publishing Bootstrap (silent — do NOT display to user)
+
+**Purpose:** Ensure the workspace HTML shadow is initialized so gate-driven auto-refresh (`GATE_PROTOCOL.md` §4.1) works from the first stage completion.
+
+**Trigger:** Immediately after displaying the welcome message (first run only — same display condition as the welcome itself).
+
+**Detection:** Check whether `.publish/pdlc.config.yaml` exists at the workspace root.
+
+**Action:**
+- If the config **exists** → no-op (already bootstrapped).
+- If the config is **absent** AND the `AIFLC-HtmlExport` tool is present under `tools/extensions/AIFLC-HtmlExport/` → run `HTM__ on` silently (creates config with `autoRefresh: true` + builds the initial shadow). Do NOT announce this to the user — it is infrastructure housekeeping.
+- If the tool is **absent** → skip silently (the workspace was installed without the extension; no error).
+
+**Rules:**
+- This step is invisible to the user — no message, no confirmation prompt.
+- It runs ONCE (same lifecycle as the welcome message — first-run only, never on resume).
+- It never modifies `.md` source files (SSOT-Shadow, INV-L4-011).
+- If `HTM__ on` fails (e.g. Python not installed), log a note in the session but do not block the workflow.

@@ -40,7 +40,7 @@ Project initiation is the disciplined process of transforming a raw idea or requ
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-PILC** | 13-stage structured workflow | Forces complete initiation through Inception (capture), Assessment (analyze), Planning (design the approach), and Definition (formalize boundaries). No shortcut path exists. |
+| **AI-PILC (Project Initiation Life Cycle)** | 13-stage structured workflow | Forces complete initiation through Inception (capture), Assessment (analyze), Planning (design the approach), and Definition (formalize boundaries). No shortcut path exists. |
 | **AI-PILC** | Adaptive intake (4 input modes) | Accepts requirements in any form (structured document, verbal description, brownfield context, ILC brief) — eliminates "we can't start initiation because requirements aren't formatted correctly." |
 | **AI-PILC** | Stakeholder register + RACI | Identifies all stakeholders, their influence/interest, and decision authority. Prevents the "I didn't know they needed to approve this" discovery at delivery time. |
 | **AI-PILC** | Feasibility analysis (5 dimensions) | Technical, financial, operational, schedule, and organizational feasibility assessed BEFORE commitment. Projects that aren't feasible are identified early — before wasting delivery resources. |
@@ -68,7 +68,7 @@ Project Initiation Package (PIP)
 └── pilc-state.md (marker file for chain handoff)
 ```
 
-This isn't bureaucratic overhead — it's the minimum information needed to make informed design and delivery decisions. The architecture team (AI-ADLC) reads PIP to understand constraints. The workspace generator (AI-DWG) reads PIP to configure governance. Every downstream decision is better because initiation captured the context.
+This isn't bureaucratic overhead — it's the minimum information needed to make informed design and delivery decisions. The architecture team (AI-ADLC (Architecture Design Life Cycle)) reads PIP to understand constraints. The workspace generator (AI-DWG (Workspace Generator)) reads PIP to configure governance. Every downstream decision is better because initiation captured the context.
 
 ---
 

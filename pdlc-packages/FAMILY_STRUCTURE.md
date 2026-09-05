@@ -8,7 +8,7 @@
 >
 > **Amendment (OI-158 — unified core placement):** cores + rule-details now install into ONE uniform home `.aiflc/{family}/` on every platform (superseding the earlier Kiro `.kiro/steering/{family}/` + `.kiro/{family}/` split); only the always-loaded orchestrator sits in each platform's native slot. See the "Installed Location" subsection in PART 1.
 >
-> **Amendment (OI-163 — single-copy fabric source):** the fabric engines **AI-FLO** and **AI-DFE** are no longer in-family dev-source folders. They exist as exactly ONE canonical engine copy in the build tree and are **cloned into the family at assemble** (stamped with the free-tier license set — INV-L4-007). PDLC therefore carries **no `ai-flo/` or `ai-dfe/` dev-source folder**; PART 1 now depicts them as cloned-at-assemble fabric, not built-here source. FLO/DFE remain valid family members — their chain contracts (PART 3) and runtime artifacts (PART 2) are unchanged.
+> **Amendment (OI-163 — single-copy fabric source):** the fabric engines **AI-FLO** (Flow Orchestrator) and **AI-DFE** (Data Fabric Engine) are no longer in-family dev-source folders. They exist as exactly ONE canonical engine copy in the build tree and are **cloned into the family at assemble** (stamped with the free-tier license set — INV-L4-007). PDLC therefore carries **no `ai-flo/` or `ai-dfe/` dev-source folder**; PART 1 now depicts them as cloned-at-assemble fabric, not built-here source. FLO/DFE remain valid family members — their chain contracts (PART 3) and runtime artifacts (PART 2) are unchanged.
 
 ---
 
@@ -30,7 +30,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -38,31 +38,31 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
-| Portfolio | **AI-ILC** ² | Interactive workflow (lifecycle) | Raw idea | Approved Idea Brief / Feature Brief |
-| Portfolio | **AI-PILC** | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
-| Portfolio | **AI-PPM** ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
+| Portfolio | **AI-ILC** (Idea Life Cycle) ² | Interactive workflow (lifecycle) | Raw idea | Approved Idea Brief / Feature Brief |
+| Portfolio | **AI-PILC** (Project Initiation Life Cycle) | Interactive workflow (lifecycle) | Raw requirement | Project Initiation Package (PIP) |
+| Portfolio | **AI-PPM** (Project Portfolio Management) ³ | Adaptive portfolio engine | Multiple PIPs + Approved Idea Briefs | Portfolio register + cross-project prioritization & governance |
 | Edge | **AI-FLO** ³ | Router / orchestration engine | Any package output marker | Routing decision + handoff to next package/layer |
-| Project | **AI-POLC** ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
-| Project | **AI-UXD** ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
-| Project | **AI-ADLC** | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
-| Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
-| Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
-| Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-POLC** (Product Ownership Life Cycle) ³ | Interactive workflow (lifecycle) | PIP | Product Backlog Package (PBP) |
+| Project | **AI-UXD** (UX Design) ³ | Interactive workflow (lifecycle) | PIP + PBP | UX Design Package (UXP): personas/journeys, IA, user flows, design system + tokens, accessibility baseline |
+| Project | **AI-ADLC** (Architecture Design Life Cycle) | Interactive workflow (lifecycle) | PIP + PBP + UXP | Architecture Package (AP) |
+| Project | **AI-DWG** (Workspace Generator) | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
+| Project | **AI-GCE** (Governance & Compliance Engine) | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
+| Project | **AI-TGE** (Test Governance Engine) | Test governance engine | DW / build artifacts | Test governance & quality layer |
+| Project | **AI-DLC** (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 > **AI-DWG Input semantics (peer-input model, OI-069 / decision 0.2 — 2026-06-15c):** The `AP + PBP + UXP` cell lists AI-DWG's three **peer inputs** (AP = AI-ADLC, PBP = AI-POLC, UXP = AI-UXD). It does **not** mean all three are required. AI-DWG accepts **any non-empty subset (≥1 of the three)** and generates only the output clusters whose input is present; absent inputs trigger a quality-impact disclosure + user approval (per `DWG_CONVERGENCE_DESIGN.md` Law 1). The cell text is kept **verbatim** as a compact input list — this note carries the semantics so no per-file table change/propagation is required.
 
@@ -290,7 +290,7 @@ The Layer-3 orchestrator (deployed with full companion routing rows by DWG) rout
 > | AI-UXD docs (`ux-design/`) | `[hyb]` | Team owns and edits; `uxd-state.md` is `[marker]` |
 > | AI-POLC docs (`product-backlog/`) | `[hyb]` | Team owns and edits; `polc-state.md` is `[marker]` |
 > | AI-DWG steering (`.kiro/steering/*.md`) | `[hyb]` | Living team docs; `workspace-rules.md` is `[marker]` |
-> | AI-DWG AI-DLC v1 inputs (`vision.md`, `technical-environment.md`, …) | `[hyb]` | Assembled from peers; platform-independent |
+> | AI-DWG AI-DLC inputs (`vision.md`, `technical-environment.md`, …) | `[hyb]` | Assembled from peers; platform-independent |
 > | AI-DWG config (`.editorconfig`, `docker-compose.yml`, …) | `[gen]` | Regenerated; ecosystem-standard names |
 > | AI-GCE hooks (`.kiro/hooks/*.kiro.hook`) | `[tool]` | Folder boundary; carry `generatedBy` |
 > | AI-GCE agents + governance docs (`.governance/`) | `[gen]` | Process agents + manual + registry; `<!-- custom -->` preserved |
@@ -401,6 +401,8 @@ A workspace holds **many projects**. Every per-project producer nests its output
 
 AI-DWG composes the workspace from whichever **peers** are present — `{ADLC}`, `{POLC}`, `{UXD}`, or any combination (≥1). Each input owns a **distinct output cluster**; an absent input simply skips its cluster (with quality-impact disclosure + user approval). `workspace-rules.md` is always produced as the marker. The dev workspace is generated at `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/` and **opened separately** in its own Kiro IDE to build; the per-project spine is **carried forward** into it (Option A).
 
+> **Opt-in per-team workspace set (Config Gate Q4 — default is a single workspace).** When the AI-ADLC `team-topologies` extension is active and the team chooses a per-team topology at DWG's Config Gate Q4, AI-DWG generates a **workspace set** instead of one workspace: a **Layer-2 control plane** at `pdlc-ws/projects/PRJ-…/{slug}-management/` (set-manifest + authoritative contract registry + cross-workspace roll-up) plus **N clean Layer-3 per-team workspaces** at `{slug}-workspaces/{team}/` (each the same single-workspace shape, scoped to one team, + `TEAM_CHARTER.md`). The split is **team-granular, never per-service** (a team owns 1..N services as modules within its workspace). This is fully opt-in and backward-compatible — the default remains the single `{slug}-workspace/` shown below. Full model: `TEAM_TOPOLOGY_WORKSPACES_DESIGN.md` (developer-side design) → materialized in `ai-dwg-rule-details/flows/workspace-set-control-plane.md`.
+
 ```
 {slug}-workspace/                   ← 📦 AI-DWG OUTPUT — IS the workspace (at pdlc-ws/projects/PRJ-…/{slug}-workspace/; opened separately)
 │
@@ -413,9 +415,9 @@ AI-DWG composes the workspace from whichever **peers** are present — `{ADLC}`,
 │   ├── frontend-standards.md                       ← IF UXD or ADLC-UI
 │   └── [conditional steering]                      ← multi-tenancy, api-versioning, resilience, tracing, event-sourcing, feature-flags …
 │
-├── vision.md                                       ← IF POLC (+ UXD personas/journeys)        → AI-DLC v1 Vision Document
-├── technical-environment.md                        ← IF ADLC (+ UXD frontend patterns)        → AI-DLC v1 Technical Environment Document
-├── ui-implementation-spec.md                       ← IF UXD                                    → AI-DLC v1 UI codegen input
+├── vision.md                                       ← IF POLC (+ UXD personas/journeys)        → AI-DLC Vision Document
+├── technical-environment.md                        ← IF ADLC (+ UXD frontend patterns)        → AI-DLC Technical Environment Document
+├── ui-implementation-spec.md                       ← IF UXD                                    → AI-DLC UI codegen input
 ├── aidlc-rules/extensions/                         ← IF ADLC security + UXD a11y (+ testing ext: from TGE if active, else DWG)
 │
 ├── DEFINITION_OF_DONE.md                           ← IF POLC (or ADLC quality attributes)
@@ -432,7 +434,7 @@ AI-DWG composes the workspace from whichever **peers** are present — `{ADLC}`,
 
 ### AI-GCE + AI-TGE outputs — continuous companions (layer on top of the workspace)
 
-Both run **alongside AI-DLC v1** (not as forward chain stages). They consume the DW and re-derive when the workspace updates.
+Both run **alongside AI-DLC** (not as forward chain stages). They consume the DW and re-derive when the workspace updates.
 
 ```
 {workspace-root}/
@@ -466,7 +468,7 @@ Both run **alongside AI-DLC v1** (not as forward chain stages). They consume the
    AI-ILC ⇢ AI-PILC ⇢ AI-PPM  ───(dispatch DA-*)──►  AI-FLO  ──(sequential)──►  AI-POLC ──► AI-UXD ──► AI-ADLC ──► AI-DWG
    (briefs)  (PIP)   (register)        ▲             (router)                                                          │
                                        │                │                                                              ▼
-                                       └──(roll-up status, project status UP)                                     DW ──►  AI-DLC v1 (build) ──► Working software
+                                       └──(roll-up status, project status UP)                                     DW ──►  AI-DLC (build) ──► Working software
                                                         │                                                              ▲  │  ▲
                                                         └──────────────────────────────────────────────────────────────┘  │  └── runtime feedback
                                                                                                                           │        ⇣ ⇣
@@ -474,7 +476,7 @@ Both run **alongside AI-DLC v1** (not as forward chain stages). They consume the
                                                                                                                          (revise → DWG Mode 2)
 ```
 
-Cross-layer hops are carried by **AI-FLO** (the router); same-layer exchanges are **direct marker reads**. The Project-layer design chain runs **sequentially** (AI-POLC → AI-UXD → AI-ADLC → AI-DWG) — each package feeds the next. Bidirectional flows: AI-FLO relays project status **up** to AI-PPM; AI-DLC v1 runtime feedback flows **back** to AI-UXD + AI-POLC; AI-POLC ⇄ AI-DLC v1 exchange backlog/acceptance throughout delivery; an upstream-peer revision loops back through **AI-DWG Mode 2** (reconcile). **Feedback loops** (same-layer, no AI-FLO): ADLC loops cost/risk back to POLC and constraints back to UXD — these are non-destructive re-entry triggers that refine without changing the forward sequence. AI-DWG validates **all three inputs present** (guaranteed by the sequential model; fewer = brownfield user-approved exception).
+Cross-layer hops are carried by **AI-FLO** (the router); same-layer exchanges are **direct marker reads**. The Project-layer design chain runs **sequentially** (AI-POLC → AI-UXD → AI-ADLC → AI-DWG) — each package feeds the next. Bidirectional flows: AI-FLO relays project status **up** to AI-PPM; AI-DLC runtime feedback flows **back** to AI-UXD + AI-POLC; AI-POLC ⇄ AI-DLC exchange backlog/acceptance throughout delivery; an upstream-peer revision loops back through **AI-DWG Mode 2** (reconcile). **Feedback loops** (same-layer, no AI-FLO): ADLC loops cost/risk back to POLC and constraints back to UXD — these are non-destructive re-entry triggers that refine without changing the forward sequence. AI-DWG validates **all three inputs present** (guaranteed by the sequential model; fewer = brownfield user-approved exception).
 
 ### Input/Output Contract Summary
 
@@ -508,7 +510,7 @@ Each package works **standalone** (the user is the orchestrator when AI-FLO is a
 | **AI-POLC** | Product brief, existing backlog | PIP / AP (+ AI-UXD personas/journeys) |
 | **AI-DWG** | Any one structured package (AP, PBP, or UXP) | Peer set {AP, PBP, UXP} from the Project layer |
 | **AI-GCE** | Any workspace with `.kiro/steering/` files | DW from AI-DWG |
-| **AI-TGE** | Any AP and/or codebase with tests | DW from AI-DWG + AI-DLC v1 state |
+| **AI-TGE** | Any AP and/or codebase with tests | DW from AI-DWG + AI-DLC state |
 
 ---
 
@@ -675,7 +677,7 @@ Each package is **contract-aware** — it knows what its predecessor(s) produce 
 │    -compliance rule)                                          │
 │  TRACEABILITY: reads/persists projectId + derivedFrom        │
 │  GOVERNANCE AGENT: ux-consistency-agent (UXC__)              │
-│  RECEIVES: AI-DLC v1 runtime usability/accessibility feedback   │
+│  RECEIVES: AI-DLC runtime usability/accessibility feedback   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -697,8 +699,8 @@ Each package is **contract-aware** — it knows what its predecessor(s) produce 
 │  TRACEABILITY: reads/persists projectId + derivedFrom        │
 │  GOVERNANCE AGENT: backlog-health-agent (BLH__)              │
 │    [POLC-AG-01]                                              │
-│  EXCHANGE: AI-POLC ⇄ AI-DLC v1 backlog/acceptance throughout    │
-│    delivery; receives AI-DLC v1 runtime feedback                 │
+│  EXCHANGE: AI-POLC ⇄ AI-DLC backlog/acceptance throughout    │
+│    delivery; receives AI-DLC runtime feedback                 │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -724,7 +726,7 @@ Each package is **contract-aware** — it knows what its predecessor(s) produce 
 │   silent, degradation). Peer conflict = anomaly → DWG gives  │
 │   root-cause analysis; user resolves upstream or via ADR.    │
 │                                                              │
-│  PRODUCES: Development Workspace (DW) + AI-DLC v1 inputs         │
+│  PRODUCES: Development Workspace (DW) + AI-DLC inputs         │
 │    (vision.md, technical-environment.md,                     │
 │     ui-implementation-spec.md, aidlc-rules/extensions/)      │
 │  MARKER (output):.kiro/steering/workspace-rules.md          │
@@ -767,7 +769,7 @@ Each package is **contract-aware** — it knows what its predecessor(s) produce 
 │    (CHECK/EXCEPTION/REMEDIATION/AUDIT/REDERIVATION)           │
 │  GOVERNANCE AGENTS: 8-agent compliance suite (GCE-AG-01..08) │
 │                                                              │
-│  COMPANION: runs ALONGSIDE AI-DLC v1 (not a forward stage);     │
+│  COMPANION: runs ALONGSIDE AI-DLC (not a forward stage);     │
 │    RE-DERIVES selectively when the workspace updates.        │
 │  ENFORCE end of the ADLC → DWG → GCE relay (file ownership). │
 └─────────────────────────────────────────────────────────────┘
@@ -779,7 +781,7 @@ Each package is **contract-aware** — it knows what its predecessor(s) produce 
 ┌─────────────────────────────────────────────────────────────┐
 │  AI-TGE  (Project layer · test governance engine · companion)│
 ├─────────────────────────────────────────────────────────────┤
-│  READS:  AP (AI-ADLC) + DW (AI-DWG) + aidlc-docs (AI-DLC v1     │
+│  READS:  AP (AI-ADLC) + DW (AI-DWG) + aidlc-docs (AI-DLC     │
 │    state). Reads adlc-state.md directly (feedback loop)    │
 │    AND workspace-rules.md + aidlc-docs/aidlc-state.md.        │
 │  MARKER (input):.kiro/steering/workspace-rules.md           │
@@ -795,7 +797,7 @@ Each package is **contract-aware** — it knows what its predecessor(s) produce 
 │  GOVERNANCE AGENTS: test-governance-agent (TGV__) +          │
 │    coverage-review-agent (CVR__)  [TGE-AG-01 / TGE-AG-02]    │
 │                                                              │
-│  COMPANION: runs ALONGSIDE AI-DLC v1; Stage 10 (architecture-   │
+│  COMPANION: runs ALONGSIDE AI-DLC; Stage 10 (architecture-   │
 │    reconciliation) mirrors DWG Mode 2 on the test side.      │
 │  GOVERNS discipline only — never writes or runs test code.   │
 └─────────────────────────────────────────────────────────────┘
@@ -831,9 +833,9 @@ Each package is **contract-aware** — it knows what its predecessor(s) produce 
 - **Sequential Project-layer chain:** AI-PILC routes to AI-PPM (register · authorize), which dispatches to AI-POLC via AI-FLO. The Project-layer chain is **sequential: AI-POLC → AI-UXD → AI-ADLC → AI-DWG**. Each package feeds the next. By the time AI-ADLC completes (the terminal predecessor), all three inputs (PBP, UXP, AP) are guaranteed present for AI-DWG. For brownfield/partial scenarios (package skipped via profile), proceeding with fewer is a user-approved exception. If AI-PPM is absent, PILC degrades to AI-POLC directly.
 - **Feedback loops (same-layer, direct — pre-build refinement):** AI-ADLC loops cost/risk bands back to AI-POLC (re-prioritization trigger) and architecture constraints back to AI-UXD (adjust flows). AI-UXD personas/journeys feed back to AI-POLC (backlog refinement). These are non-destructive re-entry triggers that refine without changing the forward sequence. Exchange is via direct peer marker reads (no AI-FLO — same layer). A peer-state change after work exists triggers a non-destructive reconciliation review.
 - **Portfolio roll-up (up):** AI-FLO relays project status UP to AI-PPM; AI-PPM dispatches authorization DOWN via AI-FLO.
-- **Runtime feedback (back):** AI-DLC v1 runtime feedback flows back to **AI-UXD** + **AI-POLC**; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery.
+- **Runtime feedback (back):** AI-DLC runtime feedback flows back to **AI-UXD** + **AI-POLC**; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery.
 - **Reconciliation loop (hinge):** when an upstream peer revises (often due to downstream feedback), the change loops back into the workspace through **AI-DWG Mode 2 (reconcile)**.
-- **Continuous companions:** **AI-GCE** + **AI-TGE** run alongside AI-DLC v1 (not as sequential forward stages) and re-derive when the workspace updates.
+- **Continuous companions:** **AI-GCE** + **AI-TGE** run alongside AI-DLC (not as sequential forward stages) and re-derive when the workspace updates.
 
 **Standalone principle (unchanged):** every package still works alone. When AI-FLO is absent, the **user is the orchestrator** — cross-layer coordination degrades to manual handoff, while same-layer marker detection works regardless. AI-FLO is additive coordination, never a single point of failure.
 
@@ -843,7 +845,7 @@ Each package is **contract-aware** — it knows what its predecessor(s) produce 
 
 ## PART 5: Reconciliation & Signal Flow
 
-AI-DWG is the **hinge** of the family's change loop: it runs **forward (Mode 1: generate)** from the present peers, and **reverse-triggered (Mode 2: reconcile)** when an upstream peer revises — typically because AI-DLC v1 runtime feedback flowed back to AI-UXD or AI-POLC (or a tech lesson reached AI-ADLC). When the workspace updates, **AI-GCE and AI-TGE both re-derive** the affected hooks/rules and test register.
+AI-DWG is the **hinge** of the family's change loop: it runs **forward (Mode 1: generate)** from the present peers, and **reverse-triggered (Mode 2: reconcile)** when an upstream peer revises — typically because AI-DLC runtime feedback flowed back to AI-UXD or AI-POLC (or a tech lesson reached AI-ADLC). When the workspace updates, **AI-GCE and AI-TGE both re-derive** the affected hooks/rules and test register.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────┐
@@ -864,7 +866,7 @@ AI-DWG is the **hinge** of the family's change loop: it runs **forward (Mode 1: 
 │                      │  steering / vision / tech-env / design-system     │   │
 │                      ▼  updated                                          │   │
 │             ┌─────────────────┐                                          │   │
-│             │   DW (workspace)│ ───►  AI-DLC v1 (build) ────────────────────┘   │
+│             │   DW (workspace)│ ───►  AI-DLC (build) ────────────────────┘   │
 │             └────────┬────────┘                                              │
 │                      │  workspace-generated | steering-files-updated         │
 │         ┌────────────┴────────────┐                                          │
@@ -878,7 +880,7 @@ AI-DWG is the **hinge** of the family's change loop: it runs **forward (Mode 1: 
 └────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Directionality rule:** the only feedback that crosses back *through AI-DWG* is an **upstream-peer revision (Mode 2)**. AI-DLC v1's internal loops stay inside `aidlc-docs/`; GCE/TGE findings can *trigger* a human upstream revision but never *author* upstream content.
+**Directionality rule:** the only feedback that crosses back *through AI-DWG* is an **upstream-peer revision (Mode 2)**. AI-DLC's internal loops stay inside `aidlc-docs/`; GCE/TGE findings can *trigger* a human upstream revision but never *author* upstream content.
 
 ---
 

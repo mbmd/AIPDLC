@@ -1,6 +1,6 @@
 # How to Handle Architecture Changes Mid-Project
 
-**Purpose:** Practical guide for managing architecture changes AFTER the initial design is complete and development is underway — how the AI-* Family's reconciliation pipeline propagates changes through AI-ADLC → AI-DWG → AI-GCE without disrupting active delivery.
+**Purpose:** Practical guide for managing architecture changes AFTER the initial design is complete and development is underway — how the AI-* Family's reconciliation pipeline propagates changes through AI-ADLC (Architecture Design Life Cycle) → AI-DWG (Workspace Generator) → AI-GCE (Governance & Compliance Engine) without disrupting active delivery.
 
 ---
 
@@ -26,7 +26,7 @@ ARCHITECTURE DECISION CHANGED
     └── AI-GCE rules need re-deriving (enforcement matches new architecture)
             │
             ▼
-        AI-DLC v1 development continues (with updated governance)
+        AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) development continues (with updated governance)
 ```
 
 A code change affects one file. An architecture change affects the entire enforcement chain. The AI-* Family handles this through coordinated reconciliation — not manual file-by-file updates.

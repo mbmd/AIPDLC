@@ -1,6 +1,6 @@
-# How AI-TGE Test Governance Works
+# How AI-TGE (Test Governance Engine) Test Governance Works
 
-**Purpose:** Explains how AI-TGE's hybrid engine derives test requirements from architecture, maps them to a structured register, observes AI-DLC v1 execution for coverage, and scores test debt risk — governing WHAT must be tested without writing test code.
+**Purpose:** Explains how AI-TGE's hybrid engine derives test requirements from architecture, maps them to a structured register, observes AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) execution for coverage, and scores test debt risk — governing WHAT must be tested without writing test code.
 
 ---
 
@@ -8,13 +8,13 @@
 
 AI-TGE is a hybrid test governance engine with two operational phases:
 1. **Strategy Phase** — derive what tests MUST exist based on architectural commitments
-2. **Observation Phase** — track what actually gets tested during AI-DLC v1 execution
+2. **Observation Phase** — track what actually gets tested during AI-DLC execution
 
 It answers: "Given what we designed, what MUST be tested? Is it being tested? What's the risk of gaps?"
 
 ```
-ARCHITECTURE PACKAGE (from AI-ADLC)
-+ DEVELOPMENT WORKSPACE (from AI-DWG)
+ARCHITECTURE PACKAGE (from AI-ADLC (Architecture Design Life Cycle))
++ DEVELOPMENT WORKSPACE (from AI-DWG (Workspace Generator))
         │
         ▼
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -26,7 +26,7 @@ ARCHITECTURE PACKAGE (from AI-ADLC)
         ▼
 TEST STRATEGY + TEST REGISTER (what MUST be tested)
         │
-        ▼ (during AI-DLC v1 delivery)
+        ▼ (during AI-DLC delivery)
 ┌─────────────────────────────────────────────────────────────────────┐
 │  AI-TGE OBSERVATION PHASE (Stages 7-12)                              │
 │                                                                      │
@@ -43,7 +43,7 @@ COVERAGE REPORTS + DEBT SCORECARD + DEFECT LOG
 
 ## The Two-Source Model
 
-Like AI-GCE, AI-TGE derives requirements from two sources:
+Like AI-GCE (Governance & Compliance Engine), AI-TGE derives requirements from two sources:
 
 ### Source 1: Architecture-Derived (from AP)
 
@@ -100,10 +100,10 @@ Each entry is classified on three ISTQB dimensions:
 
 | Mode | Input Available | Behavior |
 |------|----------------|----------|
-| **Full Chain** | AP + DW + AI-DLC v1 state | Full derivation + continuous observation |
+| **Full Chain** | AP + DW + AI-DLC state | Full derivation + continuous observation |
 | **Architecture Only** | AP only (no workspace yet) | Derive test strategy pre-implementation |
 | **Brownfield** | Existing workspace + existing tests | Scan existing tests, map against requirements, find gaps |
-| **Observation Only** | Active AI-DLC v1 session | Track what's being tested in real-time, flag gaps |
+| **Observation Only** | Active AI-DLC session | Track what's being tested in real-time, flag gaps |
 
 Mode is auto-detected based on what's available — no manual configuration needed.
 
@@ -112,7 +112,7 @@ Mode is auto-detected based on what's available — no manual configuration need
 ## Strategy Phase (Stages 1-6)
 
 ### Stage 1: Workspace Detection
-- Detect AP (`adlc-state.md`), DW (`.kiro/steering/workspace-rules.md`), AI-DLC v1 state
+- Detect AP (`adlc-state.md`), DW (`.kiro/steering/workspace-rules.md`), AI-DLC state
 - Determine operating mode based on what's found
 - Read depth level from predecessor state
 
@@ -155,14 +155,14 @@ Score each gap using four factors (1-5 each):
 
 ## Observation Phase (Stages 7-12)
 
-Runs continuously alongside AI-DLC v1 delivery:
+Runs continuously alongside AI-DLC delivery:
 
 ### Stage 7: State Observation
-- Monitor AI-DLC v1 session artifacts (specs, code, tests produced)
+- Monitor AI-DLC session artifacts (specs, code, tests produced)
 - Detect when new tests are written
 
 ### Stage 8: Story Acceptance Mapping
-- When AI-DLC v1 implements a story, map its acceptance criteria to register entries
+- When AI-DLC implements a story, map its acceptance criteria to register entries
 - Update coverage status (Gap → Covered when test confirmed)
 
 ### Stage 9: Coverage Reporting
@@ -192,7 +192,7 @@ AI-TGE tells you:
 - ✅ "TR-004 requires an integration test for event immutability — currently a Gap with Critical risk"
 - ❌ It does NOT write the test
 
-The development team (via AI-DLC v1) writes tests. AI-TGE ensures the RIGHT tests get written for the RIGHT reasons, and tracks whether they actually exist.
+The development team (via AI-DLC) writes tests. AI-TGE ensures the RIGHT tests get written for the RIGHT reasons, and tracks whether they actually exist.
 
 ---
 

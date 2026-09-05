@@ -28,6 +28,9 @@ The following shortcuts invoke governance agents. Type the shortcut anywhere in 
 | `SQC__` | `steering-quality-agent` — Steering Quality Check | After editing any `rules/` file | 2 |
 | `CMG__` | `change-management-agent` — Change Management Gate | Before any release or deployment | 3 |
 | `DOD__` | `dod-gate-agent` — Definition of Done Gate | Before marking any task "complete" | 2 |
+| `DFT__` | `drift-detect-agent` — Drift Detection | Session end (automatic) and on demand | 1 |
+| `AIG__` | `ai-governance-agent` — AI Governance | **Only when AI-LENS is ON** — after AI-feature milestones, before AI-feature release | Lens |
+| `ATG__` | `automation-governance-agent` — Automation Governance | **Only when Automation-LENS is ON** — after automation milestones, before release | Lens |
 
 ### Shortcut Rules
 
@@ -46,6 +49,12 @@ The following shortcuts invoke governance agents. Type the shortcut anywhere in 
 7. **`CMG__` triggers Change Management.** When the user types `CMG__` anywhere in a prompt, invoke `.governance/agents/change-management-agent.md` and execute its full check pass. No clarification needed.
 
 8. **`DOD__` triggers Definition of Done.** When the user types `DOD__` anywhere in a prompt, invoke `.governance/agents/dod-gate-agent.md` and execute its full check pass. No clarification needed.
+
+9. **`DFT__` triggers Drift Detection.** When the user types `DFT__` anywhere in a prompt, invoke `.governance/agents/drift-detect-agent.md` and execute its drift-detection pass. Also runs automatically at session end (silent when clean). No clarification needed.
+
+10. **`AIG__` triggers AI Governance** *(present only when AI-LENS is ON)*. When the user types `AIG__` anywhere in a prompt, invoke `.governance/agents/aig-agent.md` and execute its AI-specific governance checks against the couriered `.ai-lens/manifest.json`. No clarification needed.
+
+11. **`ATG__` triggers Automation Governance** *(present only when Automation-LENS is ON)*. When the user types `ATG__` anywhere in a prompt, invoke `.governance/agents/atg-agent.md` and execute its automation-specific governance checks against the couriered `.automation-lens/manifest.json`. No clarification needed.
 
 ### Tier Availability Note
 

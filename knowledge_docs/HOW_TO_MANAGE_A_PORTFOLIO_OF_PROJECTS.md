@@ -1,6 +1,6 @@
 # How to Manage a Portfolio of Projects
 
-**Purpose:** Practical guide for using AI-PPM to govern MANY projects as one investment portfolio — registering projects, scoring strategic alignment, ranking them against each other, making admit/pause/retire decisions, dispatching authorizations down to execution, ingesting roll-up status, and keeping the whole portfolio healthy over time. This is the operational companion to the mechanics doc: it answers "I need to run a portfolio, how do I actually use this?"
+**Purpose:** Practical guide for using AI-PPM (Project Portfolio Management) to govern MANY projects as one investment portfolio — registering projects, scoring strategic alignment, ranking them against each other, making admit/pause/retire decisions, dispatching authorizations down to execution, ingesting roll-up status, and keeping the whole portfolio healthy over time. This is the operational companion to the mechanics doc: it answers "I need to run a portfolio, how do I actually use this?"
 
 ---
 
@@ -20,10 +20,10 @@ AI-PPM governs the SET. If your concern is one project's internals, a sibling pa
 | Is the portfolio healthy across the board? | **AI-PPM** |
 | Should we pause or retire something? | **AI-PPM** |
 | How is capacity split across all projects? | **AI-PPM** |
-| One project's charter, budget, feasibility | AI-PILC |
-| One project's architecture | AI-ADLC |
-| One project's backlog and priorities | AI-POLC |
-| One project's compliance / test posture | AI-GCE / AI-TGE |
+| One project's charter, budget, feasibility | AI-PILC (Project Initiation Life Cycle) |
+| One project's architecture | AI-ADLC (Architecture Design Life Cycle) |
+| One project's backlog and priorities | AI-POLC (Product Ownership Life Cycle) |
+| One project's compliance / test posture | AI-GCE (Governance & Compliance Engine) / AI-TGE (Test Governance Engine) |
 
 The rule of thumb: *one project's internals* → a sibling package. *The portfolio as a whole* → AI-PPM. AI-PPM never executes a project and never re-derives a single project's internal numbers — it reads downstream output and rolls it up.
 
@@ -35,11 +35,11 @@ The rule of thumb: *one project's internals* → a sibling package. *The portfol
 - AI-PPM installed in your AI workspace (see `ai-ppm/setup/INSTALL.md`)
 - Input — ANY of the following works:
   - PIPs from AI-PILC (ideal — one Project Initiation Package per initiated project, richest context)
-  - Approved Idea Briefs from AI-ILC (potential projects still in the funnel)
+  - Approved Idea Briefs from AI-ILC (Idea Life Cycle) (potential projects still in the funnel)
   - A manual project list (name, objective, rough budget, timeline, sponsor — you can start from zero)
 
 **You do NOT need:**
-- AI-FLO installed — without it, dispatch and roll-up use a manual fallback (covered below)
+- AI-FLO (Flow Orchestrator) installed — without it, dispatch and roll-up use a manual fallback (covered below)
 - Strategic objectives already written (AI-PPM elicits them at Stage 3)
 - A chosen prioritization model (you pick one at Stage 4)
 - Every project initiated — you can register potential projects from Idea Briefs and govern the pipeline
@@ -132,12 +132,12 @@ You don't march through all ten stages. You enter at the stage your trigger dema
 
 ## How Dispatch Reaches the Project Layer (via AI-FLO)
 
-The portfolio sits in the Portfolio layer; execution happens in the Project layer below. The two are deliberately decoupled — **everything crossing that boundary goes through AI-FLO.** AI-PPM never starts AI-ADLC, AI-POLC, or AI-UXD directly.
+The portfolio sits in the Portfolio layer; execution happens in the Project layer below. The two are deliberately decoupled — **everything crossing that boundary goes through AI-FLO.** AI-PPM never starts AI-ADLC, AI-POLC, or AI-UXD (UX Design) directly.
 
 ```
 AI-PPM  ──(Dispatch Authorization, keyed by projectId)──►  AI-FLO  ──►  Project layer
                                                                           (AI-ADLC / AI-UXD /
-                                                                           AI-POLC / AI-DWG / ...)
+                                                                           AI-POLC / AI-DWG (Workspace Generator) / ...)
 ```
 
 When you Admit a project at Stage 5 and authorize it at Stage 6, AI-PPM writes a Dispatch Authorization — project ID, authorization scope, priority rank, constraints (budget ceiling, deadline, team allocation), and which Project-layer packages to activate. AI-FLO reads that authorization and carries it across the boundary to start execution. You authorize *what* runs; FLO handles *routing it there*.

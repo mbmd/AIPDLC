@@ -17,6 +17,15 @@ ownership: hybrid
 
 ---
 
+## Ownership
+
+- **Owning Team:** {TEAM-slug — from the AI-ADLC team-context-registry when the team-topologies feature is active; else team name; else "unassigned"}
+- **Bounded Context:** {BC-slug — from the registry / DDD context map when present; else context name; else "n/a"}
+
+> **Derived, not elicited.** When an Architecture Package with the `team-topologies` extension is present, these are read from `team-context-registry.md` (the `TEAM-*` / `BC-*` identity). Otherwise populate from the DDD context map or MS-01 "one team per service" when available, or leave unassigned. These fields are what `strategy/team-domain-planning.md` reads to derive `team-epic-distribution.md` (by `TEAM-*`) and `domain-topology-map.md` (by `BC-*`), and what AI-DWG slices the per-team workspace on. Stories inherit their epic's `Owning Team` / `Bounded Context` (no per-story elicitation).
+
+---
+
 ## Description
 
 {2-3 sentences: what this epic delivers, why it matters, who benefits from it.}

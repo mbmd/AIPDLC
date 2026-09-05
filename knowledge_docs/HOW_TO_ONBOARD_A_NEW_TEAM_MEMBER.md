@@ -6,7 +6,7 @@
 
 ## Who This Is For
 
-Tech leads or team members welcoming a new developer to a project that already has AI-DWG workspace generation and AI-GCE governance active. You want the new person productive fast — with guardrails that teach rather than punish.
+Tech leads or team members welcoming a new developer to a project that already has AI-DWG (Workspace Generator) workspace generation and AI-GCE (Governance & Compliance Engine) governance active. You want the new person productive fast — with guardrails that teach rather than punish.
 
 ---
 

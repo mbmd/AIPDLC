@@ -1,4 +1,4 @@
-# EP-001: Core Ticketing Module
+# EP-001: Core Request Module
 
 ## Summary
 
@@ -12,43 +12,43 @@
 
 ## Description
 
-Build the foundational ticketing engine that handles ticket creation, assignment, status transitions, SLA tracking, and basic automation rules.
+Build the foundational request engine that handles request creation, assignment, status transitions, SLA tracking, and basic automation rules.
 
 ## Acceptance Criteria
 
-- Tickets can be created via portal, email, and API
+- Requests can be created via portal, email, and API
 - Auto-assignment based on category and availability
 - SLA timers start on creation, pause on "waiting" states
 - Full audit trail for all state transitions
-- Sub-ticket and linked-ticket support
+- Sub-request and linked-request support
 - Bulk operations (assign, close, escalate)
 
 ## Stories (12/18 complete)
 
-- [x] Ticket data model and persistence
-- [x] Create ticket flow (portal)
-- [x] Create ticket flow (email parsing)
+- [x] Request data model and persistence
+- [x] Create request flow (portal)
+- [x] Create request flow (email parsing)
 - [x] Assignment engine (round-robin + skills)
 - [x] Status transition state machine
 - [x] SLA timer service
 - [x] Notification on assignment
 - [x] Notification on SLA warning (80%)
-- [x] Ticket search and filtering
-- [x] Ticket detail view
+- [x] Request search and filtering
+- [x] Request detail view
 - [x] Comments and internal notes
 - [x] Attachment support
 - [ ] Bulk operations UI
-- [ ] Linked tickets
-- [ ] Sub-tickets
-- [ ] Ticket templates
+- [ ] Linked requests
+- [ ] Sub-requests
+- [ ] Request templates
 - [ ] Auto-escalation rules
 - [ ] SLA breach webhook
 
 ## Dependencies
 
-- Auth service (Azure AD) — resolved
+- Auth service (SSO) — resolved
 - Notification service — in progress
-- Search index (Elasticsearch) — ready
+- Search index — ready
 
 ---
 

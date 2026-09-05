@@ -27,7 +27,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -35,15 +35,15 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
-AI-GCE sits at the **end of the preparation chain**. It reads what AI-DWG encoded — architecture AND governance — and converts that intent into automated, continuous enforcement. A developer working inside AI-DLC v1 should never manually check project rules. AI-GCE ensures the workspace enforces them automatically.
+AI-GCE sits at the **end of the preparation chain**. It reads what AI-DWG encoded — architecture AND governance — and converts that intent into automated, continuous enforcement. A developer working inside AI-DLC should never manually check project rules. AI-GCE ensures the workspace enforces them automatically.
 
 ---
 
@@ -121,9 +121,9 @@ AI-GCE generates rules from TWO sources that combine:
 │  If silent: Category gets baseline-only rules                    │
 │  If contradicts baseline: Steering WINS                          │
 ├─────────────────────────────────────────────────────────────────┤
-│  SOURCE 2: BUILT-IN BASELINE (AI-DLC v1 methodology floor)          │
+│  SOURCE 2: BUILT-IN BASELINE (AI-DLC methodology floor)          │
 │  ─────────────────────────────────────────────────               │
-│  What: 10 universal rules that apply to ANY AI-DLC v1 project       │
+│  What: 10 universal rules that apply to ANY AI-DLC project       │
 │  Covers: Spec-before-code, never-vibe-code, author≠approver,    │
 │          no secrets, migration rollback, append-only log, etc.   │
 │  If steering enriches: Baseline PLUS steering-specific detail    │
@@ -346,3 +346,23 @@ flowchart LR
     S5 --> S6["State & Log"]
     S6 --> S7["Output"]
 ```
+
+---
+
+### Workflow-Discipline Checklist (per stage)
+
+**Before starting a stage:**
+- [ ] Have I loaded this stage's rule-detail file (not working from memory)?
+- [ ] Was the previous stage approved by the user?
+- [ ] Is this the next stage in order (or a user-directed jump)?
+- [ ] Do I understand this stage's inputs and expected output?
+
+**While executing:**
+- [ ] Does every element trace to a package file, template, or the user's input?
+- [ ] Am I using the package's templates rather than inventing a format?
+- [ ] Am I avoiding improvised procedures and "best-practice" filler?
+
+**After completing a stage:**
+- [ ] Does the output match the package template / spec?
+- [ ] Have I updated the state file?
+- [ ] Have I obtained explicit user approval before the next stage?

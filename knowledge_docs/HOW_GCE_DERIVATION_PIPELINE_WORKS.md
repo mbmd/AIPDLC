@@ -1,4 +1,4 @@
-# How the AI-GCE Derivation Pipeline Works
+# How the AI-GCE (Governance & Compliance Engine) Derivation Pipeline Works
 
 **Purpose:** Explains how AI-GCE reads a development workspace and derives a tailored compliance enforcement layer — the two-source model, four operating modes, three-tier progressive compliance, and how steering files become automated hooks and rules.
 
@@ -6,7 +6,7 @@
 
 ## What AI-GCE Does
 
-AI-GCE is an adaptive governance engine. It reads the development workspace produced by AI-DWG (or any workspace with `.kiro/steering/` files) and generates:
+AI-GCE is an adaptive governance engine. It reads the development workspace produced by AI-DWG (Workspace Generator) (or any workspace with `.kiro/steering/` files) and generates:
 - **Rules** (`.governance/rules/`) — numbered, binary-enforceable compliance rules
 - **Hooks** (`.kiro/hooks/`) — automated enforcement triggers that fire on IDE events
 - **Agents** (`.kiro/agents/`) — process governance agents triggered at workflow milestones
@@ -27,7 +27,7 @@ DEVELOPMENT WORKSPACE (from AI-DWG)
 │                                                                          │
 │  ┌──────────────────────────┐    ┌───────────────────────────────────┐  │
 │  │  SOURCE 1: Steering      │    │  SOURCE 2: Built-In Baseline      │  │
-│  │  (project-specific)      │    │  (AI-DLC v1 methodology floor)       │  │
+│  │  (project-specific)      │    │  (AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) methodology floor)       │  │
 │  │                          │    │                                    │  │
 │  │  Read .kiro/steering/*   │    │  10 universal rules that apply    │  │
 │  │  Derive tailored rules   │    │  to ANY project regardless of     │  │
@@ -67,7 +67,7 @@ The `.kiro/steering/` files + operational docs produced by AI-DWG. These are the
 
 ### Source 2: Built-In Governance Baseline (Universal)
 
-Ten methodology constants that apply to ANY AI-DLC v1 project regardless of steering content:
+Ten methodology constants that apply to ANY AI-DLC project regardless of steering content:
 
 | Baseline Rule | Category | Always Enforced |
 |--------------|----------|:---------------:|

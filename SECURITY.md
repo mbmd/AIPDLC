@@ -34,7 +34,7 @@ This policy covers:
 This policy does NOT cover:
 - Issues in AI model behavior (report those to the AI platform provider)
 - Issues in user-generated content produced by running the packages
-- Issues in third-party dependencies (AI-DLC v1, IDE extensions)
+- Issues in third-party dependencies (AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle), IDE extensions)
 
 ### Severity Levels
 
@@ -61,7 +61,7 @@ This policy does NOT cover:
 The AI-* Family packages follow these security principles:
 
 1. **No secrets in packages.** Packages contain only process logic — never credentials, tokens, or environment-specific values.
-2. **Prescriptive security guidance.** AI-GCE generates security-specific steering files and hooks derived from the architecture's security decisions.
+2. **Prescriptive security guidance.** AI-GCE (Governance & Compliance Engine) generates security-specific steering files and hooks derived from the architecture's security decisions.
 3. **Least privilege in hooks.** Generated hooks use the narrowest file patterns possible — never `*.*`.
 4. **Non-destructive operations.** No package auto-applies changes. All modifications require user approval at gates.
 5. **Audit trail.** AI-GCE's compliance log provides a JSONL record of every governance action.

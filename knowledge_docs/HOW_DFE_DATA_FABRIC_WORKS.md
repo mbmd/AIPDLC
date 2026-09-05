@@ -1,4 +1,4 @@
-# How AI-DFE Data Fabric Works
+# How AI-DFE (Data Fabric Engine) Data Fabric Works
 
 **Purpose:** Explains how AI-DFE turns the scattered markdown outputs every AI-* package produces into a single, governed, machine-readable data surface — gathering sources, shaping them per consumer need, and distributing clean JSON to one read-point — so dashboards, extensions, and reports get trustworthy data without ever knowing where the raw files live.
 
@@ -13,8 +13,8 @@ AI-DFE removes that coupling. It reads each package's declared output, projects 
 It answers: "Where is the clean, current, validated version of everything the family has produced — in a form a tool can read?"
 
 ```
-   PACKAGE OUTPUTS (scattered markdown, many folders under {family}-ws/)
-   AI-PILC · AI-POLC · AI-UXD · AI-ADLC · AI-DWG · AI-PPM · …
+   PACKAGE OUTPUTS (scattered markdown, many folders)
+   AI-PILC (Project Initiation Life Cycle) · AI-POLC (Product Ownership Life Cycle) · AI-UXD (UX Design) · AI-ADLC (Architecture Design Life Cycle) · AI-DWG (Workspace Generator) · AI-PPM (Project Portfolio Management) · …
         │
         ▼
 ┌──────────────────────────────────────────────────────────────────┐
@@ -27,13 +27,10 @@ It answers: "Where is the clean, current, validated version of everything the fa
 └──────────────────────────────────────────────────────────────────┘
         │
         ▼
-   {family}-ws/data/   ← one governed read-point (e.g. pdlc-ws/data/)
+   {family}-ws/data/   ← one governed read-point
         │
         ▼
-   CONSUMERS — read via REGISTRY.json
-   ├── AIFLC-PDLC-Dashboard extension (reads per-package + portfolio JSON)
-   ├── AIFLC-CommandBoard extension (reads trigger/key data)
-   └── Any custom consumer that registers a demand declaration
+   CONSUMERS (dashboards, extensions, reports) — read via REGISTRY.json
 ```
 
 **Hard boundary:** AI-DFE gathers and shapes; it never decides structure and never places files for other packages. It navigates to where each package *says* its output lives, reads it, and writes only its own data surface. It is not a link in the chain — like the flow router, it runs *alongside* the whole family as a continuous engine.
@@ -119,24 +116,13 @@ Consumers are **discovered, not assumed** — AI-DFE finds them by their demand 
 
 A missing or not-yet-run package never causes an error. It becomes a `null`-filled `{pkg}-data.json` marked `status: not-run`, and the pass continues. This means AI-DFE produces a valid, useful surface even in a half-built workspace — you get data for the nine packages that ran, with clean nulls for the one that didn't, rather than a failed run.
 
-The installer bootstraps an **empty but valid** data folder at `{family}-ws/data/`:
-
-```
-{family}-ws/data/
-├── REGISTRY.json          ← consumer lookup index (rebuilt on every DFE write)
-├── CONSUMER_REGISTRY.md   ← registered consumers (installer auto-populates from demand declarations)
-├── dfe-state.md           ← AI-DFE engine state marker
-├── demands/               ← consumer demand declarations (*.demand.md)
-└── history/               ← timestamped snapshots (retention-managed)
-```
-
-`CONSUMER_REGISTRY.md` is populated by the installer at install time: it scans tools for `data-demand/*.demand.md` files and registers each consumer. AI-DFE also self-heals by discovering unregistered consumers during its Configure phase.
+The installer bootstraps an **empty but valid** data folder. It fills on the first data operation.
 
 ---
 
 ## Operating It: Commands and Modes
 
-AI-DFE runs in three interaction modes, activated by the explicit key `_DFE_` or by data-fabric requests:
+AI-DFE runs in three interaction modes, activated by the explicit key `_DFE_` (activate Data Fabric) or by data-fabric requests:
 
 - **Operation mode** — does work and may write the data folder (gather, shape, distribute, discover, aggregate, cleanup).
 - **Report mode** — reads and reports, never writes (status/freshness and the integrity agent).
@@ -152,7 +138,7 @@ AI-DFE runs in three interaction modes, activated by the explicit key `_DFE_` or
 | `DAT__ validate` | report | Dry-run schema check over existing files without regenerating |
 | `DAT__ cleanup --before {ts}` | history only | Prune old snapshots |
 
-Two report-only agents support the engine: a **health check** (`DHC__`) that answers "can the fabric run in this workspace?" (run it first in a new workspace), and an **integrity agent** (`DFA__`) that runs a deep, multi-category assessment of the surface. Rule of thumb: `DAT__` changes things; `DHC__` and `DFA__` only look.
+Two report-only agents support the engine: a **health check** (`DHC__` (health check)) that answers "can the fabric run in this workspace?" (run it first in a new workspace), and an **integrity agent** (`DFA__` (data audit)) that runs a deep, multi-category assessment of the surface. Rule of thumb: `DAT__` (data operations) changes things; `DHC__` and `DFA__` only look.
 
 ---
 
@@ -175,14 +161,12 @@ Two report-only agents support the engine: a **health check** (`DHC__`) that ans
 | Document | Location |
 |----------|----------|
 | How to Use the Dashboard | `knowledge_docs/HOW_TO_USE_THE_DASHBOARD.md` |
-| How to Run the Data Fabric | `knowledge_docs/HOW_TO_RUN_THE_DATA_FABRIC.md` |
 | How the Communication Fabric Works | `knowledge_docs/HOW_COMMUNICATION_FABRIC_WORKS.md` |
 | How State Files Work | `knowledge_docs/HOW_STATE_FILES_WORK.md` |
 | How Chain Handoff Works | `knowledge_docs/HOW_CHAIN_HANDOFF_WORKS.md` |
-| How Package Installation Works | `knowledge_docs/HOW_PACKAGE_INSTALLATION_WORKS.md` |
 | Pattern: Marker File Detection | `knowledge_docs/PATTERN_MARKER_FILE_DETECTION.md` |
 | Pattern: Graceful Standalone | `knowledge_docs/PATTERN_GRACEFUL_STANDALONE.md` |
 
 ---
 
-*Knowledge Document | Created: 2026-07-05 | Updated: 2026-08-10 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-07-05 | Updated: 2026-07-05 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

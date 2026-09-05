@@ -24,7 +24,7 @@ During THIS activity, ALSO adopt the mindset of a **Workspace Architect**. This 
 ### Anti-Patterns for This Activity
 - Do NOT invent modules beyond what C4 L3 defines — folder structure = C4 L3, no more, no less
 - Do NOT add internal layers (domain/, infrastructure/) unless the AP explicitly defines them
-- Do NOT generate code files — AI-DWG creates structure only; code is AI-DLC v1's responsibility
+- Do NOT generate code files — AI-DWG creates structure only; code is AI-DLC's responsibility
 
 ### Quality Check
 A good output from this activity sounds like:
@@ -156,7 +156,7 @@ src/
 ### What Gets Created
 
 For each module folder, create:
-- The folder itself (empty — code is AI-DLC v1's job)
+- The folder itself (empty — code is AI-DLC's job)
 - A `.gitkeep` file (so empty folders are tracked in git)
 - NO code files — AI-DWG generates structure, not code
 
@@ -362,7 +362,7 @@ When a new module is needed during development:
 ## Key Rules for This Mapping
 
 1. **Folder structure = C4 L3 — no more, no less.** Don't invent modules; don't omit modules.
-2. **Empty folders are fine.** AI-DWG creates structure; AI-DLC v1 writes code. Folders with only `.gitkeep` are expected.
+2. **Empty folders are fine.** AI-DWG creates structure; AI-DLC writes code. Folders with only `.gitkeep` are expected.
 3. **Dependency rules are BLOCKING.** They become enforceable constraints for AI-GCE.
 4. **Layer rules only if AP specifies them.** If C4 L3 doesn't define internal structure, use Pattern C (flat modules).
 5. **CODEOWNERS uses placeholders** if AP doesn't specify teams. Comment with `# TODO: Assign team ownership`.

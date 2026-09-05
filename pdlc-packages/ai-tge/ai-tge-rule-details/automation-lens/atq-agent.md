@@ -1,6 +1,7 @@
 # AIFLC Automation Quality — Agent Template
 
 > **Trigger:** `ATQ__` (manual invocation)
+> **AG-ID:** TGE-AG-04
 > **Owner:** AI-TGE
 > **Type:** Audit
 > **Core impact:** None — the TGE core stays concern-agnostic. This agent is seeded into the Layer-3 workspace by AI-DWG and dispatched by TGE's existing Command Dispatch.
@@ -9,9 +10,9 @@
 
 ## Purpose
 
-Verify automated-feature quality and correctness, using the couriered automation-feature context from `{slug}-workspace/.automation-lens/manifest.json`. Writes results into `.tge/`.
+Verify automated-feature quality and correctness, using the couriered automation-feature context from `{slug}-workspace/.automation-lens/manifest.json`. Writes results into `.governance/test/`.
 
-This is the **quality half** of the govern+verify bracket around the (un-lensed) builder. It tests that automated features meet their acceptance criteria and — critically — that the reliability and loop guards the architecture designed actually work. Runs across any build engine (AI-DLC v1, spec-driven, freestyle).
+This is the **quality half** of the govern+verify bracket around the (un-lensed) builder. It tests that automated features meet their acceptance criteria and — critically — that the reliability and loop guards the architecture designed actually work. Runs across any build engine (AI-DLC, spec-driven, freestyle).
 
 ---
 
@@ -40,7 +41,7 @@ This is the **quality half** of the govern+verify bracket around the (un-lensed)
 If `ATQ__` has not been run and correctness is unknown:
 1. Run `ATQ__` in **baseline mode** to establish current behavior
 2. Prioritize the **loop test** and **idempotency test** — the two highest-risk automation defects
-3. Document the baseline in `.tge/automation-lens/` for future comparison
+3. Document the baseline in `.governance/test/automation-lens/` for future comparison
 4. Schedule recurring runs
 
 ---
@@ -56,7 +57,7 @@ Reads from `{slug}-workspace/.automation-lens/manifest.json` (couriered by AI-DW
 
 Also reads from the live workspace:
 - `automation/` handlers, `automation/config.*`, `audit/` sink
-- `.tge/automation-lens/` previous results (for regression comparison)
+- `.governance/test/automation-lens/` previous results (for regression comparison)
 - Test infrastructure / harness
 
 ---
@@ -116,10 +117,10 @@ Agentic findings are reported in the same `atq-findings.json` array (threaded by
 
 ## Output
 
-Results written to `.tge/automation-lens/`:
+Results written to `.governance/test/automation-lens/`:
 
 ```
-.tge/automation-lens/
+.governance/test/automation-lens/
 ├── atq-report-{date}.md          ← Full quality report (human-readable)
 ├── atq-findings.json             ← Machine-readable findings for dashboard/DFE
 ├── baselines/                     ← Stored behavior/throughput baselines

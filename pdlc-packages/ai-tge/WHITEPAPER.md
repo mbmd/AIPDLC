@@ -2,7 +2,7 @@
 
 **AI-Driven Test Governance Engine**
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Author:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Date:** 2026-06-13
 
@@ -89,10 +89,10 @@ AI-TGE is NOT a test generator. It identifies WHAT tests must exist, tracks WHET
 
 ## Position in AIFLC — the AI-* PDLC Family
 
-AI-TGE is a **companion package** in the Project layer — it runs alongside AI-DLC v1 (with AI-GCE) as a continuous quality engine:
+AI-TGE is a **companion package** in the Project layer — it runs alongside AI-DLC (with AI-GCE) as a continuous quality engine:
 - Reads from **AI-ADLC** (Architecture Package — what was promised)
 - Reads from **AI-DWG** (Development Workspace — what tools are available)
-- Observes **AI-DLC v1** (build progress — what's being implemented)
+- Observes **AI-DLC** (build progress — what's being implemented)
 - Complements **AI-GCE** (GCE governs code/process compliance; TGE governs test completeness)
 
 AI-GCE asks "is the code compliant?" AI-TGE asks "is the testing sufficient?"

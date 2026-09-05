@@ -40,11 +40,11 @@ Spec-before-code means producing explicit, reviewed, human-approved specificatio
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-PILC** | 13-stage structured initiation | Forces explicit capture of requirements, constraints, scope, and acceptance criteria BEFORE any design begins. No stage is skipped — gates require human approval. |
-| **AI-ADLC** | Progressive decomposition (C4) | Requires architectural specification through 4 levels of decomposition before any implementation starts. ADRs record every decision with rationale. |
-| **AI-POLC** | Backlog specification | Transforms vague ideas into structured stories with acceptance criteria, value scoring, and dependency mapping — specification at the feature level. |
-| **AI-DWG** | Workspace generation from spec | Generates the development workspace FROM the specification — the spec literally becomes the workspace structure. Code can't start until spec exists. |
-| **AI-GCE** | Session governance rules | Enforces "spec-first" as a blocking governance rule: GOV-SESSION rules prevent vibe-coding by requiring specification artifacts before implementation sessions. |
+| **AI-PILC (Project Initiation Life Cycle)** | 13-stage structured initiation | Forces explicit capture of requirements, constraints, scope, and acceptance criteria BEFORE any design begins. No stage is skipped — gates require human approval. |
+| **AI-ADLC (Architecture Design Life Cycle)** | Progressive decomposition (C4) | Requires architectural specification through 4 levels of decomposition before any implementation starts. ADRs record every decision with rationale. |
+| **AI-POLC (Product Ownership Life Cycle)** | Backlog specification | Transforms vague ideas into structured stories with acceptance criteria, value scoring, and dependency mapping — specification at the feature level. |
+| **AI-DWG (Workspace Generator)** | Workspace generation from spec | Generates the development workspace FROM the specification — the spec literally becomes the workspace structure. Code can't start until spec exists. |
+| **AI-GCE (Governance & Compliance Engine)** | Session governance rules | Enforces "spec-first" as a blocking governance rule: GOV-SESSION rules prevent vibe-coding by requiring specification artifacts before implementation sessions. |
 
 ---
 

@@ -41,7 +41,7 @@ Each package makes your agent behave like a senior domain expert: a PMO advisor 
                          │
 ╔══════════ PROJECT LAYER · scope = ONE project ══════════════╗
 
-    AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-DLC v1 (build)
+    AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-DLC (build)
     Own it    Design UX  Design it  Prepare it
 
     AI-GCE + AI-TGE ── alongside (continuous quality) ──►

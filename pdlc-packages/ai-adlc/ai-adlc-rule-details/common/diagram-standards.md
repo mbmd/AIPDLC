@@ -1,7 +1,7 @@
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
 # Diagram Standards
 
-> **Base standard:** `ai-packagebuilder/process/DIAGRAM_STANDARDS.md` (builder-level). This file is the **AI-ADLC C4/architecture addendum** — it extends the base with C4-specific templates, relationship-label rules, container naming, cross-level consistency, and supplementary diagram types (sequence, state, ERD). All universal conventions (additive principle, type-selection, DFE contract, escaping, quality checklist) live in the base; this file adds domain detail.
+> **Base standard:** the AIFLC diagram-standards baseline (builder-level). This file is the **AI-ADLC C4/architecture addendum** — it extends the base with C4-specific templates, relationship-label rules, container naming, cross-level consistency, and supplementary diagram types (sequence, state, ERD). All universal conventions (additive principle, type-selection, DFE contract, escaping, quality checklist) live in the base; this file adds domain detail.
 
 ## Purpose
 
@@ -17,7 +17,7 @@ AI-ADLC uses the [C4 Model](https://c4model.com/) for progressive architectural 
 Level 1: System Context    — The system in its environment (who uses it, what it connects to)
 Level 2: Container         — Major deployable/runtime units inside the system
 Level 3: Component         — Internal modules/components within a container
-Level 4: Code              — (NOT produced by AI-ADLC — this is AI-DLC v1's territory)
+Level 4: Code              — (NOT produced by AI-ADLC — this is AI-DLC's territory)
 ```
 
 Each level zooms in from the previous. A reader should be able to understand the system by reading L1 → L2 → L3 in sequence.

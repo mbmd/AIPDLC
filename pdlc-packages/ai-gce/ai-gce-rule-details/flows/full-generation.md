@@ -7,6 +7,7 @@ This file holds the orchestration scaffolding for **Mode 1 (Full Generation)** t
 
 The full 12-step index lives in `core-engine.md` (the always-loaded dispatcher). The per-category derivation work for Steps 1–11 lives in:
 - `common/workspace-reading-guide.md` (Step 1)
+- `common/build-method-resolution.md` (Step 1, before any generator runs) — the **single point** where AI-GCE reads the 5-value `buildProfile` and resolves how generation adapts (hook vs sensor, whether to emit the compliance log + process agents, enforcement surface). No generator re-reads `buildProfile`; the enforcement-surface generators read the resolved decision from here. Authority for the `aidlc` column: the frozen `aidlc-v2-output-contract.md` §7.
 - `generators/hooks-from-steering.md`, `generators/cicd-gates-generator.md`, `generators/compliance-log-gov-gen.md` (Steps 2–4)
 - `generators/*` (24 per-category rule files — Step 3)
 - `generators/agents-from-steering.md` + `templates/agents/` (Steps 5–5d)
@@ -20,7 +21,7 @@ Load this file when executing Mode 1.
 ## STEP 4b: GENERATE PHASE-AWARE AND ROLE-AWARE STEERING (Optional Enrichment)
 
 AI-GCE can GENERATE additional fileMatch steering files that make Kiro's behavior
-adapt to the developer's current activity during AI-DLC v1 sessions.
+adapt to the developer's current activity during AI-DLC sessions.
 
 This is OPTIONAL — only generate if the workspace has sufficient governance depth
 (Standard or Comprehensive depth level). Skip for Minimal.
@@ -173,17 +174,17 @@ Present generation results:
    3. Review Tier 2 readiness criteria in .compliance-state.json
    4. If brownfield: follow .governance/incremental-adoption-plan.md for progressive enforcement
    5. Open the generated workspace as root in a NEW Kiro instance (or new IDE window)
-   6. Install AI-DLC v1 (awslabs/aidlc-workflows) in that workspace — follow its install guide
-   7. Begin development with AI-DLC v1 — Tier 1 hooks are already active in the workspace
+   6. Install AI-DLC (awslabs/aidlc-workflows) in that workspace — follow its install guide
+   7. Begin development with AI-DLC — Tier 1 hooks are already active in the workspace
 
 🔀 **Chain Navigation (what's next in the AI-* Family):**
    • Dashboard data: type `DAT__ pdlc/gce` to update the family dashboard
    • Or ask AI-FLO: type `_FLO_` for routing guidance based on your project state
 
-⚠️ **IMPORTANT: AI-DLC v1 runs in the GENERATED workspace, not here.**
+⚠️ **IMPORTANT: AI-DLC runs in the GENERATED workspace, not here.**
    Close this planning workspace. Open the generated workspace folder
    ({workspace_root}) as the ROOT of a fresh Kiro instance (or Cursor/
-   Windsurf/Claude Code). AI-DLC v1 is a separate product — install it
+   Windsurf/Claude Code). AI-DLC is a separate product — install it
    yourself (github.com/awslabs/aidlc-workflows). The hooks and steering
    files AI-GCE produced are already waiting in the workspace for AI-DLC
    to pick up.

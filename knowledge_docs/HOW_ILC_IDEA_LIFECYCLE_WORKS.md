@@ -1,4 +1,4 @@
-# How AI-ILC Idea Lifecycle Works
+# How AI-ILC (Idea Life Cycle) Idea Lifecycle Works
 
 **Purpose:** Explains how AI-ILC's 6-stage pipeline takes a raw idea through structured evaluation to a defensible go/no-go decision, then routes the approved output to the correct next package with zero context loss.
 
@@ -23,7 +23,7 @@ RAW IDEA (any format)
         ▼ (one of three outputs)
 ┌──────────────┐  ┌────────────────────┐  ┌─────────────────┐
 │ Idea Brief   │  │ Change Request     │  │ Feature Brief   │
-│ → AI-PILC    │  │ Brief → AI-PILC    │  │ → AI-DLC v1        │
+│ → AI-PILC (Project Initiation Life Cycle)    │  │ Brief → AI-PILC    │  │ → AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle)        │
 │ (new project)│  │ (change to existing)│  │ (small feature) │
 └──────────────┘  └────────────────────┘  └─────────────────┘
 ```
@@ -116,7 +116,7 @@ RAW IDEA (any format)
 |-------------|-----------|-------------|
 | **New project** (large, cross-cutting) | Approved Idea Brief | → AI-PILC (full initiation) |
 | **Major change** (to existing project) | Change Request Brief | → AI-PILC (change management) |
-| **Small feature** (within existing backlog) | Feature Brief | → AI-POLC / AI-DLC v1 (direct backlog) |
+| **Small feature** (within existing backlog) | Feature Brief | → AI-POLC (Product Ownership Life Cycle) / AI-DLC (direct backlog) |
 
 **Handoff mechanism:** `ilc-state.md` (marker file) + the appropriate brief document. Successor packages auto-detect and read.
 
@@ -168,7 +168,7 @@ Any session can resume exactly where the last one left off — cold resume guara
 
 When multiple ideas are evaluated:
 - Each gets its own evaluation and Idea Brief
-- AI-PPM (portfolio engine) can ingest multiple approved briefs for cross-project prioritization
+- AI-PPM (Project Portfolio Management) (portfolio engine) can ingest multiple approved briefs for cross-project prioritization
 - Deferred ideas stay in the register with re-evaluation dates
 - Rejected ideas remain documented (prevents re-evaluation of the same bad idea)
 

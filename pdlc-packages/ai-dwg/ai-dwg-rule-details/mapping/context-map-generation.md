@@ -10,8 +10,9 @@ Generates the **discovery layer** that makes the workspace navigable by any AI a
 - `{workspace-root}/backlog/README.md` — POLC cluster index
 - `{workspace-root}/ux/README.md` — UXD cluster index
 - `{workspace-root}/architecture/README.md` — ADLC cluster index
+- `{slug}-management/WORKSPACE_SET_CONTEXT_MAP.md` — **L2 set-level index (per-team/hybrid topology only)** — Target 5
 
-**Condition:** `WORKSPACE_CONTEXT_MAP.md` always (lists whatever clusters exist). Each folder README only when its cluster is present.
+**Condition:** `WORKSPACE_CONTEXT_MAP.md` always (lists whatever clusters exist). Each folder README only when its cluster is present. `WORKSPACE_SET_CONTEXT_MAP.md` only when `workspaceTopology ∈ {per-team, hybrid}` (written to the Layer-2 control plane, once per set — not per member).
 
 **Cluster:** Cross-cutting (discovery layer over all clusters).
 
@@ -149,6 +150,51 @@ projectId: "{project-id}"
 
 ---
 
+## Target 5: WORKSPACE_SET_CONTEXT_MAP.md (L2 — multi-workspace only)
+
+**Condition:** Generated ONLY when `workspaceTopology ∈ {per-team, hybrid}` (Config Gate Q4). This is the **Layer-2** human single-pane index across the whole set — the entry point an architect/owner reads to orient in the control plane. It is written to `{project_root}/{slug}-management/` (never inside an L3 member workspace). Referenced by `flows/workspace-set-control-plane.md` step 5. In a single workspace this target is skipped entirely (the per-workspace `WORKSPACE_CONTEXT_MAP.md` above is the only index).
+
+```markdown
+---
+generatedBy: AI-DWG
+generatedVersion: "{version}"
+source: "workspace-set-manifest.yaml + team-context-registry.md (derived)"
+generatedOn: "{generation-date}"
+ownership: generated
+projectId: "{project-id}"
+layer: 2
+---
+<!-- DWG-BASELINE: v{N} (confirmed v{N}) | {projectId} | {timestamp} -->
+
+# Workspace Set — Context Map (Layer-2 Control Plane)
+
+> Auto-generated single-pane index across all per-team workspaces. Architects/owners: read this first.
+> The management surface (this file, the set-manifest, the authoritative contract registry, the roll-up) stays here in Layer 2. Each team workspace is opened separately in Layer 3.
+
+## Control Plane (this Layer-2 surface)
+- `workspace-set-manifest.yaml` — authoritative index of all member workspaces (machine-readable)
+- `contracts/registry.yaml` — authoritative contract registry (contract-first source of truth)
+- `rollup/` — cross-workspace compliance / drift / contract-conformance (AI-GCE + AI-DFE populate)
+- `team-topology-map.md` — teams, types, interaction modes (from AI-ADLC)
+
+## Member Workspaces (Layer 3 — opened separately)
+| Team | Type | Workspace | Owns (BC-*/SVC-*) | Publishes | Consumes |
+|------|------|-----------|-------------------|-----------|----------|
+| TEAM-{slug} | {stream-aligned/platform/enabling/complicated-subsystem} | `../{slug}-workspaces/{team}/` (or repo URL) | {BC-*/SVC-*} | {contracts} | {contracts@version} |
+
+## How to Work Here
+- To govern the set: AI-GCE reads each member down → `rollup/`.
+- To change a shared contract: edit it at its owner in `contracts/` (L2); members hold read-only pinned copies.
+- To open a team's workspace: navigate to that member's path/repo; each carries its own `TEAM_CHARTER.md`.
+```
+
+**Rules:**
+- Derive the member table from `workspace-set-manifest.yaml` `members[]` (one row per team; never per service).
+- `physicalLayout` decides the `Workspace` cell — a relative folder path (subfolder) or a repo URL (polyrepo).
+- Every pointer resolves within the control plane; member links resolve to L3 members. No management artifact is written into an L3 member (one-way boundary).
+
+---
+
 ## Transformation Rules
 
 ### Rule 1: Derive, Don't Guess
@@ -162,6 +208,9 @@ The map and READMEs contain links + one-line descriptions. Never copy story/wire
 
 ### Rule 4: Auto-Regenerate
 On every generation and re-baseline, regenerate these files fresh from the current manifest. They always reflect reality.
+
+### Rule 5: Set-Level Map Only in a Set, L2-Only
+Generate `WORKSPACE_SET_CONTEXT_MAP.md` (Target 5) ONLY when `workspaceTopology ∈ {per-team, hybrid}`, and write it ONLY to the Layer-2 `{slug}-management/` control plane — never inside an L3 member. The per-workspace `WORKSPACE_CONTEXT_MAP.md` (Target 1) is still generated inside each member. In a single workspace, Target 5 is skipped (today's behavior, unchanged).
 
 ---
 

@@ -18,7 +18,7 @@ During this stage, also adopt the **Business Analyst** sub-role:
 
 ### Anti-Patterns
 - Do NOT produce epics that are just re-worded goals — epics are concrete capabilities, not aspirations
-- Do NOT prescribe implementation decomposition — that's AI-DLC v1's job (epic-to-story breakdown is DLC Inception)
+- Do NOT prescribe implementation decomposition — that's AI-DLC's job (epic-to-story breakdown is DLC Inception)
 - Do NOT create epics without acceptance criteria — every epic needs a testable definition of "done at epic level"
 - Do NOT skip dependency mapping — undetected dependencies cause sprint failures
 
@@ -91,6 +91,8 @@ ownership: hybrid
 - Kano Category: {Basic | Performance | Delighter}   <!-- Comprehensive — feeds Stage 6 prioritization -->
 - Journey Stage: {Acquisition | Onboarding | Activation | Core-use | Retention | Expansion | Offboarding}   <!-- Comprehensive -->
 - Business Capability: {capability-map node — a business function, not a technical component}   <!-- Comprehensive -->
+- Owning Team: {TEAM-slug from the AI-ADLC team-context-registry when team-topologies is active; else team name; else "unassigned"}   <!-- first-class; derived not elicited -->
+- Bounded Context: {BC-slug from the registry / DDD context map when present; else context name; else "n/a"}   <!-- first-class; derived not elicited -->
 
 ## Description
 {2-3 sentences: what this epic delivers, why it matters, who benefits}
@@ -160,7 +162,7 @@ If Tier 2 is active (story elaboration enabled):
 
 If Tier 2 is inactive (default in chain mode):
 - Epics are the terminal output of this stage
-- AI-DLC v1's Inception will decompose epics into stories later
+- AI-DLC's Inception will decompose epics into stories later
 
 **On-the-fly Tier 2 offer:** POLC does NOT silently assume the Tier 2 setting. At the Stage 5 gate (Step 5.7 below), it explicitly asks the user whether to keep Tier 2 off (epics are the handoff) or turn it on now (elaborate stories). The user can flip this decision at any time during the workflow, not only here — if they later say "elaborate stories", activate Tier 2 and return to this integration point for the confirmed epics.
 
@@ -172,17 +174,17 @@ Before closing the stage, surface the Tier 2 choice as a structured question so 
 ### Q-5T: Story elaboration (Tier 2)
 
 Context: Epics are confirmed. By default I stop at the epic level — in chain
-mode AI-DLC v1 elaborates these into user stories during its Inception phase.
+mode AI-DLC elaborates these into user stories during its Inception phase.
 You can keep it there, or have me (POLC) write PO-quality user stories now.
 
 Options:
   a) No — keep Tier 2 OFF; epics are the handoff artifact
   b) Yes — turn Tier 2 ON now; I'll elaborate stories (you'll then pick the format)
 
-Recommended: (a) in chain mode with AI-DLC v1 present · (b) in standalone mode
+Recommended: (a) in chain mode with AI-DLC present · (b) in standalone mode
 or when you want PO-quality pre-elaboration before development.
 
-Rationale: {state-derived — mention detected mode and whether AI-DLC v1 is chained}
+Rationale: {state-derived — mention detected mode and whether AI-DLC is chained}
 
 Your Decision: _[awaiting input]_
 ```

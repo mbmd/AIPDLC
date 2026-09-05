@@ -1,6 +1,6 @@
 # How Test Strategy Works
 
-**Purpose:** Explains how the AI-* Family produces and enforces a structured test strategy for your project — from architecture-driven derivation through continuous coverage governance — and how AI-TGE orchestrates this as a test governance companion alongside AI-DLC v1 delivery.
+**Purpose:** Explains how the AI-* Family produces and enforces a structured test strategy for your project — from architecture-driven derivation through continuous coverage governance — and how AI-TGE (Test Governance Engine) orchestrates this as a test governance companion alongside AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) delivery.
 
 ---
 
@@ -15,7 +15,7 @@ A test strategy is not a document someone writes from scratch. It is **derived**
 
 ```
 ARCHITECTURE DECISIONS       TECH STACK         PROJECT RISK PROFILE
-   (from AI-ADLC)          (from AI-DWG)       (from complexity score)
+   (from AI-ADLC (Architecture Design Life Cycle))          (from AI-DWG (Workspace Generator))       (from complexity score)
          │                       │                       │
          └───────────┬───────────┘───────────────────────┘
                      ▼
@@ -33,14 +33,14 @@ ARCHITECTURE DECISIONS       TECH STACK         PROJECT RISK PROFILE
 
 ## Where Test Strategy Sits in the Chain
 
-Test strategy is produced during AI-TGE's Strategy Phase and enforced during its Observation Phase. It operates alongside AI-DLC v1 as a companion:
+Test strategy is produced during AI-TGE's Strategy Phase and enforced during its Observation Phase. It operates alongside AI-DLC as a companion:
 
 ```
 AI-ADLC ─── designs architecture ──────────────────┐
                                                     │
 AI-DWG ──── prepares workspace (incl. test tools) ──┼──► AI-TGE derives test strategy
                                                     │
-AI-DLC v1 ──── builds software ◄── AI-TGE observes ───┘
+AI-DLC ──── builds software ◄── AI-TGE observes ───┘
                                     │
                                     ▼
                           Coverage tracked continuously
@@ -225,11 +225,11 @@ Brownfield assessment is non-destructive: it maps and analyzes without modifying
 
 ## Continuous Observation During Delivery
 
-Once AI-DLC v1 starts building features, AI-TGE switches to observation:
+Once AI-DLC starts building features, AI-TGE switches to observation:
 
 | Trigger | AI-TGE Action |
 |---------|---------------|
-| AI-DLC v1 completes a unit | Register the tests that should exist for that unit |
+| AI-DLC completes a unit | Register the tests that should exist for that unit |
 | A story is accepted | Verify acceptance criteria have corresponding tests |
 | Architecture changes (AP update) | Reconcile register — add new requirements, deprecate old ones |
 | A defect is found | Log it, correlate with test gaps, update risk scores |
@@ -264,10 +264,10 @@ The test strategy document (`.tge/test-strategy.md`) produced by AI-TGE includes
 |---------|------------------------------|
 | **AI-ADLC** | Produces the architecture that test requirements are derived from |
 | **AI-DWG** | Configures the workspace with appropriate test tooling + generates `testing-strategy.md` steering |
-| **AI-GCE** | Enforces test-related compliance rules (coverage thresholds, mandatory test types per tier) |
+| **AI-GCE (Governance & Compliance Engine)** | Enforces test-related compliance rules (coverage thresholds, mandatory test types per tier) |
 | **AI-TGE** | Derives the full strategy, maintains the register, tracks coverage, scores debt |
-| **AI-DLC v1** | Consumes the strategy context — writes tests according to register requirements |
-| **AI-POLC** | Produces stories with acceptance criteria that become story-derived test requirements |
+| **AI-DLC** | Consumes the strategy context — writes tests according to register requirements |
+| **AI-POLC (Product Ownership Life Cycle)** | Produces stories with acceptance criteria that become story-derived test requirements |
 
 ---
 
@@ -281,7 +281,7 @@ The test strategy document (`.tge/test-strategy.md`) produced by AI-TGE includes
 | **Non-destructive** | Assess without modifying; propose without forcing; mark without deleting |
 | **Silent when complete** | When all commitments are verified, there's nothing to report |
 | **Adaptive** | Works with whatever input exists — full chain, AP only, brownfield, or observation only |
-| **Govern, don't write** | The strategy tells you WHAT to test and WHY — AI-DLC v1 handles the HOW |
+| **Govern, don't write** | The strategy tells you WHAT to test and WHY — AI-DLC handles the HOW |
 
 ---
 

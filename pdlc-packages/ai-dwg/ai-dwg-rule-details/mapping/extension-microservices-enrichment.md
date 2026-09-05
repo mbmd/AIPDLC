@@ -122,3 +122,5 @@ A good output from this activity sounds like:
 ## Key Rule
 
 Microservices enrichment fundamentally changes how module-structure.md and resilience-standards.md are generated — it introduces service boundaries as a first-class concept above module boundaries.
+
+> **Interaction with per-team workspace topology (unchanged behavior).** When `workspaceTopology ∈ {per-team, hybrid}` (Config Gate Q4), the workspace split is **team-granular, never per-service** — a team owns 1..N services. This services-as-modules enrichment applies **within each team's single workspace** exactly as it does in a single workspace: a team's multiple services are modelled as service-grouped modules inside its one `src/`. The per-team split (`mapping/team-workspace-partitioning.md`) sits **above** this enrichment; it does NOT add a service-level workspace path. Nothing in this mapping changes for the multi-workspace case — it simply runs inside each team workspace.

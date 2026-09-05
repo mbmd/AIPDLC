@@ -12,7 +12,9 @@ ownership: generated
 
 A process agent that verifies PR readiness before creating a pull request. Checks governance, tests, naming, API contracts, segregation, and Definition of Done — producing a pass/warn/block report.
 
-**Replaces:** `periodic-audit.json` hook (userTriggered) — per, process milestone checks are agents, not hooks.
+**Replaces:** `pre-pr-checklist.json` hook (userTriggered) — per, process milestone checks are agents, not hooks.
+
+> **Correction.** This line previously read `periodic-audit.json`, contradicting this file's own footer. `periodic-audit.json` was replaced by the **compliance-audit agent (`CAA__`)**, not by this one — see `compliance-audit-agent.md`. Two agents claiming the same retired hook meant the *other* conversion had no owning record at all.
 
 ---
 

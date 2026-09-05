@@ -10,7 +10,7 @@ ownership: hybrid
 
 **Generate IF:** At least one peer input is present (any valid input set).
 **Cluster:** Cross-cluster (tech patterns from ADLC, UI patterns from UXD)
-**Purpose:** Provide AI-DLC v1 and developers with copy-paste starter patterns that demonstrate the correct way to implement common code patterns in this workspace. Seeded from architecture decisions (ADLC) and design system components (UXD).
+**Purpose:** Provide AI-DLC and developers with copy-paste starter patterns that demonstrate the correct way to implement common code patterns in this workspace. Seeded from architecture decisions (ADLC) and design system components (UXD).
 
 ## Directory Structure
 

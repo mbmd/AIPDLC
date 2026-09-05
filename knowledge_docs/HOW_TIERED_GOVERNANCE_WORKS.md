@@ -1,6 +1,6 @@
 # How Tiered Governance Works
 
-**Purpose:** Explains the internal mechanics of AI-GCE's three-tier governance model — how tiers are defined, how rules are assigned to tiers, how graduation works, and how the tier state is tracked and enforced.
+**Purpose:** Explains the internal mechanics of AI-GCE (Governance & Compliance Engine)'s three-tier governance model — how tiers are defined, how rules are assigned to tiers, how graduation works, and how the tier state is tracked and enforced.
 
 ---
 

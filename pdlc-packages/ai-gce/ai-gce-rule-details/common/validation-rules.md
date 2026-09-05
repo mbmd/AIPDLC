@@ -9,7 +9,7 @@ This document defines the cross-check rules applied AFTER AI-GCE generates its c
 
 ## MANDATORY: Stage Sub-Role — Audit & Compliance Specialist
 
-During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC v1 Engineer) — it ADDS a thinking dimension.
+During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Specialist**. This does NOT replace your primary role (Compliance Officer + Platform Engineer + AI-DLC Engineer) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
 - Apply systematic verification: every validation category (V1–V9) is a control objective — skip none
@@ -25,7 +25,7 @@ During THIS activity, ALSO adopt the mindset of an **Audit & Compliance Speciali
 
 ### Quality Check
 A good output from this activity sounds like:
-- "V1: PASS (13/13 hooks, 12/12 rules). V5: FAIL — naming-check.json references `src/modules/` but filesystem shows `src/Modules/` (case mismatch). Remediation: update pattern to match actual path."
+- "V1: PASS (5/5 Tier-1 hooks installed; tier-gated absent at Tier 1 = PASS, not a gap; 12/12 rules). V5: FAIL — naming-check.json references `src/modules/` but filesystem shows `src/Modules/` (case mismatch). Remediation: update pattern to match actual path." *(♻️ the count here counts **installed** hooks by active tier — matching the rewritten V1 completeness table below; it previously read `13/13 hooks`, the pre-item-2 template-count framing that made V1 block a correctly-generated workspace.)*
 - "V6: 2 rules use weak language ('should consider'). Rewriting to MUST/NEVER form before marking complete."
 
 ---
@@ -83,26 +83,49 @@ Every AI-GCE run (Mode 1) MUST produce these. Missing = validation failure.
 
 | Category | Artifacts | Check |
 |----------|-----------|-------|
-| Hooks (core set) | session-discipline, pre-code-spec-check, post-task-governance, security-gate-check, naming-check, module-boundary-check, migration-safety, api-contract-check, coverage-check, pre-pr-checklist, periodic-audit, sensitive-data-check, domain-layer-purity | Each .json file exists in `.governance/hooks/` |
+| Hooks (installed core set — Tier 1) | pre-code-spec-check, api-contract-check, security-gate-check, migration-safety, sensitive-data-check | Each .json file exists in `.governance/hooks/` |
+| Hooks (installed — Tier 2, when activated) | post-task-governance, segregation-check, session-end-compliance | Each .json file exists in `.governance/hooks/` **when the tier is active** — absent at Tier 1 is a PASS, not a gap |
+| Hooks (installed — Tier 3, when activated) | change-readiness-gate, exception-expiry-check | As above, at Tier 3 |
+| Hooks (reference-only — MUST NOT be required) | module-boundary-check, domain-layer-purity, coverage-check, naming-check | Generated as reference documentation of rule logic. Their checks run inside `session-end-compliance.json`. ⚠️ **NEVER assert these are installed** |
+| Hooks (ships disabled) | package-activation-guard | Exists with `"enabled": false`. Present-but-disabled is the PASS state |
+| Hooks (retired to agents — MUST NOT be required) | ~~session-discipline~~, ~~pre-pr-checklist~~, ~~periodic-audit~~, ~~steering-quality-check~~ | ❌ **Not generated as hooks.** Verify the *agent* instead: `session-discipline-agent.md` (`SDC__`), `pre-pr-checklist-agent.md` (`PRC__`), `compliance-audit-agent.md` (`CAA__`), `steering-quality-agent.md` (`SQC__`) |
+| Hooks (removed) | ~~documentation-reminder~~ | ❌ **Not generated.** No generator produces a rule family for it; its intent is covered by the session-end sweep |
 | Hook enforcement guide | ENFORCEMENT-GUIDE.md | File exists in `.governance/hooks/` |
 | Rules (always) | architecture-compliance, api-first-compliance, security-compliance, data-governance, module-boundaries, naming-conventions, error-handling-compliance, logging-compliance, sensitive-data-protection, domain-context-enforcement, phase-gates, session-governance | Each .md file exists in `.governance/rules/` |
 | Rules (tier-gated) | governance-checklist, role-isolation, team-topology, sprint-governance, pr-governance, cicd-gates, devops-deployment, steering-governance, compliance-log-governance | Generated but activation controlled by tier |
-| Agents | compliance-audit-agent.md, project-init-agent.md | Both exist in `.governance/agents/` |
+| Agents (always) | compliance-audit-agent.md (`CAA__`), project-init-agent.md, pre-pr-checklist-agent.md (`PRC__`), session-discipline-agent.md (`SDC__`) | Each exists in `.governance/agents/` |
+| Agents (Tier 2+) | sprint-governance-agent.md (`SGV__`), code-review-agent.md (`CRV__`), steering-quality-agent.md (`SQC__`), dod-gate-agent.md (`DOD__`) | Each exists when the tier is active |
+| Agents (Tier 3) | change-management-agent.md (`CMG__`) | Exists when Tier 3 is active |
+| Agents (drift — conditional) | drift-detect-agent.md (`DFT__`) | Exists when a DWG baseline is present |
+
 | Compliance log | compliance-log-schema.md, exception-workflow.md, remediation-workflow.md | All exist in `.governance/compliance-log/` |
 | COMPLIANCE_README | COMPLIANCE_README.md | Exists in `.governance/` |
 | State file | .compliance-state.json | Exists at workspace root |
 | Dashboard template | management_framework/dashboards/compliance-dashboard.md | Exists (skeleton — audit agent populates) |
 
+> ### ⚠️ Why this table was rewritten — it blocked correct workspaces and ignored missing agents
+>
+> **The hook row over-required.** It named thirteen `.json` files and asked only *"does each exist?"* Three had been retired to agents and four are generated as reference documentation that is deliberately **not installed**, so a correctly-generated workspace held at most **6 of 13**. V1 reported `6/13 ❌`, V1 failures are classed **BLOCKING**, and the prescribed response is *"generate the missing artifact"* — so the check told the engine to recreate seven files the package had deliberately retired. **A validation rule that fails on correct output is worse than no rule: it manufactures work and trains the operator to override it.**
+>
+> **The agent row under-required, which is the more dangerous direction.** It listed **two** agents while the gate-out contract guarantees **nine** to downstream consumers. Seven guaranteed artifacts had no completeness check at all — a missing hook was loudly over-reported while a missing agent was silently unreported.
+>
+> **The fix is to make the expected set tier-relative and mechanism-aware.** *Installed*, *reference-only*, *ships-disabled*, *retired-to-agent* and *removed* are five different states, and only the first is a file that must be present and active. Collapsing them into "does the file exist" is what produced both errors.
+
 ### Completeness Check Format
 
 ```
 V1: COMPLETENESS CHECK
-  Hooks:             {n}/13 always-generated ✅|❌
+  Hooks (Tier 1):    {n}/5 installed ✅|❌
+  Hooks (tier-gated):{n}/{m} for the ACTIVE tier ✅|❌   (Tier 2 → 3, Tier 3 → +2)
+  Hooks (reference): {n}/4 generated, 0 installed ✅|❌   (installed>0 is a FAIL)
+  Hooks (disabled):  package-activation-guard present, enabled=false ✅|❌
   Conditional hooks: {n} generated (of {m} applicable) ✅|❌
   Rules (always):    {n}/12 ✅|❌
   Rules (tier-gated):{n}/9 ✅|❌
   Rules (conditional):{n} generated ✅|❌
-  Agents:            {n}/2 ✅|❌
+  Agents (always):   {n}/4 ✅|❌
+  Agents (tier-gated):{n}/{m} for the ACTIVE tier ✅|❌   (Tier 2 → 4, Tier 3 → +1)
+  Agents (drift):    {n}/1 IF a DWG baseline exists ✅|❌
   Compliance log:    {n}/3 ✅|❌
   State file:        ✅|❌
   Dashboard:         ✅|❌
@@ -125,7 +148,7 @@ V1: COMPLETENESS CHECK
 
 2. No "orphan rules" — if a rule cannot trace to a source, it must be removed.
 
-3. Built-in baseline rules are self-justifying — they exist because of AI-DLC v1 methodology. Their source is "AI-DLC v1 methodology: {principle}."
+3. Built-in baseline rules are self-justifying — they exist because of AI-DLC methodology. Their source is "AI-DLC methodology: {principle}."
 
 ### Traceability Check
 
@@ -230,24 +253,25 @@ V3: CONSISTENCY CHECK
 
 ### Debounce Strategy Verification
 
+**Installed hooks only.** A hook that is not generated has no event type to verify.
+
 | Hook | Expected Event Type | Rationale |
 |------|:-------------------:|-----------|
-| secret-detection | fileEdited | Security-critical (Tier A) |
-| tenant-isolation-check | fileEdited | Data leakage risk (Tier A) |
+| sensitive-data-check | fileEdited | Secrets + PII risk (Tier A) |
+| tenant-isolation-check | fileEdited | Data leakage risk (Tier A, conditional) |
 | security-gate-check | fileEdited | Security-critical (Tier A) |
 | migration-safety | fileEdited | Destructive ops (Tier A) |
-| sensitive-data-check | fileEdited | PII risk (Tier A) |
-| domain-layer-purity | agentStop | Advisory (Tier B) — intermediate states mislead |
-| module-boundary-check | agentStop | Advisory (Tier B) — refs resolve after all writes |
-| coverage-check | agentStop | Advisory (Tier B) — final-state metric |
-| naming-check | agentStop | Advisory (Tier B) — intermediate naming valid |
-| documentation-reminder | agentStop | Advisory (Tier B) — feature must be complete first |
-| steering-quality-check | agentStop | Advisory (Tier B) — multi-pass edits common |
-| session-discipline | promptSubmit | Methodology enforcement on every prompt |
+| session-end-compliance | agentStop | Advisory (Tier B) — the consolidated sweep; intermediate states mislead, refs resolve after all writes |
 | pre-code-spec-check | preToolUse (write) | Gate before code is written |
 | post-task-governance | postTaskExecution | Check after task completion |
-| periodic-audit | userTriggered | On-demand full scan |
-| pre-pr-checklist | userTriggered | Manual PR readiness check |
+| segregation-check | postTaskExecution | Author ≠ approver, at a task boundary |
+| change-readiness-gate | preTaskExecution | CM artifacts before Integration tasks (Tier 3) |
+| exception-expiry-check | userTriggered | On-demand expired-bypass scan (Tier 3) |
+| package-activation-guard | promptSubmit | Multi-package switch guard (ships disabled) |
+
+> **`secret-detection` was never a real filename.** This table previously opened with it; the actual hook is **`sensitive-data-check.json`**. A validation table naming a file that does not exist cannot fail — it silently checks nothing, which is why the row survived.
+>
+> **Four `agentStop` rows collapsed into one.** `domain-layer-purity`, `module-boundary-check`, `coverage-check` and `naming-check` are reference-only; their checks fire inside `session-end-compliance.json`, so that is the hook whose event type matters. **Five rows removed** — `documentation-reminder` (no longer generated) and `steering-quality-check`, `session-discipline`, `periodic-audit`, `pre-pr-checklist` (all retired to agents, which have no event type because a human invokes them).
 
 ---
 
@@ -375,7 +399,8 @@ Log ONE event per rule checked. If multiple rules are checked, log multiple even
 | All hooks have logging block | Every `.json` file's prompt ends with "## Compliance Logging" section |
 | Logging format matches schema | JSON structure matches compliance-log-schema.md |
 | Tier A hooks include sessionDedup | fileEdited hooks add `"sessionDedup": true` field |
-| Hook name in log matches filename | `"hook": "secret-detection"` matches `secret-detection.json` |
+| Hook name in log matches filename | `"hook": "sensitive-data-check"` matches `sensitive-data-check.json` |
+| `ruleId` resolves to a real rule | The logged `ruleId` is an actual generated rule ID, **not** an unsubstituted `{primary-rule-checked}` placeholder. ⚠️ An unresolved placeholder means the event is unattributable and V3's rule-reference check has nothing to verify — treat as a FAIL, not a warning |
 
 ---
 
@@ -440,11 +465,17 @@ V10: TERRITORY SEGREGATION CHECK
 
 ---
 
+## V11: Sensor-Wiring Verification (aidlc only)
+
+**Question:** "Was every emitted v2 sensor manifest actually bound to a stage?"
+
+Runs **only under `buildProfile: aidlc`** (no other build method emits v2 sensor manifests). Under `aidlc`, AI-DWG emits the sensor manifests + `.governance/AIDLC_SENSOR_WIRING.md` but does **not** edit v2's stage files — so a manifest no stage imports **never fires, silently**. AI-GCE reads `seeded.sensors` in `.governance/aidlc-bootstrap.yaml` and reports any emitted-but-unwired manifest as a finding (`manifests-only` = present-but-not-firing; `wired` = confirmed live). Full procedure + report format in `common/sensor-wiring-verification.md` (merged item 26). An unwired manifest is a **reportable finding (WARNING)**, never a silent pass; AI-GCE reports it but does not apply the binding (v2 / the human applies from the wiring file).
+
 ## When to Run Validation
 
 | Scenario | Validation Scope |
 |----------|-----------------|
-| After Full Generation (Mode 1) | ALL checks (V1–V10) |
+| After Full Generation (Mode 1) | ALL checks (V1–V10); **+ V11 when `buildProfile: aidlc`** |
 | After Re-Derivation (Mode 2) | V2, V3, V4, V5, V6, V9, V10 on affected artifacts only |
 | After Brownfield Adoption (Mode 3) | ALL checks (V1–V10) + brownfield-specific: baseline exists, adoption plan exists |
 | After Tier Activation (Mode 4) | V1 (new artifacts complete), V3 (consistency with new tier), V5 (new hooks valid), V10 (new hooks segregated) |
@@ -489,3 +520,120 @@ Beyond the V1–V10 validation pipeline above, AI-GCE enforces these completion 
 | No contradictions | Rules in one category don't contradict rules in another | Resolve or flag to user |
 | COMPLIANCE_README generated | `.governance/COMPLIANCE_README.md` exists and is populated | Do not complete without this |
 | Brownfield baseline present | If `brownfield-patterns.md` exists, `.governance/brownfield-baseline.md` must also exist | Trigger Mode 3 if missing |
+
+---
+
+## Artifact Content Rules (IMP-001–005, 015, 016, 019)
+
+> Added 2026-08-15 from user-workspace field validation. These are **BLOCKING** rules — an artifact fails validation without compliance.
+
+### IMP-001: Self-Explanatory Quantitative Artifacts
+
+Every artifact containing quantitative analysis (scores, rankings, matrices, assessments) MUST include a **"What This Analysis Means"** section placed AFTER the document title/introductory blockquote but BEFORE the first numbered section (`## 1. ...`).
+
+The section MUST include:
+1. **Plain-language summary** — what the numbers mean in business terms
+2. **Concrete example** — one specific finding from the analysis explained simply
+3. **Business implications** — what action or decision the analysis supports
+
+**Blocking:** Artifact fails validation if quantitative analysis is present but no interpretation section exists at the top.
+
+---
+
+### IMP-002: Completeness & Downstream Resolution
+
+Every artifact MUST include a **"Completeness & Downstream Resolution"** section (placed after the main content, before Glossary/Sources) that answers three questions:
+
+1. **What's complete here?** — which aspects are fully covered in this document
+2. **What's partial and why?** — what is shown as representative samples vs exhaustive, and the rationale
+3. **Where/when does each gap get resolved?** — downstream package/stage that fills each gap (with package code + stage reference)
+
+**Blocking:** Artifact fails validation without this section.
+
+---
+
+### IMP-003: Back-Propagate "Gap Filled" Status
+
+After each stage writes its artifact, scan all earlier-stage artifacts in the same package for "Completeness & Downstream Resolution" sections that reference the just-completed stage. Update those references:
+- FROM: "Where gaps get filled → {Package} Stage N"
+- TO: "✅ Completed — see `{artifact-path}`"
+
+Stale "where gaps get filled" references pointing to already-completed stages are a **validation failure**.
+
+**Post-gate check:** After each gate approval, verify no earlier artifact references the just-completed stage as "pending."
+
+---
+
+### IMP-004: Human-Readable Package Key Expansion
+
+First mention of any package code in an artifact MUST include a parenthetical plain-language description.
+
+**Pattern:** `AI-{XXX} ({Human-Readable Purpose})`
+
+**Examples:**
+- `AI-AAG (Governance & Handoff)` — not just `AI-AAG`
+- `AI-INT (Integration Architecture)` — not just `AI-INT`
+- `TALC (Technology Architecture Life Cycle)` — not just `TALC`
+
+Subsequent mentions in the same document may use the bare code after first-use expansion.
+
+**Blocking:** First-use bare codes without expansion are a validation failure.
+
+---
+
+### IMP-005: Mandatory Glossary Section
+
+Every artifact MUST include a **"Glossary"** section at the bottom of the document (before Sources Used or doc signature/footer). The glossary MUST:
+
+1. Appear as the last major section before Sources/footer
+2. Contain a table with **Term** and **Meaning** columns
+3. Cover ALL abbreviations (e.g., K8s, mTLS, GPU, RAG, SWOT) and domain-specific technical terms used in the document
+4. Be tailored to each document's actual content — not a generic copy-paste
+
+**Blocking:** Artifact fails validation without a document-specific glossary.
+
+---
+
+### IMP-015: Rank-Score Consistency
+
+In any table with both a **Rank** column and a numeric **Score/Significance** column:
+
+1. Rank MUST be in **descending score order** (highest score = rank 1)
+2. If a dependency or business override changes the rank, an explicit **override column or footnote** MUST explain WHY (e.g., "GATE-ZERO prerequisite", "Blocked by #1")
+3. **Equal scores** MUST use tied ranks (e.g., 1, 1, 1, 4 — not 1, 2, 3, 4)
+
+**Blocking:** Rank/score mismatch without documented justification is a validation failure.
+
+---
+
+### IMP-016: Key-Reference Traceability (CRITICAL)
+
+Every reference to a key (`OBJ-01`, `CAP-05`, `REQ-D-03`, `THEME-02`, `SD-001`, `GAP-04`, etc.) in any artifact MUST be a markdown link pointing to the source document where that key is formally defined.
+
+**Pattern:** `[KEY-ID](relative-path-to-source#anchor)`
+
+**Rules:**
+1. Every register/definition document MUST define anchors for every key (`<a id="key-id"></a>`)
+2. Every reference to a key in any other artifact MUST be a markdown link to the source anchor
+3. **Bare key codes without links are NOT acceptable** in final artifacts — only in draft state
+4. Each stage's post-write checklist must include a "Link Validation" step verifying all keys are linked
+
+**Key prefixes requiring anchors and links:** `OBJ-`, `THEME-`, `SD-`, `CAP-`, `REQ-`, `REQ-D-`, `REQ-T-`, `CC`, `CON-`, `GAP-`, `DEBT-`, `RDR-`, `ST-`, `SO-`, `WO-`, `WT-`, `INFRA-`, `SEC-`, `RES-`, `GPU-`
+
+**Blocking (CRITICAL):** Bare key references without links are a validation failure.
+
+---
+
+### IMP-019: Column Legend for Register-Style Tables
+
+Every **register-style table** (4+ columns with an ID/identifier column or technical register structure) MUST be followed immediately by a blockquote column legend.
+
+The legend MUST:
+1. Be inside a `>` blockquote
+2. Start with `**Column Legend:**`
+3. Contain a two-column table (Column / Description)
+4. Describe ALL columns including value-set meanings (e.g., "Priority: Critical = must resolve before deployment, High = must resolve before production")
+
+**Excluded:** Simple key-value tables (Field/Value format) and prose checklists.
+
+**Blocking:** Register-style tables without a column legend are a validation failure.

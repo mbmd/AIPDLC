@@ -10,7 +10,7 @@ ownership: hybrid
 
 **Generate IF:** `uxd-state.md` is present (UXD peer input detected).
 **Cluster:** UX
-**Purpose:** Provides AI-DLC v1 with a detailed, page-by-page UI specification for code generation. This is the governed alternative to "paste Figma screenshots" — structured, versioned, and traceable.
+**Purpose:** Provides AI-DLC with a detailed, page-by-page UI specification for code generation. This is the governed alternative to "paste Figma screenshots" — structured, versioned, and traceable.
 
 ## Template
 
@@ -29,7 +29,7 @@ ownership: hybrid
 
 ## Overview
 
-This document provides AI-DLC v1 with the detailed UI specification for code generation. Each page/screen is defined with its layout, components, states, interactions, and data bindings. Use alongside `design-system.md` (token/component rules) and `frontend-standards.md` (code patterns).
+This document provides AI-DLC with the detailed UI specification for code generation. Each page/screen is defined with its layout, components, states, interactions, and data bindings. Use alongside `design-system.md` (token/component rules) and `frontend-standards.md` (code patterns).
 
 **Design System:** {design-system-name} v{version}
 **WCAG Target:** {wcag-level}

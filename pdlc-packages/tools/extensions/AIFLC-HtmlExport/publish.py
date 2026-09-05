@@ -37,12 +37,10 @@ USAGE
   WORKSPACE  the {family}-ws directory (defaults to a sibling *-ws of this file).
   --force    publish even when the config switch is off (for testing).
 
-  Sub-commands:
+  Sub-commands (Phase 2 — the switch):
     on       Enable auto-refresh + run one full publish immediately.
     off      Disable auto-refresh (shadow stays as a frozen snapshot).
     status   Report switch state, last publish time, and page count.
-    deck     Build the curated executive-presentation deck ({family}-deck.html).
-    offline  Full publish with Mermaid vendored + a zip bundle (no internet on view).
 """
 import os
 import re
@@ -80,14 +78,10 @@ DEFAULT_CONFIG = {
     # scope.exclude globs are matched against the basename, the workspace-relative
     # posix path, AND each directory segment (so a bare folder name like "flo"
     # excludes that folder at any depth). Dot-folders/files are always excluded.
-    "scope": {"exclude": ["*-state.md", "*_state.md", "flo-*.md", "flo", "flow"]},
-    # nesting: top-level folders whose real phase lives one level below an id
-    # segment (e.g. entities/{id}/{phase}, projects/{id}/{phase}). The engine
-    # descends past the id and groups by the {phase} folder (KL-3/KL-5).
-    "taxonomy": {"source": "FAMILY_STRUCTURE", "order": [], "groups": {},
-                 "nesting": ["entities", "group", "projects"]},
+    "scope": {"exclude": ["*-state.md", "*_state.md", "flo-*.md", "flo", "flow", "tools"]},
+    "taxonomy": {"source": "FAMILY_STRUCTURE", "order": [], "groups": {}},
     "mermaid": {"offline": False},
-    "deck": {"enabled": False, "title": None, "subtitle": ""},
+    "deck": {"enabled": False},
     "readerHeader": {"fields": ["stage", "status", "snapshotId", "generatedOn"]},
     "git": {"commitShadow": False},
 }
@@ -101,6 +95,7 @@ DEFAULT_CONFIG = {
 _COMMON_GROUPS = {
     "":                     (1,  "Overview",              "#0b3d66", "Top-level workspace documents."),
     "data":                 (5,  "Data Foundation",       "#64748b", "Shared data fabric the downstream stages snapshot against."),
+    "requirements":         (12, "Requirements",          "#d97706", "Architecture/technology requirements register — inputs and constraints for downstream design."),
     "entities":             (60, "Entities",              "#0969da", "Per-entity artifacts (group / multi-entity runs)."),
     "group":                (62, "Group",                 "#0969da", "Consolidated group-level artifacts."),
     "governance":           (80, "Governance",            "#475569", "Governance model, decisions, and controls."),
@@ -113,12 +108,6 @@ FAMILY_GROUP_META = {
     "pdlc": {
         **_COMMON_GROUPS,
         "projects":         (3,  "Projects",              "#0b3d66", "Per-project artifacts and registry."),
-        # nested phase folders under projects/{projectId}/ (KL-5, resolved via nesting)
-        "product":          (10, "1 - Product",           "#0e9f6e", "Product definition: vision, PIP, requirements, and UX."),
-        "backlog":          (12, "Backlog",               "#0e9f6e", "Epics and stories."),
-        "ux":               (14, "UX Design",             "#0e9f6e", "Interaction and experience designs."),
-        "architecture":     (20, "2 - Architecture",      "#7c3aed", "Architecture: ADRs, component designs, and the technical package."),
-        "decisions":        (22, "Architecture Decisions", "#7c3aed", "Architecture decision records (ADRs)."),
     },
 
     # --- SFLC (Strategy Formulation Life Cycle) ---
@@ -156,12 +145,12 @@ FAMILY_GROUP_META = {
     },
 
     # --- BALC (Business Architecture Life Cycle) ---
-    # AI-BAV produces docs in motivation/ + requirements/, AI-BCM in capabilities/,
-    # AI-VSM in value-streams/, AI-OMD in operating-model/, AI-BAG in target/ + governance/.
+    # AI-BAV produces docs in vision/ + requirements/, AI-BCM in capabilities/,
+    # AI-VSM in value-streams/, AI-OMD in operating-model/, AI-BAG in governance/.
     "balc": {
         **_COMMON_GROUPS,
-        "motivation":       (10, "1 - Business Motivation",       "#0e9f6e",
-                             "Drivers, goals, requirements, principles, and the motivation model tracing back to strategy."),
+        "vision":           (10, "1 - Vision and Grounding",      "#0e9f6e",
+                             "Strategy grounding, EA mandate, stakeholder mapping, architecture vision, and the vision baseline."),
         "requirements":     (15, "Requirements",                  "#64748b",
                              "Architecture requirements register (seeded by motivation, verified at target)."),
         "capabilities":     (20, "2 - Business Capabilities",     "#d97706",
@@ -170,34 +159,34 @@ FAMILY_GROUP_META = {
                              "Value stream maps, stages, enabling capabilities, and cross-stream dependencies."),
         "operating-model":  (40, "4 - Operating Model",           "#0969da",
                              "The operating-model design: organizational structure, process architecture, and technology alignment."),
-        "target":           (50, "5 - Target Architecture",       "#e11d48",
-                             "To-Be target business architecture, gap analysis (As-Is to To-Be per capability), and transition plateaus."),
+        "governance":       (50, "5 - Governance and Target",     "#e11d48",
+                             "Target business architecture, gap analysis, governance model, and chain contracts."),
     },
 
     # --- DALC (Data Architecture Life Cycle) ---
-    # AI-DAD in discovery/, AI-DGV in governance-data/, AI-DMO in modeling/,
-    # AI-DPL in pipelines/, AI-MDM in mdm/, AI-DPS in privacy/, AI-DRA in reference-arch/.
+    # AI-DAD in discovery/, AI-DGV in governance/, AI-DMO in models/,
+    # AI-DPL in platform/, AI-MDM in mdm/, AI-DPS in privacy-security/, AI-DRA in reference-architecture/.
     "dalc": {
         **_COMMON_GROUPS,
-        "discovery":        (10, "1 - Data Discovery and Strategy", "#0e9f6e",
-                             "Data landscape discovery, current-state inventory, strategy definition, and data principles."),
-        "governance-data":  (20, "2 - Data Governance",             "#d97706",
-                             "Data governance framework, policies, stewardship model, quality rules, and lineage."),
-        "modeling":         (30, "3 - Data Modeling",               "#7c3aed",
-                             "Logical/physical models, feature stores, vector schemas, ontologies, and schema evolution."),
-        "pipelines":        (40, "4 - Pipelines and Platform",     "#0969da",
-                             "Data pipelines, platform design, orchestration, ingestion patterns, and observability."),
-        "mdm":              (45, "5 - Master Data Management",     "#0969da",
-                             "MDM strategy, golden records, matching/merging rules, and cross-domain master data."),
-        "privacy":          (48, "6 - Privacy and Security",       "#475569",
-                             "Data classification, PII/PHI controls, encryption, access policies, and compliance mapping."),
-        "reference-arch":   (50, "7 - Data Reference Architecture","#e11d48",
-                             "Target data architecture, reference patterns, and the Data-to-Application handoff contract."),
+        "discovery":              (10, "1 - Data Discovery and Strategy", "#0e9f6e",
+                                   "Data landscape discovery, current-state inventory, strategy definition, and data principles."),
+        "governance":             (20, "2 - Data Governance",             "#d97706",
+                                   "Data governance framework, policies, stewardship model, quality rules, and lineage."),
+        "models":                 (30, "3 - Data Modeling",               "#7c3aed",
+                                   "Logical/physical models, feature stores, vector schemas, ontologies, and schema evolution."),
+        "platform":               (40, "4 - Pipelines and Platform",     "#0969da",
+                                   "Data pipelines, platform design, orchestration, ingestion patterns, and observability."),
+        "mdm":                    (45, "5 - Master Data Management",     "#0969da",
+                                   "MDM strategy, golden records, matching/merging rules, and cross-domain master data."),
+        "privacy-security":       (48, "6 - Privacy and Security",       "#475569",
+                                   "Data classification, PII/PHI controls, encryption, access policies, and compliance mapping."),
+        "reference-architecture": (50, "7 - Data Reference Architecture","#e11d48",
+                                   "Target data architecture, reference patterns, and the Data-to-Application handoff contract."),
     },
 
     # --- AALC (Application Architecture Life Cycle) ---
     # AI-AAD in discovery/, AI-APM in portfolio/, AI-INT in integration/,
-    # AI-AMD in design/, AI-AOA in ai-orchestration/, AI-AAG in target-app/.
+    # AI-AMD in design/, AI-AOA in orchestration/, AI-AAG in governance/.
     "aalc": {
         **_COMMON_GROUPS,
         "discovery":        (10, "1 - Application Discovery",      "#0e9f6e",
@@ -208,9 +197,9 @@ FAMILY_GROUP_META = {
                              "EDA patterns, API-led connectivity, AI service APIs, event catalog, and integration contracts."),
         "design":           (40, "4 - Application Design",         "#0969da",
                              "Microservices/monolith decisions, modernization roadmap, bounded contexts, and ADRs."),
-        "ai-orchestration": (45, "5 - AI Orchestration",           "#0969da",
+        "orchestration":    (45, "5 - AI Orchestration",           "#0969da",
                              "Agentic patterns, AI orchestration architecture, model routing, and guardrails."),
-        "target-app":       (50, "6 - Application Governance",     "#e11d48",
+        "governance":       (50, "6 - Application Governance",     "#e11d48",
                              "Target application architecture, governance handoff, and the Application-to-Technology contract."),
     },
 
@@ -242,65 +231,8 @@ def _get_builtin_for_family(family):
     key = (family or "").lower().strip()
     return FAMILY_GROUP_META.get(key, _COMMON_GROUPS)
 
-
-# --- optional FAMILY_STRUCTURE label enrichment (KL-1) ----------------------
-# Populated once per run by do_publish from the family's FAMILY_STRUCTURE.md when
-# one can be located near the workspace. Ranked BELOW the built-in table + config
-# (which stay authoritative) but ABOVE generic Title-casing — so a phase folder
-# that exists in FAMILY_STRUCTURE but not yet in the built-in table still gets a
-# real label. Strictly guarded so a mis-parse degrades to Title-casing, never to
-# garbage. `taxonomy.source: FAMILY_STRUCTURE` opts in (default); set it to
-# anything else to skip the read entirely.
-_FS_LABELS = {}
-
-# `folder/` — Description  |  **folder/**: Description  |  - `folder/` — Description
-# The description must start with a capital letter and avoid table pipes, so we
-# do not grab numeric columns from a runtime-tree table row.
-_FS_ROW_RE = re.compile(r"[`*]{0,2}([a-z][a-z0-9_\-]{1,30})/[`*]{0,2}\s*[—:\-]\s+([A-Z][^|`*\n]{2,59})")
-
-
-def family_structure_candidates(src, workspace_root, family):
-    """Ordered candidate locations for a family's FAMILY_STRUCTURE.md."""
-    fam = (family or "").lower()
-    names = ["FAMILY_STRUCTURE.md"]
-    roots = [
-        src, os.path.dirname(src), workspace_root,
-        os.path.join(workspace_root, ".aiflc", fam),
-        os.path.join(workspace_root, ".aiflc", fam, "%s-packages" % fam),
-    ]
-    return [os.path.join(r, n) for r in roots for n in names]
-
-
-def load_family_structure_labels(candidates):
-    """Best-effort parse of folder→label hints. Never raises; returns {} if no
-    file is found or nothing passes the guards."""
-    for path in candidates:
-        try:
-            if not path or not os.path.isfile(path):
-                continue
-            with open(path, "r", encoding="utf-8") as f:
-                text = f.read()
-        except Exception:
-            continue
-        labels = {}
-        for line in text.splitlines():
-            m = _FS_ROW_RE.search(line)
-            if not m:
-                continue
-            folder = m.group(1).strip().lower()
-            label = re.sub(r"\s+", " ", m.group(2)).strip().rstrip(".")
-            if folder and label and folder not in labels:
-                labels[folder] = label
-        if labels:
-            return labels
-    return {}
-
 STATE_RE = re.compile(r"[-_]state\.md$", re.IGNORECASE)
 EXTERNAL_RE = re.compile(r"^(?:[a-zA-Z][a-zA-Z0-9+.\-]*:|//)")
-
-# Mermaid ES module: CDN by default; offline mode vendors this file into _assets/
-MERMAID_CDN = "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"
-MERMAID_VENDOR_NAME = "mermaid.esm.min.mjs"
 
 
 def _deep_merge(base, override):
@@ -334,25 +266,10 @@ def load_config(config_path):
 
 # --- collection & ordering -------------------------------------------------
 
-def group_of(rel_path, config=None):
-    """Group key for a workspace-relative path.
-
-    Normally the top-level subfolder (or '' for root files). For "nested"
-    top-level folders — entities/{id}/{phase}, group/{id}/{phase},
-    projects/{id}/{phase} (KL-3 / KL-5) — descend past the id segment and group
-    by the real {phase} folder, so per-entity / per-project artifacts sort under
-    their workflow phase instead of one undifferentiated bucket. Folders to
-    descend into come from config taxonomy.nesting.
-    """
+def group_of(rel_path):
+    """Top-level subfolder of a workspace-relative path, or '' for root files."""
     parts = rel_path.replace(os.sep, "/").split("/")
-    if len(parts) <= 1:
-        return ""
-    top = parts[0]
-    nesting = ((config or {}).get("taxonomy") or {}).get("nesting") or []
-    if top in nesting and len(parts) >= 4:
-        # entities/{id}/{phase}/….md -> {phase}
-        return parts[2]
-    return top
+    return parts[0] if len(parts) > 1 else ""
 
 
 def group_meta(group, config, family=None):
@@ -381,8 +298,6 @@ def group_meta(group, config, family=None):
         label = label or builtin[1]
         colour = colour or builtin[2]
         desc = desc if desc is not None else builtin[3]
-    if label is None and group in _FS_LABELS:   # KL-1 enrichment (below builtin/config)
-        label = _FS_LABELS[group]
     label = label or (group.replace("-", " ").replace("_", " ").title() if group else "Overview")
     colour = colour or "#0969da"
     desc = desc or ""
@@ -428,7 +343,7 @@ def collect_files(src, export_abs, config, family=None):
 
     def sort_key(p):
         rel = os.path.relpath(p, src)
-        grp = group_of(rel, config)
+        grp = group_of(rel)
         order, _, _, _ = group_meta(grp, config, family)
         # (group order, creation-time tiebreaker within group, name)
         try:
@@ -439,50 +354,6 @@ def collect_files(src, export_abs, config, family=None):
 
     found.sort(key=sort_key)
     return found
-
-
-def compute_seq_map(files, src, export_root):
-    """Map each source .md (abs) → its output .html (abs), NN_-prefixed in order.
-    Shared by the document mirror and the deck so links line up."""
-    seq_map = {}
-    for i, srcf in enumerate(files, start=1):
-        rel = os.path.relpath(srcf, src)
-        d = os.path.dirname(rel)
-        base = os.path.splitext(os.path.basename(rel))[0]
-        name = "%02d_%s.html" % (i, base)
-        seq_map[srcf] = os.path.join(export_root, d, name) if d else os.path.join(export_root, name)
-    return seq_map
-
-
-def vendor_mermaid(export_root):
-    """Copy a vendored Mermaid ES module into the export's _assets/ for offline
-    rendering. Looks in the tool's templates/assets/ and in .publish/_vendor/.
-    Returns the destination path, or None if no asset is available."""
-    here = os.path.dirname(os.path.abspath(__file__))
-    candidates = [
-        os.path.join(here, "templates", "assets", MERMAID_VENDOR_NAME),
-        os.path.join(os.path.dirname(export_root), "_vendor", MERMAID_VENDOR_NAME),
-    ]
-    for srcf in candidates:
-        if os.path.isfile(srcf):
-            dest_dir = os.path.join(export_root, "_assets")
-            os.makedirs(dest_dir, exist_ok=True)
-            try:
-                shutil.copy2(srcf, os.path.join(dest_dir, MERMAID_VENDOR_NAME))
-                return os.path.join(dest_dir, MERMAID_VENDOR_NAME)
-            except Exception:
-                return None
-    return None
-
-
-def make_bundle(publish_root, export_root, family):
-    """Zip the shadow site into {publish_root}/{family}-html.zip for handoff."""
-    try:
-        base = os.path.join(publish_root, "%s-html" % family)
-        return shutil.make_archive(base, "zip", root_dir=export_root)
-    except Exception as e:
-        print("  note: could not create zip bundle (%r)" % e)
-        return None
 
 
 # --- front matter ----------------------------------------------------------
@@ -502,44 +373,28 @@ def parse_fm(fm_text):
         return None
 
 
-def render_front_matter(fm_text, data, fields=None):
-    """Render front matter as a reader header.
-
-    If `fields` (config readerHeader.fields) is given, those fields are
-    *promoted* into the open reader header in that order; any remaining
-    front-matter fields drop into a collapsed "More metadata" panel (KL-4).
-    With no configured fields present, every field shows (back-compat).
-    """
+def render_front_matter(fm_text, data):
     if not fm_text or not fm_text.strip():
         return ""
 
     def esc(v):
         return html.escape(str(v))
 
-    def render_val(v):
-        if isinstance(v, list):
-            return "<ul class='fm-list'>%s</ul>" % "".join("<li>%s</li>" % esc(i) for i in v)
-        if isinstance(v, dict):
-            return "<ul class='fm-list'>%s</ul>" % "".join(
-                "<li><span class='fm-subkey'>%s</span>: %s</li>" % (esc(kk), esc(vv)) for kk, vv in v.items())
-        return esc(v)
-
     if isinstance(data, dict):
-        def rows_for(keys):
-            return "".join("<tr><th scope='row'>%s</th><td>%s</td></tr>" % (esc(k), render_val(data[k])) for k in keys)
-        promoted = [k for k in (fields or []) if k in data]
-        if not promoted:  # no configured field present → show everything (back-compat)
-            return ("<details class='frontmatter' open><summary>Document metadata</summary>"
-                    "<table class='fm-table'><tbody>%s</tbody></table></details>" % rows_for(list(data.keys())))
-        rest = [k for k in data.keys() if k not in promoted]
-        block = ("<details class='frontmatter' open><summary>Document metadata</summary>"
-                 "<table class='fm-table'><tbody>%s</tbody></table></details>" % rows_for(promoted))
-        if rest:
-            block += ("<details class='frontmatter'><summary>More metadata</summary>"
-                      "<table class='fm-table'><tbody>%s</tbody></table></details>" % rows_for(rest))
-        return block
-    inner = "<pre class='fm-raw'>%s</pre>" % esc(fm_text.strip())
-    return "<details class='frontmatter' open><summary>Document metadata</summary>%s</details>" % inner
+        rows = []
+        for k, v in data.items():
+            if isinstance(v, list):
+                val = "<ul class='fm-list'>%s</ul>" % "".join("<li>%s</li>" % esc(i) for i in v)
+            elif isinstance(v, dict):
+                val = "<ul class='fm-list'>%s</ul>" % "".join(
+                    "<li><span class='fm-subkey'>%s</span>: %s</li>" % (esc(kk), esc(vv)) for kk, vv in v.items())
+            else:
+                val = esc(v)
+            rows.append("<tr><th scope='row'>%s</th><td>%s</td></tr>" % (esc(k), val))
+        inner = "<table class='fm-table'><tbody>%s</tbody></table>" % "".join(rows)
+    else:
+        inner = "<pre class='fm-raw'>%s</pre>" % esc(fm_text.strip())
+    return "<details class='frontmatter'><summary>Document metadata</summary>%s</details>" % inner
 
 
 def fm_field(data, name):
@@ -580,6 +435,44 @@ URL_TEXT_RE = re.compile(r'https?://[^\s<>"]+')
 SKIP_TAGS = {"a", "code", "pre"}
 
 
+def _resolve_cross_ws_html(target_md_abs, current_src_root, current_export_dir):
+    """Resolve a cross-workspace .md link to its published HTML equivalent.
+    
+    Given a target like /workspace/balc-ws/capabilities/capability-decomposition.md,
+    find the matching HTML file in /workspace/.publish/balc-html/capabilities/NN_capability-decomposition.html.
+    Returns a relative href from current_export_dir, or None if not found.
+    """
+    # Find the workspace root (parent of *-ws folders)
+    ws_root = os.path.dirname(current_src_root)
+    # Determine which {family}-ws the target belongs to
+    target_norm = target_md_abs.replace(os.sep, "/")
+    ws_root_norm = ws_root.replace(os.sep, "/")
+    if not target_norm.startswith(ws_root_norm):
+        return None
+    rel_to_root = target_norm[len(ws_root_norm):].lstrip("/")
+    parts = rel_to_root.split("/")
+    if len(parts) < 2 or not parts[0].endswith("-ws"):
+        return None
+    target_family = parts[0][:-3]  # e.g., "balc-ws" -> "balc"
+    target_rel_md = "/".join(parts[1:])  # e.g., "capabilities/capability-decomposition.md"
+    # Look for the HTML equivalent in .publish/{family}-html/
+    publish_dir = os.path.join(ws_root, ".publish", "%s-html" % target_family)
+    if not os.path.isdir(publish_dir):
+        return None
+    # The HTML file is named NN_{basename}.html in the same subfolder structure
+    target_dir = os.path.dirname(target_rel_md)
+    target_base = os.path.splitext(os.path.basename(target_rel_md))[0]
+    search_dir = os.path.join(publish_dir, target_dir) if target_dir else publish_dir
+    if not os.path.isdir(search_dir):
+        return None
+    # Find the file matching *_{target_base}.html
+    for fn in os.listdir(search_dir):
+        if fn.lower().endswith("_%s.html" % target_base.lower()):
+            html_abs = os.path.join(search_dir, fn)
+            return os.path.relpath(html_abs, current_export_dir).replace(os.sep, "/")
+    return None
+
+
 def make_link_rewriter(src_abs, src_root, seq_map):
     src_dir = os.path.dirname(src_abs)
     this_export_dir = os.path.dirname(seq_map[src_abs])
@@ -604,7 +497,12 @@ def make_link_rewriter(src_abs, src_root, seq_map):
         if target_abs in seq_map:
             return 'href="%s"' % (href_to(seq_map[target_abs]) + anchor)
         if os.path.exists(target_abs):
-            # in-workspace but out-of-set: point back to the source file
+            # Cross-workspace .md link: resolve to sibling HTML publish folder
+            if target_abs.lower().endswith(".md"):
+                resolved_html = _resolve_cross_ws_html(target_abs, src_root, this_export_dir)
+                if resolved_html:
+                    return 'href="%s"' % (resolved_html + anchor)
+            # fallback: point back to the source file
             return 'href="%s"' % (os.path.relpath(target_abs, this_export_dir).replace(os.sep, "/") + anchor)
         return m.group(0)
 
@@ -660,75 +558,99 @@ def render_toc(tokens):
     if len(top) == 1 and top[0]["level"] == 1:
         top = top[0].get("children", [])
     body = walk(top)
-    return ("<nav class='toc'><details open><summary>Contents</summary><ul>%s</ul></details></nav>" % body) if body else ""
+    return ("<nav class='toc' id='toc-panel'><ul>%s</ul></nav><button class='toc-toggle' id='toc-btn' title='Toggle Contents'>&#9776;</button>" % body) if body else ""
 
 
 # --- assets (CSS/JS/templates) ---------------------------------------------
 
 CSS = """
-:root{--fg:#1f2328;--muted:#59636e;--border:#d1d9e0;--bg:#fff;--soft:#f6f8fa;--accent:#0969da;--th:#eef2f6;--zebra:#fafbfc;}
+:root{--fg:#1a1f36;--muted:#4a5568;--border:#e2e8f0;--bg:#ffffff;--soft:#f7fafc;--accent:#2b6cb0;--accent-light:#ebf4ff;--th:#edf2f7;--zebra:#f7fafc;--gradient-start:#1a365d;--gradient-end:#2b6cb0;--shadow:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -1px rgba(0,0,0,.04);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -2px rgba(0,0,0,.04);}
 *{box-sizing:border-box;}
-body{margin:0;color:var(--fg);background:#eaeef2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6;font-size:16px;}
-.page{max-width:980px;margin:24px auto;background:var(--bg);border:1px solid var(--border);border-radius:10px;box-shadow:0 1px 3px rgba(27,31,36,.08);}
-.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;padding:14px 28px;background:linear-gradient(90deg,#0b3d66,#0969da);color:#fff;border-radius:10px 10px 0 0;box-shadow:0 2px 10px rgba(11,37,69,.18);}
-.topbar .home{color:#fff;text-decoration:none;font-size:18px;opacity:.85;}.topbar .home:hover{opacity:1;}
-.topbar .seq{font-weight:700;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);padding:2px 10px;border-radius:20px;font-size:13px;letter-spacing:.5px;}
+body{margin:0;color:var(--fg);background:linear-gradient(135deg,#f0f4f8 0%,#e2e8f0 100%);font-family:'Source Sans Pro','Noto Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;font-size:16px;min-height:100vh;}
+.page{max-width:1020px;margin:32px auto;background:var(--bg);border:0;border-radius:16px;box-shadow:var(--shadow-lg);position:relative;}
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;padding:16px 32px;background:linear-gradient(135deg,var(--gradient-start),var(--gradient-end));color:#fff;border-radius:16px 16px 0 0;box-shadow:0 4px 12px rgba(26,54,93,.2);}
+.topbar .home{color:#fff;text-decoration:none;font-size:18px;opacity:.85;transition:opacity .2s;}.topbar .home:hover{opacity:1;}
+.topbar .seq{font-weight:700;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:3px 12px;border-radius:20px;font-size:12px;letter-spacing:.8px;backdrop-filter:blur(4px);}
 .topbar .crumb{font-size:13px;opacity:.9;}.topbar .crumb b{opacity:1;}.topbar .grow{flex:1;}
-.content{padding:8px 34px 34px;}
-h1,h2,h3,h4{line-height:1.25;margin-top:1.4em;font-weight:600;scroll-margin-top:72px;}
-h1{font-size:1.9em;margin-top:.6em;padding-bottom:.3em;border-bottom:2px solid var(--border);}
-h2{font-size:1.45em;padding-bottom:.25em;border-bottom:1px solid var(--border);}
-h3{font-size:1.2em;}h4{font-size:1.05em;}
-a{color:var(--accent);text-decoration:none;}a:hover{text-decoration:underline;}
+.content{padding:12px 40px 40px;}
+h1,h2,h3,h4{line-height:1.3;margin-top:1.6em;font-weight:700;scroll-margin-top:80px;letter-spacing:-.02em;}
+h1{font-size:2em;margin-top:.7em;padding-bottom:.4em;border-bottom:3px solid var(--accent-light);color:var(--gradient-start);}
+h2{font-size:1.5em;padding-bottom:.3em;border-bottom:2px solid var(--border);color:#2d3748;}
+h3{font-size:1.2em;color:#2d3748;}h4{font-size:1.05em;color:#4a5568;}
+a{color:var(--accent);text-decoration:none;transition:color .15s;}a:hover{color:#1a4971;text-decoration:underline;}
 p,li{overflow-wrap:break-word;}
-blockquote{margin:1em 0;padding:.4em 1em;color:var(--muted);border-left:4px solid var(--border);background:var(--soft);border-radius:0 6px 6px 0;}
+blockquote{margin:1.2em 0;padding:.6em 1.2em;color:var(--muted);border-left:4px solid var(--accent);background:var(--accent-light);border-radius:0 8px 8px 0;}
 blockquote p{margin:.4em 0;}
-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--soft);padding:.15em .4em;border-radius:6px;font-size:.88em;}
-pre{background:var(--soft);border:1px solid var(--border);border-radius:8px;padding:14px 16px;overflow:auto;font-size:.85em;}
-pre code{background:none;padding:0;}
-.table-wrap{overflow-x:auto;margin:1em 0;border-radius:8px;}
-table{border-collapse:collapse;width:100%;font-size:.92em;}
-th,td{border:1px solid var(--border);padding:8px 11px;text-align:left;vertical-align:top;}
-th{background:var(--th);font-weight:600;}tbody tr:nth-child(even){background:var(--zebra);}
-hr{border:0;border-top:1px solid var(--border);margin:2em 0;}
-ul,ol{padding-left:1.5em;}img{max-width:100%;}
-.frontmatter{margin:16px 0 4px;border:1px solid var(--border);border-radius:8px;background:var(--soft);}
-.frontmatter>summary{cursor:pointer;padding:8px 14px;font-weight:600;color:var(--muted);font-size:.85em;text-transform:uppercase;letter-spacing:.6px;}
+blockquote table{font-size:.75em;}
+details.legend{margin:1em 0;border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;background:var(--accent-light);}
+details.legend>summary{cursor:pointer;padding:8px 14px;font-weight:600;font-size:.8em;color:var(--accent);list-style:none;}
+details.legend>summary::before{content:'▶ ';font-size:.75em;}
+details.legend[open]>summary::before{content:'▼ ';}
+details.legend>.legend-body{padding:4px 14px 10px;font-size:.78em;color:var(--muted);}
+details.legend>.legend-body table{font-size:.85em;margin:0;}
+details.legend>.legend-body th,details.legend>.legend-body td{padding:3px 8px;line-height:1.3;}
+details.legend>.legend-body th{background:var(--soft);color:var(--muted);font-weight:600;border-color:var(--border);}
+details.legend>.legend-body td{background:#fff;border-color:var(--border);}
+code{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--soft);padding:.2em .5em;border-radius:6px;font-size:.86em;border:1px solid var(--border);}
+pre{background:#1a1f36;color:#e2e8f0;border:0;border-radius:10px;padding:18px 20px;overflow:auto;font-size:.84em;box-shadow:inset 0 2px 4px rgba(0,0,0,.2);}
+pre code{background:none;padding:0;border:0;color:inherit;}
+.table-wrap{overflow-x:auto;margin:1.2em 0;border-radius:10px;box-shadow:var(--shadow);}
+table{border-collapse:collapse;width:100%;font-size:.9em;}
+th,td{border:1px solid var(--border);padding:10px 14px;text-align:left;vertical-align:top;}
+th{background:var(--gradient-start);color:#fff;font-weight:600;border-color:rgba(255,255,255,.1);}
+tbody tr:nth-child(even){background:var(--zebra);}tbody tr:hover{background:var(--accent-light);}
+hr{border:0;border-top:2px solid var(--border);margin:2.5em 0;}
+ul,ol{padding-left:1.6em;}img{max-width:100%;border-radius:8px;}
+.frontmatter{margin:16px 0 8px;border:1px solid var(--border);border-radius:10px;background:var(--soft);transition:box-shadow .2s;}
+.frontmatter:hover{box-shadow:var(--shadow);}
+.frontmatter>summary{cursor:pointer;padding:10px 16px;font-weight:600;color:var(--muted);font-size:.82em;text-transform:uppercase;letter-spacing:.8px;}
 .fm-table{margin:0;font-size:.86em;}
-.fm-table th{width:210px;background:#fff;color:var(--muted);font-weight:600;white-space:nowrap;vertical-align:top;}
-.fm-table td{background:#fff;}.fm-list{margin:0;padding-left:1.1em;}.fm-subkey{font-weight:600;color:var(--muted);}
+.fm-table th{width:210px;background:#fff;color:var(--muted);font-weight:600;white-space:nowrap;vertical-align:top;border-color:var(--border);}
+.fm-table td{background:#fff;border-color:var(--border);}.fm-list{margin:0;padding-left:1.1em;}.fm-subkey{font-weight:600;color:var(--muted);}
 .fm-raw{margin:0;border:0;background:#fff;}
-.toc{margin:18px 0;border:1px solid var(--border);border-radius:8px;background:#fff;}
-.toc>details>summary{cursor:pointer;padding:8px 14px;font-weight:600;color:var(--muted);font-size:.85em;text-transform:uppercase;letter-spacing:.6px;}
-.toc ul{padding-left:1.2em;margin:.3em 0;}.toc>details>ul{padding:4px 20px 12px;}
-.toc a{color:var(--fg);}.toc a:hover{color:var(--accent);}
-.docfoot{margin-top:2.5em;padding-top:14px;border-top:1px solid var(--border);color:var(--muted);font-size:.8em;}
-.topbar .tnav{color:#fff;text-decoration:none;font-size:12.5px;font-weight:600;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:4px 11px;margin-left:8px;white-space:nowrap;}
-.topbar .tnav:hover{background:rgba(255,255,255,.28);}
-.pagenav{display:flex;justify-content:space-between;gap:14px;margin:30px 0 4px;}
-.pagenav .pn{flex:1 1 0;max-width:48%;text-decoration:none;border:1px solid var(--border);border-radius:10px;padding:11px 15px;background:#fff;display:flex;flex-direction:column;gap:2px;transition:border-color .12s,box-shadow .12s,transform .12s;}
-.pagenav .pn:hover{border-color:var(--accent);box-shadow:0 3px 10px rgba(9,105,218,.12);transform:translateY(-1px);}
+.toc{position:fixed;top:72px;right:0;width:240px;height:calc(100vh - 72px);background:#fff;border-left:1px solid var(--border);box-shadow:-2px 0 8px rgba(0,0,0,.06);overflow-y:auto;padding:14px 0;transform:translateX(100%);transition:transform .25s ease;z-index:20;font-size:.82em;}
+.toc.open{transform:translateX(0);}
+.toc-toggle{position:fixed;top:80px;right:8px;z-index:21;background:var(--accent);color:#fff;border:0;border-radius:8px 0 0 8px;padding:8px 10px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:var(--shadow);transition:right .25s ease,background .2s;}
+.toc-toggle.shifted{right:248px;}
+.toc-toggle:hover{background:var(--gradient-start);}
+.toc ul{padding-left:1em;margin:.2em 0;list-style:none;}
+.toc>ul{padding:0 12px;}
+.toc li{margin:1px 0;}
+.toc a{color:var(--muted);text-decoration:none;display:block;padding:3px 8px;border-radius:4px;border-left:2px solid transparent;transition:all .15s;line-height:1.4;}
+.toc a:hover{color:var(--accent);background:var(--accent-light);}
+.toc a.active{color:var(--accent);font-weight:600;border-left-color:var(--accent);background:var(--accent-light);}
+@media(min-width:1300px){.toc{left:auto;right:0;width:220px;border-radius:10px 0 0 10px;border:1px solid var(--border);border-right:0;top:100px;height:calc(100vh - 120px);box-shadow:var(--shadow);}.toc.open{transform:translateX(0);}.toc-toggle{right:8px;}.toc-toggle.shifted{right:228px;}}
+@media(max-width:640px){.toc{width:200px;}.toc-toggle.shifted{right:208px;}}
+.docfoot{margin-top:3em;padding-top:16px;border-top:2px solid var(--border);color:var(--muted);font-size:.8em;}
+.topbar .tnav{color:#fff;text-decoration:none;font-size:12px;font-weight:600;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 13px;margin-left:8px;white-space:nowrap;transition:background .2s;}
+.topbar .tnav:hover{background:rgba(255,255,255,.25);}
+.pagenav{display:flex;justify-content:space-between;gap:16px;margin:36px 0 8px;}
+.pagenav .pn{flex:1 1 0;max-width:48%;text-decoration:none;border:1px solid var(--border);border-radius:12px;padding:14px 18px;background:#fff;display:flex;flex-direction:column;gap:3px;transition:all .2s ease;}
+.pagenav .pn:hover{border-color:var(--accent);box-shadow:var(--shadow-lg);transform:translateY(-2px);}
 .pagenav .pn.next{align-items:flex-end;text-align:right;}
-.pagenav .pn .lab{font-size:.72em;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;}
+.pagenav .pn .lab{font-size:.7em;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);font-weight:700;}
 .pagenav .pn .ttl{color:var(--fg);font-weight:600;font-size:.95em;}
 .pagenav .pn.empty{visibility:hidden;border:0;background:none;box-shadow:none;}
-.mermaid-fig{position:relative;margin:1.2em 0;border:1px solid var(--border);border-radius:8px;background:#fff;padding:6px;}
+.mermaid-fig{position:relative;margin:1.5em 0;border:1px solid var(--border);border-radius:12px;background:#fff;padding:8px;box-shadow:var(--shadow);}
 .mermaid-fig>.mermaid{border:0;margin:0;background:#fff;text-align:center;}
-.mm-toolbar{position:absolute;top:8px;right:8px;z-index:3;opacity:.35;transition:opacity .15s;}
+.mm-toolbar{position:absolute;top:10px;right:10px;z-index:3;opacity:.3;transition:opacity .2s;}
 .mermaid-fig:hover .mm-toolbar,.mm-toolbar:focus-within{opacity:1;}
-.mm-btn{font:600 12px/1.2 -apple-system,"Segoe UI",Roboto,sans-serif;background:#0969da;color:#fff;border:0;border-radius:6px;padding:7px 11px;cursor:pointer;}
-.mm-btn:hover{background:#0b3d66;}
+.mm-btn{font:600 12px/1.2 'Inter',-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--accent);color:#fff;border:0;border-radius:8px;padding:8px 12px;cursor:pointer;transition:background .2s;}
+.mm-btn:hover{background:var(--gradient-start);}
 .mm-overlay{position:fixed;inset:0;z-index:99999;background:#fff;display:flex;flex-direction:column;}
-.mm-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);background:#f6f8fa;flex:0 0 auto;}
+.mm-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--soft);flex:0 0 auto;}
 .mm-bar .sp{flex:1;}.mm-bar .hint{color:var(--muted);font-size:12px;}.mm-bar strong{font-size:14px;}
-.mm-stage{flex:1 1 auto;overflow:hidden;position:relative;cursor:grab;touch-action:none;background-image:linear-gradient(45deg,#f0f3f6 25%,transparent 25%,transparent 75%,#f0f3f6 75%),linear-gradient(45deg,#f0f3f6 25%,#fff 25%,#fff 75%,#f0f3f6 75%);background-size:24px 24px;background-position:0 0,12px 12px;}
+.mm-stage{flex:1 1 auto;overflow:hidden;position:relative;cursor:grab;touch-action:none;background-image:linear-gradient(45deg,#f0f4f8 25%,transparent 25%,transparent 75%,#f0f4f8 75%),linear-gradient(45deg,#f0f4f8 25%,#fff 25%,#fff 75%,#f0f4f8 75%);background-size:24px 24px;background-position:0 0,12px 12px;}
 .mm-stage.grabbing{cursor:grabbing;}
 .mm-stage svg{position:absolute;top:0;left:0;transform-origin:0 0;}
-@media(max-width:640px){.content{padding:8px 18px 24px;}.topbar{padding:12px 18px;}.fm-table th{width:auto;}}
+@media(min-width:1400px){.page{max-width:1200px;}.content{padding:12px 56px 48px;}}
+@media(min-width:1800px){.page{max-width:1440px;}.content{padding:16px 72px 56px;}table{font-size:.94em;}}
+@media(max-width:640px){.content{padding:8px 18px 24px;}.topbar{padding:12px 18px;gap:8px;}.topbar .seq{font-size:11px;padding:2px 8px;}.topbar .crumb{font-size:11px;}.topbar .tnav{font-size:11px;padding:3px 9px;margin-left:4px;}.fm-table th{width:auto;}h1{font-size:1.5em;}h2{font-size:1.25em;}.page{margin:8px;border-radius:10px;}table{font-size:.8em;}th,td{padding:6px 8px;}.pagenav{flex-direction:column;}.pagenav .pn{max-width:100%;}.mermaid-fig{margin:1em -12px;border-radius:4px;}}
+@media(max-width:480px){.content{padding:6px 12px 18px;}.topbar{flex-wrap:wrap;padding:10px 14px;}.topbar .grow{display:none;}h1{font-size:1.3em;}h2{font-size:1.1em;}table{font-size:.75em;}th,td{padding:4px 6px;}}
 """
 
 JS = """
-import mermaid from '%%MERMAIDSRC%%';
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
 mermaid.initialize({ startOnLoad:false, securityLevel:'loose', theme:'default' });
 try { await mermaid.run({ querySelector: '.mermaid' }); } catch (e) { console.error('mermaid render failed', e); }
 function initPanZoom(stage, svg){
@@ -780,6 +702,96 @@ document.addEventListener('keydown', e=>{
   if(e.key==='ArrowLeft' && _pv){ location.href=_pv.getAttribute('href'); }
   else if(e.key==='ArrowRight' && _nx){ location.href=_nx.getAttribute('href'); }
 });
+/* Conditional cell coloring for comparative columns */
+(function(){
+  /* Collapsible blockquote legends — wrap in <details> */
+  document.querySelectorAll('blockquote').forEach(bq=>{
+    const first=bq.querySelector('p>strong')||bq.querySelector('strong');
+    if(!first||!first.textContent.includes('Column Legend')) return;
+    const det=document.createElement('details');
+    det.className='legend';
+    const sum=document.createElement('summary');
+    sum.textContent='Column Legend';
+    const body=document.createElement('div');
+    body.className='legend-body';
+    while(bq.firstChild){
+      if(bq.firstChild.nodeType===1 && bq.firstChild.tagName==='P' && bq.firstChild.querySelector('strong') && bq.firstChild.textContent.trim().startsWith('Column Legend')){
+        bq.removeChild(bq.firstChild);
+        continue;
+      }
+      body.appendChild(bq.firstChild);
+    }
+    det.appendChild(sum);
+    det.appendChild(body);
+    bq.replaceWith(det);
+  });
+  /* TOC sidebar toggle + scroll-spy */
+  (function(){
+    const toc=document.getElementById('toc-panel');
+    const btn=document.getElementById('toc-btn');
+    if(!toc||!btn) return;
+    btn.addEventListener('click',()=>{toc.classList.toggle('open');btn.classList.toggle('shifted');});
+    const links=toc.querySelectorAll('a[href^="#"]');
+    if(!links.length) return;
+    const headings=[];
+    links.forEach(a=>{const id=a.getAttribute('href').slice(1);const el=document.getElementById(id);if(el)headings.push({el,a});});
+    let raf=0;
+    function onScroll(){cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{
+      let cur=null;const top=window.scrollY+100;
+      for(let i=headings.length-1;i>=0;i--){if(headings[i].el.offsetTop<=top){cur=headings[i];break;}}
+      links.forEach(a=>a.classList.remove('active'));
+      if(cur){cur.a.classList.add('active');cur.a.scrollIntoView({block:'nearest',behavior:'smooth'});}
+    });}
+    window.addEventListener('scroll',onScroll,{passive:true});
+    onScroll();
+  })();
+  const colors={
+    'critical':['#fef2f2','#991b1b'],'very high':['#fef2f2','#991b1b'],
+    'high':['#fff7ed','#9a3412'],'significant':['#fff7ed','#9a3412'],
+    'medium':['#fefce8','#854d0e'],'moderate':['#fefce8','#854d0e'],
+    'low':['#f0fdf4','#166534'],'minor':['#f0fdf4','#166534'],
+    'very low':['#f0fdf4','#166534'],'negligible':['#f0fdf4','#166534'],
+    'adopt':['#f0fdf4','#166534'],'trial':['#eff6ff','#1e40af'],
+    'assess':['#fefce8','#854d0e'],'hold':['#fef2f2','#991b1b'],
+    'yes':['#f0fdf4','#166534'],'no':['#fef2f2','#991b1b'],'partial':['#fefce8','#854d0e'],
+    'strong':['#f0fdf4','#166534'],'weak':['#fef2f2','#991b1b'],
+    'strength':['#f0fdf4','#166534'],'weakness':['#fef2f2','#991b1b'],
+    'opportunity':['#eff6ff','#1e40af'],'threat':['#fff7ed','#9a3412'],
+    'completed':['#f0fdf4','#166534'],'in-progress':['#eff6ff','#1e40af'],'not started':['#fef2f2','#991b1b'],
+    'resolved':['#f0fdf4','#166534'],'open':['#fef2f2','#991b1b'],'mitigated':['#fefce8','#854d0e']
+  };
+  /* Text-based coloring */
+  document.querySelectorAll('td').forEach(td=>{
+    const txt=td.textContent.trim().toLowerCase();
+    const c=colors[txt];
+    if(c){td.style.background=c[0];td.style.color=c[1];td.style.fontWeight='600';}
+  });
+  /* Numeric gradient coloring for score/weight columns */
+  document.querySelectorAll('table').forEach(tbl=>{
+    const ths=tbl.querySelectorAll('thead th, tr:first-child th');
+    if(!ths.length) return;
+    const scoreKw=/score|significance|weight|priority|impact|severity|rating|rank|maturity|readiness|risk|ev\b|p.i\b/i;
+    ths.forEach((th,ci)=>{
+      if(!scoreKw.test(th.textContent)) return;
+      const cells=[]; let min=Infinity, max=-Infinity;
+      tbl.querySelectorAll('tbody tr, tr:not(:first-child)').forEach(tr=>{
+        const td=tr.querySelectorAll('td')[ci]; if(!td) return;
+        const v=parseFloat(td.textContent.replace(/[^0-9.\-]/g,''));
+        if(!isNaN(v)){cells.push({td,v}); if(v<min)min=v; if(v>max)max=v;}
+      });
+      if(cells.length<2||min===max) return;
+      cells.forEach(({td,v})=>{
+        const t=(v-min)/(max-min);
+        const r=Math.round(254-(t*115));
+        const g=Math.round(202+(t*50));
+        const b=Math.round(202-(t*90));
+        td.style.background='rgb('+r+','+g+','+b+')';
+        td.style.color=t>0.7?'#14532d':t<0.3?'#7f1d1d':'#713f12';
+        td.style.fontWeight='600';
+      });
+    });
+  });
+})();
 """
 
 PAGE = """<!DOCTYPE html>
@@ -787,18 +799,21 @@ PAGE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <title>%%TITLE%%</title>
 <style>%%CSS%%</style>
 </head>
 <body>
+%%TOC%%
 <div class="page">
 <div class="topbar"><a class="home" href="%%INDEXHREF%%" title="Back to index">&#8962;</a><span class="seq">%%SEQ%%</span><span class="crumb">%%CRUMB%%</span><span class="grow"></span>%%TOPNAV%%</div>
 <div class="content">
 %%META%%
-%%TOC%%
 %%BODY%%
 %%PAGENAV%%
-<div class="docfoot">Generated from <code>%%SRC%%</code> on %%DATE%% &middot; sequence %%SEQ%% &middot; <a href="%%INDEXHREF%%">back to index</a>. This HTML is a read-only view; the Markdown source is authoritative.</div>
+<div class="docfoot">Generated from <code>%%SRC%%</code> on %%DATE%% &middot; sequence %%SEQ%% &middot; <a href="%%INDEXHREF%%">back to index</a>. This HTML is a read-only view; the Markdown source is authoritative.<br><br><strong>AIFLC</strong> (AI Full Life Cycle) &mdash; a structured, AI-driven enterprise strategy and architecture methodology. Built with the <strong>AIFLC HTML Export</strong> engine. <a href="https://github.com/mbmd/AIFLC" target="_blank" rel="noopener noreferrer">GitHub</a><br>Created by <strong>Mohammad Maheri</strong> &mdash; <a href="https://www.linkedin.com/in/mohammad-maheri-8399565b" target="_blank" rel="noopener noreferrer">LinkedIn</a></div>
 </div>
 </div>
 <script type="module">%%JS%%</script>
@@ -864,17 +879,10 @@ def convert_one(src_abs, src_root, export_root, seq, seq_map, config, prev=None,
     else:
         top_next, pn_next = "", '<span class="pn empty"></span>'
 
-    if bool((config.get("mermaid") or {}).get("offline")):
-        mermaid_src = os.path.relpath(os.path.join(export_root, "_assets", MERMAID_VENDOR_NAME),
-                                      os.path.dirname(out_abs)).replace(os.sep, "/")
-    else:
-        mermaid_src = MERMAID_CDN
-    js = JS.replace("%%MERMAIDSRC%%", mermaid_src)
-
-    page = (PAGE.replace("%%TITLE%%", html.escape(title)).replace("%%CSS%%", CSS).replace("%%JS%%", js)
+    page = (PAGE.replace("%%TITLE%%", html.escape(title)).replace("%%CSS%%", CSS).replace("%%JS%%", JS)
             .replace("%%SEQ%%", "%02d" % seq).replace("%%CRUMB%%", crumb)
             .replace("%%INDEXHREF%%", index_href)
-            .replace("%%META%%", render_front_matter(fm_text, fm_data, (config.get("readerHeader") or {}).get("fields")))
+            .replace("%%META%%", render_front_matter(fm_text, fm_data))
             .replace("%%TOC%%", render_toc(toc_tokens)).replace("%%BODY%%", html_body)
             .replace("%%TOPNAV%%", top_prev + top_next).replace("%%PAGENAV%%",
                      '<nav class="pagenav">%s%s</nav>' % (pn_prev, pn_next))
@@ -886,19 +894,17 @@ def convert_one(src_abs, src_root, export_root, seq, seq_map, config, prev=None,
         f.write(page)
 
     stage = fm_field(fm_data, "stage")
-    reader_fields = (config.get("readerHeader") or {}).get("fields") or []
-    status = fm_field(fm_data, "status") if "status" in reader_fields else ""
-    return {"seq": seq, "group": group_of(rel, config),
+    return {"seq": seq, "group": (crumb_dir.split("/")[0] if crumb_dir else ""),
             "href": os.path.relpath(out_abs, export_root).replace(os.sep, "/"),
-            "title": title, "stage": stage, "status": status}
+            "title": title, "stage": stage}
 
 
 # --- landing page ----------------------------------------------------------
 
 INDEX_CSS = """
-:root{--fg:#1f2328;--muted:#59636e;--border:#d1d9e0;--soft:#f6f8fa;--accent:#0969da;}
+:root{--fg:#1a1f36;--muted:#4a5568;--border:#e2e8f0;--soft:#f7fafc;--accent:#2b6cb0;}
 *{box-sizing:border-box;}
-body{margin:0;color:var(--fg);background:#eaeef2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6;}
+body{margin:0;color:var(--fg);background:linear-gradient(135deg,#f0f4f8 0%,#e2e8f0 100%);font-family:'Source Sans Pro','Noto Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;}
 .wrap{max-width:1080px;margin:24px auto;padding:0 18px 48px;}
 .hero{background:linear-gradient(120deg,#0b3d66,#0969da);color:#fff;border-radius:14px;padding:30px 34px;box-shadow:0 2px 8px rgba(27,31,36,.12);}
 .hero h1{margin:0 0 6px;font-size:2em;}.hero .sub{font-size:1.05em;opacity:.92;}
@@ -916,10 +922,23 @@ body{margin:0;color:var(--fg);background:#eaeef2;font-family:-apple-system,Blink
 .card-body{display:flex;flex-direction:column;min-width:0;}
 .card-title{font-weight:600;color:var(--fg);line-height:1.3;}
 .card-stage{color:var(--muted);font-size:.78em;margin-top:2px;}
-.card-status{display:inline-block;margin-top:4px;font-size:.68em;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#0969da;background:#ddf4ff;border:1px solid #b6e3ff;border-radius:20px;padding:1px 8px;width:fit-content;}
 .card-file{color:#8a94a0;font-size:.73em;margin-top:4px;font-family:ui-monospace,Consolas,monospace;overflow-wrap:anywhere;}
 .foot{margin-top:30px;color:var(--muted);font-size:.82em;text-align:center;}
-@media(max-width:560px){.cards{grid-template-columns:1fr;}}
+.portal-back{display:inline-block;color:#fff;opacity:.85;font-size:.85em;font-weight:600;text-decoration:none;margin-bottom:12px;padding:5px 14px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;transition:all .2s;}
+.portal-back:hover{opacity:1;background:rgba(255,255,255,.25);text-decoration:none;}
+.toc{position:fixed;top:72px;right:0;width:240px;height:calc(100vh - 72px);background:#fff;border-left:1px solid var(--border);box-shadow:-2px 0 8px rgba(0,0,0,.06);overflow-y:auto;padding:14px 0;transform:translateX(100%);transition:transform .25s ease;z-index:20;font-size:.82em;}
+.toc.open{transform:translateX(0);}
+.toc-toggle{position:fixed;top:80px;right:8px;z-index:21;background:var(--accent);color:#fff;border:0;border-radius:8px 0 0 8px;padding:8px 10px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 6px -1px rgba(0,0,0,.07);transition:right .25s ease,background .2s;}
+.toc-toggle.shifted{right:248px;}
+.toc-toggle:hover{background:#1a365d;}
+.toc ul{padding-left:0;margin:.2em 0;list-style:none;}
+.toc>ul{padding:0 12px;}
+.toc li{margin:1px 0;}
+.toc a{color:var(--muted);text-decoration:none;display:block;padding:5px 10px;border-radius:4px;border-left:2px solid transparent;transition:all .15s;line-height:1.4;font-size:.92em;}
+.toc a:hover{color:var(--accent);background:#ebf4ff;}
+.toc a.active{color:var(--accent);font-weight:600;border-left-color:var(--accent);background:#ebf4ff;}
+@media(min-width:1400px){.wrap{max-width:1280px;}.cards{grid-template-columns:repeat(auto-fill,minmax(360px,1fr));}.toc{width:220px;border-radius:10px 0 0 10px;border:1px solid var(--border);border-right:0;top:100px;height:calc(100vh - 120px);}.toc-toggle.shifted{right:228px;}}
+@media(max-width:560px){.cards{grid-template-columns:1fr;}.wrap{padding:0 12px 32px;}.hero{padding:22px 18px;border-radius:10px;}.hero h1{font-size:1.5em;}.hero .stats{gap:10px;font-size:.8em;}.group{padding:14px 16px;}.group-head h2{font-size:1.1em;}.card{padding:10px 12px;}.toc{width:200px;}.toc-toggle.shifted{right:208px;}}
 """
 
 INDEX_PAGE = """<!DOCTYPE html>
@@ -927,20 +946,46 @@ INDEX_PAGE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 <title>%%TITLE%% &mdash; Document Index</title>
 <style>%%CSS%%</style>
 </head>
 <body>
+%%TOC%%
 <div class="wrap">
 <div class="hero">
+<a class="portal-back" href="../index.html">&larr; Back to Portal</a>
 <h1>%%TITLE%%</h1>
 <div class="sub">%%SUBTITLE%%</div>
 <div class="stats"><span><b>%%TOTAL%%</b> documents</span><span><b>%%GROUPS%%</b> stages</span><span>generated %%DATE%%</span></div>
 <div class="note">This site is a read-only view of the workspace. The Markdown files are the single source of truth.</div>
 </div>
 %%SECTIONS%%
-<div class="foot">Sequence numbers (NN) follow workflow-stage order. State markers and routing artifacts are excluded from the site.</div>
+<div class="foot">Sequence numbers (NN) follow workflow-stage order. State markers and routing artifacts are excluded from the site.<br><strong>AIFLC</strong> (AI Full Life Cycle) &mdash; a structured, AI-driven enterprise strategy and architecture methodology. Built with the <strong>AIFLC HTML Export</strong> engine. <a href="https://github.com/mbmd/AIFLC" target="_blank" rel="noopener noreferrer">GitHub</a><br>Created by <strong>Mohammad Maheri</strong> &mdash; <a href="https://www.linkedin.com/in/mohammad-maheri-8399565b" target="_blank" rel="noopener noreferrer">LinkedIn</a></div>
 </div>
+<script>
+(function(){
+  var toc=document.getElementById('toc-panel');
+  var btn=document.getElementById('toc-btn');
+  if(!toc||!btn) return;
+  btn.addEventListener('click',function(){toc.classList.toggle('open');btn.classList.toggle('shifted');});
+  var links=toc.querySelectorAll('a[href^="#"]');
+  if(!links.length) return;
+  var sections=[];
+  links.forEach(function(a){var id=a.getAttribute('href').slice(1);var el=document.getElementById(id);if(el)sections.push({el:el,a:a});});
+  var raf=0;
+  function onScroll(){cancelAnimationFrame(raf);raf=requestAnimationFrame(function(){
+    var cur=null,top=window.scrollY+120;
+    for(var i=sections.length-1;i>=0;i--){if(sections[i].el.offsetTop<=top){cur=sections[i];break;}}
+    links.forEach(function(a){a.classList.remove('active');});
+    if(cur){cur.a.classList.add('active');cur.a.scrollIntoView({block:'nearest',behavior:'smooth'});}
+  });}
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+})();
+</script>
 </body>
 </html>
 """
@@ -968,20 +1013,26 @@ def build_index(items, export_root, family, config):
         rng = "%02d" % lo if lo == hi else "%02d-%02d" % (lo, hi)
         cards = []
         for d in docs:
-            badges = ""
-            if d.get("stage"):
-                badges += "<span class='card-stage'>%s</span>" % html.escape(d["stage"])
-            if d.get("status"):
-                badges += "<span class='card-status'>%s</span>" % html.escape(d["status"])
+            stage = ("<span class='card-stage'>%s</span>" % html.escape(d["stage"])) if d["stage"] else ""
             cards.append("<a class='card' href='%s'><span class='card-seq'>%02d</span>"
                          "<span class='card-body'><span class='card-title'>%s</span>%s"
                          "<span class='card-file'>%s</span></span></a>"
-                         % (d["href"], d["seq"], html.escape(d["title"]), badges,
+                         % (d["href"], d["seq"], html.escape(d["title"]), stage,
                             html.escape(os.path.basename(d["href"]))))
-        sections.append("<section class='group' style='--accent:%s'>"
+        sections.append("<section class='group' id='grp-%s' style='--accent:%s'>"
                         "<div class='group-head'><h2>%s</h2><span class='group-meta'>%d docs &middot; seq %s</span></div>"
                         "<p class='group-desc'>%s</p><div class='cards'>%s</div></section>"
-                        % (accent, html.escape(label), len(docs), rng, html.escape(desc), "".join(cards)))
+                        % (html.escape(g or "overview"), accent, html.escape(label), len(docs), rng, html.escape(desc), "".join(cards)))
+
+    # Build TOC for the right-panel navigation
+    toc_items = []
+    for g in order:
+        _, label, _, _ = group_meta(g, config, family)
+        anchor = "grp-%s" % (g or "overview")
+        toc_items.append("<li><a href='#%s'>%s</a></li>" % (html.escape(anchor), html.escape(label)))
+    toc_html = ("<nav class='toc' id='toc-panel'><ul>%s</ul></nav>"
+                "<button class='toc-toggle' id='toc-btn' title='Toggle Contents'>&#9776;</button>"
+                % "".join(toc_items)) if toc_items else ""
 
     landing = config.get("landing") or {}
     title = landing.get("title") or ("%s Workspace" % family.upper())
@@ -989,113 +1040,10 @@ def build_index(items, export_root, family, config):
     page = (INDEX_PAGE.replace("%%TITLE%%", html.escape(title))
             .replace("%%SUBTITLE%%", html.escape(subtitle)).replace("%%CSS%%", INDEX_CSS)
             .replace("%%TOTAL%%", str(shown_total)).replace("%%GROUPS%%", str(len(order)))
-            .replace("%%DATE%%", datetime.date.today().isoformat()).replace("%%SECTIONS%%", "".join(sections)))
+            .replace("%%DATE%%", datetime.date.today().isoformat())
+            .replace("%%TOC%%", toc_html)
+            .replace("%%SECTIONS%%", "".join(sections)))
     out = os.path.join(export_root, "index.html")
-    with open(out, "w", encoding="utf-8") as f:
-        f.write(page)
-    return out
-
-
-# --- executive deck (Phase 4) ----------------------------------------------
-
-DECK_CSS = """
-:root{--fg:#f8fafc;--muted:#94a3b8;--accent:#38bdf8;--bg:#0b1220;--card:#111c30;}
-*{box-sizing:border-box;}
-html,body{margin:0;height:100%;}
-body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
-.deck{height:100vh;}
-.slide{min-height:100vh;display:none;flex-direction:column;justify-content:center;padding:6vh 9vw;gap:14px;border-top:6px solid var(--accent);}
-.slide.title{align-items:flex-start;}
-.slide .kicker{color:var(--accent);font-size:.9rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
-.slide h1{font-size:3rem;margin:.1em 0;line-height:1.1;}
-.slide h2{font-size:2.1rem;margin:.1em 0;color:#e2e8f0;}
-.slide .sub{font-size:1.3rem;color:var(--muted);}
-.slide .meta{color:var(--muted);font-size:.9rem;margin-top:22px;}
-.slide .desc{color:var(--muted);font-size:1.05rem;max-width:60ch;}
-.slide ul{font-size:1.15rem;line-height:1.9;max-width:70ch;}
-.slide ul.docs{list-style:none;padding:0;}
-.slide ul.docs li a{color:var(--fg);text-decoration:none;display:flex;gap:12px;align-items:baseline;padding:6px 0;border-bottom:1px solid #1e2c44;}
-.slide ul.docs li a:hover{color:var(--accent);}
-.slide ul.docs .n{color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums;}
-.slide.note ul li{margin:.5em 0;}
-.nav{position:fixed;bottom:18px;right:22px;display:flex;gap:10px;align-items:center;background:rgba(17,28,48,.9);border:1px solid #24344f;border-radius:30px;padding:6px 12px;}
-.nav button{background:var(--accent);color:#04121f;border:0;border-radius:20px;width:34px;height:30px;font-size:16px;font-weight:700;cursor:pointer;}
-.nav #counter{color:var(--muted);font-size:.85rem;min-width:56px;text-align:center;}
-@media print{
-  .slide{display:flex!important;min-height:auto;page-break-after:always;border-top:4px solid #0969da;background:#fff;color:#111;}
-  body{background:#fff;color:#111;}.slide h2,.slide h1{color:#0b3d66;}.slide .sub,.slide .desc,.slide .meta,.nav #counter{color:#555;}
-  .slide ul.docs li a{color:#111;}.nav{display:none;}
-}
-"""
-
-DECK_PAGE = """<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>%%TITLE%% &mdash; Deck</title>
-<style>%%CSS%%</style>
-</head>
-<body>
-<div class="deck">%%SLIDES%%</div>
-<div class="nav"><button id="prev" title="Previous">&#8249;</button><span id="counter">1 / %%COUNT%%</span><button id="next" title="Next">&#8250;</button></div>
-<script>
-const slides=[...document.querySelectorAll('.slide')];let i=0;
-function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.style.display=(k===i?'flex':'none'));document.getElementById('counter').textContent=(i+1)+' / '+slides.length;}
-document.getElementById('prev').onclick=()=>show(i-1);
-document.getElementById('next').onclick=()=>show(i+1);
-document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')show(i-1);else if(e.key==='ArrowRight'||e.key===' ')show(i+1);else if(e.key.toLowerCase()==='p')window.print();});
-show(0);
-</script>
-</body>
-</html>
-"""
-
-
-def build_deck(items, publish_root, family, config):
-    """Build a curated executive-presentation deck shell at
-    {publish_root}/{family}-deck.html. The tool provides the navigable shell +
-    print-to-PDF framework + the plain-language content contract; curated
-    narrative is assembled on top per that contract (design §6)."""
-    deck_cfg = config.get("deck") or {}
-    landing = config.get("landing") or {}
-    title = deck_cfg.get("title") or landing.get("title") or ("%s Executive Overview" % family.upper())
-    subtitle = deck_cfg.get("subtitle") or landing.get("subtitle") or ""
-
-    groups = {}
-    for it in items:
-        groups.setdefault(it["group"], []).append(it)
-
-    def gkey(g):
-        order, _, _, _ = group_meta(g, config, family)
-        return (order, min(x["seq"] for x in groups[g]))
-
-    order = sorted(groups.keys(), key=gkey)
-    slides = []
-    slides.append("<section class='slide title'><div class='kicker'>Executive Overview</div>"
-                  "<h1>%s</h1><p class='sub'>%s</p>"
-                  "<p class='meta'>Generated %s &middot; Markdown is the single source of truth</p></section>"
-                  % (html.escape(title), html.escape(subtitle), datetime.date.today().isoformat()))
-    slides.append("<section class='slide note'><div class='kicker'>How to use this deck</div><h2>About this deck</h2><ul>"
-                  "<li>Navigable <b>shell</b> generated from the workspace &mdash; use &larr; / &rarr; (or Space) to move; press <b>P</b> to print to PDF.</li>"
-                  "<li>Curated narrative is layered per the <b>plain-language contract</b>: expand every abbreviation and code in prose, remove internal citations, and mark quantified targets <b>provisional</b> until leadership confirms.</li>"
-                  "<li>Each item links to the full document in the read-only HTML shadow; the Markdown source stays authoritative.</li>"
-                  "</ul></section>")
-    for g in order:
-        _, label, accent, desc = group_meta(g, config, family)
-        docs = sorted(groups[g], key=lambda x: x["seq"])
-        lis = "".join("<li><a href='%s'><span class='n'>%02d</span> %s</a></li>"
-                      % (d["href"], d["seq"], html.escape(d["title"])) for d in docs)
-        slides.append("<section class='slide' style='--accent:%s'><div class='kicker'>%s</div>"
-                      "<h2>%s</h2><p class='desc'>%s</p><ul class='docs'>%s</ul></section>"
-                      % (accent, html.escape(label), html.escape(label), html.escape(desc or ""), lis))
-    slides.append("<section class='slide title'><h1>Thank you</h1>"
-                  "<p class='sub'>Full detail lives in the workspace HTML shadow.</p></section>")
-
-    page = (DECK_PAGE.replace("%%TITLE%%", html.escape(title)).replace("%%CSS%%", DECK_CSS)
-            .replace("%%SLIDES%%", "".join(slides)).replace("%%COUNT%%", str(len(slides))))
-    os.makedirs(publish_root, exist_ok=True)
-    out = os.path.join(publish_root, "%s-deck.html" % family)
     with open(out, "w", encoding="utf-8") as f:
         f.write(page)
     return out
@@ -1111,7 +1059,7 @@ def ensure_gitignore(publish_root, commit_shadow):
     else:
         body = ("# AIFLC HTML Export - the HTML site is a derived, disposable shadow.\n"
                 "# It is git-ignored by default; the .config.yaml settings stay tracked.\n"
-                "*-html/\n*-html.zip\n*-deck.html\n")
+                "*-html/\n*-deck.html\n")
     try:
         with open(path, "w", encoding="utf-8") as f:
             f.write(body)
@@ -1220,38 +1168,6 @@ def cmd_status(src, family, workspace_root, config_path):
     print("  Output:       %s" % export_root)
 
 
-def cmd_deck(src, family, workspace_root, config_path):
-    """HTM__ deck — build the curated executive-presentation deck shell."""
-    publish_root = os.path.join(workspace_root, ".publish")
-    export_root = os.path.join(publish_root, "%s-html" % family)
-    bootstrap_config(config_path, family)
-    config, _ = load_config(config_path)
-    if not config.get("enabled", True):
-        print("Publishing is disabled for '%s' (enabled: false); deck not built." % family)
-        return
-    export_abs = os.path.abspath(export_root)
-    files = collect_files(src, export_abs, config, family)
-    if not files:
-        print("No publishable .md files found; nothing to build a deck from.")
-        return
-    seq_map = compute_seq_map(files, src, export_root)
-    items = []
-    for i, srcf in enumerate(files, start=1):
-        rel = os.path.relpath(srcf, src)
-        href = "%s-html/%s" % (family, os.path.relpath(seq_map[srcf], export_root).replace(os.sep, "/"))
-        items.append({"seq": i, "group": group_of(rel, config), "title": get_title(srcf), "href": href})
-    out = build_deck(items, publish_root, family, config)
-    print("Deck: %s (%d docs across the chain)" % (os.path.relpath(out, workspace_root).replace(os.sep, "/"), len(items)))
-    print("  Note: slides link into the %s-html/ shadow — run a full HTM__ publish so those pages exist." % family)
-
-
-def cmd_offline(src, family, workspace_root, config_path):
-    """HTM__ offline — full publish with Mermaid vendored + a zip bundle."""
-    bootstrap_config(config_path, family)
-    print("Offline build for '%s' (vendored Mermaid + zip bundle)..." % family)
-    return do_publish(src, family, workspace_root, config_path, force=False, force_offline=True)
-
-
 # --- main ------------------------------------------------------------------
 
 def resolve_family(src, explicit):
@@ -1273,8 +1189,8 @@ def main(argv=None):
     here = os.path.dirname(os.path.abspath(__file__))
     raw_args = argv if argv is not None else sys.argv[1:]
 
-    # Detect sub-command as the first arg (on|off|status|deck|offline) before parsing
-    subcmds = {"on", "off", "status", "deck", "offline"}
+    # Detect sub-command as the first arg (on | off | status) before parsing
+    subcmds = {"on", "off", "status"}
     command = None
     if raw_args and raw_args[0] in subcmds:
         command = raw_args[0]
@@ -1296,7 +1212,24 @@ def main(argv=None):
         sys.exit(1)
 
     family = resolve_family(src, args.family)
-    workspace_root = os.path.abspath(args.out_root) if args.out_root else os.path.dirname(src)
+
+    # --- FIX: workspace_root resolution guard (IMP-006) ---
+    # The tool is designed for {family}-ws directories. When src ends with "-ws",
+    # workspace_root is correctly its parent. But if src does NOT end with "-ws"
+    # (e.g., someone passes the workspace root itself), using os.path.dirname(src)
+    # would escape one level too high and publish into the wrong location.
+    src_basename = os.path.basename(os.path.normpath(src)).lower()
+    if args.out_root:
+        workspace_root = os.path.abspath(args.out_root)
+    elif src_basename.endswith("-ws"):
+        workspace_root = os.path.dirname(src)
+    else:
+        # src IS the workspace root (not a {family}-ws subfolder) — anchor here
+        print("WARNING: '%s' does not end with '-ws'. Treating it as the workspace root itself." % src_basename)
+        print("  If this is wrong, pass --out-root explicitly.")
+        workspace_root = src
+    # --- END FIX ---
+
     publish_root = os.path.join(workspace_root, ".publish")
     config_path = args.config or os.path.join(publish_root, "%s.config.yaml" % family)
 
@@ -1307,15 +1240,11 @@ def main(argv=None):
         cmd_off(src, family, workspace_root, config_path)
     elif command == "status":
         cmd_status(src, family, workspace_root, config_path)
-    elif command == "deck":
-        cmd_deck(src, family, workspace_root, config_path)
-    elif command == "offline":
-        cmd_offline(src, family, workspace_root, config_path)
     else:
         do_publish(src, family, workspace_root, config_path, force=args.force)
 
 
-def do_publish(src, family, workspace_root, config_path, force=False, force_offline=False):
+def do_publish(src, family, workspace_root, config_path, force=False):
     """Full idempotent publish. Returns the page count."""
     publish_root = os.path.join(workspace_root, ".publish")
     export_root = os.path.join(publish_root, "%s-html" % family)
@@ -1324,8 +1253,6 @@ def do_publish(src, family, workspace_root, config_path, force=False, force_offl
     bootstrap_config(config_path, family)
 
     config, had_cfg = load_config(config_path)
-    if force_offline:  # HTM__ offline forces vendored Mermaid for this run only
-        config.setdefault("mermaid", {})["offline"] = True
     if not config.get("enabled", True) and not force:
         print("Publishing is disabled for '%s' (config enabled: false). Use --force to override." % family)
         return 0
@@ -1347,16 +1274,6 @@ def do_publish(src, family, workspace_root, config_path, force=False, force_offl
     if os.path.isdir(export_root):
         shutil.rmtree(export_root, ignore_errors=True)
 
-    # KL-1: optionally enrich group labels from FAMILY_STRUCTURE.md (best-effort,
-    # ranked below the built-in table + config; a mis-parse degrades to Title-casing).
-    global _FS_LABELS
-    _FS_LABELS = {}
-    if str((config.get("taxonomy") or {}).get("source") or "").upper() == "FAMILY_STRUCTURE":
-        _FS_LABELS = load_family_structure_labels(
-            family_structure_candidates(src, workspace_root, family))
-        if _FS_LABELS:
-            print("Taxonomy:   enriched %d group label(s) from FAMILY_STRUCTURE.md" % len(_FS_LABELS))
-
     files = collect_files(src, export_abs, config, family)
     if not files:
         print("No publishable .md files found.")
@@ -1365,7 +1282,13 @@ def do_publish(src, family, workspace_root, config_path, force=False, force_offl
         ensure_gitignore(publish_root, (config.get("git") or {}).get("commitShadow", False))
         return 0
 
-    seq_map = compute_seq_map(files, src, export_root)
+    seq_map = {}
+    for i, srcf in enumerate(files, start=1):
+        rel = os.path.relpath(srcf, src)
+        d = os.path.dirname(rel)
+        base = os.path.splitext(os.path.basename(rel))[0]
+        name = "%02d_%s.html" % (i, base)
+        seq_map[srcf] = os.path.join(export_root, d, name) if d else os.path.join(export_root, name)
 
     def relhref(cur, tgt):
         return os.path.relpath(seq_map[tgt], os.path.dirname(seq_map[cur])).replace(os.sep, "/")
@@ -1386,18 +1309,6 @@ def do_publish(src, family, workspace_root, config_path, force=False, force_offl
 
     idx = build_index(items, export_root, family, config)
     ensure_gitignore(publish_root, (config.get("git") or {}).get("commitShadow", False))
-
-    if (config.get("mermaid") or {}).get("offline"):
-        if vendor_mermaid(export_root):
-            print("Offline:    vendored Mermaid into _assets/ (diagrams render with no internet).")
-        else:
-            print("Offline:    NOTE - no vendored Mermaid asset found. Place '%s' in the tool's "
-                  "templates/assets/ (or in .publish/_vendor/) so diagrams render offline; "
-                  "pages reference _assets/%s." % (MERMAID_VENDOR_NAME, MERMAID_VENDOR_NAME))
-        bundle = make_bundle(publish_root, export_root, family)
-        if bundle:
-            print("Bundle:     %s" % os.path.relpath(bundle, workspace_root).replace(os.sep, "/"))
-
     print("Done: %d/%d pages + index -> %s" % (ok, len(files), os.path.relpath(idx, workspace_root).replace(os.sep, "/")))
     return ok
 

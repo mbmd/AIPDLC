@@ -102,6 +102,7 @@ dashboard-summary:
 - domain-topology-map: {generated | stale | not-generated}
 - release-relevance-grouping: {generated | stale | not-generated}
 - capacity-planning-matrix: {generated | stale | not-generated}
+- Team Roster: [{TEAM-slug, ...} or "none"]   <!-- teams seen on epic Owning Team fields (from the AI-ADLC team-context-registry when present); recorded for AI-DWG per-team workspace detection -->
 - Last Derived: {ISO-date or "never"}
 
 ## Pending Decisions

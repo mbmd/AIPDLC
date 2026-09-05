@@ -287,6 +287,7 @@ Create `{output_root}/adlc-state.md`:
 | Output Root | {output_root}  (= {project_root}/architecture/) |
 | Input Source | {path or mode} |
 | Input Mode | {PIP / Document / Verbal / Brownfield} |
+| Enabled Extensions | _[none yet — opt-ins recorded as activated, e.g. team-topologies]_ |
 | Current Phase | FOUNDATION |
 | Current Stage | 1 |
 | Status | In Progress |
@@ -326,6 +327,10 @@ _To be defined in Stage 3._
 ## Containers
 
 _To be defined in Stage 5._
+
+## Team Topology
+
+_Populated only if the `team-topologies` extension is activated at Stage 5. Records the team roster + the TEAM-*/BC-*/SVC-* identity from `team-context-registry.md`, so AI-DWG can detect the topology by marker and partition per team._
 
 ## Open Questions
 

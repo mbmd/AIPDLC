@@ -2,13 +2,13 @@
 
 **Scope:** Family-wide | **Audience:** Builders, contributors, advanced users
 
-When you install more than one AI-* package into the same workspace, all package cores live together under `.aiflc/{family}/` — but they are **not** always loaded. Only the session orchestrator (the family's single always-loaded file) is active on every session; it routes to exactly ONE package core on demand. This document explains how the family keeps packages from interfering with each other — how you activate the one you want, how the assistant decides which package is "active," and how it refuses to switch packages behind your back.
+When you install more than one AI-* package into the same workspace, every package's core workflow is always loaded. This document explains how the family keeps those packages from interfering with each other — how you activate the one you want, how the assistant decides which package is "active," and how it refuses to switch packages behind your back.
 
 ---
 
 ## The Problem It Solves
 
-Each AI-* package (AI-PILC, AI-ADLC, AI-UXD, AI-POLC, AI-DWG, AI-GCE, AI-TGE, AI-PPM, AI-FLO, AI-ILC, AI-DFE) installs its core workflow into `.aiflc/{family}/`, where it sits dormant until activated. With one package installed, routing is unambiguous. With several installed in one workspace, two risks appear:
+Each AI-* package (AI-PILC (Project Initiation Life Cycle), AI-ADLC (Architecture Design Life Cycle), AI-UXD (UX Design), AI-POLC (Product Ownership Life Cycle), AI-DWG (Workspace Generator), AI-GCE (Governance & Compliance Engine), AI-TGE (Test Governance Engine), AI-PPM (Project Portfolio Management), AI-FLO (Flow Orchestrator), AI-ILC (Idea Life Cycle)) installs a core workflow that declares "when the user asks for X, follow me first." With one package installed, that's unambiguous. With several installed in one workspace, two risks appear:
 
 1. **File interference** — could one package overwrite another's output?
 2. **Activation interference** — while you are working in one package, could a stray phrase pull a different package into the conversation?
@@ -25,20 +25,19 @@ Every package has a command-style activation key in the form `_{PKG}_` — the p
 
 | Key | Activates | Key | Activates |
 |-----|-----------|-----|-----------|
-| `_ILC_` | AI-ILC | `_GCE_` | AI-GCE |
-| `_PILC_` | AI-PILC | `_TGE_` | AI-TGE |
-| `_ADLC_` | AI-ADLC | `_PPM_` | AI-PPM |
-| `_UXD_` | AI-UXD | `_FLO_` | AI-FLO |
-| `_POLC_` | AI-POLC | `_DWG_` | AI-DWG |
-| `_DFE_` | AI-DFE | | |
+| `_ILC_` (activate Idea Life Cycle) | AI-ILC | `_GCE_` (activate Governance Engine) | AI-GCE |
+| `_PILC_` (activate Project Initiation) | AI-PILC | `_TGE_` (activate Test Governance) | AI-TGE |
+| `_ADLC_` (activate Architecture Design) | AI-ADLC | `_PPM_` (activate Portfolio Management) | AI-PPM |
+| `_UXD_` (activate UX Design) | AI-UXD | `_FLO_` (activate Flow Orchestrator) | AI-FLO |
+| `_POLC_` (activate Product Ownership) | AI-POLC | `_DWG_` (activate Workspace Generator) | AI-DWG |
 
-These keys are intentionally distinct from governance **agent shortcuts**, which use a trailing double underscore (for example `IQA__`). A package key (`_PILC_`) and an agent shortcut (`IQA__`) can never be confused for one another.
+These keys are intentionally distinct from governance **agent shortcuts**, which use a trailing double underscore (for example `IQA__` (Initiation Quality)). A package key (`_PILC_`) and an agent shortcut (`IQA__`) can never be confused for one another.
 
 There is also one family-wide utility key:
 
 | Key | What it does |
 |-----|--------------|
-| `_ACTIVE_` | Reports which package is currently active and the status of its state marker. Read-only — it never changes anything and never triggers a switch. |
+| `_ACTIVE_` (report active package) | Reports which package is currently active and the status of its state marker. Read-only — it never changes anything and never triggers a switch. |
 
 ### Layer 2 — Keyword activation (fallback)
 
@@ -83,20 +82,6 @@ Because it fires on every prompt, it is most useful in workspaces where several 
 
 ---
 
-## Layer-3 Companions: Staged but Not Routable (OI-204)
-
-AI-GCE and AI-TGE are **Layer-3 companions** — they execute in the AI-DWG-generated project workspace, not in the Layer-2 design workspace where the rest of the family orchestrates. When the installer uses the **design** bundle (or any selection with AI-DWG present but without GCE/TGE explicitly selected):
-
-- The companion files are **staged inert** — physically present in `.aiflc/{family}/` so AI-DWG can later provision them into the generated workspace.
-- The session orchestrator **omits their routing rows** — typing `_GCE_` or `_TGE_` in a design workspace does nothing.
-- They are recorded in the manifest as `provisioningSource` (role = provisioning-source), never in the routed `packages` list.
-
-This means isolation is enforced at the routing level, not just at the file level: even though the companion cores are on disk, they are unreachable until AI-DWG places them in a Layer-3 workspace where they become fully active.
-
-In a **full** bundle or a direct **governance** install (GCE + TGE into an existing project repo), the companions are fully routable — the orchestrator includes their rows and activation keys work normally.
-
----
-
 ## Worked Example
 
 A workspace has AI-PILC and AI-ADLC installed. You are halfway through initiating a project (`pilc-state.md` shows status "in-progress").
@@ -113,7 +98,6 @@ A workspace has AI-PILC and AI-ADLC installed. You are halfway through initiatin
 ## Related Documents
 
 - [`HOW_STEERING_FILE_LOADING_WORKS.md`](HOW_STEERING_FILE_LOADING_WORKS.md) — why all core workflows are always loaded
-- [`HOW_PACKAGE_INSTALLATION_WORKS.md`](HOW_PACKAGE_INSTALLATION_WORKS.md) — how packages are installed (uniform home, orchestrator, companion staging)
 - [`HOW_STATE_FILES_WORK.md`](HOW_STATE_FILES_WORK.md) — the markers that signal an active session
 - [`HOW_CHAIN_HANDOFF_WORKS.md`](HOW_CHAIN_HANDOFF_WORKS.md) — how one package's output feeds the next
 - [`PATTERN_MARKER_FILE_DETECTION.md`](PATTERN_MARKER_FILE_DETECTION.md) — the marker-detection pattern this relies on
@@ -123,4 +107,4 @@ A workspace has AI-PILC and AI-ADLC installed. You are halfway through initiatin
 
 ---
 
-*Knowledge Document | Created: 2026-06-15 | Updated: 2026-08-10 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-15 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

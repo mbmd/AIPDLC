@@ -30,20 +30,19 @@ How the AI-* packages function internally — their engines, modes, and behavior
 
 | # | Document Name | Package(s) | Status |
 |---|--------------|------------|:------:|
-| 1 | [`HOW_PILC_WORKFLOW_ENGINE_WORKS.md`](HOW_PILC_WORKFLOW_ENGINE_WORKS.md) | AI-PILC | ✅ |
-| 2 | [`HOW_ADLC_PROGRESSIVE_DECOMPOSITION_WORKS.md`](HOW_ADLC_PROGRESSIVE_DECOMPOSITION_WORKS.md) | AI-ADLC | ✅ |
+| 1 | [`HOW_PILC_WORKFLOW_ENGINE_WORKS.md`](HOW_PILC_WORKFLOW_ENGINE_WORKS.md) | AI-PILC (Project Initiation Life Cycle) | ✅ |
+| 2 | [`HOW_ADLC_PROGRESSIVE_DECOMPOSITION_WORKS.md`](HOW_ADLC_PROGRESSIVE_DECOMPOSITION_WORKS.md) | AI-ADLC (Architecture Design Life Cycle) | ✅ |
 | 3 | [`HOW_ADLC_EXTENSIONS_WORK.md`](HOW_ADLC_EXTENSIONS_WORK.md) | AI-ADLC | ✅ |
-| 4 | [`HOW_DWG_GENERATION_ENGINE_WORKS.md`](HOW_DWG_GENERATION_ENGINE_WORKS.md) | AI-DWG | ✅ |
+| 4 | [`HOW_DWG_GENERATION_ENGINE_WORKS.md`](HOW_DWG_GENERATION_ENGINE_WORKS.md) | AI-DWG (Workspace Generator) | ✅ |
 | 5 | [`HOW_DWG_BROWNFIELD_DETECTION_WORKS.md`](HOW_DWG_BROWNFIELD_DETECTION_WORKS.md) | AI-DWG | ✅ |
-| 6 | [`HOW_GCE_DERIVATION_PIPELINE_WORKS.md`](HOW_GCE_DERIVATION_PIPELINE_WORKS.md) | AI-GCE | ✅ |
+| 6 | [`HOW_GCE_DERIVATION_PIPELINE_WORKS.md`](HOW_GCE_DERIVATION_PIPELINE_WORKS.md) | AI-GCE (Governance & Compliance Engine) | ✅ |
 | 7 | [`HOW_GCE_COMPLIANCE_AUDIT_WORKS.md`](HOW_GCE_COMPLIANCE_AUDIT_WORKS.md) | AI-GCE | ✅ |
 | 8 | [`HOW_GCE_REDERIVATION_WORKS.md`](HOW_GCE_REDERIVATION_WORKS.md) | AI-GCE | ✅ |
-| 9 | [`HOW_TGE_TEST_GOVERNANCE_WORKS.md`](HOW_TGE_TEST_GOVERNANCE_WORKS.md) | AI-TGE | ✅ |
-| 10 | [`HOW_ILC_IDEA_LIFECYCLE_WORKS.md`](HOW_ILC_IDEA_LIFECYCLE_WORKS.md) | AI-ILC | ✅ |
-| 11 | [`HOW_POLC_PRODUCT_OWNERSHIP_WORKS.md`](HOW_POLC_PRODUCT_OWNERSHIP_WORKS.md) | AI-POLC | ✅ |
-| 117 | [`HOW_DFE_DATA_FABRIC_WORKS.md`](HOW_DFE_DATA_FABRIC_WORKS.md) | AI-DFE | ✅ |
+| 9 | [`HOW_TGE_TEST_GOVERNANCE_WORKS.md`](HOW_TGE_TEST_GOVERNANCE_WORKS.md) | AI-TGE (Test Governance Engine) | ✅ |
+| 10 | [`HOW_ILC_IDEA_LIFECYCLE_WORKS.md`](HOW_ILC_IDEA_LIFECYCLE_WORKS.md) | AI-ILC (Idea Life Cycle) | ✅ |
+| 11 | [`HOW_POLC_PRODUCT_OWNERSHIP_WORKS.md`](HOW_POLC_PRODUCT_OWNERSHIP_WORKS.md) | AI-POLC (Product Ownership Life Cycle) | ✅ |
+| 117 | [`HOW_DFE_DATA_FABRIC_WORKS.md`](HOW_DFE_DATA_FABRIC_WORKS.md) | AI-DFE (Data Fabric Engine) | ✅ |
 | 110 | [`HOW_PACKAGE_ARCHETYPES_WORK.md`](HOW_PACKAGE_ARCHETYPES_WORK.md) | Family-wide | ✅ |
-| 121 | [`HOW_DELIVERY_METHOD_TIMING_WORKS.md`](HOW_DELIVERY_METHOD_TIMING_WORKS.md) | AI-POLC | ✅ |
 
 ---
 
@@ -57,12 +56,12 @@ How packages hand off to each other, share contracts, and maintain coherence.
 | 13 | [`HOW_STATE_FILES_WORK.md`](HOW_STATE_FILES_WORK.md) | Family-wide | ✅ |
 | 14 | [`HOW_DEPTH_LEVELS_WORK.md`](HOW_DEPTH_LEVELS_WORK.md) | Family-wide | ✅ |
 | 15 | [`HOW_GATES_AND_APPROVALS_WORK.md`](HOW_GATES_AND_APPROVALS_WORK.md) | Family-wide | ✅ |
-| 16 | [`HOW_FLOW_ORCHESTRATOR_WORKS.md`](HOW_FLOW_ORCHESTRATOR_WORKS.md) | AI-FLO | ✅ |
-| 17 | [`HOW_PORTFOLIO_MANAGEMENT_WORKS.md`](HOW_PORTFOLIO_MANAGEMENT_WORKS.md) | AI-PPM | ✅ |
+| 16 | [`HOW_FLOW_ORCHESTRATOR_WORKS.md`](HOW_FLOW_ORCHESTRATOR_WORKS.md) | AI-FLO (Flow Orchestrator) | ✅ |
+| 17 | [`HOW_PORTFOLIO_MANAGEMENT_WORKS.md`](HOW_PORTFOLIO_MANAGEMENT_WORKS.md) | AI-PPM (Project Portfolio Management) | ✅ |
 | 18 | `HOW_LIFECYCLE_CHANGE_PROPAGATION_WORKS.md` | Cross-cutting | 📋 |
 | 19 | [`HOW_TEST_STRATEGY_WORKS.md`](HOW_TEST_STRATEGY_WORKS.md) | AI-TGE / Family-wide | ✅ |
 | 111 | [`HOW_PACKAGE_ACTIVATION_ISOLATION_WORKS.md`](HOW_PACKAGE_ACTIVATION_ISOLATION_WORKS.md) | Family-wide | ✅ |
-| 112 | [`HOW_PROJECT_LAYER_COLLABORATION_WORKS.md`](HOW_PROJECT_LAYER_COLLABORATION_WORKS.md) | AI-ADLC / AI-UXD / AI-POLC → AI-DWG | ✅ |
+| 112 | [`HOW_PROJECT_LAYER_COLLABORATION_WORKS.md`](HOW_PROJECT_LAYER_COLLABORATION_WORKS.md) | AI-ADLC / AI-UXD (UX Design) / AI-POLC → AI-DWG | ✅ |
 | 113 | [`HOW_COMMUNICATION_FABRIC_WORKS.md`](HOW_COMMUNICATION_FABRIC_WORKS.md) | Family-wide / Cross-family | ✅ |
 
 ---
@@ -286,7 +285,7 @@ Consolidated lookup tables for specific reference data — instant answers witho
 
 | Category | Documents | ✅ Created | 📋 Planned | 💡 Future |
 |----------|:---------:|:----------:|:----------:|:---------:|
-| 1. Package Mechanics | 14 | 14 | 0 | 0 |
+| 1. Package Mechanics | 13 | 13 | 0 | 0 |
 | 2. Chain & Orchestration | 10 | 9 | 1 | 0 |
 | 3. Installation & Delivery | 5 | 3 | 0 | 2 |
 | 4. Governance & Compliance | 11 | 5 | 1 | 5 |
@@ -301,7 +300,7 @@ Consolidated lookup tables for specific reference data — instant answers witho
 | 13. Lifecycle | 4 | 4 | 0 | 0 |
 | 14. Interactions | 4 | 4 | 0 | 0 |
 | 15. Reference Maps | 7 | 7 | 0 | 0 |
-| **TOTAL** | **122** | **108** | **4** | **10** |
+| **TOTAL** | **121** | **107** | **4** | **10** |
 
 ---
 

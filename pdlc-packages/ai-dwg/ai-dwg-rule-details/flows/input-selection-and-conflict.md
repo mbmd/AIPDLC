@@ -27,11 +27,11 @@ QUALITY-IMPACT DISCLOSURE (if <3 inputs):
 
   Impact per absent input:
   • ADLC absent → tech steering (13+ files), src structure, technical-environment.md NOT produced.
-                   AI-DLC v1 will lack: module layout, technology constraints, security rules, API standards.
+                   AI-DLC will lack: module layout, technology constraints, security rules, API standards.
   • POLC absent → vision.md, DEFINITION_OF_DONE.md, planning templates NOT produced.
-                   AI-DLC v1 will lack: product context, success metrics, acceptance criteria.
+                   AI-DLC will lack: product context, success metrics, acceptance criteria.
   • UXD absent  → design-system.md, ui-implementation-spec.md, a11y baseline NOT produced.
-                   AI-DLC v1 will lack: design tokens, component patterns, accessibility governance.
+                   AI-DLC will lack: design tokens, component patterns, accessibility governance.
 
   "Proceed with {n}/3 inputs?" → USER MUST EXPLICITLY APPROVE.
   If user says no → ask which missing input to provide or point to.
@@ -48,7 +48,7 @@ Present inputs: {list}
 Absent inputs: {list}
 
 Impact of absent inputs:
-• {absent input}: Cannot produce {cluster list}. AI-DLC v1 will lack {what}.
+• {absent input}: Cannot produce {cluster list}. AI-DLC will lack {what}.
 • ...
 
 Proceed with reduced coverage? (User must explicitly approve)
@@ -87,7 +87,7 @@ Proceed with reduced coverage? (User must explicitly approve)
 
 You have two options:
   [A] Go back and complete {package(s)} first, then return to AI-DWG
-      → Richer workspace, more clusters generated, better AI-DLC v1 readiness
+      → Richer workspace, more clusters generated, better AI-DLC readiness
   [B] Skip and proceed with what's available now
       → DWG generates only the clusters for present inputs (reduced coverage)
 

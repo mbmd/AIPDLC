@@ -1,15 +1,15 @@
-# How AI-POLC Product Ownership Works
+# How AI-POLC (Product Ownership Life Cycle) Product Ownership Works
 
-**Purpose:** Explains how AI-POLC transforms business intent into a governed, prioritized Product Backlog Package (PBP) — covering vision, epic decomposition, value-based prioritization, and the continuous backlog/acceptance exchange with AI-DLC v1 during delivery.
+**Purpose:** Explains how AI-POLC transforms business intent into a governed, prioritized Product Backlog Package (PBP) — covering vision, epic decomposition, value-based prioritization, and the continuous backlog/acceptance exchange with AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) during delivery.
 
 ---
 
 ## What AI-POLC Does
 
-AI-POLC is the single source of truth for WHAT gets built, in WHAT order, and WHY. It sits between strategic planning (AI-PILC) and implementation (AI-DLC v1), turning business goals into a structured, prioritized backlog that developers consume.
+AI-POLC is the single source of truth for WHAT gets built, in WHAT order, and WHY. It sits between strategic planning (AI-PILC (Project Initiation Life Cycle)) and implementation (AI-DLC), turning business goals into a structured, prioritized backlog that developers consume.
 
 ```
-PIP (from AI-PILC) + AP (from AI-ADLC)
+PIP (from AI-PILC) + AP (from AI-ADLC (Architecture Design Life Cycle))
         │
         ▼
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -18,7 +18,7 @@ PIP (from AI-PILC) + AP (from AI-ADLC)
 │  VISION → DISCOVERY → DECOMPOSITION → PRIORITIZATION → RELEASE      │
 │                                                                      │
 │  Produces: Product Backlog Package (PBP)                             │
-│  Feeds: AI-DWG (workspace enrichment) + AI-DLC v1 (implementation)      │
+│  Feeds: AI-DWG (Workspace Generator) (workspace enrichment) + AI-DLC (implementation)      │
 └─────────────────────────────────────────────────────────────────────┘
         │
         ▼
@@ -39,7 +39,7 @@ PRODUCT BACKLOG PACKAGE (PBP)
 
 **Identity spine:** AI-POLC turns business intent into a prioritized, value-justified product backlog, and is the single source of truth for *what gets built, in what order, and why*.
 
-**Inclusion rule:** If it answers "what/why/order" → AI-POLC owns it. If it answers "how/when-built/is-it-compliant" → it belongs to a sibling package (AI-ADLC, AI-DLC v1, AI-GCE).
+**Inclusion rule:** If it answers "what/why/order" → AI-POLC owns it. If it answers "how/when-built/is-it-compliant" → it belongs to a sibling package (AI-ADLC, AI-DLC, AI-GCE (Governance & Compliance Engine)).
 
 ---
 
@@ -47,7 +47,7 @@ PRODUCT BACKLOG PACKAGE (PBP)
 
 ### Tier 1 — Always Active (the gap-filling delta)
 
-Active regardless of chain context. Covers what AI-DLC v1's Inception phase does NOT:
+Active regardless of chain context. Covers what AI-DLC's Inception phase does NOT:
 
 | Capability | What It Produces |
 |-----------|-----------------|
@@ -69,7 +69,7 @@ For standalone use or teams wanting comprehensive product ownership:
 |-----------|-------------|
 | Stakeholder value mapping | Deep stakeholder-to-feature alignment |
 | Outcome metrics & OKR tracking | Measure whether features deliver intended outcomes |
-| Feedback loop governance | Structure for incorporating AI-DLC v1 runtime feedback |
+| Feedback loop governance | Structure for incorporating AI-DLC runtime feedback |
 | Sprint-level refinement governance | Backlog grooming standards and ceremonies |
 | Technical debt as backlog items | Surfaces architecture debt as prioritized work |
 
@@ -77,7 +77,7 @@ For standalone use or teams wanting comprehensive product ownership:
 
 ## Key Interactions
 
-### AI-UXD → AI-POLC (Producer → Consumer)
+### AI-UXD (UX Design) → AI-POLC (Producer → Consumer)
 
 AI-UXD produces personas and user journeys. AI-POLC consumes them to:
 - Ground epics in real user needs (not abstract requirements)
@@ -91,9 +91,9 @@ AI-DWG reads the PBP to enrich workspace generation:
 - Story structure informs project instructions
 - Release structure informs milestone tracking
 
-### AI-POLC ⇄ AI-DLC v1 (Continuous Exchange)
+### AI-POLC ⇄ AI-DLC (Continuous Exchange)
 
-During delivery, AI-POLC and AI-DLC v1 exchange continuously:
+During delivery, AI-POLC and AI-DLC exchange continuously:
 - **POLC → DLC:** Stories with acceptance criteria, priority order, DoR compliance
 - **DLC → POLC:** Implementation feedback (stories that need splitting, discovered complexity, technical debt)
 
@@ -129,7 +129,7 @@ Before a story enters the "ready for development" state:
 | Priority assigned | Position in the backlog with rationale |
 | Risks noted | Known risks or assumptions |
 
-Stories that don't pass DoR are sent back to refinement — they don't enter AI-DLC v1 consumption.
+Stories that don't pass DoR are sent back to refinement — they don't enter AI-DLC consumption.
 
 ---
 

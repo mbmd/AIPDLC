@@ -2,7 +2,7 @@
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 **Transform architecture into a ready-to-code development workspace.**
 
@@ -37,7 +37,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -45,13 +45,13 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -65,11 +65,11 @@ flowchart LR
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 > **AI-DFE** ([Data Fabric Engine](../ai-dfe/)) is a family-scoped **companion** — it gathers data from all packages and distributes structured JSON for dashboards and status roll-ups. It runs alongside the chain rather than as a linear step, so it is not shown as a chain row above.
 
@@ -84,7 +84,7 @@ AI-DWG is the **hinge of the Project layer** — the terminal step of the design
 | **Layer** | Project (the design → build hinge) |
 | **Position** | Terminal step of the Project-layer design sequence (POLC → UXD → ADLC → DWG) |
 | **Predecessors (peer inputs, ≥1)** | AP (AI-ADLC), PBP (AI-POLC), UXP (AI-UXD) — equal-impact peers; any non-empty subset |
-| **Direct successors** | AI-GCE and AI-TGE (companions it provisions into the generated workspace); the workspace then feeds AI-DLC v1 (the build) |
+| **Direct successors** | AI-GCE and AI-TGE (companions it provisions into the generated workspace); the workspace then feeds AI-DLC (the build) |
 | **Reads (input)** | Any non-empty subset of `adlc-state.md` ∥ `polc-state.md` ∥ `uxd-state.md` |
 | **Produces (output)** | A self-contained dev workspace at `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/{slug}-workspace/`, opened separately in its own IDE |
 | **Output marker** | `dwg-state.md` (capability gate); AI-GCE/AI-TGE detect `rules/workspace-rules.md` + `.governance/workspace-manifest.yaml` |
@@ -96,11 +96,11 @@ AI-DWG is the **hinge of the Project layer** — the terminal step of the design
 **Simplified chain view** (see the diagram above for the full topology):
 
 ```
-AI-PILC → [ AI-POLC → AI-UXD → AI-ADLC → AI-DWG ] → AI-DLC v1  (build)
+AI-PILC → [ AI-POLC → AI-UXD → AI-ADLC → AI-DWG ] → AI-DLC (build)
                                           ▲ you are here   (AI-GCE + AI-TGE run alongside the build)
 ```
 
-AI-DWG answers **"turn the design into a workspace a team (and AI-DLC v1) can build in."** It composes — it does not author the design (ADLC/POLC/UXD), build the software (AI-DLC v1), or enforce the rules at runtime (AI-GCE). It is the **Layer-2 → Layer-3 hinge**: it provisions the AI-GCE and AI-TGE companions into the generated workspace so they activate there.
+AI-DWG answers **"turn the design into a workspace a team (and AI-DLC) can build in."** It composes — it does not author the design (ADLC/POLC/UXD), build the software (AI-DLC), or enforce the rules at runtime (AI-GCE). It is the **Layer-2 → Layer-3 hinge**: it provisions the AI-GCE and AI-TGE companions into the generated workspace so they activate there.
 
 ### Standalone vs. chained
 
@@ -166,7 +166,7 @@ pdlc-ws/projects/
 
 ## Activation
 
-**Explicit key:** type `_DWG_` in any prompt to activate AI-DWG unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-DWG`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
+**Explicit key:** type `_DWG_` in any prompt to activate AI-DWG unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` (report active package) reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-DWG`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
 
 ---
 
@@ -229,7 +229,7 @@ An AI assistant can install AI-DWG by parsing and executing the block below. All
 # AIFLC INSTALL MANIFEST — AI-DWG
 package: AI-DWG
 family: pdlc                       # package home: .aiflc/pdlc/
-version: 1.0.0
+version: 1.1.0
 runtime: none                      # pure Markdown; no deps, no build
 source_root: pdlc-packages/        # clone root of the AIPDLC repo
 activation_phrase: "Using AI-DWG, generate the workspace"
@@ -340,7 +340,7 @@ AI-DWG is a **generator**, so the patterns it embodies are engineering approache
 | **AI-agnostic canonical + adapter rendering** | One platform-neutral `rules/` canonical + a thin adapter per target (Kiro/Claude Code/Cursor/Codex/generic); the generated workspace is also **build-method-agnostic** (AI-DLC, spec-driven, or freestyle) | It does not choose your build method — it records a derived hint for AI-GCE only |
 | **Developer Experience / day-1 productivity** ("golden path") | A clone-and-contribute workspace — onboarding, contributing, definition-of-done, examples, CI/CD — so a new joiner needs zero "how do I…?" | — |
 
-The boundary: AI-DWG **is** the workspace. It generates and reconciles it; it does not author the design (AI-ADLC / AI-POLC / AI-UXD), build the software (AI-DLC v1), or enforce the rules at runtime (AI-GCE / AI-TGE).
+The boundary: AI-DWG **is** the workspace. It generates and reconciles it; it does not author the design (AI-ADLC / AI-POLC / AI-UXD), build the software (AI-DLC), or enforce the rules at runtime (AI-GCE / AI-TGE).
 
 ---
 
@@ -354,7 +354,7 @@ AI-DWG is the **Layer-2 → Layer-3 hinge** for the family's cross-cutting lense
 | **Automation Lens** | Automated / Manual | `_AUTOLENS_` | Provisions automation scaffolding and couriers the automation context (`.automation-lens/manifest.json`) |
 | **Agentic** (AI ∩ Automation) | derived — both on | — | Provisions the agent-framework scaffolding (tool registry, memory store, loop runner) and seeds the Layer-3 lens agents |
 
-AI-GCE and AI-TGE then govern and test the tagged features in Layer 3 via those seeded agents (`AIG__`/`ATG__` governance, `AIQ__`/`ATQ__` quality).
+AI-GCE and AI-TGE then govern and test the tagged features in Layer 3 via those seeded agents (`AIG__` (AI Governance) /`ATG__` (Automation Governance) governance, `AIQ__` (AI Quality) /`ATQ__` (Automation Quality) quality).
 
 ---
 

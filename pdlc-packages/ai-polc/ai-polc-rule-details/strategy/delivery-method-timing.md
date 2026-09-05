@@ -169,6 +169,8 @@ This rule owns the section below. It is a **dual-consumer** contract — `team-d
 
 ## 7. Elicitation (structured `### Q` blocks)
 
+> **Shared intake primitive (`project-intake@1.0`).** This elicitation is the **`deliveryMethod` contributor** to the family-wide project-parameter intake defined in `contracts/PROJECT_PARAMETER_INTAKE_CONTRACT.md`. It is **not** a bespoke gate — it is the live reference implementation of the primitive's ask-once resolution protocol: **read the recorded value first → if present, use it (never ask) → if absent, ask once and record → never re-prompt.** The storage authority is the per-project state file's `## Velocity Model` section (§6), per `OUTPUT_AND_STATE_CONTRACT.md` §10.1. The contract carries the registry row (parameter `deliveryMethod` + `aiTool` + `teamAIMaturity` + `buildProfile`); this file owns the domain-specific question wording below.
+
 Ask at Stage 1 (or inherit from `pilc-state.md` when chained — never re-ask what upstream already captured). Follow the standard question format (Context → Options → Recommended → Rationale → "Your Decision").
 
 ### Q-DM1: Delivery method

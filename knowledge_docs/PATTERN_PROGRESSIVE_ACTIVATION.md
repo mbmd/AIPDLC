@@ -29,12 +29,12 @@ FULL CAPABILITY (everything the package can do)
 
 | Package | Activation Mechanism | Levels | What Progresses |
 |---------|---------------------|:------:|-----------------|
-| **AI-GCE** | Governance Tiers | 3 | Rules enforced (Tier 1: 5-8 → Tier 2: +15 → Tier 3: +20) |
+| **AI-GCE (Governance & Compliance Engine)** | Governance Tiers | 3 | Rules enforced (Tier 1: 5-8 → Tier 2: +15 → Tier 3: +20) |
 | **All lifecycle packages** | Depth Levels | 3 | Detail produced (Minimal → Standard → Comprehensive) |
-| **AI-DWG** | Generation Modes | 4 | Scope of generation (Full → Delta → Brownfield → Extension) |
-| **AI-ADLC** | Extension Opt-In | Per-extension | Constraints activated (core only → core + DDD → core + DDD + Resilience) |
-| **AI-POLC** | Tier Activation | 2 | Capabilities active (Tier 1 gap-filling → Tier 2 full PO discipline) |
-| **AI-TGE** | Phase Activation | 2 | Operations mode (Strategy derivation → continuous Observation) |
+| **AI-DWG (Workspace Generator)** | Generation Modes | 4 | Scope of generation (Full → Delta → Brownfield → Extension) |
+| **AI-ADLC (Architecture Design Life Cycle)** | Extension Opt-In | Per-extension | Constraints activated (core only → core + DDD → core + DDD + Resilience) |
+| **AI-POLC (Product Ownership Life Cycle)** | Tier Activation | 2 | Capabilities active (Tier 1 gap-filling → Tier 2 full PO discipline) |
+| **AI-TGE (Test Governance Engine)** | Phase Activation | 2 | Operations mode (Strategy derivation → continuous Observation) |
 
 ---
 

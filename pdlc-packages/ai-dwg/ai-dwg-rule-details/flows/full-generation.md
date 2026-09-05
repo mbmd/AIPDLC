@@ -22,6 +22,23 @@ The step-by-step orchestration for **Mode 1: Full Generation** — composing a c
 
 ---
 
+## Topology Branch (checked after the Config Gate, before the single-workspace flow below)
+
+Read `workspaceTopology` from the Config Gate (Q4 — `flows/workspace-topology-selection.md`):
+
+- **`single` (default, or Q4 not offered) →** run the **Full Generation Flow below unchanged** — one workspace at `{project_root}/{slug}-workspace/`. This is the entire behavior for everyone who does not opt in; nothing changes.
+- **`per-team` or `hybrid` →** hand off to **`flows/workspace-set-control-plane.md`**, which:
+  1. Partitions the tri-input by `TEAM-*` (`mapping/team-workspace-partitioning.md`).
+  2. **Runs the Full Generation Flow below ONCE PER L3 MEMBER**, scoped to that team's slice — each member is a normal single workspace at `{project_root}/{slug}-workspaces/{team}/`, so STEP 1–5 below execute per member unchanged (plus `TEAM_CHARTER.md` + team-scoped relevance-map + read-only pinned `contracts/`).
+  3. Builds the **Layer-2 control plane** at `{project_root}/{slug}-management/` (set-manifest + authoritative contract registry + roll-up scaffold + `WORKSPACE_SET_CONTEXT_MAP.md`).
+  4. Seeds guardrail distribution (`reconciliation/guardrail-sync.md`) so every member's canonical `rules/` is byte-identical.
+
+  Post-generation steps (`mapping/companion-bootstrap.md`, `flows/agent-installation.md`) run **per L3 member** in this mode — see those files' set-aware sections.
+
+The STEP 1–5 flow below is therefore the **per-workspace unit of work** — invoked once for a single workspace, or once per member for a set. The set-level assembly is owned by `flows/workspace-set-control-plane.md`; this flow is not duplicated.
+
+---
+
 ## Full Generation Flow
 
 ```
@@ -212,7 +229,7 @@ Present generation results:
 🔗 Next steps:
    1. Review generated steering files for team-specific adjustments
    2. Run AI-GCE to derive compliance enforcement (hooks + rules)
-   3. Begin AI-DLC v1 workflow with user stories
+   3. Begin AI-DLC workflow with user stories
 
 🔀 **Chain Navigation (what's next in the AI-* Family):**
    • Sequential next: **AI-GCE** (`_GCE_`) — Governance & Compliance Engine
@@ -226,6 +243,8 @@ Present generation results:
 
 The workspace is ready for development."
 ```
+
+> **Set summary (per-team/hybrid topology).** When this flow ran once per member under a set, the single-workspace summary above is emitted **per member**, and `flows/workspace-set-control-plane.md` presents the **set-level summary** on top: the N member workspaces generated (by `TEAM-*`), the Layer-2 control plane location (`{slug}-management/`), and the `WORKSPACE_SET_CONTEXT_MAP.md` entry point. Each member is opened separately; the control plane stays with the architects/owners.
 
 ---
 

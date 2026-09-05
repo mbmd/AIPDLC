@@ -23,7 +23,7 @@ Every lifecycle package in the AI-* Family maintains a persistent state file tha
 │  Depth:        Standard                                              │
 │  Structure:    numbered                                              │
 │  Decisions:    6 logged                                              │
-│  Extensions:   [DDD Tactical, Microservices]  (AI-ADLC only)         │
+│  Extensions:   [DDD Tactical, Microservices]  (AI-ADLC (Architecture Design Life Cycle) only)         │
 │  Status:       In Progress                                           │
 │                                                                      │
 │  Used by:                                                            │
@@ -40,13 +40,13 @@ Each package has its own marker/state file:
 
 | Package | State File | Type | Purpose |
 |---------|-----------|------|---------|
-| AI-ILC | `ilc-state.md` | Lifecycle state | Tracks idea evaluation progress |
-| AI-PILC | `pilc-state.md` | Lifecycle state | Tracks project initiation progress |
+| AI-ILC (Idea Life Cycle) | `ilc-state.md` | Lifecycle state | Tracks idea evaluation progress |
+| AI-PILC (Project Initiation Life Cycle) | `pilc-state.md` | Lifecycle state | Tracks project initiation progress |
 | AI-ADLC | `adlc-state.md` | Lifecycle state | Tracks architecture design progress |
-| AI-POLC | `polc-state.md` | Lifecycle state | Tracks product ownership progress |
-| AI-UXD | `uxd-state.md` | Lifecycle state | Tracks UX design progress |
-| AI-DWG | — (no state file) | Generator | Marker is `.kiro/steering/workspace-rules.md` |
-| AI-GCE | `.compliance-state.json` | Engine state | Tracks compliance tier, scores, audit dates |
+| AI-POLC (Product Ownership Life Cycle) | `polc-state.md` | Lifecycle state | Tracks product ownership progress |
+| AI-UXD (UX Design) | `uxd-state.md` | Lifecycle state | Tracks UX design progress |
+| AI-DWG (Workspace Generator) | — (no state file) | Generator | Marker is `.kiro/steering/workspace-rules.md` |
+| AI-GCE (Governance & Compliance Engine) | `.compliance-state.json` | Engine state | Tracks compliance tier, scores, audit dates |
 
 **Note:** Generators (AI-DWG) and engines (AI-GCE) use different marker mechanisms because they don't have multi-phase linear progress to track.
 

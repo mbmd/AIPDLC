@@ -1,4 +1,4 @@
-# AI-PILC Output Structure — Per-Project PIP & Portfolio Feeding
+# AI-PILC (Project Initiation Life Cycle) Output Structure — Per-Project PIP & Portfolio Feeding
 
 **Purpose:** Reference document showing what AI-PILC produces and how multiple PIPs feed portfolio governance.
 
@@ -12,7 +12,7 @@ Each time you run AI-PILC against a requirement, it produces a **self-contained 
 {project-output-root}/                         ← One folder per project
 │
 ├── pilc-state.md                    [marker]   ← Workflow state, Project ID, completion status
-│                                                  (this is what AI-ADLC & AI-PPM detect)
+│                                                  (this is what AI-ADLC (Architecture Design Life Cycle) & AI-PPM (Project Portfolio Management) detect)
 │
 ├── 01_Requirement_Intake_Form.md               ← Structured requirements
 ├── 02_Requirements_Analysis_Report.md          ← Gap/ambiguity analysis (conditional: depth ≥ Standard)
@@ -85,7 +85,7 @@ Raw Requirement ─►  AI-PILC  ─► PIP            ├──► AI-PPM (Port
                                                          └─ Strategic alignment scoring
                          │
                          ▼ (per project)
-                      AI-ADLC ──► AI-DWG ──► AI-DLC v1 (build)
+                      AI-ADLC ──► AI-DWG (Workspace Generator) ──► AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) (build)
 ```
 
 | Aspect | How It Works |

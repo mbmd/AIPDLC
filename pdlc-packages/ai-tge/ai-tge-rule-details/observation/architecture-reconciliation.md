@@ -9,7 +9,7 @@
 
 ## Purpose
 
-Detect changes in the Architecture Package since the last TGE strategy run. For each change, propose register updates: new commitments → new required tests; removed commitments → deprecate tests; changed contracts → flag tests for review. All operations are **non-destructive** — AI-TGE proposes changes but never auto-applies them to the register without user confirmation.
+Detect changes in the Architecture Package (location resolved via `manifest.paths.architecture` — `common/manifest-resolution.md`) since the last TGE strategy run. For each change, propose register updates: new commitments → new required tests; removed commitments → deprecate tests; changed contracts → flag tests for review. All operations are **non-destructive** — AI-TGE proposes changes but never auto-applies them to the register without user confirmation.
 
 This stage implements  (Reconciliation is not optional) and  (Downstream signaling) for the test governance domain.
 
@@ -19,11 +19,25 @@ This stage implements  (Reconciliation is not optional) and  (Downstream signali
 
 | Execute IF | Skip IF |
 |-----------|---------|
-| AP has been modified since last `tge-state.md → AP Version → Last Read` timestamp | AP unchanged since last strategy run |
+| AP has been modified since last `tge-state.md → AP Version → Last Read` timestamp | AP **resolved** and is unchanged since last strategy run |
 | User explicitly requests "reconcile" or "check for architecture changes" | Mode = Brownfield (no AP to reconcile against) |
 | Upstream signal received: "AP updated — reconcile downstream" | Mode = Observation Only (no AP connection) |
 
-**If skipped:** Log in state file: `Stage 10: Skipped (AP unchanged since {last_read_timestamp})`. Proceed to Stage 11 (if applicable) or Stage 12.
+### If skipped — classify the cause first
+
+⚠️ **"Unchanged" and "unreadable" are the same silence and opposite findings.** This stage's skip message makes a **positive claim about the AP** — that it has not changed — and that claim is only earned when the AP was actually read. Classify before recording (`common/observation-fidelity.md`, fail-closed rule F2):
+
+| Cause | Fidelity | What to record | Does the user see it? |
+|---|:---:|---|:---:|
+| **AP resolved and is unchanged** | unaffected | `Stage 10: Skipped — AP read at {path}, unchanged since {last_read_timestamp}`. The positive claim is **earned**, so it may be stated | No. **Silent**, correctly |
+| **AP location did not resolve** — the mode declares an AP and it was not found | **⚠️ Degraded** | Fidelity block: input = *Architecture Package* · expected at `{path}` · substitute = *reconciliation skipped* · unmeasured = *whether the architecture changed is unknown; no comparison was performed* | **Yes — all three destinations** |
+| **This mode declares no AP** — Brownfield, Observation Only | unaffected — record `n/a` | `Stage 10: Skipped — no AP declared by {mode} mode` | No |
+
+**NEVER report an unreadable AP as an unchanged one.** *"AP unchanged since {timestamp}"* on a run where the AP was never read is a **false confirmation** — and a false confirmation is more damaging than a reported absence, because it closes the question instead of raising it. A team told their architecture is unchanged stops checking.
+
+**Note what the mode rows above already got right.** Brownfield and Observation Only declare no AP, so their skips cost nothing and stay silent. That distinction was already correct here; it simply was not applied to the unchanged-versus-unreadable case.
+
+Proceed to Stage 11 (if applicable) or Stage 12 in all three cases — this stage never blocks on a skip.
 
 ---
 
@@ -63,14 +77,18 @@ A good output at this stage sounds like:
 
 ### Step 1: Detect AP Changes
 
+**Resolve the AP location before comparing anything.** If it does not resolve, this stage cannot answer its own question — go to the Conditional Trigger classification above and record the degradation rather than proceeding to a comparison with nothing on one side.
+
 Compare current AP state against last-read state:
 
 | Detection Method | How |
 |-----------------|-----|
 | Timestamp comparison | AP file modification dates vs. `tge-state.md → AP Version → Last Read` |
-| Marker file version | `adlc-state.md` version field (if AP tracks versions) |
+| Marker file version | AI-DLC build-state version field (via `manifest.files.buildState`; legacy fallback `adlc-state.md`), if the AP tracks versions |
 | Content hash | Compare file hashes from last read (Comprehensive depth) |
 | Manual trigger | User says "architecture changed — reconcile" |
+
+⚠️ **An empty change inventory means one of two things, and they must not be conflated.** *"The AP was read and nothing changed"* is a result. *"The AP could not be read, so nothing was found"* is the absence of one. Only the first may be reported as "no changes detected".
 
 **Produce change inventory:**
 ```markdown
@@ -246,6 +264,9 @@ After user approval:
 
 | Check | Pass Criteria |
 |-------|---------------|
+| **AP resolution established before comparison** | The AP location resolved, **or** the skip was classified per the Conditional Trigger table. ⚠️ **Reporting "AP unchanged" without having read the AP is a FAIL** — it is a false confirmation, not a pass |
+| **Skip cause recorded** | If skipped: recorded as *resolved and unchanged*, *did not resolve*, or *no AP declared by this mode* — never as a bare "AP unchanged" |
+| **Degradation disclosed in all three destinations** | If the AP did not resolve: the coverage report artifact, the state file, **and** the user-facing report each say the architecture comparison was not performed. State-file-only is a FAIL |
 | AP delta detected | Changes identified since last read |
 | All changes classified | Each as: addition, removal, modification, or rename |
 | New entries derived correctly | Follow same derivation rules as Stage 3 |

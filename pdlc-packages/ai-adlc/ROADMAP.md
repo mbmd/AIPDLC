@@ -1,7 +1,7 @@
 # AI-ADLC — Extension Roadmap
 
 **Version:** 1.1.0
-**Status:** Core workflow complete. v1.1 extensions delivered (ten — the initial seven plus Domain Storytelling, Wardley Mapping, and deep Threat Modeling). v1.2 extensions planned.
+**Status:** Core workflow complete. v1.1 extensions delivered (eleven — the initial seven plus Domain Storytelling, Wardley Mapping, deep Threat Modeling, and Team Topologies). v1.2 extensions planned.
 
 ---
 
@@ -29,6 +29,7 @@ Extensions follow the opt-in model — activated during the workflow when a user
 | `domain-storytelling/` | Domain Storytelling (narrative discovery: actor → activity → work object; feeds DDD Tactical + role model) | ✅ Complete | DST-01 → DST-10 |
 | `wardley-mapping/` | Wardley Mapping (value-chain × evolution; build-vs-buy positioning, Stage 6) | ✅ Complete | WDL-01 → WDL-08 |
 | `threat-modeling/` | Threat Modeling — Deep (STRIDE DFD, attack trees, DREAD/OWASP rating; layers on the Stage 8 baseline) | ✅ Complete | THM-01 → THM-10 |
+| `team-topologies/` | Team Topologies (team types, interaction modes, Conway alignment, cognitive-load budget + the shared TEAM-*/BC-*/SVC-* identity; Stage 5) | ✅ Complete | TT-01 → TT-10 |
 
 ---
 
@@ -74,7 +75,7 @@ ai-adlc-rule-details/
 
 **Activation:** During Stage 5 (Container Design) or Stage 6 (Technology Stack), the workflow presents opt-in prompts for applicable extensions. User opts in → extension rules loaded and enforced in subsequent stages.
 
-**Delivery Note:** All ten extensions now have complete rule files with numbered rules, verification criteria, anti-patterns, ADR triggers, and templates. Enforcement is structured — once a user opts in, rules are blocking constraints verified at stage completion. *(Event Storming was added after the initial v1.1 six as a discovery technique; Domain Storytelling later joined as a narrative discovery alternative presented via a shared selector with Event Storming, alongside Wardley Mapping for build-vs-buy positioning and a deep Threat Modeling extension that layers on the always-run Stage 8 STRIDE baseline.)*
+**Delivery Note:** All eleven extensions now have complete rule files with numbered rules, verification criteria, anti-patterns, ADR triggers, and templates. Enforcement is structured — once a user opts in, rules are blocking constraints verified at stage completion. *(Event Storming was added after the initial v1.1 six as a discovery technique; Domain Storytelling later joined as a narrative discovery alternative presented via a shared selector with Event Storming, alongside Wardley Mapping for build-vs-buy positioning and a deep Threat Modeling extension that layers on the always-run Stage 8 STRIDE baseline. Team Topologies was added to model team boundaries against the architecture and mint the shared TEAM-*/BC-*/SVC-* identity that threads team/context ownership through backlog, UX, and workspace generation.)*
 
 ---
 

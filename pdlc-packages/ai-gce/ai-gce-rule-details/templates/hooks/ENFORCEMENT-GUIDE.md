@@ -37,16 +37,19 @@ Hooks fire automatically on IDE events. They warn when compliance rules are viol
 
 | Hook | Event | Noise | What It Does |
 |------|-------|:-----:|-------------|
-| session-discipline | promptSubmit | 🟡 | Spec-before-code, never-vibe-code |
 | pre-code-spec-check | preToolUse | 🟠 | Warns if no spec before implementation |
 | api-contract-check | fileCreated | 🟠 | Contract must exist before controller |
 | security-gate-check | fileEdited | 🔴 | Auth on all endpoints |
 | migration-safety | fileEdited | 🔴 | Rollback method required |
 | sensitive-data-check | fileEdited | 🔴 | No secrets/PII in code |
 
-> **Process agents (invoke via shortcut — no hook needed):**
+> **Process agents (invoke via shortcut — no hook needed).** Each replaced a hook under the agents-over-hooks rule: a check a person triggers at a milestone is an agent, not an event handler.
+> - `SDC__` — Session discipline: spec-before-code, never-vibe-code (was `session-discipline.json`)
 > - `CAA__` — Full compliance audit (was `periodic-audit.json`)
 > - `PRC__` — Pre-PR quality checklist (was `pre-pr-checklist.json`)
+> - `SQC__` — Steering file quality review (was `steering-quality-check.json`)
+>
+> **Why `session-discipline` is an agent and not a Tier 1 hook.** It fired on **every prompt** — the noisiest event surface available — and this guide's own removal guidance used to list it first. The checks are unchanged in `SDC__`; what a hook gave and an agent does not is **interception**, so a violating prompt now proceeds and is reviewed afterwards. A team that wants that timing back can enable an opt-in `promptSubmit` hook shipping disabled, the same pattern `package-activation-guard` uses.
 
 ## Tier 2 — Sprint 2+ (Governance + Quality)
 
@@ -64,7 +67,7 @@ Hooks fire automatically on IDE events. They warn when compliance rules are viol
 |------|-------|:-----:|-------------|
 | package-activation-guard | promptSubmit | 🟡 | Re-checks the AI-* multi-package switching rule on every prompt: no package switch without an explicit `_{PKG}_` key or confirmation; announces the active package on switch; `_ACTIVE_` reports the current one. **Not installed by default** — set `"enabled": true` or toggle in the Kiro Hooks UI. Useful only when several AI-* packages share one workspace. |
 
-> **Note:** `steering-quality-check` and `documentation-reminder` are now included in the session-end-compliance sweep (checks #5 and #6, Tier 3 only). They no longer need separate hooks.
+> **Note:** `steering-quality-check` is a process agent (`SQC__`) — steering quality is reviewed when someone asks, not on every session close. `documentation-reminder` is **not generated in any form**: no rule family exists for it, so it could never cite a real rule ID, and the docs-after-feature obligation is carried by the Definition-of-Done gate (`DOD__`).
 
 ## Tier 3 — Pre-Release (Change Management)
 
@@ -87,10 +90,13 @@ Hooks fire automatically on IDE events. They warn when compliance rules are viol
 ## Reducing Noise
 
 If hooks produce too many warnings, remove in this order:
-1. `session-discipline.json` (fires every prompt — highest noise)
-2. `session-end-compliance.json` (advisory batch — one hook, all non-critical checks)
+1. `session-end-compliance.json` (advisory batch — one hook, all non-critical checks; its rule logic stays readable in the four reference-only templates)
+2. `post-task-governance.json` (fires at every task boundary)
+3. `segregation-check.json` (author ≠ approver — better asked at an approval gate than a task boundary)
 
 **NEVER remove:** security-gate-check, migration-safety, sensitive-data-check, tenant-isolation-check
+
+> **Removing a hook does not remove the rule.** The rules stay in `.governance/rules/` and remain auditable by `CAA__`; what you lose is the automatic prompt. Prefer moving a check to its agent over deleting it.
 
 ---
 

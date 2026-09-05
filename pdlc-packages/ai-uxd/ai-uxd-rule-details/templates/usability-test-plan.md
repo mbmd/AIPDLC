@@ -127,7 +127,7 @@ Pre-implementation validation against Nielsen's 10 heuristics:
 
 | Signal Source | What It Tells Us | Action |
 |--------------|-----------------|--------|
-| AI-DLC v1 usability signals | Task completion in real use | Compare to test predictions |
+| AI-DLC usability signals | Task completion in real use | Compare to test predictions |
 | AI-TGE accessibility violations | Components failing WCAG | Update component specs |
 | Product analytics | Navigation paths, drop-offs | Validate IA decisions |
 | Support tickets | Pain points in production | Feed back to personas/journeys |

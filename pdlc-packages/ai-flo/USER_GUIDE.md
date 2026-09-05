@@ -78,7 +78,7 @@ Ongoing awareness and reporting.
 
 | Stage | What Happens | What You Decide |
 |-------|-------------|-----------------|
-| 8 — Position Tracking | Maintains real-time awareness of every project's chain position | Review positions |
+| 8 — Position Tracking | Maintains real-time awareness of every project's chain position; **emits a data-refresh signal to AI-DFE** when a project advances, so the data surface / dashboard stays fresh without a manual `DAT__` | Review positions |
 | 9 — Upward Roll-Up | Compiles project status for portfolio-level consumption (PPM) | Confirm telemetry accuracy |
 | 10 — Exception Handling | Manages blocks, cancellations, rework, skips, escalations | Decide on exceptions |
 

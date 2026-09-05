@@ -1,6 +1,6 @@
 # What If the Team Rejects Governance?
 
-**Scenario:** You activated AI-GCE governance but the team pushes back — disabling hooks, ignoring violations, complaining about friction, or requesting to remove governance entirely.
+**Scenario:** You activated AI-GCE (Governance & Compliance Engine) governance but the team pushes back — disabling hooks, ignoring violations, complaining about friction, or requesting to remove governance entirely.
 
 ---
 

@@ -18,7 +18,7 @@ GENERATED ──→ ACTIVE ──→ CUSTOMIZED ──→ ┬── RECONCILED �
 
 ### 1. Generated (Creation)
 
-**Trigger:** AI-DWG runs (Mode 1 or Mode 3) and produces steering files from the Architecture Package.
+**Trigger:** AI-DWG (Workspace Generator) runs (Mode 1 or Mode 3) and produces steering files from the Architecture Package.
 
 **What happens:**
 - File created in `.kiro/steering/`
@@ -37,7 +37,7 @@ GENERATED ──→ ACTIVE ──→ CUSTOMIZED ──→ ┬── RECONCILED �
 
 **What happens:**
 - AI sessions read the file (based on inclusion mode: always/fileMatch/manual)
-- AI-GCE derives rules and hooks from it
+- AI-GCE (Governance & Compliance Engine) derives rules and hooks from it
 - Developers experience the constraints it defines
 - File is the runtime expression of architecture decisions
 

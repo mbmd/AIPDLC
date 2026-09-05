@@ -25,7 +25,7 @@
 **When to use `UXC__`:**
 - After revising any UXP artifact
 - Before downstream handoffs (AI-POLC, AI-DWG, AI-GCE)
-- After incorporating AI-DLC v1 feedback
+- After incorporating AI-DLC feedback
 - Monthly governance check
 
 **When to use `UXC__ sync-figma`:**

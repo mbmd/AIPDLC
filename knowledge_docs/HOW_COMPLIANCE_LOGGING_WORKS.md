@@ -1,6 +1,6 @@
 # How Compliance Logging Works
 
-**Purpose:** Explains how AI-GCE maintains an append-only audit trail of all governance events — violations detected, resolutions applied, tier changes, and audit results — providing continuous evidence for internal review and external certification.
+**Purpose:** Explains how AI-GCE (Governance & Compliance Engine) maintains an append-only audit trail of all governance events — violations detected, resolutions applied, tier changes, and audit results — providing continuous evidence for internal review and external certification.
 
 ---
 

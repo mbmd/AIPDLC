@@ -4,7 +4,7 @@
 
 **Family:** PDLC (the AI-* PDLC Family of AIFLC)
 **Status:** Canonical (family)
-**Related:** `ai-packagebuilder/lens-seam/LENS_STATUS_MECHANISM.md` (current-mode SSOT) · `ai-packagebuilder/lens-seam/LENS_COHERENCE_PROTOCOL.md` (shared coherence layer)
+**Related:** `LENS_STATUS_MECHANISM.md` (current-mode SSOT) · `LENS_COHERENCE_PROTOCOL.md` (shared coherence layer)
 
 ---
 
@@ -16,7 +16,7 @@ Lenses plug into the **generic lens seam** — the stage-boundary hook defined o
 
 ### Intersection facets (a distinct kind — composed, not a lens)
 
-An **intersection facet** is a facet COMPOSED from two or more lenses — it fires only when those lenses are co-active. It is **not a lens**: it has no mode switch, no `Lens_Status.md` row, and no feature id of its own. Its activation is **derived** (`activateWhen`, a predicate over lens modes), and its per-feature marker is a **shadow** of the composed lens tags that dissolves if either drops. The seam evaluates intersection-facet entries after the active-lens pass (§3). The first is the **agentic** facet (AI ∩ Automation) — see `ai-packagebuilder/agentic-lens/AGENTIC_FACET_SPEC.md`. Teaching the seam this kind is a **one-time** logic extension; thereafter a new intersection facet is a registry-only addition, same zero-core-edit promise as lenses.
+An **intersection facet** is a facet COMPOSED from two or more lenses — it fires only when those lenses are co-active. It is **not a lens**: it has no mode switch, no `Lens_Status.md` row, and no feature id of its own. Its activation is **derived** (`activateWhen`, a predicate over lens modes), and its per-feature marker is a **shadow** of the composed lens tags that dissolves if either drops. The seam evaluates intersection-facet entries after the active-lens pass (§3). The first is the **agentic** facet (AI ∩ Automation) — see the agentic facet spec (`AGENTIC_FACET_SPEC.md`). Teaching the seam this kind is a **one-time** logic extension; thereafter a new intersection facet is a registry-only addition, same zero-core-edit promise as lenses.
 
 ---
 
@@ -34,7 +34,7 @@ lenses:
       governance: AIG__              # AI-GCE
       quality:    AIQ__              # AI-TGE
     utilityKey: _AILENS_
-    protocol: ai-packagebuilder/ai-lens/AI_LENS_PROTOCOL.md
+    protocol: AI_LENS_PROTOCOL.md          # canonical lens protocol (build-side)
     manifest: .ai-lens/manifest.json
 
   - id: automation-lens
@@ -47,7 +47,7 @@ lenses:
       governance: ATG__              # AI-GCE
       quality:    ATQ__              # AI-TGE
     utilityKey: _AUTOLENS_
-    protocol: ai-packagebuilder/automation-lens/AUTOMATION_LENS_PROTOCOL.md
+    protocol: AUTOMATION_LENS_PROTOCOL.md   # canonical lens protocol (build-side)
     manifest: .automation-lens/manifest.json
 
 # Facets COMPOSED from ≥2 lenses. NOT lenses: no mode switch, no Lens_Status.md row,
@@ -65,7 +65,7 @@ intersection-facets:
     agents:                              # EXTENDS the two lenses' agents — no new pair
       quality:    [AIQ__, ATQ__]         # + trajectory eval / step-cap test
       governance: [AIG__, ATG__]         # + tool-permission / excessive-agency / kill-switch
-    spec: ai-packagebuilder/agentic-lens/AGENTIC_FACET_SPEC.md
+    spec: AGENTIC_FACET_SPEC.md            # canonical intersection-facet spec (build-side)
     coherence: "LENS_COHERENCE_PROTOCOL.md §3.1 (intra-feature action-surface sub-check)"
 ```
 
@@ -105,7 +105,7 @@ Engine cores do not consult this registry for facets. The `agents` entries are l
 
 To add a lens (e.g. a future Security Lens or Accessibility Lens):
 
-1. Author its protocol under `ai-packagebuilder/{lens}/`.
+1. Author its protocol (the canonical build-side lens protocol).
 2. Append a row to §2 here.
 3. Author its facets under each `{pkg}-rule-details/{lens-id}/`.
 4. Add its `Lens_Status.md` row semantics + `data-schema/` fields.
@@ -113,7 +113,7 @@ To add a lens (e.g. a future Security Lens or Accessibility Lens):
 
 No edit to any core file is required — the seam already reads this registry. This is the promise the seam was built for; the Automation Lens (the second row) validated it.
 
-**Adding an intersection facet** (a facet composed from ≥2 existing lenses): author its spec under `ai-packagebuilder/{id}/`, append an `intersection-facets` entry to §2 (with `derivesFrom` + `activateWhen`), author its facet under each `{pkg}-rule-details/{id}/`, and add its derived `featureMarker` + `data-schema/` field. The **first** intersection facet (agentic) also required a one-time seam-logic extension (§3 step 3) to teach the seam this kind; **subsequent** intersection facets are registry-only additions (zero core edits), exactly like lenses.
+**Adding an intersection facet** (a facet composed from ≥2 existing lenses): author its spec (the canonical build-side intersection-facet spec), append an `intersection-facets` entry to §2 (with `derivesFrom` + `activateWhen`), author its facet under each `{pkg}-rule-details/{id}/`, and add its derived `featureMarker` + `data-schema/` field. The **first** intersection facet (agentic) also required a one-time seam-logic extension (§3 step 3) to teach the seam this kind; **subsequent** intersection facets are registry-only additions (zero core edits), exactly like lenses.
 
 ---
 

@@ -268,15 +268,15 @@ All strategy artifacts have been produced:
 
 **Next steps:**
 {IF mode = Full Chain or Observation Only}
-→ Observation Phase begins. AI-TGE will monitor AI-DLC v1 progress and update the register as tests are written.
+→ Observation Phase begins. AI-TGE will monitor AI-DLC progress and update the register as tests are written.
 
 {IF mode = Architecture Only}
-→ Strategy complete. Use the debt scorecard to prioritize test writing. Re-invoke AI-TGE when AI-DLC v1 begins for observation tracking.
+→ Strategy complete. Use the debt scorecard to prioritize test writing. Re-invoke AI-TGE when AI-DLC begins for observation tracking.
 
 {IF mode = Brownfield}
 → Strategy complete. Use the debt scorecard to address gaps. Re-invoke AI-TGE periodically for coverage reassessment.
 
-⚠️ **IMPORTANT: If continuing to AI-DLC v1 or re-invoking AI-TGE later, start in a NEW session.**
+⚠️ **IMPORTANT: If continuing to AI-DLC or re-invoking AI-TGE later, start in a NEW session.**
    Each AI-* package loads a full workflow into context;
    a fresh session keeps it fast and focused.
 ```

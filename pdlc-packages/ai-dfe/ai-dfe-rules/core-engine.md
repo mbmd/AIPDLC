@@ -86,6 +86,23 @@ Only ONE stage detail file is active at a time.
 
 ---
 
+<!-- BEGIN WORKFLOW-DISCIPLINE v1 (synced from WORKFLOW_DISCIPLINE_CONTRACT.md — do not edit inline) -->
+## Workflow Discipline
+
+This package's workflow is authoritative — do not improvise it. (Full rules:
+"Workflow Discipline (Enforced)" in the session orchestrator.)
+
+- **Read before you execute.** Load this package's core + the relevant rule-detail
+  file before performing any stage. Never generate its outputs from memory.
+- **Trace to source.** Every deliverable derives from this package's templates,
+  rule-detail files, or the user's own input — never unstated "best practice."
+- **No unilateral deviation.** Do not skip, reorder, combine, or auto-progress past
+  a gate on your own initiative; the user may direct these — confirm and log them.
+  Every gate needs explicit user approval.
+<!-- END WORKFLOW-DISCIPLINE -->
+
+---
+
 ## MANDATORY: Welcome Message
 
 Display ONCE on first interaction (when no `dfe-state.md` exists):
@@ -121,7 +138,7 @@ AI-DFE is an adaptive engine with three interaction modes:
 
 - **Operation mode** (`DAT__ …`) — does work: gather, shape, distribute, discover, aggregate, cleanup, master control. Mutates `data/`.
 - **Report mode** (`DAT__ status`, `DFA__ …`) — reads and reports; never writes.
-- **Continuous mode** — when signaled by FLO ("package X completed") or on a timestamp pass, DFE checks for stale data and refreshes only what changed.
+- **Continuous mode** — when signaled by FLO via `data/signals/` ("package X completed / advanced", per `contracts/SIGNAL_CONTRACT.md`) or on a timestamp pass, DFE checks for stale data and refreshes only what changed. **Signals take priority; timestamps are the catch-all fallback.** See the Monitor Signal-Check Preamble + `DAT__ signals`.
 
 ---
 
@@ -141,6 +158,9 @@ This is the authoritative dispatch for every trigger. When a command arrives, ru
 | `DAT__ discover` | mutate (state only) | **Phase 1 in full** — 1.1 Family → 1.2 Package → 1.3 Demander (incl. **Step 1b** self-healing consumer scan). Rewrites the `dfe-state.md` registries; writes **no** data files. | `configure/{family-discovery,package-discovery,demand-discovery}.md` |
 | `DAT__ status` | report | **3.2 Freshness** — staleness/lag across packages + demands. No write. | `govern/freshness.md` |
 | `DAT__ validate` | report | **3.1 Validation** as a dry-run over existing `data/` files — reports schema conformance without regenerating or writing. | `govern/validation.md` |
+| `DAT__ signals` | report | List all pending (unprocessed) `*.signal.md` in `data/signals/` — show package, event, timestamp, age. No write. | `operate/monitor.md` (Signal-Check Preamble) |
+| `DAT__ signals --process` | mutate | Process all pending FLO data-refresh signals now (same logic as the Monitor Signal-Check Preamble): scoped Gather→Shape→Distribute per signaled package, FIFO, dedup, archive to `signals/processed/`. Explicit "catch up now". | `operate/monitor.md`; `contracts/SIGNAL_CONTRACT.md` |
+| `DAT__ signals --clear` | mutate (signals only) | Archive all pending signals to `signals/processed/` **without** processing them (discard stale/irrelevant signals). Touches only `signals/` — never data files. | `operate/monitor.md` |
 | `DAT__ cleanup --before {epoch-ms}` | mutate (history only) | **3.4 Cleanup** — prune `history/` snapshots older than `{epoch-ms}`. Never touches current data, registry, manifest, schemas, or `dfe-state.md`. | `govern/cleanup.md` |
 | `DAT__ master` | report | Report which family's DFE is currently master (newest version auto-wins). No write. | `operate/cross-family.md` |
 | `DAT__ master --set {family}` | mutate (state only) | Override auto-detection — pin `{family}`'s DFE as master in `dfe-state.md`. | `operate/cross-family.md` |

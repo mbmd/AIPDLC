@@ -73,6 +73,23 @@ All detail-file references below are relative to the resolved directory. **Befor
 
 ---
 
+<!-- BEGIN WORKFLOW-DISCIPLINE v1 (synced from WORKFLOW_DISCIPLINE_CONTRACT.md — do not edit inline) -->
+## Workflow Discipline
+
+This package's workflow is authoritative — do not improvise it. (Full rules:
+"Workflow Discipline (Enforced)" in the session orchestrator.)
+
+- **Read before you execute.** Load this package's core + the relevant rule-detail
+  file before performing any stage. Never generate its outputs from memory.
+- **Trace to source.** Every deliverable derives from this package's templates,
+  rule-detail files, or the user's own input — never unstated "best practice."
+- **No unilateral deviation.** Do not skip, reorder, combine, or auto-progress past
+  a gate on your own initiative; the user may direct these — confirm and log them.
+  Every gate needs explicit user approval.
+<!-- END WORKFLOW-DISCIPLINE -->
+
+---
+
 ## MANDATORY: Welcome Message
 
 When starting ANY idea-management request: load `common/welcome-message.md`, display it in full, ONCE, at the start of a new workflow. Do NOT reload it on resume or in subsequent interactions.
@@ -197,7 +214,7 @@ AI-ILC is contract-aware — it is the optional pre-stage (front door) of the AI
 ### I Read (Predecessor: None)
 AI-ILC is the optional first entry point. It accepts raw ideas in any format — verbal description, one-liner/subject line, document (brief/proposal/email/feature request), or an existing backlog item to elevate. No input marker file; no predecessor package.
 
-### I Produce (Successors: AI-PILC / AI-POLC / AI-FLO / AI-DLC v1 / AI-PPM)
+### I Produce (Successors: AI-PILC / AI-POLC / AI-FLO / AI-DLC / AI-PPM)
 - **Marker:** `ilc-state.md`. **Output:** `pdlc-ws/ideas/` (fixed; shared artifacts flat, per-idea artifacts under `{NNN}-{idea-slug}/`).
 - **Guaranteed output** (relative to marker): `ilc-state.md` (✅ always), Idea Register entry (✅ always), Decision Log entry (✅ always), `{NNN}-{slug}/*_GoNoGo_Decision_Record.md` (✅ always). **Conditional briefs:** `*_Approved_Idea_Brief.md` when `Route = new-project`; `*_Change_Request_Brief.md` when `Route = change-request`; `*_Feature_Brief.md` when `Route = feature`. Exactly one brief is produced per approved idea, keyed off the route.
 - **State fields successors read:** `Status` (must be `Routed` for handoff — terminal success), `Route` (`new-project` / `change-request` / `feature` / `portfolio-inform`), `Brief File` (relative path to the brief in the per-idea subfolder), `Depth Level`, `Idea Name`, `Project ID` (if targeting an existing project — for AI-PPM correlation).
@@ -205,13 +222,13 @@ AI-ILC is the optional first entry point. It accepts raw ideas in any format —
 ### Successor detection (forward-compatible)
 - **`new-project`:** AI-FLO dispatches to AI-PILC (if available) → fallback: AI-PILC directly reads `ilc-state.md` and consumes the Approved Idea Brief via Mode E intake.
 - **`change-request`:** AI-PILC consumes the Change Request Brief through its change management registers.
-- **`feature`:** AI-POLC consumes the Feature Brief (if available) → fallback: AI-DLC v1 backlog.
+- **`feature`:** AI-POLC consumes the Feature Brief (if available) → fallback: AI-DLC backlog.
 - **`portfolio-inform`:** AI-PPM is notified for portfolio awareness (if available) → fallback: informational no-op.
 
 > **Forward-compatibility:** the `Route` field carries the *intent*; the consuming package resolves the *target* based on what's installed. Routing never breaks if AI-FLO/AI-POLC/AI-PPM are absent — it falls through to the direct successor.
 
 ### Contract Principles
-Detection by marker (not folder name) · fixed output root (`pdlc-ws/ideas/`) · graceful standalone (every successor works without AI-ILC) · **additive to AI-PILC** (the AI-ILC brief is an additional optional intake mode, OR-input) · **forward-compatible routing** (routes may target packages that don't exist yet; fallback always succeeds) · single-project context (v1.0) · **AI-ADLC is never a direct target** (architecture rework flows THROUGH AI-PILC change management) · **AI-POLC preferred for features** (AI-DLC v1 is the fallback OR-input).
+Detection by marker (not folder name) · fixed output root (`pdlc-ws/ideas/`) · graceful standalone (every successor works without AI-ILC) · **additive to AI-PILC** (the AI-ILC brief is an additional optional intake mode, OR-input) · **forward-compatible routing** (routes may target packages that don't exist yet; fallback always succeeds) · single-project context (v1.0) · **AI-ADLC is never a direct target** (architecture rework flows THROUGH AI-PILC change management) · **AI-POLC preferred for features** (AI-DLC is the fallback OR-input).
 
 ### Portfolio Connector & Downstream Signal
 On `new-project`, AI-ILC may also set `portfolio-inform` so AI-PPM (if present) registers the project; absent AI-PPM, it is a no-op. Multi-project routing is a v1.1+ capability (will consume AI-FLO). **Downstream signal:** none — the brief is a one-time handoff. If the user modifies the idea after the successor starts, they re-initiate from the updated brief.

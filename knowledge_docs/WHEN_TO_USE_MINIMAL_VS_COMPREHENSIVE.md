@@ -34,17 +34,17 @@
 
 | Package | Minimal Behavior |
 |---------|-----------------|
-| AI-PILC | Core artifacts only (requirements, charter, risk register). Skips deep feasibility, detailed stakeholder maps. |
-| AI-ADLC | L1-L2 architecture only. Skips detailed design stages (9-12). Fewer ADRs. |
-| AI-DWG | Essential steering files only. Fewer conditional files generated. |
-| AI-GCE | Tier 1 governance only. Minimal hook set. |
-| AI-TGE | Baseline test requirements only. No architecture-derived register. |
+| AI-PILC (Project Initiation Life Cycle) | Core artifacts only (requirements, charter, risk register). Skips deep feasibility, detailed stakeholder maps. |
+| AI-ADLC (Architecture Design Life Cycle) | L1-L2 architecture only. Skips detailed design stages (9-12). Fewer ADRs. |
+| AI-DWG (Workspace Generator) | Essential steering files only. Fewer conditional files generated. |
+| AI-GCE (Governance & Compliance Engine) | Tier 1 governance only. Minimal hook set. |
+| AI-TGE (Test Governance Engine) | Baseline test requirements only. No architecture-derived register. |
 
 ### What You Risk
 
 - Missing constraints discovered mid-delivery
 - Architecture gaps at integration points
-- Less context for AI-DLC v1 sessions (thinner steering)
+- Less context for AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) sessions (thinner steering)
 - Harder to upgrade later if project grows in complexity
 
 ---

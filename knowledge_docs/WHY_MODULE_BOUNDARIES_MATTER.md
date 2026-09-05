@@ -40,11 +40,11 @@ Module boundaries mean that each code module (service, package, bounded context,
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-ADLC** | C4 decomposition (L2 → L3) | Forces explicit container and component boundaries with defined responsibilities and interfaces before any code is written. |
+| **AI-ADLC (Architecture Design Life Cycle)** | C4 decomposition (L2 → L3) | Forces explicit container and component boundaries with defined responsibilities and interfaces before any code is written. |
 | **AI-ADLC** | DDD Tactical extension | When activated, adds bounded context rules — aggregate boundaries, anti-corruption layers, context mapping. |
-| **AI-DWG** | `module-structure.md` steering | Generates steering file defining which modules exist, what each owns, and what dependencies are allowed. |
+| **AI-DWG (Workspace Generator)** | `module-structure.md` steering | Generates steering file defining which modules exist, what each owns, and what dependencies are allowed. |
 | **AI-DWG** | Folder structure from architecture | Generates physical folder boundaries that mirror logical architecture boundaries. Structure enforces separation. |
-| **AI-GCE** | ARCH-01: Module boundary rules | Enforces import restrictions — hooks block cross-boundary imports that violate the defined dependency direction. |
+| **AI-GCE (Governance & Compliance Engine)** | ARCH-01: Module boundary rules | Enforces import restrictions — hooks block cross-boundary imports that violate the defined dependency direction. |
 | **AI-GCE** | Domain layer purity hooks | Prevents infrastructure code from leaking into domain layers and vice versa. |
 
 ---

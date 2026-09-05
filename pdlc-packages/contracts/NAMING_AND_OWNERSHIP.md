@@ -111,6 +111,8 @@ ownership: generated          # generated | hybrid | user
 
 > **Traceability keys LOCKED (2026-06-13, OI-030 Phase A):** `id`, `originType`, `derivedFrom`, `mergedFrom`, `projectId`, `provenanceVersion`, `aliasOf`. These extend the provenance front-matter for identity-transformation traceability. Defined in `contracts/TRACEABILITY_CONTRACT.md`. Same camelCase convention applies.
 
+> **Team/context correlation keys (2026-09-03, feature-gated):** `TEAM-{slug}`, `BC-{slug}`, `SVC-{slug}` — a **finer-grained** correlation tier minted by the AI-ADLC `team-topologies` extension, riding **alongside** `projectId` (never replacing it). Form: `{TYPE}-{lower-hyphen-slug}`, stable once minted. Absent by default; present only when the topology feature is opted in. Registered + propagation rules in `contracts/TRACEABILITY_CONTRACT.md` §5.2; authoritative source is the AP `team-context-registry.md`.
+
 ### 5.3 Hook provenance (for `*.kiro.hook` JSON)
 
 ```json

@@ -19,7 +19,7 @@ type: audit
 
 ## Purpose
 
-Validates that the output produced by AI-ILC (Approved Idea Brief, Feature Brief, or Change Request Brief) meets professional innovation-governance standards. Checks brief completeness, evaluation scoring integrity, routing decision rationale, and management register entries — before the idea proceeds to its next destination (AI-PILC, AI-POLC, or AI-DLC v1).
+Validates that the output produced by AI-ILC (Approved Idea Brief, Feature Brief, or Change Request Brief) meets professional innovation-governance standards. Checks brief completeness, evaluation scoring integrity, routing decision rationale, and management register entries — before the idea proceeds to its next destination (AI-PILC, AI-POLC, or AI-DLC).
 
 ## When to Invoke
 

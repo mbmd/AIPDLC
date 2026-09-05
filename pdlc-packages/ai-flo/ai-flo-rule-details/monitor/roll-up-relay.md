@@ -5,6 +5,8 @@
 
 Compile project positions, status, and health into a roll-up report for AI-PPM. This is the upward signal — giving the portfolio layer visibility into how its authorized projects are progressing.
 
+> **Per-team workspace set (multi-workspace topology).** When a project is built as a per-team set (AI-DWG `workspaceTopology ∈ {per-team, hybrid}`), FLO's roll-up stays at the **project level** — the set's teams build one product, so it is one project in the portfolio. The **per-team detail** (cross-workspace compliance, drift, contract conformance) lives in the **Layer-2 control plane** roll-up owned by AI-GCE + AI-DFE (`{slug}-management/rollup/`), not in FLO's project roll-up. FLO may note "built as an N-team set" in the profile notes, but does not aggregate per-team governance (that is L2's job). Routing stays position-driven and delivery-method-independent, as today.
+
 ---
 
 ## Trigger

@@ -40,10 +40,10 @@ A testing strategy defines WHAT to test (critical paths, boundaries, integration
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-DWG** | `testing-strategy.md` steering | Generates testing strategy steering file from architecture decisions — test types, coverage thresholds, and patterns appropriate for the project's architecture. |
-| **AI-GCE** | TEST-* enforcement rules | Derives test governance: minimum coverage, required test types per component, regression test requirement on bug fixes. |
-| **AI-TGE** | Test governance engine | Dedicated package for test quality — enforces test-type distribution, prevents test suite degradation, tracks test effectiveness metrics. |
-| **AI-ADLC** | Quality requirements capture | Architecture stage captures non-functional requirements including testability. Untestable architectures are caught at design time. |
+| **AI-DWG (Workspace Generator)** | `testing-strategy.md` steering | Generates testing strategy steering file from architecture decisions — test types, coverage thresholds, and patterns appropriate for the project's architecture. |
+| **AI-GCE (Governance & Compliance Engine)** | TEST-* enforcement rules | Derives test governance: minimum coverage, required test types per component, regression test requirement on bug fixes. |
+| **AI-TGE (Test Governance Engine)** | Test governance engine | Dedicated package for test quality — enforces test-type distribution, prevents test suite degradation, tracks test effectiveness metrics. |
+| **AI-ADLC (Architecture Design Life Cycle)** | Quality requirements capture | Architecture stage captures non-functional requirements including testability. Untestable architectures are caught at design time. |
 | **AI-GCE** | Tier 2 coverage thresholds | Test coverage enforcement activates at Tier 2 — when the team has demonstrated ability to write meaningful tests consistently. |
 | **AI-GCE** | CI/CD gate rules | Ensures test suites run at appropriate stages: fast tests pre-commit, integration tests in PR, full suite at deployment. |
 

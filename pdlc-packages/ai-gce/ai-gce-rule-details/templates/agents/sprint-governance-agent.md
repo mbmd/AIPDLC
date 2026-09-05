@@ -88,6 +88,6 @@ If you missed `SGV__` for multiple sprints:
 
 - **Steering source:** `project-governance.md`, `TEAM_AGREEMENTS.md` (AI-DWG output)
 - **Rules enforced:** GOV-SPRINT-01 through GOV-SPRINT-07
-- **Hooks (complementary):** None — this agent REPLACES the former `sprint-governance.json` hook
+- **Hooks (complementary):** None — sprint governance is a cadence checkpoint a person runs, so it has no event to fire on. ⚠️ **This line previously claimed to replace a former `sprint-governance.json` hook. No such hook ever existed** — it was never declared in the hook inventory and never had a template. This agent was authored as an agent from the start, so there is nothing to record as a conversion.
 - **Registers affected:** Action Register (retro actions), Issue Register (impediments)
 - **Contract:** Agent Governance Contract §5, §6

@@ -48,16 +48,20 @@ A good output at this stage sounds like:
 
 ## Step-by-Step Execution
 
+### Step 0: Resolve Sources via the Manifest (manifest-first)
+
+Before reading anything, resolve each source **by semantic role** through `common/manifest-resolution.md` — the Architecture Package via `manifest.paths.architecture`, the backlog/stories via `manifest.paths.backlog`, canonical rules via `manifest.paths.rules`, and AI-DLC state via `manifest.files.buildState`. The mode-source table below names *what* to read; the manifest says *where*. The literal locations in this file are the legacy fallback only, used when no manifest exists and disclosed as a "legacy workspace" degradation. NEVER read a hardcoded literal as if it were the resolved role.
+
 ### Step 1: Load Available Sources
 
-Based on mode detected in Stage 1:
+Based on mode detected in Stage 1 (each source resolved per Step 0):
 
-| Mode | Sources to Read | Priority Order |
+| Mode | Sources to Read (by role) | Priority Order |
 |------|----------------|---------------|
-| **Full Chain** | AP + DW steering + aidlc-docs requirements | AP first → DW enrichment → aidlc-docs stories |
-| **Architecture Only** | AP only | Read all AP artifacts systematically |
+| **Full Chain** | AP (`paths.architecture`) + DW rules (`paths.rules`) + AI-DLC state (`files.buildState`) | AP first → DW enrichment → backlog stories |
+| **Architecture Only** | AP only (`paths.architecture`) | Read all AP artifacts systematically |
 | **Brownfield** | Codebase structure + any available docs | Source directories → existing tests → any architecture docs |
-| **Observation Only** | aidlc-docs + DW steering | User stories → functional designs → tech stack |
+| **Observation Only** | AI-DLC state (`files.buildState`) + DW rules (`paths.rules`) | User stories (`paths.backlog`) → functional designs → tech stack |
 
 ---
 
@@ -94,9 +98,9 @@ For each AP artifact type, extract testable commitments:
 
 ### Step 3: Read Development Workspace (If Available)
 
-Extract testing-relevant context from DW steering files:
+Extract testing-relevant context from DW steering files. **Resolve their directory via `manifest.paths.rules`** (`common/manifest-resolution.md`) — the filenames below are relative to that resolved root, NOT bare literals, and NOT the `.kiro/steering/` adapter. If the rules role does not resolve, this is an `⚠️ Degraded` read (DW enrichment context unavailable; AP-derived requirements unaffected) — disclose per `common/observation-fidelity.md`, never fall through silently to a hardcoded path.
 
-| Steering File | What to Extract |
+| Steering File (under `manifest.paths.rules`) | What to Extract |
 |---------------|----------------|
 | `tech-stack.md` | Testing frameworks configured (Jest, Pytest, etc.), test runner, coverage tools |
 | `testing-strategy.md` | Existing test approach, coverage goals, automation decisions |

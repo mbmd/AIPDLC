@@ -1,6 +1,6 @@
 # How to Design User Experience
 
-**Purpose:** Practical guide for using AI-UXD to transform business intent and user research into a governed UX Design Package (UXP) — personas, journeys, information architecture, user flows, a complete design system with tokens, and an accessibility baseline that AI-DWG, AI-POLC, and AI-GCE consume directly.
+**Purpose:** Practical guide for using AI-UXD to transform business intent and user research into a governed UX Design Package (UXP) — personas, journeys, information architecture, user flows, a complete design system with tokens, and an accessibility baseline that AI-DWG (Workspace Generator), AI-POLC (Product Ownership Life Cycle), and AI-GCE (Governance & Compliance Engine) consume directly.
 
 ---
 
@@ -15,7 +15,7 @@ UX designers, product designers, frontend developers, product managers, or desig
 **You need:**
 - AI-UXD installed in your AI workspace (see `ai-uxd/setup/INSTALL.md`)
 - Input — ANY of the following:
-  - A PIP from AI-PILC + an Architecture Package from AI-ADLC (ideal — richest context)
+  - A PIP from AI-PILC (Project Initiation Life Cycle) + an Architecture Package from AI-ADLC (Architecture Design Life Cycle) (ideal — richest context)
   - A PIP only (scope, stakeholders, goals — no architecture yet)
   - A product or brand brief (standalone)
   - An existing design system you want to bring under governance (brownfield)
@@ -29,7 +29,7 @@ UX designers, product designers, frontend developers, product managers, or desig
 
 ## Starting: Standalone vs. Chain
 
-When you activate AI-UXD (type `_UXD_` or say *"Using AI-UXD, design the UX for this product"*), it asks which mode fits your situation:
+When you activate AI-UXD (type `_UXD_` (activate UX Design) or say *"Using AI-UXD, design the UX for this product"*), it asks which mode fits your situation:
 
 | You Pick | Mode | What AI-UXD Does |
 |----------|------|------------------|
@@ -223,7 +223,7 @@ Your UXP feeds the next packages in the chain:
 | **AI-POLC** | Personas + journeys → value-based backlog prioritization |
 | **AI-DWG** | Design system, tokens, component inventory → workspace generation (`design-system.md`, `frontend-standards.md`) |
 | **AI-GCE** | Accessibility baseline → derives `accessibility-compliance` enforcement rule |
-| **AI-DLC v1** | (runtime) sends usability/accessibility feedback back to AI-UXD for design iteration |
+| **AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle)** | (runtime) sends usability/accessibility feedback back to AI-UXD for design iteration |
 
 The handoff is automatic — successor packages detect `uxd-state.md` and read what they need. The `ux-consistency-agent` (`UXC__`) installed at Stage 16 lets you re-validate the UXP's traceability and consistency on demand at any time.
 

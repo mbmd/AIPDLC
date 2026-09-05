@@ -123,7 +123,7 @@ Every artifact traces forward and backward through this chain. To verify: pick a
 
 | Trigger | Action |
 |---------|--------|
-| AI-DLC v1 feedback (usability signal) | Review affected flow/component, revise if needed |
+| AI-DLC feedback (usability signal) | Review affected flow/component, revise if needed |
 | Design QA drift report | Update component spec, signal development |
 | New feature request | Add persona scenario → journey stage → flow → wireframe → component |
 | Accessibility audit finding | Update baseline + component ARIA spec |

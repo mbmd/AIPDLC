@@ -1,6 +1,6 @@
 # Interaction Between Extensions and Governance
 
-**Purpose:** Maps how activating an AI-ADLC extension (DDD, Microservices, etc.) affects what AI-DWG generates and what AI-GCE enforces — the full cascade from opt-in to enforcement.
+**Purpose:** Maps how activating an AI-ADLC (Architecture Design Life Cycle) extension (DDD, Microservices, etc.) affects what AI-DWG (Workspace Generator) generates and what AI-GCE (Governance & Compliance Engine) enforces — the full cascade from opt-in to enforcement.
 
 ---
 

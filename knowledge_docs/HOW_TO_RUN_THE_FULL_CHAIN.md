@@ -1,6 +1,6 @@
 # How to Run the Full Chain
 
-**Purpose:** End-to-end operational guide for running the complete AI-* Family pipeline — from raw idea or requirement through to a governed, ready-to-code development workspace that AI-DLC v1 consumes.
+**Purpose:** End-to-end operational guide for running the complete AI-* Family pipeline — from raw idea or requirement through to a governed, ready-to-code development workspace that AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) consumes.
 
 ---
 
@@ -14,7 +14,7 @@ Practitioners who want to use the full AI-* Family chain on a real project. You'
 
 ```
  (optional)
-  AI-ILC         AI-PILC          AI-POLC → AI-UXD → AI-ADLC          AI-DWG          AI-GCE + AI-TGE
+  AI-ILC (Idea Life Cycle)         AI-PILC (Project Initiation Life Cycle)          AI-POLC (Product Ownership Life Cycle) → AI-UXD (UX Design) → AI-ADLC (Architecture Design Life Cycle)          AI-DWG (Workspace Generator)          AI-GCE (Governance & Compliance Engine) + AI-TGE (Test Governance Engine)
   ────────       ────────         ──────────────────────────           ────────        ────────────────
   Evaluate →     Initiate →       Own → Design UX → Design            Generate →      Enforce
   the idea       the project      backlog / UX / architecture          workspace       governance
@@ -24,7 +24,7 @@ Practitioners who want to use the full AI-* Family chain on a real project. You'
 ```
 
 **Minimum viable chain:** AI-PILC → AI-POLC → AI-ADLC → AI-DWG → AI-GCE (5 packages)
-**Full chain:** AI-ILC → AI-PILC → AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-GCE + AI-TGE → AI-DLC v1
+**Full chain:** AI-ILC → AI-PILC → AI-POLC → AI-UXD → AI-ADLC → AI-DWG → AI-GCE + AI-TGE → AI-DLC
 
 ---
 
@@ -164,15 +164,15 @@ Practitioners who want to use the full AI-* Family chain on a real project. You'
 
 ---
 
-## Step 6: Build with AI-DLC v1
+## Step 6: Build with AI-DLC
 
-**What happens next:** The workspace is ready for Amazon's AI-DLC v1 (or any AI-assisted development workflow). AI-DLC v1 consumes:
+**What happens next:** The workspace is ready for Amazon's AI-DLC (or any AI-assisted development workflow). AI-DLC consumes:
 - The steering files (architectural constraints)
 - The hooks (automated enforcement)
 - The user stories (from AI-POLC's PBP)
 - The project instructions (context for every session)
 
-AI-GCE and AI-TGE run continuously alongside AI-DLC v1, enforcing governance and test quality throughout delivery.
+AI-GCE and AI-TGE run continuously alongside AI-DLC, enforcing governance and test quality throughout delivery.
 
 ---
 

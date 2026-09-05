@@ -1,0 +1,16 @@
+{
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
+  "name": "MCP Audit Log",
+  "version": "1.0.0",
+  "description": "Conditional (only if .kiro/settings/mcp.json is configured with at least one server) · postToolUse (matcher ^mcp_.*): Logs every MCP tool invocation for the audit trail. The hook's existence IS the MCP-005 compliance.",
+  "when": {
+    "type": "postToolUse",
+    "matcher": "^mcp_.*"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check .compliance-state.json → currentPhase. This audit hook runs at all phases whenever an MCP tool is invoked.\n\nAn MCP tool invocation just completed. This hook's PRIMARY purpose is the audit trail — every MCP invocation MUST produce a log event (that recording IS the MCP-005 compliance). While logging, also opportunistically flag any MCP configuration violation visible in .kiro/settings/mcp.json. Each numbered check names the rule ID it enforces; log that ID in the event below:\n\n1. AUDIT TRAIL [MCP-005]: Record this invocation (tool name, timestamp). The recording itself satisfies MCP-005 — never skip the log.\n2. NO WRITE AUTO-APPROVE [MCP-003]: If mcp.json `autoApprove` contains any write/delete tool, flag 🔴 Critical.\n3. CREDENTIALS PLACEMENT [MCP-004]: If credentials appear in `args` rather than `env`, flag 🟠 High.\n4. VERSION PINNING [MCP-006]: If a server uses `@latest` rather than a pinned version, flag 🟠 High.\n\nOnly enforce rules 2–4 if mcp-governance rules were generated (no mcp.json servers = no rules). If .kiro/settings/mcp.json is absent or has no servers, this hook is not generated at all.\n\nIf a configuration violation is found, warn with the MCP-* rule ID and the remediation.\nIf the invocation is clean, log it silently (the audit event is still written).\n\n## Compliance Logging\nAfter handling the invocation, append to `compliance-log/events/{today-date}.jsonl` — ALWAYS log the MCP-005 audit event, plus ONE event per additional rule checked, and `ruleId` MUST be the actual rule ID from the check above, NEVER a literal placeholder:\n{\"timestamp\": \"{ISO-8601-UTC}\", \"type\": \"check\", \"id\": \"chk-{date}-{time}-{seq}\", \"hook\": \"mcp-audit-log\", \"trigger\": \"postToolUse\", \"ruleId\": \"{the ID from the checked rule, e.g. MCP-005}\", \"ruleSeverity\": \"{severity}\", \"result\": \"{pass|fail|warn}\", \"message\": \"{one-line-finding, incl. the invoked tool name}\"}\nLog the MCP-005 audit event for every invocation; log an additional event per flagged violation."
+  }
+}

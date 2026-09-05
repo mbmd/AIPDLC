@@ -14,7 +14,7 @@ However, some features depend on **platform-specific infrastructure** that not a
 
 ## Platform Compatibility Matrix
 
-### Workflow Packages (AI-ILC, AI-PILC, AI-ADLC, AI-POLC, AI-UXD, AI-PPM, AI-FLO)
+### Workflow Packages (AI-ILC (Idea Life Cycle), AI-PILC (Project Initiation Life Cycle), AI-ADLC (Architecture Design Life Cycle), AI-POLC (Product Ownership Life Cycle), AI-UXD (UX Design), AI-PPM (Project Portfolio Management), AI-FLO (Flow Orchestrator))
 
 | Feature | Kiro | Claude Code | claude.ai | Cursor | Cline | Amazon Q | Copilot | Codex CLI |
 |---------|:----:|:-----------:|:---------:|:------:|:-----:|:--------:|:-------:|:---------:|
@@ -38,7 +38,7 @@ However, some features depend on **platform-specific infrastructure** that not a
 
 ---
 
-### Generator Package (AI-DWG)
+### Generator Package (AI-DWG (Workspace Generator))
 
 | Feature | Kiro | Claude Code | claude.ai | Cursor | Cline | Amazon Q | Copilot | Codex CLI |
 |---------|:----:|:-----------:|:---------:|:------:|:-----:|:--------:|:-------:|:---------:|
@@ -50,7 +50,7 @@ However, some features depend on **platform-specific infrastructure** that not a
 
 ---
 
-### Governance Engine (AI-GCE) — Most Platform-Dependent
+### Governance Engine (AI-GCE (Governance & Compliance Engine)) — Most Platform-Dependent
 
 | Feature | Kiro | Claude Code | claude.ai | Cursor | Cline | Amazon Q | Copilot | Codex CLI |
 |---------|:----:|:-----------:|:---------:|:------:|:-----:|:--------:|:-------:|:---------:|
@@ -58,7 +58,7 @@ However, some features depend on **platform-specific infrastructure** that not a
 | Hook generation (`.kiro/hooks/`) | ✅ Native | ⚠️ Generated but inert | ❌ | ⚠️ Generated but inert | ⚠️ Generated but inert | ⚠️ Generated but inert | ⚠️ Generated but inert | ⚠️ Generated but inert |
 | **Hook execution (auto-enforcement)** | ✅ Native | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | Agent generation (`.kiro/agents/`) | ✅ Native | ⚠️ Generated but inert | ❌ | ⚠️ Generated but inert | ⚠️ Generated but inert | ⚠️ Generated but inert | ⚠️ Generated but inert | ⚠️ Generated but inert |
-| **Agent shortcut triggers (`SDC__`, etc.)** | ✅ Native | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Agent shortcut triggers (`SDC__` (Session Discipline), etc.)** | ✅ Native | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | Compliance logging (JSONL) | ✅ Auto | ⚠️ Manual | ❌ | ⚠️ Manual | ⚠️ Manual | ⚠️ Manual | ⚠️ Manual | ⚠️ Manual |
 | Tier activation (progressive) | ✅ Auto | ⚠️ Manual | ❌ | ⚠️ Manual | ⚠️ Manual | ⚠️ Manual | ⚠️ Manual | ⚠️ Manual |
 | Re-derivation (Mode 2) | ✅ Auto-triggered | ⚠️ User-initiated | ❌ | ⚠️ User-initiated | ⚠️ User-initiated | ⚠️ User-initiated | ⚠️ User-initiated | ⚠️ User-initiated |
@@ -69,7 +69,7 @@ However, some features depend on **platform-specific infrastructure** that not a
 
 ---
 
-### Test Governance Engine (AI-TGE)
+### Test Governance Engine (AI-TGE (Test Governance Engine))
 
 | Feature | Kiro | Claude Code | claude.ai | Cursor | Cline | Amazon Q | Copilot | Codex CLI |
 |---------|:----:|:-----------:|:---------:|:------:|:-----:|:--------:|:-------:|:---------:|

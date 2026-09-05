@@ -6,33 +6,19 @@
 
 ## What Chain Handoff Means
 
-The AI-* Family is a pipeline where each package produces output that feeds the next. Chain handoff is the mechanism that makes this work: each package publishes a marker file, defines what it produces (via a gate contract), and its successor knows exactly what to look for and where to find it.
+The AI-* Family is a pipeline where each package produces output that feeds the next. Chain handoff is the mechanism that makes this work: each package publishes a marker file, defines what it produces, and its successor knows exactly what to look for and where to find it.
 
 ```
-PORTFOLIO LAYER (scope = MANY projects)
-───────────────────────────────────────────────────────────────────────
-AI-ILC ···> AI-PILC ──> AI-PPM
-(optional)   │            │
-             │            ▼ (dispatch via AI-FLO)
-─────────────┼────────────────────────────────────────────────────────
-             ▼
-PROJECT LAYER (scope = ONE project)
-───────────────────────────────────────────────────────────────────────
-AI-POLC ──> AI-UXD ──> AI-ADLC ──> AI-DWG ──> AI-DLC v1 (build)
- (PBP)       (UXP)      (AP)        (DW)        │
-                                                 │ alongside:
-                                              AI-GCE (compliance)
-                                              AI-TGE (test governance)
-
-FABRIC (runs alongside the whole family, not in the chain)
-───────────────────────────────────────────────────────────────────────
-AI-FLO — routes handoffs between layers, tracks positions
-AI-DFE — gathers structured data from every package's output
+AI-ILC (Idea Life Cycle) (optional)       AI-PILC (Project Initiation Life Cycle)              AI-ADLC (Architecture Design Life Cycle)              AI-DWG (Workspace Generator)              AI-GCE (Governance & Compliance Engine)
+─────────────────       ───────              ───────              ───────              ───────
+Marker: ilc-state.md    Marker: pilc-state.md   Marker: adlc-state.md   Marker: workspace-rules.md   Marker: .kiro/hooks/
+        │                       │                       │                       │
+        └───── reads ──────────►│                       │                       │
+                                └───── reads ──────────►│                       │
+                                                        └───── reads ──────────►│
+                                                                                └─── signal ──►
+                                                                                        (AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle))
 ```
-
-Each arrow represents a chain handoff — a predecessor completing and a successor reading its marker.
-
-> **Communication Fabric formalization.** The handoff mechanism described in this document is now formalized as part of the AIFLC Communication Fabric. Each package declares a `§ Gate Contract` in its core file specifying the capability types it emits and consumes, with mandatory and optional fields. The fabric provides the matching algorithm (`GATE_PROTOCOL.md`) that validates compatibility at each boundary. See `knowledge_docs/HOW_COMMUNICATION_FABRIC_WORKS.md` for the full protocol.
 
 ---
 
@@ -46,15 +32,9 @@ Packages find their predecessor's output by looking for a **marker file** — a 
 |---------------|-------------|
 | AI-ILC | `ilc-state.md` |
 | AI-PILC | `pilc-state.md` |
-| AI-PPM | `ppm-state.md` |
-| AI-POLC | `polc-state.md` |
-| AI-UXD | `uxd-state.md` |
 | AI-ADLC | `adlc-state.md` |
 | AI-DWG | `.kiro/steering/workspace-rules.md` |
 | AI-GCE | `.kiro/hooks/` folder with at least one `.json` hook file |
-| AI-TGE | `tge-state.md` |
-| AI-FLO | `flo-state.md` |
-| AI-DFE | `dfe-state.md` |
 | Shared governance spine | `management_framework/MANAGEMENT_FRAMEWORK.md` |
 
 **Why markers:** Users choose WHERE output goes. A team might put their architecture docs in `./docs/arch/` or `./architecture/` or even a sibling repo. The marker lets the next package find it regardless of path.
@@ -90,7 +70,7 @@ This means users can enter the chain at any point — not just the beginning.
 
 ## How a Handoff Works (Step by Step)
 
-### Example: AI-PILC → AI-POLC
+### Example: AI-PILC → AI-POLC (Product Ownership Life Cycle)
 
 **1. AI-PILC completes and produces:**
 - `pilc-state.md` (marker — contains project ID, status, depth, output structure)
@@ -169,19 +149,17 @@ When a generator/engine updates workspace files that a downstream package depend
 
 ---
 
-## Multi-Input Convergence (AI-DWG) — Peer-Input Model
+## Multi-Input Convergence (AI-DWG)
 
-AI-DWG is unique: it reads from THREE parallel predecessors using a **peer-input model**:
+AI-DWG is unique: it reads from THREE parallel predecessors:
 
 | Input | Producer | Required? | Marker |
 |-------|----------|:---------:|--------|
-| Architecture Package (AP) | AI-ADLC | ⚪ Peer | `adlc-state.md` |
-| Product Backlog Package (PBP) | AI-POLC | ⚪ Peer | `polc-state.md` |
-| UX Design Package (UXP) | AI-UXD | ⚪ Peer | `uxd-state.md` |
+| Architecture Package | AI-ADLC | ✅ Required | `adlc-state.md` |
+| Product Backlog Package | AI-POLC | ⚪ Optional | `polc-state.md` |
+| UX Design Package | AI-UXD | ⚪ Optional | `uxd-state.md` |
 
-**The peer-input rule:** AI-DWG accepts **any non-empty subset (≥1 of the three)** and generates only the output clusters whose input is present. Absent inputs trigger a quality-impact disclosure + user approval. No single input is privileged over another — they are peers, not a primary + enrichment.
-
-This means you can enter AI-DWG from architecture alone, from backlog alone, from UX alone, or from any combination — and get a workspace tailored to what was produced.
+AP is the generation core. PBP and UXP are additive enrichment — when present they sharpen specific outputs, when absent the generator proceeds with no loss of core function.
 
 ---
 
@@ -194,8 +172,8 @@ AI-PILC mints: PRJ-ACME-2026-001
     → pilc-state.md carries it
     → AI-ADLC reads it, copies to adlc-state.md
     → AI-DWG reads it, embeds in PROJECT_INSTRUCTIONS.md
-    → AI-PPM uses it for portfolio roll-up
-    → AI-FLO uses it for routing decisions
+    → AI-PPM (Project Portfolio Management) uses it for portfolio roll-up
+    → AI-FLO (Flow Orchestrator) uses it for routing decisions
 ```
 
 This ID enables:
@@ -240,9 +218,7 @@ As long as the marker file can be found, the chain works. The user provides the 
 | AI-ADLC chain contract | `ai-adlc/ai-adlc-rules/core-workflow.md` (§ Chain Contract) |
 | AI-DWG chain contract | `ai-dwg/ai-dwg-rules/core-generator.md` (§ Chain Contract) |
 | AI-GCE chain contract | `ai-gce/ai-gce-rules/core-engine.md` (§ Chain Contract) |
-| How the Communication Fabric Works | `knowledge_docs/HOW_COMMUNICATION_FABRIC_WORKS.md` |
-| How AI-FLO Flow Orchestration Works | `knowledge_docs/HOW_FLOW_ORCHESTRATOR_WORKS.md` |
 | Family Structure | `FAMILY_STRUCTURE.md` |
 | Naming & Ownership | `contracts/NAMING_AND_OWNERSHIP.md` |
 
-*Knowledge Document | Created: 2026-06-11 | Updated: 2026-08-10 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-11 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

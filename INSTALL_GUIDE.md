@@ -1,6 +1,6 @@
-# AI-* PDLC Family — Installation Guide
+# AI-* PDLC (Product Development Life Cycle) Family — Installation Guide
 
-**AIFLC · The AI-* PDLC Family** — Injectable Workflow Packages for AI-Assisted Software Delivery
+**AIFLC (AI Full Life Cycle) · The AI-* PDLC Family** — Injectable Workflow Packages for AI-Assisted Software Delivery
 
 This guide covers installation on all supported platforms. Pick your platform section below.
 
@@ -78,14 +78,14 @@ All platforms support the same preset bundles via the automated installer:
 
 | Bundle | Flag | Packages | Best For |
 |--------|------|----------|----------|
-| **Design** (recommended) | `-Bundle design` | AI-ILC + AI-PILC + AI-PPM + AI-FLO + AI-POLC + AI-UXD + AI-ADLC + AI-DWG + AI-DFE | Design workspace — the full design chain. AI-GCE/AI-TGE are staged as inert provisioning sources so AI-DWG can provision them into the project (Layer-3) workspace. |
+| **Design** (recommended) | `-Bundle design` | AI-ILC (Idea Life Cycle) + AI-PILC (Project Initiation) + AI-PPM (Portfolio Management) + AI-FLO (Flow Orchestrator) + AI-POLC (Product Ownership) + AI-UXD (UX Design) + AI-ADLC (Architecture Design) + AI-DWG (Workspace Generator) + AI-DFE (Data Fabric) | Design workspace — the full design chain. AI-GCE/AI-TGE are staged as inert provisioning sources so AI-DWG can provision them into the project (Layer-3) workspace. |
 | **Full** | `-Bundle full` | All 11 packages | Power users — everything installed for use in one workspace |
 | **Minimal** | `-Bundle minimal` | AI-PILC + AI-ADLC + AI-DWG | Quick start, architecture focus |
 | **Architecture** | `-Bundle arch` | AI-ADLC + AI-DWG + AI-GCE | Architecture → workspace → governance |
-| **Governance** | `-Bundle governance` | AI-GCE + AI-TGE | Existing project workspace, add governance + test enforcement directly |
+| **Governance** | `-Bundle governance` | AI-GCE (Governance & Compliance) + AI-TGE (Test Governance) | Existing project workspace, add governance + test enforcement directly |
 | **Portfolio** | `-Bundle portfolio` | AI-ILC + AI-PILC + AI-PPM + AI-FLO | Multi-project management |
 
-> **Why "design" is recommended:** AI-GCE (governance) and AI-TGE (test) are Layer-3 (Execute) companions — they run inside the AI-DWG-generated project workspace, not the design workspace. The `design` bundle installs the design chain for use and stages the companions so AI-DWG can provision them into the correct workspace on generation. Use `governance` to install GCE/TGE directly into an **existing** project repo (standalone/brownfield adoption).
+> **Why "design" is recommended:** AI-GCE (Governance & Compliance Engine) and AI-TGE (Test Governance Engine) are Layer-3 (Execute) companions — they run inside the AI-DWG-generated project workspace, not the design workspace. The `design` bundle installs the design chain for use and stages the companions so AI-DWG can provision them into the correct workspace on generation. Use `governance` to install GCE/TGE directly into an **existing** project repo (standalone/brownfield adoption).
 
 ---
 
@@ -93,17 +93,17 @@ All platforms support the same preset bundles via the automated installer:
 
 | # | Package | What It Does | Activation Phrase |
 |---|---------|-------------|-------------------|
-| 1 | **AI-ILC** | Evaluates raw ideas → Approved Idea Brief | "Using AI-ILC, evaluate this idea" |
-| 2 | **AI-PILC** | Raw requirement → Project Initiation Package | "Using AI-PILC, initiate a project" |
-| 3 | **AI-PPM** | Portfolio governance across multiple projects | "Using AI-PPM, manage my portfolio" |
-| 4 | **AI-FLO** | Routes handoffs between packages | "Using AI-FLO, route this output" |
-| 5 | **AI-ADLC** | Requirements → Architecture Package | "Using AI-ADLC, design the architecture" |
-| 6 | **AI-UXD** | PIP/AP → UX Design Package (personas, flows) | "Using AI-UXD, design the user experience" |
-| 7 | **AI-POLC** | PIP/AP → Product Backlog Package | "Using AI-POLC, build the product backlog" |
-| 8 | **AI-DWG** | Architecture → Ready-to-code workspace | "Using AI-DWG, generate the workspace" |
-| 9 | **AI-GCE** | Workspace → Compliance enforcement layer | "Using AI-GCE, set up governance" |
-| 10 | **AI-TGE** | Workspace → Test strategy & coverage tracking | "Using AI-TGE, establish test governance" |
-| 11 | **AI-DFE** | Gather, shape, and distribute structured data | "Using AI-DFE, gather data" |
+| 1 | **AI-ILC** (Idea Life Cycle) | Evaluates raw ideas → Approved Idea Brief | "Using AI-ILC, evaluate this idea" |
+| 2 | **AI-PILC** (Project Initiation Life Cycle) | Raw requirement → Project Initiation Package | "Using AI-PILC, initiate a project" |
+| 3 | **AI-PPM** (Project Portfolio Management) | Portfolio governance across multiple projects | "Using AI-PPM, manage my portfolio" |
+| 4 | **AI-FLO** (Flow Orchestrator) | Routes handoffs between packages | "Using AI-FLO, route this output" |
+| 5 | **AI-ADLC** (Architecture Design Life Cycle) | Requirements → Architecture Package | "Using AI-ADLC, design the architecture" |
+| 6 | **AI-UXD** (UX Design) | PIP/AP → UX Design Package (personas, flows) | "Using AI-UXD, design the user experience" |
+| 7 | **AI-POLC** (Product Ownership Life Cycle) | PIP/AP → Product Backlog Package | "Using AI-POLC, build the product backlog" |
+| 8 | **AI-DWG** (Workspace Generator) | Architecture → Ready-to-code workspace | "Using AI-DWG, generate the workspace" |
+| 9 | **AI-GCE** (Governance & Compliance Engine) | Workspace → Compliance enforcement layer | "Using AI-GCE, set up governance" |
+| 10 | **AI-TGE** (Test Governance Engine) | Workspace → Test strategy & coverage tracking | "Using AI-TGE, establish test governance" |
+| 11 | **AI-DFE** (Data Fabric Engine) | Gather, shape, and distribute structured data | "Using AI-DFE, gather data" |
 
 ### Common Starting Points
 
@@ -555,6 +555,14 @@ Rule generation works fully. VS Code 1.102+ supports `.github/hooks/` for basic 
 4. **Approve at gates:** The AI presents output and waits for approval before proceeding
 5. **Get deliverables:** Each stage produces one professional deliverable (written to disk)
 
+> **Working with the AI (read first, don't improvise).** These packages carry
+> their own workflow — the assistant reads the relevant package core and its
+> rule-detail files on demand, and follows them exactly. If you ever see the
+> assistant generating deliverables without reading the package (phrases like
+> "based on my knowledge…" or "I'll combine these stages…"), stop it and ask it
+> to read the package core first. The workflow is deliberately staged and
+> gated for reproducibility.
+
 ### Depth Levels
 
 | Level | Output Volume | Best For |
@@ -609,7 +617,7 @@ Each workflow package maintains a **state file** (e.g., `pilc-state.md`) recordi
 | Depth adaptation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Session continuity | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-> **Kiro is the only platform with 100% feature coverage.** All other platforms lack hook execution and agent triggers but deliver the full workflow logic.
+> **Kiro is the only platform with 100% feature coverage.** All other platforms lack hook execution and agent triggers (e.g., `SDC__` (Session Discipline), `TGV__` (Test Governance), `IQA__` (Initiation Quality)) but deliver the full workflow logic.
 
 ---
 
@@ -662,5 +670,5 @@ Remove-Item "<your-project-path>\pdlc-ws\.ai-family-manifest.json" -ErrorAction 
 
 ---
 
-*Part of the [AI-* PDLC Family](./README.md) — Injectable Workflow Packages for AI-Assisted Software Delivery*
+*Part of the [AI-* PDLC (Product Development Life Cycle) Family](./README.md) — Injectable Workflow Packages for AI-Assisted Software Delivery*
 *See also: [PLATFORM_CAPABILITIES.md](./pdlc-packages/PLATFORM_CAPABILITIES.md) for the detailed cross-platform matrix*

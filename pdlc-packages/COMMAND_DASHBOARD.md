@@ -1,4 +1,4 @@
-# PDLC Family — Command Dashboard
+# PDLC (Product Development Life Cycle) Family — Command Dashboard
 
 > **Purpose:** Single-page reference for operating the AI-* PDLC Family in your workspace. Copy any command and paste it directly into the Kiro chat prompt.
 
@@ -12,32 +12,32 @@ Force-activate any PDLC package's workflow. Deterministic — wins over keyword 
 
 | Key | Package | What It Does |
 |-----|---------|--------------|
-| `_ILC_` | AI-ILC | Start the Idea Life Cycle — capture, shape, evaluate, and approve ideas |
-| `_PILC_` | AI-PILC | Start Project Initiation — transform a raw requirement into a PIP |
-| `_PPM_` | AI-PPM | Start Portfolio Management — cross-project prioritization & governance |
+| `_ILC_` (activate Idea Life Cycle) | AI-ILC (Idea Life Cycle) | Start the Idea Life Cycle — capture, shape, evaluate, and approve ideas |
+| `_PILC_` (activate Project Initiation) | AI-PILC (Project Initiation Life Cycle) | Start Project Initiation — transform a raw requirement into a PIP |
+| `_PPM_` (activate Portfolio Management) | AI-PPM (Project Portfolio Management) | Start Portfolio Management — cross-project prioritization & governance |
 
 ### Edge (Router)
 
 | Key | Package | What It Does |
 |-----|---------|--------------|
-| `_FLO_` | AI-FLO | Activate routing — package-to-package handoff decisions |
+| `_FLO_` (activate Flow Orchestrator) | AI-FLO (Flow Orchestrator) | Activate routing — package-to-package handoff decisions |
 
 ### Project Layer
 
 | Key | Package | What It Does |
 |-----|---------|--------------|
-| `_POLC_` | AI-POLC | Start Product Ownership — PIP → Product Backlog Package |
-| `_UXD_` | AI-UXD | Start UX Design — PIP + PBP → UX Design Package |
-| `_ADLC_` | AI-ADLC | Start Architecture Design — PIP + PBP + UXP → Architecture Package |
-| `_DWG_` | AI-DWG | Generate Development Workspace — AP + PBP + UXP → ready-to-code workspace |
-| `_GCE_` | AI-GCE | Derive Governance & Compliance — hooks, agents, enforcement layer |
-| `_TGE_` | AI-TGE | Derive Test Governance — test strategy, coverage, quality layer |
+| `_POLC_` (activate Product Ownership) | AI-POLC (Product Ownership Life Cycle) | Start Product Ownership — PIP → Product Backlog Package |
+| `_UXD_` (activate UX Design) | AI-UXD (UX Design) | Start UX Design — PIP + PBP → UX Design Package |
+| `_ADLC_` (activate Architecture Design) | AI-ADLC (Architecture Design Life Cycle) | Start Architecture Design — PIP + PBP + UXP → Architecture Package |
+| `_DWG_` (activate Workspace Generator) | AI-DWG (Workspace Generator) | Generate Development Workspace — AP + PBP + UXP → ready-to-code workspace |
+| `_GCE_` (activate Governance Engine) | AI-GCE (Governance & Compliance Engine) | Derive Governance & Compliance — hooks, agents, enforcement layer |
+| `_TGE_` (activate Test Governance) | AI-TGE (Test Governance Engine) | Derive Test Governance — test strategy, coverage, quality layer |
 
 ### Utility Keys
 
 | Key | What It Does |
 |-----|--------------|
-| `_ACTIVE_` | Report which AI-* package is currently active + its state |
+| `_ACTIVE_` (report active package) | Report which AI-* package is currently active + its state |
 | `_APROJ_` | Switch active project (multi-project workspaces) |
 
 ---
@@ -50,21 +50,21 @@ Invoke a governance or quality agent instantly. Three capitals + double undersco
 
 | Command | Agent | What It Does |
 |---------|-------|--------------|
-| `IQA__` | Initiation Quality Agent | PIP completeness, gate compliance |
-| `ADA__` | Architecture Decision Agent | ADR quality, decision traceability |
-| `WIA__` | Workspace Integrity Agent | Steering completeness, workspace structure |
-| `TGV__` | Test Governance Agent | Test strategy, coverage, quality metrics |
-| `SDC__` | Session Discipline Agent | Spec-before-code enforcement |
+| `IQA__` (Initiation Quality) | Initiation Quality Agent | PIP completeness, gate compliance |
+| `ADA__` (Architecture Decision) | Architecture Decision Agent | ADR quality, decision traceability |
+| `WIA__` (Workspace Integrity) | Workspace Integrity Agent | Steering completeness, workspace structure |
+| `TGV__` (Test Governance) | Test Governance Agent | Test strategy, coverage, quality metrics |
+| `SDC__` (Session Discipline) | Session Discipline Agent | Spec-before-code enforcement |
 
 ### Sprint 2+ (Tier 2)
 
 | Command | Agent | What It Does |
 |---------|-------|--------------|
-| `SGV__` | Sprint Governance Agent | Sprint plan, goals, retro actions |
+| `SGV__` (Sprint Governance) | Sprint Governance Agent | Sprint plan, goals, retro actions |
 | `CRV__` | Code Review Agent | Reviewer separation, trust spectrum |
 | `SQC__` | Steering Quality Agent | Steering file meta-governance (5 qualities) |
 | `DOD__` | DoD Gate Agent | Definition of Done validation |
-| `CVR__` | Coverage Review Agent | Test coverage analysis |
+| `CVR__` (Coverage Review) | Coverage Review Agent | Test coverage analysis |
 
 ### Pre-Release (Tier 3)
 
@@ -91,9 +91,9 @@ Portfolio:  _ILC_ → _PILC_ → _PPM_
                          │
 Edge:                  _FLO_  (routes between layers)
                          │
-Project:   _POLC_ → _UXD_ → _ADLC_ → _DWG_ → AI-DLC v1 (build)
+Project:   _POLC_ → _UXD_ → _ADLC_ → _DWG_ → AI-DLC (build)
                                                      ▲
-           _GCE_ + _TGE_ ── alongside AI-DLC v1 ───────┘
+           _GCE_ + _TGE_ ── alongside AI-DLC ───────┘
 ```
 
 ### Common Sequences (Copy & Follow)
@@ -187,9 +187,9 @@ Each package produces a named output that feeds downstream:
 | AI-POLC | Product Backlog Package | **PBP** | AI-UXD, AI-ADLC, AI-DWG |
 | AI-UXD | UX Design Package | **UXP** | AI-ADLC, AI-DWG, AI-GCE |
 | AI-ADLC | Architecture Package | **AP** | AI-DWG |
-| AI-DWG | Development Workspace | **DW** | AI-GCE, AI-TGE, AI-DLC v1 |
-| AI-GCE | Compliance Layer | — | AI-DLC v1 (enforcement) |
-| AI-TGE | Test Governance Layer | — | AI-DLC v1 (quality) |
+| AI-DWG | Development Workspace | **DW** | AI-GCE, AI-TGE, AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle) |
+| AI-GCE | Compliance Layer | — | AI-DLC (enforcement) |
+| AI-TGE | Test Governance Layer | — | AI-DLC (quality) |
 
 ---
 

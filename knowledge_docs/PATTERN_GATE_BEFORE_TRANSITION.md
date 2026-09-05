@@ -34,14 +34,14 @@ STATE FILE UPDATED → Stage N+1 begins
 
 | Package | Gates | Gate Behavior |
 |---------|:-----:|--------------|
-| **AI-PILC** | 13 (every stage) | Must approve before next stage begins |
-| **AI-ADLC** | 13 (every stage) | Must approve; extension opt-in gates at specific stages |
-| **AI-ILC** | 6 (every stage) | Must approve; Stage 5 is the DECISION gate (go/no-go) |
-| **AI-POLC** | Per-stage | Must approve priority order before release slicing |
-| **AI-UXD** | Per-stage | Must approve persona/journey before design system |
-| **AI-DWG** | 1 (final review) | Review full generated workspace before activation |
-| **AI-GCE** | Strategy stages only | Observation phase is continuous (no gates) |
-| **AI-TGE** | Strategy stages only | Same hybrid model as AI-GCE |
+| **AI-PILC (Project Initiation Life Cycle)** | 13 (every stage) | Must approve before next stage begins |
+| **AI-ADLC (Architecture Design Life Cycle)** | 13 (every stage) | Must approve; extension opt-in gates at specific stages |
+| **AI-ILC (Idea Life Cycle)** | 6 (every stage) | Must approve; Stage 5 is the DECISION gate (go/no-go) |
+| **AI-POLC (Product Ownership Life Cycle)** | Per-stage | Must approve priority order before release slicing |
+| **AI-UXD (UX Design)** | Per-stage | Must approve persona/journey before design system |
+| **AI-DWG (Workspace Generator)** | 1 (final review) | Review full generated workspace before activation |
+| **AI-GCE (Governance & Compliance Engine)** | Strategy stages only | Observation phase is continuous (no gates) |
+| **AI-TGE (Test Governance Engine)** | Strategy stages only | Same hybrid model as AI-GCE |
 
 ---
 

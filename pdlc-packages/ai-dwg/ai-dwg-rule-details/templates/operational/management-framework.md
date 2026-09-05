@@ -164,7 +164,7 @@ All schemas carry the **Phase** column per the contract. AI-DWG uses project-qua
 2. Registers start with headers + one example row (populated during development).
 3. Entries are append-only — never delete logged items.
 4. Each entry is sequentially numbered per the ID Assignment Protocol above.
-5. AI-DLC v1 sessions should log decisions and lessons as they arise (using their own phase code if/when AI-DLC v1 contributes to the spine).
+5. AI-DLC sessions should log decisions and lessons as they arise (using their own phase code if/when AI-DLC contributes to the spine).
 6. Sprint retros feed into `Lessons_Learned.md`.
 
 ---
@@ -192,7 +192,7 @@ All schemas carry the **Phase** column per the contract. AI-DWG uses project-qua
 | **AI-DWG** | **`DWG`** | **Decision, Change, Issue, Lessons** | **Spine (workspace-generation governance)** |
 | AI-GCE | `GCE` | Decision, Lessons | Spine (compliance decisions) + `.governance/compliance-log/` |
 | AI-TGE | `TGE` | Decision, Lessons | Spine (test-governance decisions) + `.tge/` |
-| AI-DLC v1 | `DLC` | Decision, Change, Issue, Lessons, Action | Spine (development-phase governance) |
+| AI-DLC | `DLC` | Decision, Change, Issue, Lessons, Action | Spine (development-phase governance) |
 
 > Planning-phase contributions (from AI-PILC, AI-ADLC, AI-POLC, AI-UXD) are captured as **source provenance** in the steering files' front-matter (`source:` field) — not as active spine participants. If the architecture or product backlog changes, the planning workspace runs AI-DWG reconciliation (Mode 2) to propagate updates here.
 

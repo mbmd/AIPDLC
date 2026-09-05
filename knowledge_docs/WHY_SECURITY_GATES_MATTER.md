@@ -40,13 +40,13 @@ Security gates are non-negotiable checkpoints in the development workflow where 
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-ADLC** | Stage 8: Security & Identity | Dedicated architecture stage for security design — auth model, trust boundaries, data protection, encryption strategy. Gate requires approval before proceeding. |
+| **AI-ADLC (Architecture Design Life Cycle)** | Stage 8: Security & Identity | Dedicated architecture stage for security design — auth model, trust boundaries, data protection, encryption strategy. Gate requires approval before proceeding. |
 | **AI-ADLC** | Security Architect sub-role | Security-focused persona activates during security stages, ensuring decisions are made with adversarial thinking. |
-| **AI-DWG** | `security-rules.md` steering | Generates security steering file from architecture decisions — embedding secure coding patterns as development-time rules. |
-| **AI-GCE** | SEC-* enforcement rules | Derives security hooks: no secrets in code, input validation required, auth checks on all endpoints, dependency vulnerability scanning. |
+| **AI-DWG (Workspace Generator)** | `security-rules.md` steering | Generates security steering file from architecture decisions — embedding secure coding patterns as development-time rules. |
+| **AI-GCE (Governance & Compliance Engine)** | SEC-* enforcement rules | Derives security hooks: no secrets in code, input validation required, auth checks on all endpoints, dependency vulnerability scanning. |
 | **AI-GCE** | Tier 1 security rules | Basic security (no hardcoded secrets, input validation) is a foundational Tier 1 rule — active from day one, no opt-in required. |
 | **AI-GCE** | Pre-commit security hooks | Hooks fire before commit — secrets scanning, security-pattern validation at the moment of creation, not at review time. |
-| **AI-TGE** | Security test requirements | Enforces security testing alongside functional testing — penetration test planning, security regression suites. |
+| **AI-TGE (Test Governance Engine)** | Security test requirements | Enforces security testing alongside functional testing — penetration test planning, security regression suites. |
 
 ---
 

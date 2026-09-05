@@ -1,6 +1,6 @@
 # How to Run the Data Fabric
 
-**Purpose:** Practical guide for using AI-DFE to turn your packages' scattered outputs into clean, validated, machine-readable data that a dashboard, report, or extension can consume — covering first-run setup, routine refreshes, checking freshness, and connecting a new consumer.
+**Purpose:** Practical guide for using AI-DFE (Data Fabric Engine) to turn your packages' scattered outputs into clean, validated, machine-readable data that a dashboard, report, or extension can consume — covering first-run setup, routine refreshes, checking freshness, and connecting a new consumer.
 
 ---
 
@@ -16,7 +16,7 @@ You do not need to understand the internals to use it. If you want the mechanics
 
 - AI-DFE is installed in your workspace (its rules and detail folders are in place).
 - At least one AI-* package has produced output. AI-DFE works with a partial family — anything not yet run simply comes back as `null`, never an error.
-- You activate AI-DFE with the explicit key `_DFE_`, or just by asking for a data operation.
+- You activate AI-DFE with the explicit key `_DFE_` (activate Data Fabric), or just by asking for a data operation.
 
 ---
 
@@ -25,7 +25,7 @@ You do not need to understand the internals to use it. If you want the mechanics
 In a brand-new workspace, run the health check first:
 
 ```
-DHC__
+DHC__ (health check)
 ```
 
 This answers one question: *can the data fabric run here?* It's read-only — it verifies the data folder scaffolding exists and reports anything missing. If it flags missing empty scaffolding, `DHC__ fix` creates it (and only that — it never writes data).
@@ -35,7 +35,7 @@ This answers one question: *can the data fabric run here?* It's read-only — it
 Run the main data operation:
 
 ```
-DAT__ all
+DAT__ (data operations) all
 ```
 
 This gathers data from every installed package, shapes it into the outputs each registered consumer asked for, validates every file against its schema, writes it all to `{family}-ws/data/`, and rebuilds `REGISTRY.json`. You'll get a status line back, for example:
@@ -97,7 +97,7 @@ Then run `DAT__ discover` (to pick up the new demand) followed by `DAT__ all`, a
 For a deeper, standalone assessment of the whole surface — schema conformance, registry integrity, manifest correctness, freshness, and territory ownership — run the integrity agent:
 
 ```
-DFA__
+DFA__ (data audit)
 ```
 
 It performs a multi-category integrity assessment and returns a findings report, each finding naming the `DAT__` command that fixes it. It is strictly read-only — it never mutates the data. Rule of thumb: **`DAT__` changes things; `DHC__` and `DFA__` only look.**

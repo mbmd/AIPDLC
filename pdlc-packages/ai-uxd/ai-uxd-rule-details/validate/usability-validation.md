@@ -3,7 +3,7 @@
 
 ## Purpose
 
-Define how the design will be validated for usability — both pre-implementation (heuristic evaluation against the design) and post-implementation (usability testing with real users). Also defines the feedback intake channel from AI-DLC v1.
+Define how the design will be validated for usability — both pre-implementation (heuristic evaluation against the design) and post-implementation (usability testing with real users). Also defines the feedback intake channel from AI-DLC.
 
 ---
 
@@ -118,10 +118,10 @@ For each step, answer:
 
 ### Step 4: Define Feedback Intake Channel
 
-Define how post-implementation signals from AI-DLC v1 feed back:
+Define how post-implementation signals from AI-DLC feed back:
 
 ```markdown
-## Feedback Intake: AI-DLC v1 → AI-UXD
+## Feedback Intake: AI-DLC → AI-UXD
 
 ### Signal Types
 | Signal | Source | What It Tells Us | UXP Impact |
@@ -132,7 +132,7 @@ Define how post-implementation signals from AI-DLC v1 feed back:
 | User feedback | Support tickets, reviews | Pain points, feature requests | Feed back to personas/journeys |
 
 ### Feedback Loop Process
-1. Signal arrives (from AI-DLC v1 / AI-TGE / analytics)
+1. Signal arrives (from AI-DLC / AI-TGE / analytics)
 2. Categorize: Accessibility / Usability / Behavioral / Request
 3. Assess severity: Does it require immediate UXP revision or next-cycle?
 4. If revision needed: update affected artifact + log as UXD-C-NNN in Change Log

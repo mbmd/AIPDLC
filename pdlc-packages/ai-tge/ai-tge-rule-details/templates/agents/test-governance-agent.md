@@ -34,11 +34,12 @@ Call this agent **after completing the AI-TGE Strategy phase** — before enteri
 - "I've finished the test strategy" → call `TGV__` to validate governance quality
 - "Is the test register ready for the team?" → call `TGV__` to check traceability
 - "Architecture changed and I ran reconciliation" → call `TGV__` to verify register coherence
-- "We're about to start the build (AI-DLC v1)" → call `TGV__` to confirm test governance is in place
+- "We're about to start the build (AI-DLC)" → call `TGV__` to confirm test governance is in place
 
 ## Consequences of Skipping
 
 **Immediate impact:**
+- **A degradation detected at Stage 1 goes unfixed while it is still cheap to fix** → the strategy is built on inputs that never resolved, and the same warning then repeats in every coverage report for the rest of the project
 - Incomplete test strategy → missing test types for critical architectural commitments
 - Unlinked register entries → tests without traceability to design decisions
 - Incorrect risk scores → low-risk gaps prioritized over critical ones
@@ -56,12 +57,26 @@ If you skipped `TGV__` and the strategy is already in use:
 
 1. Run `TGV__` now — it checks the CURRENT state of all `.governance/test/` artifacts
 2. For each gap found:
+   - **Unresolved declared input:** Locate the input (it usually exists at a path this release does not look in), supply it via Stage 1's *"Provide inputs"* option, and re-run detection. Fixing it here costs one re-run; carried into Observation it silently qualifies every coverage figure the project ever produces
    - **Missing commitment coverage:** Add register entries; re-derive from AP
    - **Broken traceability:** Link entries to source commitments; mark source type
    - **Risk score inconsistency:** Re-score using 4-factor formula; update debt scorecard
    - **Stale entries:** Mark as DEPRECATED; remove from coverage calculations
 
 ## Checks Performed
+
+### Category F: Observation Fidelity (F1–F4) — run FIRST
+
+**Why this agent checks fidelity at all, when it runs before the Observation phase.** Fidelity is *assessed* at Stage 1, during detection — long before any coverage figure exists. So this is the last checkpoint at which an unresolved input is still cheap to fix: one re-run, before a strategy is built on it and before it starts qualifying every report the project produces. Definition and fail-closed rules: `common/observation-fidelity.md` · governing invariant `INV-L2-021`.
+
+| ID | Check | Pass Criteria |
+|----|-------|---------------|
+| F1 | Fidelity assessed, not left unassessed | `tge-state.md → Observation Fidelity` is `✅ Full` or `⚠️ Degraded`. ⚠️ **`❌ Unknown` after detection completed is a FAIL**, and a missing block is a FAIL — absence is a violation, not a pass |
+| F2 | Declared-input set matches the selected mode | Per-input rows exist for exactly the inputs the mode declares; anything else reads `n/a`, never `❌`. A degraded verdict caused by an undeclared input is a FAIL in the opposite direction |
+| F3 | Degradation surfaced at the earliest fixable point | If degraded: Stage 1's findings block named each unresolved input, its unmeasured consequence, **and** how to supply it. A degradation whose first appearance is a coverage report is a FAIL |
+| F4 | No measurable target set against an unmeasurable level | ⭐ If a declared input did not resolve, the strategy does **not** set a plain coverage target for the level that depends on it — the target is either omitted or explicitly marked unmeasurable until the input resolves |
+
+> **F4 is the check that catches the compound error, and it interacts with T2.** T2 requires a measurable coverage target for every test level. When the user-story location has not resolved, an Acceptance target satisfies T2 and is unmeasurable in practice — so the project acquires a number it can never legitimately report against, and every later Acceptance figure reads as a shortfall against a goal rather than as missing data. Two individually reasonable rules produce a wrong outcome together; F4 is where that is caught.
 
 ### Category T: Strategy Completeness (T1–T5)
 
@@ -120,22 +135,34 @@ If you skipped `TGV__` and the strategy is already in use:
 ### Summary
 | Category | Checks | Pass | Fail |
 |----------|:------:|:----:|:----:|
+| F — Observation Fidelity | 4 | {n} | {n} |
 | T — Strategy | 5 | {n} | {n} |
 | R — Register | 5 | {n} | {n} |
 | S — Scoring | 4 | {n} | {n} |
 | C — Coverage | 3 | {n} | {n} |
 | X — Cross-Ref | 3 | {n} | {n} |
-| **Total** | **20** | **{n}** | **{n}** |
+| **Total** | **24** | **{n}** | **{n}** |
+
+### Observation Fidelity
+| Field | Value |
+|-------|-------|
+| Fidelity | {✅ Full / ⚠️ Degraded / ❌ Unknown} |
+| Mode assessed against | {mode} |
+| Declared inputs resolved | {n} of {N} |
+| Unresolved | {list, each with its unmeasured consequence — or "none"} |
 
 ### Findings
 {list of failures with ID, check, finding, recommended fix}
 
 ### Verdict
-{PASS — all 20 checks pass / FAIL — {n} issues found, {n} critical}
+{PASS — all 24 checks pass / FAIL — {n} issues found, {n} critical}
+
+⚠️ **A Category F failure caps the verdict at FAIL.** A strategy validated against inputs that never resolved is internally consistent and built on sand — and this is the last point where correcting it costs one re-run.
 ```
 
 ## Related
 
+- **AI-TGE `common/observation-fidelity.md`** — the fidelity definition and fail-closed rules Category F verifies
 - **AI-TGE core-engine.md** — master orchestration defining the strategy + observation flow
 - **AI-TGE `common/test-taxonomy.md`** — ISTQB classification reference
 - **AI-TGE `common/two-source-model.md`** — baseline + AP-derived resolution rules

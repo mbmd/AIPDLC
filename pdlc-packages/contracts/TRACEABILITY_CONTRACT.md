@@ -110,6 +110,18 @@ The correlation key (`PRJ-{ABBREV}-{YYYY}-{NNN}`) is minted once and MUST surviv
 
 When a package runs standalone (no predecessor marker detected), it may **self-mint** a `Project ID` using the same format (`PRJ-{ABBREV}-{YYYY}-{NNN}`), confirmed with the user. This ensures the correlation key exists regardless of entry point (OR-input).
 
+### 5.2 Team / Context Correlation Keys (`TEAM-*` / `BC-*` / `SVC-*`) — feature-gated
+
+When the AI-ADLC `team-topologies` extension is active, a **finer-grained** correlation tier is minted alongside `projectId` (which stays the project-wide key). These keys thread team/context ownership through backlog, UX, architecture, and workspace generation:
+
+| Key | Form | Minted by | Referenced by | Status |
+|-----|------|-----------|---------------|--------|
+| `TEAM-{slug}` | `TEAM-{payments}` | AI-ADLC `team-topologies` (`team-context-registry.md`) | AI-POLC epics (`Owning Team`), AI-UXD flows/journeys/wireframes, AI-DWG partitioning + set-manifest, AI-GCE CODEOWNERS + GOV-TT | ✅ Implemented (opt-in) |
+| `BC-{slug}` | `BC-{payment}` | AI-ADLC (DDD-08 / component-design BC name → slug) | AI-POLC epics (`Bounded Context`), AI-UXD tags, AI-DWG module→workspace map | ✅ Implemented (opt-in) |
+| `SVC-{slug}` | `SVC-{payment-api}` | AI-ADLC `microservices` extension | contract registry, AI-DWG module scoping | ✅ Implemented (opt-in) |
+
+**Rules:** these keys are **finer than `projectId`** (project-level, too coarse for per-team slicing) and ride **alongside** it, never replacing it. Each `BC-*`/`SVC-*` maps to exactly one owning `TEAM-*` (TT-02). Slugs are lower-case, hyphenated, and **stable once minted** (never re-slug mid-project). They are **absent by default** — minted only when the topology feature is opted in; without it, `projectId` remains the sole correlation key (today's behavior, unchanged). The authoritative source is the AP `team-context-registry.md`; downstream packages reference (never re-mint) these IDs.
+
 ---
 
 ## 6. The Merge Identity Rule (Specification)

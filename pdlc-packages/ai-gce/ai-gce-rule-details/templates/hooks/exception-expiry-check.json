@@ -1,0 +1,15 @@
+{
+  "generatedBy": "AI-GCE",
+  "generatedVersion": "{version}",
+  "source": "{upstream-rule-path}",
+  "name": "Exception Expiry Check",
+  "version": "1.0.0",
+  "description": "Tier 3 (userTriggered): On demand, reviews the compliance-log exception register for expired or improperly-approved rule bypasses.",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check .compliance-state.json → currentPhase. This check runs on demand at any phase.\n\nReview the exception register in the compliance log (exception entries under compliance-log/). For every active exception, verify the following. Each numbered check names the rule ID it enforces; log that ID in the event below:\n\n1. SEGREGATED APPROVAL [GOV-LOG-004]: An exception for a 🔴 Critical rule was approved by a DIFFERENT person than the requester. Flag any self-approved Critical exception.\n2. EXPIRY PRESENT [GOV-LOG-005]: Every exception has an expiry date, within the allowed window (max 30 days for Critical, 90 days for High).\n3. EXPIRED FLAGGED [GOV-LOG-006]: Any exception past its expiry date is flagged for resolution and no longer treated as neutral.\n\nReport findings as:\n- ✅ Passing (silent if every exception is validly approved and unexpired)\n- ⚠️ Warnings (exception approaching expiry)\n- ❌ Violations (self-approved Critical exception, missing/over-window expiry, or expired-but-still-active bypass)\n\nIf every exception is valid and current, confirm silently.\n\n## Compliance Logging\nAfter completing all checks above, append a JSON event to `compliance-log/events/{today-date}.jsonl` (create the file if it doesn't exist) — ONE event per rule checked, and `ruleId` MUST be the actual rule ID from the check above, NEVER a literal placeholder. Format:\n{\"timestamp\": \"{ISO-8601-UTC}\", \"type\": \"check\", \"id\": \"chk-{date}-{time}-{seq}\", \"hook\": \"exception-expiry-check\", \"trigger\": \"userTriggered\", \"ruleId\": \"{the ID from the checked rule, e.g. GOV-LOG-004}\", \"ruleSeverity\": \"{severity}\", \"result\": \"{pass|fail|warn}\", \"message\": \"{one-line-finding}\"}\nLog ONE event per rule checked."
+  }
+}

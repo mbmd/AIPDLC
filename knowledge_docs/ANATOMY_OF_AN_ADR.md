@@ -1,6 +1,6 @@
 # Anatomy of an ADR (Architecture Decision Record)
 
-**Purpose:** Field-by-field breakdown of Architecture Decision Records produced by AI-ADLC — what each section means, when ADRs are created, how they propagate through the chain, and how to write a good one.
+**Purpose:** Field-by-field breakdown of Architecture Decision Records produced by AI-ADLC (Architecture Design Life Cycle) — what each section means, when ADRs are created, how they propagate through the chain, and how to write a good one.
 
 **Derived from:** Pattern: Gate Before Transition + Pattern: Downstream Signaling
 
@@ -42,7 +42,7 @@ Option 2: PostgreSQL + Redis
 - Redis caches user profiles (TTL-based, eventual consistency acceptable)
 - Team needs Redis operational knowledge (training planned)
 - Data architecture must define cache invalidation strategy
-- AI-DWG will generate: data-standards.md with Redis caching rules
+- AI-DWG (Workspace Generator) will generate: data-standards.md with Redis caching rules
 
 ## Supersedes
 None
@@ -113,7 +113,7 @@ No hedging. No "we'll revisit." The decision is made. If conditions change, crea
 - What this decision ENABLES (positive consequences)
 - What this decision COSTS or CONSTRAINS (negative consequences)
 - What OTHER decisions this forces or influences
-- What downstream packages will derive from this (AI-DWG, AI-GCE)
+- What downstream packages will derive from this (AI-DWG, AI-GCE (Governance & Compliance Engine))
 
 ### Supersedes / Superseded By
 
@@ -163,7 +163,7 @@ AI-ADLC produces ADRs (recorded in adlc-state.md: ADR Count = N)
     ├── AI-GCE reads steering (derived from ADRs) → derives governance rules
     │   (data-standards.md → DATA-01: cache invalidation required)
     │
-    └── AI-TGE reads ADRs → derives test requirements
+    └── AI-TGE (Test Governance Engine) reads ADRs → derives test requirements
         (ADR-003 → TR-015: Redis cache invalidation test required)
 ```
 

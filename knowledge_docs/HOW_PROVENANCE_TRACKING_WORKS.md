@@ -10,7 +10,7 @@ Provenance tracking means every generated file carries metadata declaring: who g
 
 ```yaml
 ---
-generatedBy: AI-DWG
+generatedBy: AI-DWG (Workspace Generator)
 generatedVersion: 1.0.0
 source: adlc-output/04_Technology_Stack.md
 generatedOn: 2026-06-12
@@ -26,7 +26,7 @@ Every generated `.md` artifact carries a YAML front-matter block:
 
 | Field | Purpose | Example |
 |-------|---------|---------|
-| `generatedBy` | Which package produced this file | `AI-DWG`, `AI-GCE`, `AI-TGE` |
+| `generatedBy` | Which package produced this file | `AI-DWG`, `AI-GCE (Governance & Compliance Engine)`, `AI-TGE (Test Governance Engine)` |
 | `generatedVersion` | Version of the generating package | `1.0.0` |
 | `source` | Which upstream document triggered generation | `adlc-output/07_API_Architecture.md` |
 | `generatedOn` | ISO date of generation | `2026-06-12` |
@@ -131,8 +131,8 @@ Each package generates files with its own provenance:
 | **AI-DWG** | Steering files, PROJECT_INSTRUCTIONS, DoD, TEAM_AGREEMENTS | Mix of `generated` and `hybrid` |
 | **AI-GCE** | Rules, hooks, agents, compliance-state | Mostly `generated` |
 | **AI-TGE** | Test strategy, register, coverage reports | Mostly `generated` |
-| **AI-PILC** | PIP artifacts (requirements, charter, etc.) | `hybrid` (team refines) |
-| **AI-ADLC** | AP artifacts (architecture docs, ADRs) | `hybrid` (team refines) |
+| **AI-PILC (Project Initiation Life Cycle)** | PIP artifacts (requirements, charter, etc.) | `hybrid` (team refines) |
+| **AI-ADLC (Architecture Design Life Cycle)** | AP artifacts (architecture docs, ADRs) | `hybrid` (team refines) |
 
 ---
 

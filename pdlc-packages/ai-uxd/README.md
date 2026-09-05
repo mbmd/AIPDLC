@@ -37,7 +37,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -45,13 +45,13 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -65,11 +65,11 @@ flowchart LR
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 > **AI-DFE** ([Data Fabric Engine](../ai-dfe/)) is a family-scoped **companion** — it gathers data from all packages and distributes structured JSON for dashboards and status roll-ups. It runs alongside the chain rather than as a linear step, so it is not shown as a chain row above.
 
@@ -83,8 +83,8 @@ AI-UXD is the **second step of the Project layer** — the middle of the sequent
 |--------|---------|
 | **Layer** | Project |
 | **Position** | Second in the Project-layer sequence (POLC → UXD → ADLC → DWG) |
-| **Predecessor** | AI-POLC (value goals, strategy exchange); AI-PILC (PIP) |
-| **Direct successors** | AI-ADLC (next in sequence); feeds AI-DWG (design system + tokens → `design-system.md` + `frontend-standards.md`), AI-POLC (personas/journeys), AI-GCE (accessibility baseline → `accessibility-compliance` rule) |
+| **Predecessor** | AI-POLC (AI-Driven Product Ownership Life Cycle — value goals, strategy exchange); AI-PILC (AI-Driven Project Initiation Life Cycle — PIP) |
+| **Direct successors** | AI-ADLC (AI-Driven Architecture Design Life Cycle — next in sequence); feeds AI-DWG (AI-Driven Workspace Generator — design system + tokens → `design-system.md` + `frontend-standards.md`), AI-POLC (personas/journeys), AI-GCE (AI-Driven Governance & Compliance Engine — accessibility baseline → `accessibility-compliance` rule) |
 | **Reads (input)** | PIP (`pilc-state.md`), PBP (`polc-state.md`); optionally AP constraints (`adlc-state.md`) |
 | **Produces (output)** | UX Design Package (UXP) under `pdlc-ws/projects/PRJ-{ABBREV}-{slug}/ux/` |
 | **Output marker** | `uxd-state.md` |
@@ -95,11 +95,11 @@ AI-UXD is the **second step of the Project layer** — the middle of the sequent
 **Simplified chain view** (see the diagram above for the full topology):
 
 ```
-AI-PILC → [ AI-POLC → AI-UXD → AI-ADLC → AI-DWG ] → AI-DLC v1
-                       ▲ you are here    (AI-DLC v1 runtime UX feedback loops back to AI-UXD)
+AI-PILC → [ AI-POLC → AI-UXD → AI-ADLC → AI-DWG ] → AI-DLC
+                       ▲ you are here    (AI-DLC runtime UX feedback loops back to AI-UXD)
 ```
 
-AI-UXD answers **"how should this feel and flow for its users, as a governed system?"** — it defines the UX system (personas → journeys → IA → flows → design system → tokens → components → accessibility). It does not design the technical architecture (AI-ADLC) or build the UI (AI-DLC v1), and it receives AI-DLC v1 runtime usability/accessibility feedback for refinement.
+AI-UXD answers **"how should this feel and flow for its users, as a governed system?"** — it defines the UX system (personas → journeys → IA → flows → design system → tokens → components → accessibility). It does not design the technical architecture (AI-ADLC) or build the UI (AI-DLC), and it receives AI-DLC runtime usability/accessibility feedback for refinement.
 
 ### Standalone vs. chained
 
@@ -125,7 +125,7 @@ AI-UXD answers **"how should this feel and flow for its users, as a governed sys
 - **Accessibility-by-design** — WCAG 2.2 baseline embedded in every stage, not bolted on
 - **Design QA framework** — governed drift detection for implementation fidelity
 - **Usability validation** — heuristic evaluation + test plan + feedback intake
-- **UXC__ governance agent** — on-demand consistency validation
+- **`UXC__` (UX Consistency) governance agent** — on-demand consistency validation
 - **Adaptive depth** — Minimal / Standard / Comprehensive based on project complexity
 - **4 input modes** — Full chain (PIP+AP) / PIP only / Standalone / Brownfield
 - **Gates at every stage** — nothing proceeds without your approval
@@ -134,7 +134,7 @@ AI-UXD answers **"how should this feel and flow for its users, as a governed sys
 
 ## Activation
 
-**Explicit key:** type `_UXD_` in any prompt to activate AI-UXD unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-UXD`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
+**Explicit key:** type `_UXD_` in any prompt to activate AI-UXD unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` (report active package) reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-UXD`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
 
 ---
 
@@ -312,7 +312,7 @@ AI-UXD operationalizes **end-to-end UX design as a governed system**. It aligns 
 | **Information architecture** (organize / label / navigate / search) | Site maps, taxonomy, navigation and search models | Bounded to structure — not content authoring |
 | **Journey mapping · service blueprints · heuristic evaluation** | Journeys per persona (emotion, error paths), service blueprints, Nielsen-style heuristics + a usability test plan | It plans and specifies validation; it does not run live usability studies |
 
-The defining boundary: AI-UXD is an **artifact, not a tool** — it governs structure and specifications (personas, IA, flows, tokens, component specs, a11y baseline). It does not replace Figma or produce pixel comps, prototypes, or UI code (that is AI-DLC v1's build), and it does not design the technical architecture (AI-ADLC).
+The defining boundary: AI-UXD is an **artifact, not a tool** — it governs structure and specifications (personas, IA, flows, tokens, component specs, a11y baseline). It does not replace Figma or produce pixel comps, prototypes, or UI code (that is AI-DLC's build), and it does not design the technical architecture (AI-ADLC).
 
 ---
 
@@ -326,7 +326,7 @@ AI-UXD designs the **interaction** side of the family's cross-cutting lenses —
 | **Automation Lens** | Automated / Manual | `_AUTOLENS_` | Designs the automation UX (approval, monitoring, override) |
 | **Agentic** (AI ∩ Automation) | derived — both on | — | Adds agent-interaction transparency — reasoning/tool-use visibility, agent "working" states, and interruptibility |
 
-Downstream, AI-DWG provisions the scaffolding and AI-GCE / AI-TGE govern and test the tagged features via Layer-3 agents (`AIG__`/`ATG__`, `AIQ__`/`ATQ__`).
+Downstream, AI-DWG (Workspace Generator) provisions the scaffolding and AI-GCE (Governance & Compliance Engine) / AI-TGE (Test Governance Engine) govern and test the tagged features via Layer-3 agents (`AIG__` (AI Governance) /`ATG__` (Automation Governance), `AIQ__` (AI Quality) /`ATQ__` (Automation Quality)).
 
 ---
 

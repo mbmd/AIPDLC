@@ -1,4 +1,4 @@
-# How AI-ADLC Progressive Decomposition Works
+# How AI-ADLC (Architecture Design Life Cycle) Progressive Decomposition Works
 
 **Purpose:** Explains how AI-ADLC uses the C4 model to progressively decompose system architecture — from boundaries to internals — and why this discipline prevents premature detail.
 
@@ -151,7 +151,7 @@ Extensions are opt-in: they activate only when the architecture justifies them. 
 
 ## Downstream Impact
 
-AI-ADLC's decomposition output directly shapes AI-DWG's generation:
+AI-ADLC's decomposition output directly shapes AI-DWG (Workspace Generator)'s generation:
 
 | AI-ADLC Produces | AI-DWG Derives |
 |-------------------|----------------|

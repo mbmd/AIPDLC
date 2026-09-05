@@ -281,7 +281,7 @@ erDiagram
 - Show relationship cardinality (1:1, 1:N, M:N)
 - Group by domain if large
 - Don't show every column — this is conceptual, not physical schema
-- Physical schema details go in implementation documentation (AI-DLC v1 territory)
+- Physical schema details go in implementation documentation (AI-DLC territory)
 
 ---
 

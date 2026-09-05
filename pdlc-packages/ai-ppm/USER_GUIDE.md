@@ -236,7 +236,7 @@ Rebalance the portfolio given reduced capacity.
 
 ## What AI-PPM Is NOT
 
-- NOT single-project management (that's AI-PILC for initiation, AI-DLC v1 for execution)
+- NOT single-project management (that's AI-PILC for initiation, AI-DLC for execution)
 - NOT architecture design (that's AI-ADLC)
 - NOT product backlog management (that's AI-POLC)
 - NOT routing/orchestration (that's AI-FLO — PPM decides, FLO carries)

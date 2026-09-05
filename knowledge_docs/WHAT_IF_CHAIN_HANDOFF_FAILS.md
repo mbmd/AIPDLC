@@ -38,7 +38,7 @@ When the successor asks "Where is predecessor output?":
 
 ```
 User: "The PIP output is in C:\Projects\MyProject\docs\initiation\"
-AI-ADLC: Scanning C:\Projects\MyProject\docs\initiation\ for pilc-state.md... FOUND.
+AI-ADLC (Architecture Design Life Cycle): Scanning C:\Projects\MyProject\docs\initiation\ for pilc-state.md... FOUND.
 ```
 
 ### Option B: Fix the Marker File
@@ -47,11 +47,11 @@ If the marker was renamed or is in a subfolder:
 
 1. Find your state file (search for `*-state.md` in your output folder)
 2. Ensure it's named correctly:
-   - AI-ILC output → `ilc-state.md`
-   - AI-PILC output → `pilc-state.md`
+   - AI-ILC (Idea Life Cycle) output → `ilc-state.md`
+   - AI-PILC (Project Initiation Life Cycle) output → `pilc-state.md`
    - AI-ADLC output → `adlc-state.md`
-   - AI-POLC output → `polc-state.md`
-   - AI-UXD output → `uxd-state.md`
+   - AI-POLC (Product Ownership Life Cycle) output → `polc-state.md`
+   - AI-UXD (UX Design) output → `uxd-state.md`
 3. Ensure it's in the ROOT of the output folder (not a subfolder)
 4. Retry the successor — it should detect the marker now
 
@@ -115,7 +115,7 @@ If the predecessor ran partially (some stages, not all):
 
 ---
 
-## AI-DWG Special Case (Three Inputs)
+## AI-DWG (Workspace Generator) Special Case (Three Inputs)
 
 AI-DWG reads from three predecessors (AP required, PBP and UXP optional):
 

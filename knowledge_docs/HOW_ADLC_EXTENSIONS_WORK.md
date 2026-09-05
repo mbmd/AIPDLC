@@ -1,6 +1,6 @@
-# How AI-ADLC Extensions Work
+# How AI-ADLC (Architecture Design Life Cycle) Extensions Work
 
-**Purpose:** Explains the opt-in extension system that lets AI-ADLC enforce specialized architectural patterns (Event Storming, Domain Storytelling, DDD, Microservices, BFF, Event Sourcing, Resilience, Feature Flags, Wardley Mapping, Threat Modeling) — how they load, activate, compose, and propagate downstream.
+**Purpose:** Explains the opt-in extension system that lets AI-ADLC enforce specialized architectural patterns (Event Storming, DDD, Microservices, BFF, Event Sourcing, Resilience, Feature Flags) — how they load, activate, compose, and propagate downstream.
 
 ---
 
@@ -17,15 +17,12 @@ CORE WORKFLOW (covers 80% of all architectures)
         ▼  (user opts in during relevant stage)
 EXTENSIONS (cover the 20% specialized patterns)
 ├── Event Storming (discovery — feeds DDD + Event Sourcing)
-├── Domain Storytelling (discovery — narrative alternative to Event Storming; feeds DDD)
 ├── DDD Tactical Patterns
 ├── Microservices
 ├── BFF Pattern
 ├── Event Sourcing / CQRS
 ├── Resilience Patterns
-├── Feature Flags
-├── Wardley Mapping (build-vs-buy positioning, Stage 6)
-└── Threat Modeling — deep (STRIDE DFD/attack trees; layers on Stage 8 baseline)
+└── Feature Flags
 
 Each extension ADDS rules — never replaces or conflicts with core.
 ```
@@ -85,9 +82,6 @@ Extensions are presented at the stage where their pattern becomes architecturall
 | Resilience Patterns | Stage 11 (Integration/Infra) | Resilience applies to distributed communication |
 | DDD Tactical | Stage 12 (Component Design) | DDD patterns apply to internal module structure |
 | Feature Flags | Stage 6 or 12 (Tech Stack/Components) | Delivery mechanism decision |
-| Domain Storytelling | Stage 4/5 (System Context / Decomposition) | Narrative domain discovery; shared selector with Event Storming |
-| Wardley Mapping | Stage 6 (Technology Stack) | Build-vs-buy positioning is a tech-stack decision |
-| Threat Modeling (deep) | Stage 8 (Security & Identity) | Deep threat analysis layered on the always-run STRIDE baseline |
 
 ---
 
@@ -158,7 +152,7 @@ At Stage 12 (Component Design):
 
 Extensions activated in AI-ADLC affect the entire downstream chain:
 
-### AI-DWG reads `adlc-state.md` → "Enabled Extensions" field
+### AI-DWG (Workspace Generator) reads `adlc-state.md` → "Enabled Extensions" field
 
 | Active Extension | AI-DWG Generates |
 |-----------------|------------------|
@@ -169,11 +163,8 @@ Extensions activated in AI-ADLC affect the entire downstream chain:
 | Event Sourcing/CQRS | Generates `event-sourcing.md` steering file |
 | Resilience Patterns | Forces `resilience-standards.md` with full detail |
 | Feature Flags | Generates `feature-flags.md` steering file |
-| Domain Storytelling | Nothing directly — findings flow through DDD Tactical (like Event Storming) |
-| Wardley Mapping | Nothing directly — build/buy dispositions inform the Technology Stack + ADRs |
-| Threat Modeling (deep) | Nothing directly — mitigations flow to AI-GCE (security rules/hooks) + AI-TGE (security tests) |
 
-### AI-GCE reads workspace → conditional steering files
+### AI-GCE (Governance & Compliance Engine) reads workspace → conditional steering files
 
 Extensions that caused AI-DWG to generate conditional steering files are then read by AI-GCE, which derives specialized compliance rules and hooks for those patterns.
 
@@ -181,22 +172,19 @@ Extensions that caused AI-DWG to generate conditional steering files are then re
 
 ---
 
-## The Ten Extensions (v1.1)
+## The Seven Extensions (v1.1)
 
 | Extension | Prefix | Rules | Primary Stage |
 |-----------|:------:|:-----:|:-------------:|
 | Event Storming | `EVS-` | 12 | Stage 5 |
-| Domain Storytelling | `DST-` | 10 | Stage 4/5 |
 | DDD Tactical | `DDD-` | 10-12 | Stage 12 |
 | Microservices | `MS-` | 10-12 | Stage 5 |
 | BFF Pattern | `BFF-` | 10-12 | Stage 5 |
 | Event Sourcing/CQRS | `ES-` | 10-12 | Stage 9 |
 | Resilience Patterns | `RES-` | 10-12 | Stage 11 |
 | Feature Flags | `FF-` | 10-12 | Stage 6/12 |
-| Wardley Mapping | `WDL-` | 8 | Stage 6 |
-| Threat Modeling (deep) | `THM-` | 10 | Stage 8 |
 
-All ten are complete and enforceable as of AI-ADLC v1.1. Event Storming and Domain Storytelling are **discovery techniques** (presented via a shared selector) — their output feeds DDD Tactical and Event Sourcing/CQRS rather than producing their own downstream steering. Threat Modeling (deep) layers on the always-run Stage 8 STRIDE baseline.
+All seven are complete and enforceable as of AI-ADLC v1.1. Event Storming is a **discovery technique** — unlike the six structural-pattern extensions, its output feeds DDD Tactical and Event Sourcing/CQRS rather than producing its own downstream steering.
 
 ---
 
@@ -215,8 +203,8 @@ All ten are complete and enforceable as of AI-ADLC v1.1. Event Storming and Doma
 | Document | Location |
 |----------|----------|
 | Extensions README (source) | `ai-adlc/ai-adlc-rule-details/extensions/README.md` |
-| Extension folders (10) | `ai-adlc/ai-adlc-rule-details/extensions/` |
+| Extension folders (7) | `ai-adlc/ai-adlc-rule-details/extensions/` |
 | AI-DWG extension detection | `ai-dwg/ai-dwg-rules/core-generator.md` (§ Extension-Aware Reading) |
 | AI-DWG enrichment mappings | `ai-dwg/ai-dwg-rule-details/mapping/extension-*.md` |
 
-*Knowledge Document | Created: 2026-06-11 | Updated: 2026-08-09 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*
+*Knowledge Document | Created: 2026-06-11 | Updated: 2026-06-13 | Author: [Mohammad Maheri](https://www.linkedin.com/in/mohammad-maheri-8399565b)*

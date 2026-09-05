@@ -89,6 +89,23 @@ All detail-file references below are relative to the resolved directory. Only ON
 
 ---
 
+<!-- BEGIN WORKFLOW-DISCIPLINE v1 (synced from WORKFLOW_DISCIPLINE_CONTRACT.md — do not edit inline) -->
+## Workflow Discipline
+
+This package's workflow is authoritative — do not improvise it. (Full rules:
+"Workflow Discipline (Enforced)" in the session orchestrator.)
+
+- **Read before you execute.** Load this package's core + the relevant rule-detail
+  file before performing any stage. Never generate its outputs from memory.
+- **Trace to source.** Every deliverable derives from this package's templates,
+  rule-detail files, or the user's own input — never unstated "best practice."
+- **No unilateral deviation.** Do not skip, reorder, combine, or auto-progress past
+  a gate on your own initiative; the user may direct these — confirm and log them.
+  Every gate needs explicit user approval.
+<!-- END WORKFLOW-DISCIPLINE -->
+
+---
+
 ## MANDATORY: Welcome Message
 
 When starting ANY UX design request (no `uxd-state.md` exists): load `common/welcome-message.md`, display it in full, ONCE, then proceed to Stage 1 (Workspace Detection). Do NOT reload it in subsequent interactions.
@@ -197,6 +214,7 @@ AI-UXD is contract-aware — a Project-layer lifecycle that reads PIP + PBP (+ o
 - **Guaranteed (ALWAYS):** `uxd-state.md`, personas, journey maps, information architecture, user flows, wireframe specs, design system (color/type/spatial/icons/voice & tone), design tokens, component inventory (states & interactions), accessibility baseline, usability test plan, design QA framework, UXP README.
 - **Conditional:** multi-brand token architecture (>1 brand or color modes), i18n/RTL token extensions (>1 locale), service blueprints (Comprehensive + service-oriented), empathy maps (Comprehensive).
 - **Downstream signals:** AI-POLC (personas + journeys), AI-DWG (design system + tokens + components → `design-system.md` + `frontend-standards.md`), AI-GCE (accessibility baseline → `accessibility-compliance` rule).
+- **Team/context attribution (hybrid — when the AI-ADLC `team-topologies` feature is active):** the sliceable UX units (user flows, journeys, wireframes) carry an optional `Owning Team` (`TEAM-*`) / `Bounded Context` (`BC-*`) tag from the AI-ADLC `team-context-registry`. When a unit is untagged, AI-DWG **derives** attribution via **persona → epic → BC/TEAM** (bridge the persona/journey to its AI-POLC epic and inherit that epic's ownership). This lets AI-DWG route each team its `ux/` slice when generating per-team workspaces. **Design-system tokens and the accessibility baseline are SHARED across all teams — never team-scoped** (a team never owns half the design system). Backward-compatible: with the topology feature off, no tag is set and UX behaves exactly as today.
 - **Principles:** detection by marker (not folder name) · fixed output root · graceful standalone (works from a brief alone) · format tolerant (reads numbered + legacy flat).
 
 ### Drift Intake (governance back-flow)

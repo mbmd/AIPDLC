@@ -219,6 +219,8 @@ After all automation features in this batch are tagged:
    - AI-TGE `ATQ__` (automation verification)
 3. **DFE derivation:** `automationFeatureId` + `automationMode` + `automationPattern` + `automationTrigger` + `automationAcceptanceCriteria` are exposed via POLC's `data-schema/` for the cross-lifecycle traceability JSON.
 
+> **Team attribution (per-team lens courier).** A tagged feature carries the `epicId` of the epic it sits on, and that epic now carries a first-class `Owning Team` (`TEAM-*`). The feature's team attribution is therefore **inherited via its epic** — no separate tag. When the `team-topologies` feature is active and per-team workspaces are generated, AI-DWG's lens courier uses this inheritance to deliver each lens to the **owning team's** workspace only.
+
 ---
 
 ## Tier 2 Behavior (Story Elaboration)

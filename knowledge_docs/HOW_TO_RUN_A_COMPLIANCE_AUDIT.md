@@ -1,6 +1,6 @@
 # How to Run a Compliance Audit
 
-**Purpose:** Practical guide for running a periodic governance health check using AI-GCE — assessing current compliance, identifying drift, verifying rule effectiveness, and producing an audit report suitable for stakeholders and certification bodies.
+**Purpose:** Practical guide for running a periodic governance health check using AI-GCE (Governance & Compliance Engine) — assessing current compliance, identifying drift, verifying rule effectiveness, and producing an audit report suitable for stakeholders and certification bodies.
 
 ---
 

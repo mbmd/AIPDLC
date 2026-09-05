@@ -9,17 +9,17 @@
 Depth affects governance through a causal chain:
 
 ```
-DEPTH LEVEL (chosen at AI-PILC or entry point)
+DEPTH LEVEL (chosen at AI-PILC (Project Initiation Life Cycle) or entry point)
     │
     ├── Affects AI-PILC output richness (thin vs. detailed PIP)
     │       │
-    │       └── Affects AI-ADLC input (how many constraints visible)
+    │       └── Affects AI-ADLC (Architecture Design Life Cycle) input (how many constraints visible)
     │               │
     │               └── Affects AP richness (how many ADRs, how detailed)
     │                       │
-    │                       └── Affects AI-DWG output (how many steering files)
+    │                       └── Affects AI-DWG (Workspace Generator) output (how many steering files)
     │                               │
-    │                               └── Affects AI-GCE derivation (how many rules derivable)
+    │                               └── Affects AI-GCE (Governance & Compliance Engine) derivation (how many rules derivable)
     │
     └── NET EFFECT: Depth determines the CEILING of governance achievable
 ```

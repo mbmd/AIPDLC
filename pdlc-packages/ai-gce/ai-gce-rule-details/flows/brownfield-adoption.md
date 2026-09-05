@@ -185,16 +185,16 @@ STEP 8: OUTPUT — Present Brownfield Summary
    1. Review .governance/brownfield-baseline.md — acknowledge and sign off
    2. Read .governance/incremental-adoption-plan.md — understand the timeline
    3. Open this workspace as root in a NEW Kiro instance (or new IDE window)
-   4. Install AI-DLC v1 (awslabs/aidlc-workflows) in the workspace — follow its install guide
+   4. Install AI-DLC (awslabs/aidlc-workflows) in the workspace — follow its install guide
    5. Begin development — new code is enforced from day 1; legacy follows the adoption plan
    6. Run weekly compliance audit (`CAA__`) to track improvement score
 
 🔀 **Chain Navigation:**
    • Dashboard data: type `DAT__ pdlc/gce` to update the family dashboard
 
-⚠️ **IMPORTANT: AI-DLC v1 runs in THIS workspace, but in a fresh IDE instance.**
+⚠️ **IMPORTANT: AI-DLC runs in THIS workspace, but in a fresh IDE instance.**
    Close this planning session. Open the workspace folder as the ROOT
-   of a fresh Kiro instance (or Cursor/Windsurf/Claude Code). AI-DLC v1
+   of a fresh Kiro instance (or Cursor/Windsurf/Claude Code). AI-DLC
    is a separate product — install it yourself
    (github.com/awslabs/aidlc-workflows). The hooks, rules, and baseline
    AI-GCE produced are already in place for AI-DLC to operate within."

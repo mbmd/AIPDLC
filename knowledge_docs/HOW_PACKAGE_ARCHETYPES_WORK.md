@@ -36,13 +36,13 @@ Every package in the family is exactly one of three archetypes. The archetype de
 Ask these questions in order. The first "yes" wins.
 
 1. **Does it watch a workspace or portfolio state and re-act whenever that state changes?**
-   → **Adaptive engine.** (AI-PPM, AI-GCE, AI-TGE)
+   → **Adaptive engine.** (AI-PPM (Project Portfolio Management), AI-GCE (Governance & Compliance Engine), AI-TGE (Test Governance Engine))
 
 2. **Does it produce a build artifact in a single pass, with no ongoing relationship after?**
-   → **One-time generator.** (AI-DWG)
+   → **One-time generator.** (AI-DWG (Workspace Generator))
 
 3. **Does it take one input and march it through ordered, interactive stages to a single defined deliverable?**
-   → **Interactive workflow.** (AI-ILC, AI-PILC, AI-ADLC, AI-UXD, AI-POLC)
+   → **Interactive workflow.** (AI-ILC (Idea Life Cycle), AI-PILC (Project Initiation Life Cycle), AI-ADLC (Architecture Design Life Cycle), AI-UXD (UX Design), AI-POLC (Product Ownership Life Cycle))
 
 The discriminator is **time and input cardinality**, not subject matter. A package is an engine because of *how* it runs (continuously, over a changing set of inputs), not because of *what domain* it covers.
 
@@ -55,7 +55,7 @@ The discriminator is **time and input cardinality**, not subject matter. A packa
 | Portfolio | AI-ILC | Interactive workflow | One raw idea → ordered evaluation → one Idea Brief |
 | Portfolio | AI-PILC | Interactive workflow | One raw requirement → ordered intake → one PIP |
 | Portfolio | **AI-PPM** | **Adaptive engine** | Watches N PIPs/briefs; re-prioritises as the portfolio changes |
-| Edge | AI-FLO | Router / orchestration engine | Observes package output markers; routes continuously |
+| Edge | AI-FLO (Flow Orchestrator) | Router / orchestration engine | Observes package output markers; routes continuously |
 | Project | AI-ADLC | Interactive workflow | Requirements → ordered design stages → one AP |
 | Project | AI-UXD | Interactive workflow | PIP/AP → ordered design stages → one UXP |
 | Project | AI-POLC | Interactive workflow | PIP/AP → ordered stages → one PBP |

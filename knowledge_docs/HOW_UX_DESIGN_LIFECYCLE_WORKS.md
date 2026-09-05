@@ -1,6 +1,6 @@
 # How the UX Design Lifecycle Works
 
-**Purpose:** Explains how AI-UXD transforms business intent and user research into a governed UX Design Package (UXP) — covering the 5-phase / 16-stage lifecycle, the traceability spine that links persona to token, adaptive depth, conditional generation, and the handoffs that feed AI-POLC, AI-DWG, and AI-GCE.
+**Purpose:** Explains how AI-UXD transforms business intent and user research into a governed UX Design Package (UXP) — covering the 5-phase / 16-stage lifecycle, the traceability spine that links persona to token, adaptive depth, conditional generation, and the handoffs that feed AI-POLC (Product Ownership Life Cycle), AI-DWG (Workspace Generator), and AI-GCE (Governance & Compliance Engine).
 
 ---
 
@@ -9,7 +9,7 @@
 AI-UXD is the single producer of the design foundation downstream packages assume but nothing else creates. It turns user research and business context into personas, journeys, information architecture, user flows, a complete design system with tokens, a component library, and an accessibility baseline — all governed, versioned, and consumable without interpretation.
 
 ```
-PIP (from AI-PILC) + AP (from AI-ADLC) + strategy exchange with AI-POLC
+PIP (from AI-PILC (Project Initiation Life Cycle)) + AP (from AI-ADLC (Architecture Design Life Cycle)) + strategy exchange with AI-POLC
         │
         ▼
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -49,7 +49,7 @@ UX DESIGN PACKAGE (UXP)
 
 **Identity spine:** AI-UXD answers *how it looks, how it feels, how it behaves, and whether everyone can use it*. If a concern is about look/feel/behavior + inclusive access → AI-UXD owns it.
 
-**Inclusion rule:** If it answers "what/why/order" → AI-POLC. If it answers "how it's built" → AI-DLC v1. If it answers "is it compliant at runtime" → AI-GCE. If it answers "what's the system architecture" → AI-ADLC. AI-UXD owns the experience layer between them.
+**Inclusion rule:** If it answers "what/why/order" → AI-POLC. If it answers "how it's built" → AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle). If it answers "is it compliant at runtime" → AI-GCE. If it answers "what's the system architecture" → AI-ADLC. AI-UXD owns the experience layer between them.
 
 ---
 
@@ -135,7 +135,7 @@ Discover → Define → Design → Validate → Assemble
 | Stage | What Happens | Deliverable |
 |-------|-------------|-------------|
 | 11. Accessibility Baseline | Declare WCAG 2.2 target, map to POUR, link to design decisions, define keyboard + SR behavior | Accessibility baseline |
-| 12. Usability Validation Plan | Heuristic checklist, test plan, feedback intake (AI-DLC v1 runtime signals route back here) | Validation plan |
+| 12. Usability Validation Plan | Heuristic checklist, test plan, feedback intake (AI-DLC runtime signals route back here) | Validation plan |
 | 13. Design QA Framework | Define design-to-code drift tolerance, comparison dimensions, severity model, report format | Design QA framework |
 
 ### Phase 5: Assemble (Stages 14–16)
@@ -231,9 +231,9 @@ The design system and tokens seed AI-DWG's `design-system.md` and enrich its `fr
 
 The accessibility baseline seeds AI-GCE's `accessibility-compliance` rule — the WCAG 2.2 target declared at Stage 11 becomes an enforceable governance rule in the development workspace.
 
-### AI-DLC v1 → AI-UXD (Runtime Feedback)
+### AI-DLC → AI-UXD (Runtime Feedback)
 
-During delivery, AI-DLC v1 runtime usability and accessibility signals flow back into the UXP through the feedback intake defined at Stage 12 — closing the loop between design intent and implementation reality.
+During delivery, AI-DLC runtime usability and accessibility signals flow back into the UXP through the feedback intake defined at Stage 12 — closing the loop between design intent and implementation reality.
 
 ---
 

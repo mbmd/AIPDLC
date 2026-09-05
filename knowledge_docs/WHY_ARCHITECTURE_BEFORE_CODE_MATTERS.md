@@ -40,11 +40,11 @@ Architecture-before-code means defining system context, container boundaries, co
 
 | Package | Feature | Prevention Mechanism |
 |---------|---------|---------------------|
-| **AI-ADLC** | 13-stage progressive decomposition | Forces architecture design through C4 levels (System Context → Containers → Components) with gates at each level. No implementation starts until L2 boundaries are stable. |
+| **AI-ADLC (Architecture Design Life Cycle)** | 13-stage progressive decomposition | Forces architecture design through C4 levels (System Context → Containers → Components) with gates at each level. No implementation starts until L2 boundaries are stable. |
 | **AI-ADLC** | ADR-driven decisions | Every major architecture choice (tech stack, isolation pattern, security model, data strategy) produces a formal Architecture Decision Record with options considered and consequences documented. |
 | **AI-ADLC** | Extension system (6 patterns) | When architecture demands DDD, Microservices, BFF, Event Sourcing, Resilience patterns, or Feature Flags — dedicated rule sets activate with blocking constraints that prevent half-implementations. |
-| **AI-DWG** | Workspace generated FROM architecture | The development workspace is generated directly from the Architecture Package — folder structure, steering files, and governance rules derive from architectural decisions. Code structure reflects design, not accident. |
-| **AI-GCE** | Architectural compliance rules | Governance hooks enforce architecture boundaries at code time: module boundary violations, forbidden dependencies, missing API contracts — caught before commit, not in review. |
+| **AI-DWG (Workspace Generator)** | Workspace generated FROM architecture | The development workspace is generated directly from the Architecture Package — folder structure, steering files, and governance rules derive from architectural decisions. Code structure reflects design, not accident. |
+| **AI-GCE (Governance & Compliance Engine)** | Architectural compliance rules | Governance hooks enforce architecture boundaries at code time: module boundary violations, forbidden dependencies, missing API contracts — caught before commit, not in review. |
 
 ---
 

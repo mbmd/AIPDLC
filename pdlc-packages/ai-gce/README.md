@@ -4,13 +4,13 @@
 
 **Created By:** Maheri — [LinkedIn](https://www.linkedin.com/in/mohammad-maheri-8399565b)
 **Inspired By:** [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) (MIT-0)
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 ---
 
 ## What Is AI-GCE?
 
-A **full project governance engine** that reads an AI-DWG development workspace and derives a tailored compliance enforcement layer — rules, hooks, agents, and logging infrastructure specific to that project's architecture, technology, team structure, and methodology.
+A **full project governance engine** that reads an AI-DWG (Workspace Generator) development workspace and derives a tailored compliance enforcement layer — rules, hooks, agents, and logging infrastructure specific to that project's architecture, technology, team structure, and methodology.
 
 **Not just architecture compliance.** AI-GCE enforces team topology, role segregation, session discipline, sprint governance, PR process, CI/CD gates, DevOps standards, and change management — all derived automatically from the workspace.
 
@@ -36,7 +36,7 @@ flowchart LR
         UXD["AI-UXD<br/>Design UX"]
         ADLC["AI-ADLC<br/>Design it"]
         DWG["AI-DWG<br/>Prepare it"]
-        DLC["AI-DLC v1<br/>(build) ¹"]
+        DLC["AI-DLC<br/>(build) ¹"]
         GCE["AI-GCE<br/>Guard it"]
         TGE["AI-TGE<br/>Test it"]
 
@@ -44,13 +44,13 @@ flowchart LR
         POLC <-.->|"back-and-forth"| DLC
         DLC -.->|"feedback"| UXD
         DLC -.->|"feedback"| POLC
-        GCE ---|"alongside AI-DLC v1"| DLC
-        TGE ---|"alongside AI-DLC v1"| DLC
+        GCE ---|"alongside AI-DLC"| DLC
+        TGE ---|"alongside AI-DLC"| DLC
     end
 
     PORTFOLIO ~~~ FLO ~~~ PROJECT
 ```
-  ¹ AI-DLC v1 = Amazon's open-source build lifecycle (not ours; we feed it).
+  ¹ AI-DLC = Amazon's open-source build lifecycle (not ours; we feed it).
 
 | Layer | Package | Type | Input | Output |
 |-------|---------|------|-------|--------|
@@ -64,11 +64,11 @@ flowchart LR
 | Project | **AI-DWG** | One-time generator | AP + PBP + UXP | Ready-to-code development workspace (DW) |
 | Project | **AI-GCE** | Adaptive governance engine | DW (AI-DWG output) | Compliance enforcement layer |
 | Project | **AI-TGE** | Test governance engine | DW / build artifacts | Test governance & quality layer |
-| Project | **AI-DLC v1** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
+| Project | **AI-DLC** ¹ | Interactive workflow (lifecycle) | DW + GCE + User Stories (from AI-POLC) | Working Software |
 
-> ¹ **AI-DLC v1** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC v1 consumes.
+> ¹ **AI-DLC** ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) is NOT our product. Our chain produces the workspace AI-DLC consumes.
 > ² **AI-ILC** is an **optional pre-stage** (the funnel before the funnel). The chain still works without it for users who start at AI-PILC. `⇢` denotes the optional link.
-> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC v1** as continuous quality engines; **AI-POLC ⇄ AI-DLC v1** exchange backlog/acceptance throughout delivery; and **AI-DLC v1 runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
+> ³ All packages in this table are **built**. AI-PPM (portfolio engine), AI-FLO (router), AI-POLC (product ownership lifecycle), and AI-UXD (UX design lifecycle) were the last four — completed June 2026. Within the Project layer, **AI-POLC, AI-UXD, and AI-ADLC run sequentially** (POLC→UXD→ADLC) — each feeds the next, culminating at AI-DWG which receives all three outputs (AP + PBP + UXP). **AI-GCE and AI-TGE run alongside AI-DLC** as continuous quality engines; **AI-POLC ⇄ AI-DLC** exchange backlog/acceptance throughout delivery; and **AI-DLC runtime feedback flows back to both AI-UXD and AI-POLC**. Feedback loops (ADLC→POLC cost/risk, ADLC→UXD constraints) provide iterative refinement without changing the forward sequence.
 
 > **AI-DFE** ([Data Fabric Engine](../ai-dfe/)) is a family-scoped **companion** — it gathers data from all packages and distributes structured JSON for dashboards and status roll-ups. It runs alongside the chain rather than as a linear step, so it is not shown as a chain row above.
 
@@ -76,30 +76,30 @@ flowchart LR
 
 ## Where AI-GCE Sits in the Chain
 
-AI-GCE is a **continuous companion**, not a forward chain step. It runs **alongside AI-DLC v1** (the build), inside the AI-DWG-generated development workspace: it reads that workspace, derives a tailored compliance-enforcement layer, and then enforces it continuously as the code is built. AI-DWG provisions it into the dev workspace; it activates there when you type `_GCE_`.
+AI-GCE is a **continuous companion**, not a forward chain step. It runs **alongside AI-DLC** (the build), inside the AI-DWG-generated development workspace: it reads that workspace, derives a tailored compliance-enforcement layer, and then enforces it continuously as the code is built. AI-DWG provisions it into the dev workspace; it activates there when you type `_GCE_`.
 
 | Aspect | AI-GCE |
 |--------|---------|
 | **Layer** | Project — a continuous companion (runs in the generated dev workspace, alongside the build) |
-| **Position** | Alongside AI-DLC v1 (not a sequential design step); provisioned into the workspace by AI-DWG |
-| **Predecessor** | AI-DWG (the development workspace) |
-| **Runs with** | AI-DLC v1 (the build) and AI-TGE (its sibling companion) |
+| **Position** | Alongside AI-DLC (AI-Driven Development Life Cycle — Amazon's open-source build lifecycle; not a sequential design step); provisioned into the workspace by AI-DWG |
+| **Predecessor** | AI-DWG (AI-Driven Workspace Generator — the development workspace) |
+| **Runs with** | AI-DLC (the build) and AI-TGE (its sibling companion) |
 | **Reads (input)** | The dev workspace — `.governance/workspace-manifest.yaml` (discovery contract), `rules/`, Definition of Done, TEAM_AGREEMENTS, CODEOWNERS, the actual module layout |
 | **Produces (output)** | A compliance-enforcement layer under `.governance/` — rules, hooks, process agents, a JSONL audit log, and a compliance dashboard |
 | **Output marker** | `.governance/hooks/` folder (≥1 hook); `gce-state.md` is the capability gate |
 | **Correlation key** | Reads the `projectId` and stamps it into every JSONL compliance event |
-| **Capability emitted** | `governance-engine@1` (internal — companion to AI-DLC v1) |
+| **Capability emitted** | `governance-engine@1` (internal — companion to AI-DLC) |
 | **Capability consumed** | `development-workspace@1` (from AI-DWG) |
 
 **Simplified chain view** (see the diagram above for the full topology):
 
 ```
-… AI-ADLC → AI-DWG → AI-DLC v1  (build)
+… AI-ADLC → AI-DWG → AI-DLC (build)
                        ├── AI-GCE  ← you are here (guards, alongside)
                        └── AI-TGE  (tests, alongside)
 ```
 
-AI-GCE answers **"is the team building it the way the design and governance say to?"** It **enforces discipline** — architecture, team topology, roles, session/sprint/PR process, DevOps, and change management — all **derived** from the workspace, not hand-configured. It does not build code (AI-DLC v1), run or govern tests (AI-TGE), or author the design (AI-ADLC/DWG), and it re-derives selectively when the workspace changes.
+AI-GCE answers **"is the team building it the way the design and governance say to?"** It **enforces discipline** — architecture, team topology, roles, session/sprint/PR process, DevOps, and change management — all **derived** from the workspace, not hand-configured. It does not build code (AI-DLC), run or govern tests (AI-TGE), or author the design (AI-ADLC/DWG), and it re-derives selectively when the workspace changes.
 
 ### Standalone vs. chained
 
@@ -116,9 +116,9 @@ AI-GCE answers **"is the team building it the way the design and governance say 
 - **Two-source derivation** — built-in methodology baseline + steering-enriched project specifics
 - **Four operating modes** — Full Generation, Re-Derivation, Brownfield Adoption, Tier Activation
 - **Three-tier progressive compliance** — Day 0 (60-70%) → Sprint 2+ (80-90%) → Pre-Release (92%+)
-- **Dual enforcement model** — 9 hooks (automatic, real-time) + 6 process agents (manual, milestone-triggered)
+- **Dual enforcement model** — 10 installed hooks (automatic, real-time: 5 Tier 1 + 3 Tier 2 + 2 Tier 3), plus conditional hooks where applicable, + 9 process/audit agents (manual, milestone-triggered), + 2 lens agents when a lens is ON (`AIG__`/`ATG__`)
 - **Hook debounce strategy** — security-critical on fileEdited; advisory on agentStop
-- **Process agent shortcuts** — `SDC__`, `SGV__`, `CRV__`, `SQC__`, `CMG__`, `DOD__` invoke governance at milestones
+- **Process agent shortcuts** — `CAA__` (Compliance Audit), `SDC__` (Session Discipline), `SGV__`, `CRV__`, `SQC__`, `CMG__`, `DOD__`, `PRC__`, `DFT__` (Drift Detection) invoke governance at milestones; `AIG__`/`ATG__` add lens-specific governance when a lens is ON
 - **Agent Process Guide** — generated user manual documents when to call, consequences of skipping, recovery procedures
 - **Phase-aware enforcement** — rules only fire when applicable to current project phase
 - **Silent when passing** — no output unless something is wrong
@@ -158,7 +158,7 @@ Installed into the development workspace:
 
 ```
 .governance/hooks/              ← 9 always-generated + up to 6 conditional enforcement hooks (JSON)
-.governance/agents/             ← 6 process/audit governance agents (milestone-triggered)
+.governance/agents/             ← process/audit governance agents (milestone-triggered) + 2 lens agents when a lens is ON (AIG__/ATG__)
 .compliance-state.json    ← Tier tracking + readiness criteria
 management_framework/dashboards/compliance-dashboard.md  ← Visual compliance overview (Dashboard Framework Convention)
 .governance/
@@ -209,7 +209,7 @@ For the full cross-platform matrix, see `PLATFORM_CAPABILITIES.md`.
 
 ## Activation
 
-**Explicit key:** type `_GCE_` in any prompt to activate AI-GCE unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-GCE`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
+**Explicit key:** type `_GCE_` in any prompt to activate AI-GCE unambiguously — even when other AI-* packages share the workspace. The status key `_ACTIVE_` (report active package) reports which package is currently active. A package switch never happens without your explicit key or confirmation, and any switch is announced on the first line of the response (`Active package: AI-GCE`). See [`../TRIGGER_KEYS_REFERENCE.md`](../TRIGGER_KEYS_REFERENCE.md) for the full family key table.
 
 ---
 
@@ -274,7 +274,7 @@ An AI assistant can install AI-GCE by parsing and executing the block below. All
 # AIFLC INSTALL MANIFEST — AI-GCE
 package: AI-GCE
 family: pdlc                       # package home:.aiflc/pdlc/
-version: 1.0.0
+version: 1.1.0
 runtime: none                      # pure Markdown; no deps, no build
 role: layer-3-companion            # normally provisioned by AI-DWG; direct install for standalone/brownfield
 source_root: pdlc-packages/        # clone root of the AIPDLC repo
@@ -339,7 +339,7 @@ ai-gce/
 │   ├── generators/                    ← Derivation logic per rule category (24 files, incl. agents-from-steering)
 │   ├── re-derivation/                 ← Incremental update logic (3 files)
 │   └── templates/                     ← Hook, agent, and log templates
-│       ├── hooks/                     ← 9 hook JSON templates + enforcement guide
+│       ├── hooks/                     ← 21 hook JSON templates + enforcement guide
 │       ├── agents/                    ← 8 agent templates + agent-guide + agent-registry
 │       └── compliance-log/            ← Schema + workflows + dashboard template
 └── setup/
@@ -375,7 +375,7 @@ AI-GCE operationalizes **governance-as-code across the whole delivery discipline
 | **Audit trail & evidence** (append-only log) | Every hook writes a timestamped JSONL compliance event — Git-committed, reproducible evidence | An internal audit trail, not a certified external audit (SOC 2 / ISO 27001) |
 | **Configuration-drift detection** | Detects drift of governed elements vs the AI-DWG baseline (a `DFT__` agent + a silent session-end drift check) | It watches the **baseline** only; its own derived rules are handled by re-derivation, not the drift loop |
 
-The boundary: AI-GCE **governs discipline** — it derives and enforces the rules. It does not build the software (AI-DLC v1), govern tests (AI-TGE), or author the design (AI-ADLC / AI-DWG). On non-Kiro platforms the rules are fully generated but enforcement is advisory (see Platform Capabilities).
+The boundary: AI-GCE **governs discipline** — it derives and enforces the rules. It does not build the software (AI-DLC), govern tests (AI-TGE), or author the design (AI-ADLC / AI-DWG). On non-Kiro platforms the rules are fully generated but enforcement is advisory (see Platform Capabilities).
 
 ---
 
@@ -389,7 +389,7 @@ AI-GCE is the **governance end** of the family's lens system. Engine cores carry
 | **Automation Lens** | `ATG__` | Governance of automation-lens features (`automationFeature` work) |
 | **Agentic** (AI ∩ Automation) | `AIG__` + `ATG__` (extended) | Adds agentic safeguards — tool-permission, excessive-agency, and kill-switch checks |
 
-Modes originate upstream (set at AI-PILC in `Lens_Status.md`, tagged per-feature at AI-POLC); AI-GCE enforces against those tags. AI-TGE is the quality counterpart (`AIQ__` / `ATQ__`).
+Modes originate upstream (set at AI-PILC (Project Initiation Life Cycle) in `Lens_Status.md`, tagged per-feature at AI-POLC (Product Ownership Life Cycle)); AI-GCE enforces against those tags. AI-TGE (Test Governance Engine) is the quality counterpart (`AIQ__` (AI Quality) / `ATQ__` (Automation Quality)).
 
 ---
 

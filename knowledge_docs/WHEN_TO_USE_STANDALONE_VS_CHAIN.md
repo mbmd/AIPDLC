@@ -11,10 +11,10 @@
 | Your Situation | Recommendation |
 |---------------|----------------|
 | Starting from scratch, no existing artifacts | Run the chain (PILC → POLC → UXD → ADLC → DWG → GCE) |
-| Have requirements but no architecture | Enter at AI-ADLC standalone |
-| Have architecture docs from another source | Enter at AI-DWG standalone |
-| Have existing codebase, need governance only | Enter at AI-GCE standalone |
-| Need to evaluate an idea before committing | Start at AI-ILC standalone |
+| Have requirements but no architecture | Enter at AI-ADLC (Architecture Design Life Cycle) standalone |
+| Have architecture docs from another source | Enter at AI-DWG (Workspace Generator) standalone |
+| Have existing codebase, need governance only | Enter at AI-GCE (Governance & Compliance Engine) standalone |
+| Need to evaluate an idea before committing | Start at AI-ILC (Idea Life Cycle) standalone |
 | Want maximum quality and traceability | Full chain |
 | Want speed over completeness | Standalone at the package you need |
 
@@ -72,7 +72,7 @@ You don't have to choose one or the other for all packages:
 |----------|---------|
 | Chain for initiation + design, standalone for governance | Run PILC → POLC → UXD → ADLC → DWG (chain), then install AI-GCE standalone on any workspace |
 | Standalone design, chain for everything else | Have architecture from another source → enter at AI-DWG, let DWG → GCE chain from there |
-| Partial chain entry | Already have a PIP → enter at AI-POLC, let the sequence flow POLC → UXD → ADLC → DWG |
+| Partial chain entry | Already have a PIP → enter at AI-POLC (Product Ownership Life Cycle), let the sequence flow POLC → UXD → ADLC → DWG |
 
 ---
 

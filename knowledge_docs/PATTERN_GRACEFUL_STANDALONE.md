@@ -24,12 +24,12 @@ PACKAGE INPUT
 
 | Package | With Predecessor (Path A) | Without Predecessor (Path B) |
 |---------|--------------------------|------------------------------|
-| **AI-PILC** | Reads AI-ILC Idea Brief (evaluation already done) | Accepts raw requirements in any format |
-| **AI-ADLC** | Reads PIP from AI-PILC (requirements, constraints, risk captured) | Accepts requirements + charter directly |
-| **AI-DWG** | Reads AP from AI-ADLC (full architecture) | Accepts any structured architecture docs |
-| **AI-GCE** | Reads workspace from AI-DWG (full steering) | Reads any workspace with `.kiro/steering/` |
-| **AI-TGE** | Reads AP + DW (full context) | Works with whatever exists (even just test files) |
-| **AI-POLC** | Reads PIP and/or AP (requirements + architecture) | Accepts raw product vision or feature list |
+| **AI-PILC (Project Initiation Life Cycle)** | Reads AI-ILC (Idea Life Cycle) Idea Brief (evaluation already done) | Accepts raw requirements in any format |
+| **AI-ADLC (Architecture Design Life Cycle)** | Reads PIP from AI-PILC (requirements, constraints, risk captured) | Accepts requirements + charter directly |
+| **AI-DWG (Workspace Generator)** | Reads AP from AI-ADLC (full architecture) | Accepts any structured architecture docs |
+| **AI-GCE (Governance & Compliance Engine)** | Reads workspace from AI-DWG (full steering) | Reads any workspace with `.kiro/steering/` |
+| **AI-TGE (Test Governance Engine)** | Reads AP + DW (full context) | Works with whatever exists (even just test files) |
+| **AI-POLC (Product Ownership Life Cycle)** | Reads PIP and/or AP (requirements + architecture) | Accepts raw product vision or feature list |
 
 ---
 

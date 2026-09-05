@@ -100,7 +100,7 @@ To route effectively, the connector needs a **Project Registry** (v1.1+ artifact
 | Domain | What domain the project covers (for matching) |
 | Status | Active / On-hold / Completed |
 | Has AI-PILC output? | Can receive change requests? |
-| Has AI-DLC v1 backlog? | Can receive feature briefs? |
+| Has AI-DLC backlog? | Can receive feature briefs? |
 | Key stakeholders | For impact assessment context |
 | Architecture summary | For determining if an idea impacts architecture |
 

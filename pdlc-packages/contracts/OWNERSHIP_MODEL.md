@@ -1,7 +1,7 @@
 # AI-* Family — Artifact Ownership & Access Governance Model
 
 > **Status:** Reference (as-is map + target model)
-> **Scope:** Cross-cutting — the ownership-bearing chain (**AI-ADLC, AI-UXD, AI-POLC → AI-DWG → AI-GCE, AI-TGE**) plus upstream initiation (**AI-PILC**) and the **AI-DLC v1** runtime. The portfolio/edge packages (**AI-ILC, AI-PPM, AI-FLO**) carry provenance but do not define file ownership.
+> **Scope:** Cross-cutting — the ownership-bearing chain (**AI-ADLC, AI-UXD, AI-POLC → AI-DWG → AI-GCE, AI-TGE**) plus upstream initiation (**AI-PILC**) and the **AI-DLC** runtime. The portfolio/edge packages (**AI-ILC, AI-PPM, AI-FLO**) carry provenance but do not define file ownership.
 > **Created:** 2026-06-09
 > **Author:** Maheri
 > **Related:** `FAMILY_STRUCTURE.md`, `NAMING_AND_OWNERSHIP.md` (provenance keys + A-dominant naming convention), idea `005-lifecycle-change-propagation` (ownership dimension folded in), siblings `003`/`004`
@@ -28,7 +28,7 @@ It deliberately covers the complexity the family must handle: **DDD bounded cont
 The AI-* Family produces a chain of dependent artifacts and ultimately a living, operated system:
 
 ```
-PIP (AI-PILC) → [ AP (AI-ADLC) ∥ UXP (AI-UXD) ∥ PBP (AI-POLC) — peer inputs, ≥1 ] → DW (AI-DWG) → enforcement layer (AI-GCE) + test governance (AI-TGE) → operated software (AI-DLC v1 sessions)
+PIP (AI-PILC) → [ AP (AI-ADLC) ∥ UXP (AI-UXD) ∥ PBP (AI-POLC) — peer inputs, ≥1 ] → DW (AI-DWG) → enforcement layer (AI-GCE) + test governance (AI-TGE) → operated software (AI-DLC sessions)
 ```
 
 > **Peer-input note (OI-069):** AI-DWG composes the workspace from any non-empty subset of {AP, UXP, PBP}; none is mandatory-singular. File-ownership boundaries themselves still originate in **AI-ADLC** (DDD bounded contexts) — see Stage A — so the DEFINE→GENERATE→ENFORCE relay below remains ADLC→DWG→GCE.
@@ -102,9 +102,9 @@ Ownership for code and domain artifacts is not a single feature — it is a rela
 | Mode | Mechanism | Where | Effect |
 |------|-----------|-------|--------|
 | **Preventive** (blocks) | Git platform branch protection driven by `CODEOWNERS`; required CODEOWNER review | External Git platform (configured from generated `CODEOWNERS`) | A change *cannot merge* without owner approval |
-| **Detective** (flags + logs) | GCE hooks (`fileEdited`, `agentStop`, `promptSubmit`) + JSONL compliance log | AI-GCE + AI-DLC v1 runtime | A wrong change is *detected, flagged, routed, and logged* — not hard-blocked in the editor |
+| **Detective** (flags + logs) | GCE hooks (`fileEdited`, `agentStop`, `promptSubmit`) + JSONL compliance log | AI-GCE + AI-DLC runtime | A wrong change is *detected, flagged, routed, and logged* — not hard-blocked in the editor |
 
-Inside **AI-DLC v1 coding sessions**, enforcement is detective: `role-isolation.md` "AI MUST/MUST NOT" rules and GCE hooks fire, deviations are logged — but a determined wrong actor is flagged, not stopped. Hard prevention only exists at the Git-platform merge gate.
+Inside **AI-DLC coding sessions**, enforcement is detective: `role-isolation.md` "AI MUST/MUST NOT" rules and GCE hooks fire, deviations are logged — but a determined wrong actor is flagged, not stopped. Hard prevention only exists at the Git-platform merge gate.
 
 ---
 

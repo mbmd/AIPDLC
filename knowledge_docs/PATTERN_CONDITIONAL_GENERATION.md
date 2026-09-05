@@ -30,16 +30,16 @@ OUTPUT (only files justified by input — no unnecessary artifacts)
 
 | Package | Conditional Output | Trigger Condition |
 |---------|-------------------|-------------------|
-| **AI-DWG** | `multi-tenancy.md` steering | AP contains multi-tenancy architecture |
+| **AI-DWG (Workspace Generator)** | `multi-tenancy.md` steering | AP contains multi-tenancy architecture |
 | **AI-DWG** | `event-sourcing.md` steering | Event Sourcing extension is active in `adlc-state.md` |
 | **AI-DWG** | `resilience-standards.md` steering | ≥3 external integrations OR Resilience extension active |
 | **AI-DWG** | `feature-flags.md` steering | Feature Flags extension is active |
 | **AI-DWG** | `frontend-standards.md` steering | AP contains frontend containers |
 | **AI-DWG** | `microservices.md` steering | Microservices extension is active |
-| **AI-GCE** | Performance budget hooks | Tier 3 active AND performance NFRs exist in AP |
+| **AI-GCE (Governance & Compliance Engine)** | Performance budget hooks | Tier 3 active AND performance NFRs exist in AP |
 | **AI-GCE** | Accessibility hooks | Tier 3 active AND frontend exists |
-| **AI-TGE** | Contract test requirements | ≥2 services with explicit API contracts |
-| **AI-ADLC** | Extension rule loading | User opts in during relevant stage |
+| **AI-TGE (Test Governance Engine)** | Contract test requirements | ≥2 services with explicit API contracts |
+| **AI-ADLC (Architecture Design Life Cycle)** | Extension rule loading | User opts in during relevant stage |
 
 ---
 

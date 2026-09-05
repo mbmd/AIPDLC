@@ -25,9 +25,9 @@ SOURCE 1: Project-Specific              SOURCE 2: Built-In Baseline
 
 | Package | Source 1 (Project-Specific) | Source 2 (Baseline) | Output |
 |---------|---------------------------|---------------------|--------|
-| **AI-GCE** | `.kiro/steering/` files | 10 universal methodology rules | Compliance rules + hooks |
-| **AI-TGE** | AP artifacts (API contracts, ADRs, security) | Universal test minimums (every function tested, error paths covered) | Test requirements register |
-| **AI-ILC** | Configurable evaluation rubric (org-specific weights) | Universal thresholds (feasibility < 2/5 = auto-defer) | Evaluation scores |
+| **AI-GCE (Governance & Compliance Engine)** | `.kiro/steering/` files | 10 universal methodology rules | Compliance rules + hooks |
+| **AI-TGE (Test Governance Engine)** | AP artifacts (API contracts, ADRs, security) | Universal test minimums (every function tested, error paths covered) | Test requirements register |
+| **AI-ILC (Idea Life Cycle)** | Configurable evaluation rubric (org-specific weights) | Universal thresholds (feasibility < 2/5 = auto-defer) | Evaluation scores |
 | **AI-GCE Audit** | Project-specific rules (derived from steering) | Baseline violation tracking (brownfield) | Compliance score |
 
 ---

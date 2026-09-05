@@ -204,6 +204,10 @@ Generate the **automation feature manifest** inside the workspace:
 
 The manifest is the **single source of truth** for dev-side agents. `ATG__` and `ATQ__` read this manifest; they never reach back across the hinge. Everything they need — especially the **guards** they must verify — is here.
 
+### Per-Team Lens Courier (multi-workspace only — Q-D7)
+
+When `workspaceTopology ∈ {per-team, hybrid}`, the courier delivers each automation feature to the **owning team's** workspace only. Each `automationFeature` carries the `epicId` of its epic, and that epic carries a first-class `Owning Team` (`TEAM-*`, from AI-POLC). So route each feature's `.automation-lens/manifest.json` + automation scaffolding + the `ATG__`/`ATQ__` agents into `{slug}-workspaces/{owning-team}/` only — a team with automation features gets the automation lens; a team without does not. The set-manifest records which team carries which lens; no cross-team lens leakage. In a single workspace, the courier behaves exactly as today.
+
 ---
 
 ## Step 5: Seed the Dev-Side Agents

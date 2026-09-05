@@ -31,12 +31,12 @@ NORMALIZED INTERNAL MODEL (same quality regardless of input mode)
 
 | Package | Supported Input Modes |
 |---------|----------------------|
-| **AI-PILC** | Structured document / Raw verbal / ILC Idea Brief / Brownfield context |
-| **AI-ADLC** | Full PIP (from AI-PILC) / Requirements + charter / Verbal description / Existing architecture (brownfield) |
-| **AI-DWG** | Full AP (from AI-ADLC) / Any structured architecture docs / Existing codebase scan |
-| **AI-GCE** | Full workspace (from AI-DWG) / Any workspace with `.kiro/steering/` / Minimal steering + baseline |
-| **AI-ILC** | Verbal idea / One-liner / Feature request / Competitive observation / Technical improvement |
-| **AI-POLC** | PIP + AP (chain) / Raw product vision / Feature list / Existing backlog |
+| **AI-PILC (Project Initiation Life Cycle)** | Structured document / Raw verbal / ILC Idea Brief / Brownfield context |
+| **AI-ADLC (Architecture Design Life Cycle)** | Full PIP (from AI-PILC) / Requirements + charter / Verbal description / Existing architecture (brownfield) |
+| **AI-DWG (Workspace Generator)** | Full AP (from AI-ADLC) / Any structured architecture docs / Existing codebase scan |
+| **AI-GCE (Governance & Compliance Engine)** | Full workspace (from AI-DWG) / Any workspace with `.kiro/steering/` / Minimal steering + baseline |
+| **AI-ILC (Idea Life Cycle)** | Verbal idea / One-liner / Feature request / Competitive observation / Technical improvement |
+| **AI-POLC (Product Ownership Life Cycle)** | PIP + AP (chain) / Raw product vision / Feature list / Existing backlog |
 
 ---
 

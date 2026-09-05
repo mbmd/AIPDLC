@@ -1,6 +1,6 @@
 # How to Retrofit Governance on Existing Code
 
-**Purpose:** Practical guide for bringing AI-GCE governance to a brownfield codebase — an existing project that was built without the AI-* Family chain. Covers: how to overlay governance non-destructively, how to baseline existing violations, and how to enforce progressively on NEW code without drowning in legacy debt.
+**Purpose:** Practical guide for bringing AI-GCE (Governance & Compliance Engine) governance to a brownfield codebase — an existing project that was built without the AI-* Family chain. Covers: how to overlay governance non-destructively, how to baseline existing violations, and how to enforce progressively on NEW code without drowning in legacy debt.
 
 ---
 
@@ -43,8 +43,8 @@ Retrofitting governance does NOT mean fixing everything that's wrong today. It m
 - Willingness to create a few steering files (minimum: `workspace-rules.md`)
 
 **You do NOT need:**
-- AI-DWG to have generated the workspace
-- AI-ADLC architecture documents (helpful but not required)
+- AI-DWG (Workspace Generator) to have generated the workspace
+- AI-ADLC (Architecture Design Life Cycle) architecture documents (helpful but not required)
 - The entire team to agree upfront (start small, demonstrate value)
 
 ---

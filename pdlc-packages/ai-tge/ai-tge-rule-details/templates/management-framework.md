@@ -34,7 +34,7 @@ This guide defines when and how AI-TGE also writes **summary governance entries*
 
 ## Behavior: Append-if-Exists Only
 
-AI-TGE **reads from AI-ADLC + AI-DWG** and observes AI-DLC v1. The spine will typically exist by the time AI-TGE runs. Therefore:
+AI-TGE **reads from AI-ADLC + AI-DWG** and observes AI-DLC. The spine will typically exist by the time AI-TGE runs. Therefore:
 
 ```
 1. DETECT the spine by marker: management_framework/MANAGEMENT_FRAMEWORK.md

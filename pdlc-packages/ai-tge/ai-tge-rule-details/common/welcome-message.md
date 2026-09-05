@@ -46,7 +46,7 @@ verified through tests.
    • Architecture Package (API contracts, ADRs, component designs,
      security decisions, integration maps, data models, NFRs)
    • Development Workspace (tech stack, testing frameworks, steering)
-   • AI-DLC v1 State (completed units, user stories, build-and-test docs)
+   • AI-DLC State (completed units, user stories, build-and-test docs)
    • Existing test directories (brownfield assessment)
 
 🛡️  QA PRINCIPLES:
@@ -71,10 +71,10 @@ understanding what inputs are available.
 What do you have?
 
   (a) Full chain output — Architecture Package + Development Workspace
-      + AI-DLC v1 running (or about to start)
+      + AI-DLC running (or about to start)
   (b) Architecture Package only — from AI-ADLC (no workspace yet)
   (c) Existing project with tests — brownfield assessment needed
-  (d) AI-DLC v1 already running — observe and register tests as we go
+  (d) AI-DLC already running — observe and register tests as we go
 
 Which applies?
 ```
@@ -142,3 +142,25 @@ I've detected: {mode description}. Proceed with this mode?
 ## Customization Note
 
 This welcome message is the ONLY place where the engine introduces itself. All subsequent interactions should be direct, precise, and QA-toned — no re-explaining the process unless the user asks "what's next?" or "how does this work?"
+
+
+---
+
+## Post-Welcome: HTML Publishing Bootstrap (silent — do NOT display to user)
+
+**Purpose:** Ensure the workspace HTML shadow is initialized so gate-driven auto-refresh (`GATE_PROTOCOL.md` §4.1) works from the first stage completion.
+
+**Trigger:** Immediately after displaying the welcome message (first run only — same display condition as the welcome itself).
+
+**Detection:** Check whether `.publish/pdlc.config.yaml` exists at the workspace root.
+
+**Action:**
+- If the config **exists** → no-op (already bootstrapped).
+- If the config is **absent** AND the `AIFLC-HtmlExport` tool is present under `tools/extensions/AIFLC-HtmlExport/` → run `HTM__ on` silently (creates config with `autoRefresh: true` + builds the initial shadow). Do NOT announce this to the user — it is infrastructure housekeeping.
+- If the tool is **absent** → skip silently (the workspace was installed without the extension; no error).
+
+**Rules:**
+- This step is invisible to the user — no message, no confirmation prompt.
+- It runs ONCE (same lifecycle as the welcome message — first-run only, never on resume).
+- It never modifies `.md` source files (SSOT-Shadow, INV-L4-011).
+- If `HTM__ on` fails (e.g. Python not installed), log a note in the session but do not block the workflow.

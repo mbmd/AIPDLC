@@ -2,6 +2,8 @@
 # AI-DWG Output Contract & Directory Structure
 
 > **Load this file** when executing any generation/reconciliation mode, or when verifying output completeness. This carries the full guaranteed-output table and the runtime directory structure that AI-GCE depends on.
+>
+> **⚠️ Under the AI-DLC build method (`buildProfile: aidlc`), a second FROZEN contract also applies:** `common/aidlc-v2-output-contract.md` — the conditional `aidlc/` tree (behavioural rules, per-agent knowledge, code KB), sensor manifests, and the bootstrap record. The always-on outputs below are emitted regardless of build method; the `aidlc/` surface is emitted **only** when `buildProfile: aidlc`. AI-GCE and AI-TGE build against that frozen contract.
 
 ---
 
@@ -17,11 +19,11 @@ Scoped by present inputs. The successor (AI-GCE) can always find these relative 
 | `rules/frontend-standards.md` | UI patterns + a11y | IF UXD or ADLC (UI containers) |
 | `rules/` UX steering — `navigation-structure`, `design-qa`, `content-guidelines`, `theming`, `i18n-standards` | Routes/taxonomy, drift rules, voice/tone, multi-brand, locales | IF UXD (respective artefact present) |
 | `rules/[conditional files]` | Pattern-specific rules (multi-tenancy, api-versioning, resilience, tracing, performance, workflow-engine, event-sourcing, feature-flags, brownfield-patterns) | Depends on AP content |
-| `info/vision.md` | AI-DLC v1 Vision Document | IF POLC |
-| `architecture/technical-environment.md` | AI-DLC v1 Technical Environment Document | IF ADLC |
+| `info/vision.md` | AI-DLC Vision Document | IF POLC |
+| `architecture/technical-environment.md` | AI-DLC Technical Environment Document | IF ADLC |
 | `architecture/constraint-register.md` | Full architecture constraint set (hard + derived) | IF ADLC |
 | `architecture/architecture-decision-records.md` | ADR register with rationale | IF ADLC |
-| `ux/ui-implementation-spec.md` | AI-DLC v1 UI Implementation Spec | IF UXD |
+| `ux/ui-implementation-spec.md` | AI-DLC UI Implementation Spec | IF UXD |
 | `ux/wireframes/` | Per-screen wireframe specifications | IF UXD (wireframes present) |
 | `ux/user-flows/` | Multi-step interaction choreography | IF UXD (user flows present) |
 | `ux/personas/` | User profiles for implementation context | IF UXD (personas present) |
@@ -97,7 +99,7 @@ When AI-DWG completes, this structure exists in the generated dev workspace (max
 │   └── vision.md                                 ← IF POLC (+UXD personas/journeys)
 │
 ├── architecture/                                 ← IF ADLC (reference material)
-│   ├── technical-environment.md                  ← AI-DLC v1 Technical Environment Document
+│   ├── technical-environment.md                  ← AI-DLC Technical Environment Document
 │   ├── constraint-register.md                   ← Full constraint set (hard + derived)
 │   ├── architecture-decision-records.md         ← ADR register with rationale
 │   └── docker-compose.yml                       ← Infrastructure config
@@ -120,7 +122,7 @@ When AI-DWG completes, this structure exists in the generated dev workspace (max
 │
 ├── ux/                                           ← IF UXD (reference material)
 │   ├── README.md                                ← Folder-level context index
-│   ├── ui-implementation-spec.md                ← AI-DLC v1 UI Implementation Spec
+│   ├── ui-implementation-spec.md                ← AI-DLC UI Implementation Spec
 │   ├── wireframes/                              ← Per-screen wireframe specs (if present)
 │   ├── user-flows/                              ← Multi-step interaction flows (if present)
 │   ├── personas/                                ← User profiles (if present)
@@ -132,7 +134,7 @@ When AI-DWG completes, this structure exists in the generated dev workspace (max
 ├── WORKSPACE_CONTEXT_MAP.md                      ← Discovery index (auto-regenerated)
 ├── .github/pull_request_template.md              ← ALWAYS
 ├── examples/                                     ← skeleton patterns
-├── aidlc-rules/extensions/                       ← AI-DLC v1 extension rules bundle
+├── aidlc-rules/extensions/                       ← AI-DLC extension rules bundle
 ├── templates/                                    ← session-planning · sprint-planning · estimation-guide
 ├── .gitignore · .editorconfig                    ← IF ADLC
 ├── management_framework/                         ← Shared governance spine (active — GCE appends)
@@ -143,3 +145,42 @@ When AI-DWG completes, this structure exists in the generated dev workspace (max
 │   └── agents/
 └── {src-structure}/                              ← IF ADLC (C4 L3 derived)
 ```
+
+---
+
+## Multi-Workspace Output (Runtime) — `workspaceTopology: per-team | hybrid`
+
+When Config Gate Q4 selects a per-team topology, DWG produces **two clearly separated layers**: a **Layer-2 control plane** (stays with the architects/owners in the design workspace) and **N Layer-3 per-team dev workspaces** (pushed down, each opened separately). The single-workspace tree above is unchanged for `workspaceTopology: single` (the default). Full flow: `flows/workspace-set-control-plane.md`.
+
+```
+{project_root}/
+├── {slug}-management/                            ← LAYER 2 — control plane (architects/owners)
+│   ├── workspace-set-manifest.yaml               ← baseline/workspace-set-manifest-generation.md (authoritative index)
+│   ├── contracts/                                ← mapping/contract-registry-generation.md (AUTHORITATIVE registry)
+│   │   ├── registry.yaml
+│   │   └── {svc}/ openapi.yaml · asyncapi.yaml · events/*.schema.json
+│   ├── team-topology-map.md                      ← from AI-ADLC
+│   ├── WORKSPACE_SET_CONTEXT_MAP.md              ← human single-pane index across all L3 workspaces
+│   └── rollup/                                    ← AI-GCE/AI-DFE populate (read L3 down)
+│       └── compliance-rollup.md · drift-rollup.md · contract-conformance.md
+│
+└── {slug}-workspaces/                            ← LAYER 3 — one clean workspace per team (each opened separately)
+    ├── {team-1}/                                 ← a FULL single-workspace DW (identical shape to the tree above), scoped to this team
+    │   ├── TEAM_CHARTER.md                       ← mapping/team-charter-generation.md ("what you own + must move")
+    │   ├── rules/ (canonical — IDENTICAL across teams — + team-scoped; relevance-map.md team-scoped)
+    │   ├── backlog/ (this team's epics/stories — sliced by TEAM-*)
+    │   ├── ux/ (this team's flows/screens — sliced by BC-*/TEAM-*; design-system + a11y SHARED)
+    │   ├── architecture/ (this team's slice of the AP)
+    │   ├── src/ (this team's 1..N services/contexts as modules — services-as-modules WITHIN)
+    │   ├── contracts/ (READ-ONLY pinned copy: produced + consumed@version)
+    │   ├── CODEOWNERS (this team only)
+    │   └── .governance/workspace-manifest.yaml   ← per-member manifest (+ setMembership back-pointer)
+    ├── {team-2}/                                 ← same uniform shape
+    └── {platform}/                               ← if a platform team exists (TT-05, X-as-a-Service)
+```
+
+**Placement rules (owner's two requirements):**
+- **Management is Layer-2.** The set-manifest, authoritative contract registry, and roll-up live in `{slug}-management/` — architects/owners keep maximum control over every parallel workspace without entering them. **No orchestration/registry/roll-up artifact lives inside an L3 workspace.**
+- **Layer-3 is clean & consistent.** Every L3 workspace has the identical single-workspace shape (the tree above), scoped to one team, self-contained. A developer moving between team workspaces sees the same structure each time.
+- **Contract-first = designed in L2, pushed down.** The authoritative registry is L2; each L3 workspace gets a read-only, version-pinned copy of what it produces + consumes.
+- **Team-granular, never per-service.** One L3 workspace per team; a team's multiple services stay as modules within (the services-as-modules enrichment applies *inside* each team workspace, unchanged).

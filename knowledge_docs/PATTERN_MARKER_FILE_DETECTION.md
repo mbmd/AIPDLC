@@ -33,14 +33,14 @@ MARKER FOUND → read state, read guaranteed files, proceed
 
 | Package Output | Marker File | Why This File |
 |---------------|-------------|--------------|
-| AI-ILC | `ilc-state.md` | State file doubles as marker (lifecycle packages) |
-| AI-PILC | `pilc-state.md` | State file doubles as marker |
-| AI-ADLC | `adlc-state.md` | State file doubles as marker |
-| AI-POLC | `polc-state.md` | State file doubles as marker |
-| AI-UXD | `uxd-state.md` | State file doubles as marker |
-| AI-DWG | `.kiro/steering/workspace-rules.md` | Workspace existence marker (generators don't have state files) |
-| AI-GCE | `.kiro/hooks/` folder (with ≥1 `.json` file) | Folder existence = governance installed |
-| AI-TGE | `tge-state.md` | Hybrid engine state file |
+| AI-ILC (Idea Life Cycle) | `ilc-state.md` | State file doubles as marker (lifecycle packages) |
+| AI-PILC (Project Initiation Life Cycle) | `pilc-state.md` | State file doubles as marker |
+| AI-ADLC (Architecture Design Life Cycle) | `adlc-state.md` | State file doubles as marker |
+| AI-POLC (Product Ownership Life Cycle) | `polc-state.md` | State file doubles as marker |
+| AI-UXD (UX Design) | `uxd-state.md` | State file doubles as marker |
+| AI-DWG (Workspace Generator) | `.kiro/steering/workspace-rules.md` | Workspace existence marker (generators don't have state files) |
+| AI-GCE (Governance & Compliance Engine) | `.kiro/hooks/` folder (with ≥1 `.json` file) | Folder existence = governance installed |
+| AI-TGE (Test Governance Engine) | `tge-state.md` | Hybrid engine state file |
 | Shared governance spine | `management_framework/MANAGEMENT_FRAMEWORK.md` | Spine marker for consolidated governance |
 
 ---

@@ -99,7 +99,7 @@ At **Minimal** depth: ask only 🔴 Required; use defaults for 🟡 Optional.
 At **Standard** depth: ask all, offer defaults.
 At **Comprehensive** depth: ask all, explain impact of each.
 
-> **Delivery method (velocity-model seed — not one of the 13 factors).** Also capture *how the product is built* — manual / AI-assisted / AI-driven / hybrid. Inherit from `pilc-state.md` when present; else ask per `strategy/delivery-method-timing.md` (Q-DM1..Q-DM4). **Manual is the default** and needs no AI-tool detail. This is kept separate from the *Delivery Methodology* factor (Scrum/Kanban/SAFe) and seeds the `## Velocity Model` section that drives dual-track timing at Stages 5/7. It is intentionally not added to the 13 governance factors above.
+> **Delivery method (velocity-model seed — not one of the 13 factors).** Also capture *how the product is built* — manual / AI-assisted / AI-driven / hybrid. Inherit from `pilc-state.md` when present; else ask per `strategy/delivery-method-timing.md` (Q-DM1..Q-DM4). **Manual is the default** and needs no AI-tool detail. This is kept separate from the *Delivery Methodology* factor (Scrum/Kanban/SAFe) and seeds the `## Velocity Model` section that drives dual-track timing at Stages 5/7. It is intentionally not added to the 13 governance factors above. The inherit-or-ask-once behaviour here is the `deliveryMethod` case of the shared project-parameter intake (`project-intake@1.0`, `contracts/PROJECT_PARAMETER_INTAKE_CONTRACT.md`): read state first, ask only if absent, never re-prompt.
 
 ### Step 1.4: Scan for Upstream Changes (Resume Only)
 

@@ -47,11 +47,13 @@ The richness of `domain-topology-map.md` depends on the Tier 2 state at derivati
 ### Rule 1: Team Extraction
 
 For each epic file in `epics/EPIC-NNN_*.md`:
-- Read `Owning Team` field → primary assignment
+- Read `Owning Team` field → primary assignment (a **first-class epic field** — `TEAM-*` from the AI-ADLC `team-context-registry` when the `team-topologies` feature is active; else team name; else "unassigned")
 - Read `Secondary Domains` or `Co-Owner` field → shared ownership (if present)
 - Read `Story Points` or `Size` field → SP value (map S=3, M=5, L=8, XL=13 if textual sizing)
 - Read `Release` field → release assignment
-- Read `Bounded Context` field → BC assignment
+- Read `Bounded Context` field → BC assignment (a **first-class epic field** — `BC-*` from the registry / DDD context map when present)
+
+> **Governed, not free-text (2026-09-03).** `Owning Team` / `Bounded Context` are now first-class fields in `templates/epic-definition.md` + `strategy/epic-decomposition.md` Step 5.2 (they carry the `TEAM-*`/`BC-*` identity when the topology feature is active). This makes `team-epic-distribution.md` (by `TEAM-*`) and `domain-topology-map.md` (by `BC-*`) the **governed** partition source AI-DWG reads — no longer a heuristic read of undefined fields.
 
 ### Rule 2: Domain Classification (Tier 2 ON only)
 

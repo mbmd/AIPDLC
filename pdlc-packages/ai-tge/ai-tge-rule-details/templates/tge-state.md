@@ -36,8 +36,33 @@ ownership: generated
 | **Architecture Package (AP)** | {path or "not available"} | {✅ Detected / ❌ Not available} |
 | **Development Workspace (DW)** | {path or "not available"} | {✅ Detected / ❌ Not available} |
 | **aidlc-docs** | {path or "not available"} | {✅ Detected / ❌ Not available} |
-| **Existing Tests** | {path or "not detected"} | {✅ Detected / ❌ Not detected} |
 | **User Stories** | {path or "not available"} | {✅ Detected / ❌ Not available} |
+| **Existing Tests** | {path or "not detected"} | {✅ Detected / ❌ Not detected} |
+
+> **Detection only.** A `❌ Not available` row above is not a finding on its own — what each absence *costs* is recorded in Observation Fidelity below.
+
+---
+
+## Observation Fidelity
+
+| Field | Value |
+|-------|-------|
+| **Fidelity** | {✅ Full / ⚠️ Degraded / ❌ Unknown} |
+| **Assessed At** | {ISO timestamp or "not assessed"} |
+| **Assessed By** | Stage {1 / 7} |
+| **Mode Assessed Against** | {Full Chain / Architecture Only / Brownfield / Observation Only} |
+| **Declared Inputs Resolved** | {n} of {N} |
+
+### Per-Input Resolution
+
+| Input | Expected At | Resolved | Substitute Used | Unmeasured Consequence |
+|-------|-------------|:-------:|-----------------|------------------------|
+| **Build state** | {path or "not declared by this mode"} | {✅ / ❌ / n/a} | {— / modification-time heuristic} | {— / unit completion is inferred from file timestamps, not read} |
+| **Unit-progress vocabulary** | {source or "not declared by this mode"} | {✅ / ❌ / n/a} | {— / completions treated as generic} | {— / per-unit stage position unavailable} |
+| **User-story location** | {path or "not declared by this mode"} | {✅ / ❌ / n/a} | {— / Stage 8 skipped} | {— / story-derived acceptance coverage is zero, not complete} |
+| **NFR location** | {path or "not declared by this mode"} | {✅ / ❌ / n/a} | {— / story-carried NFR extraction skipped} | {— / NFR coverage reflects the Architecture Package only} |
+
+> **`❌ Unknown` is read as `⚠️ Degraded` by every consumer** — an unassessed run is never treated as a clean one. Fidelity is reset to `❌ Unknown` on every session resume and earns `✅ Full` only by a fresh assessment that resolves every input this mode declares. Definition, both fail-closed rules, and the disclosure obligation: `common/observation-fidelity.md`.
 
 ---
 
@@ -96,10 +121,12 @@ ownership: generated
 
 ## Observation History
 
-| Cycle | Date | Tests Added | Tests Deprecated | Coverage Before | Coverage After |
-|:-----:|:----:|:-----------:|:----------------:|:--------------:|:--------------:|
-| 1 | {date} | {n} | {n} | {n}% | {n}% |
-| 2 | {date} | {n} | {n} | {n}% | {n}% |
+| Cycle | Date | Fidelity | Tests Added | Tests Deprecated | Coverage Before | Coverage After |
+|:-----:|:----:|:--------:|:-----------:|:----------------:|:--------------:|:--------------:|
+| 1 | {date} | {✅ / ⚠️ / ❌} | {n} | {n} | {n}% | {n}% |
+| 2 | {date} | {✅ / ⚠️ / ❌} | {n} | {n} | {n}% | {n}% |
+
+> **Why fidelity is recorded per cycle.** The current-state block above is overwritten each cycle, so without this column a degraded cycle becomes invisible the moment the next one runs. Any trend read across these rows MUST be qualified if any contributing cycle was not `✅ Full` — a coverage jump between a degraded cycle and a full one measures the change in *observation*, not the change in *tests*.
 
 ---
 

@@ -101,7 +101,7 @@ ownership: generated
 
 ## How to Use This Package
 - **AI-DWG:** Reads DoR/DoD, release cadence, AC format for workspace generation
-- **AI-DLC v1:** User references prioritized epics as development intent seeds
+- **AI-DLC:** User references prioritized epics as development intent seeds
 - **AI-GCE:** Derives product governance hooks from DoR/DoD rules
 - **Stakeholders:** Use traceability matrix + roadmap for status visibility
 
@@ -155,7 +155,7 @@ Product Backlog Package assembled:
 The PBP is now ready for:
 • AI-UXD to read (UX design)
 • AI-DWG to read (workspace generation)
-• AI-DLC v1 to reference (development execution)
+• AI-DLC to reference (development execution)
 • Stakeholders to review
 
 🔀 **Chain Navigation (what's next in the AI-* Family):**

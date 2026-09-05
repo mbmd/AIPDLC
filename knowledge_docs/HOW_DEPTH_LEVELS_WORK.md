@@ -33,8 +33,8 @@ Every lifecycle package in the AI-* Family uses three depth levels to adapt its 
 ### Assessment Point
 
 Depth is determined during the early intake stages:
-- **AI-PILC:** Stage 2 (Source Document Ingestion) — based on source completeness + estimated complexity
-- **AI-ADLC:** Stage 2 (Requirements Ingestion) — based on input completeness + system complexity
+- **AI-PILC (Project Initiation Life Cycle):** Stage 2 (Source Document Ingestion) — based on source completeness + estimated complexity
+- **AI-ADLC (Architecture Design Life Cycle):** Stage 2 (Requirements Ingestion) — based on input completeness + system complexity
 
 ### Complexity Factors (5-8 per package)
 
@@ -122,11 +122,11 @@ Depth determined in one package influences successors:
 
 | Predecessor | Successor | Propagation |
 |------------|-----------|-------------|
-| AI-PILC (Standard) | AI-POLC | Reads `Workflow Depth: Standard` from `pilc-state.md` → calibrates to Standard |
-| AI-POLC (Standard) | AI-UXD | Reads depth from `polc-state.md` → calibrates to Standard |
+| AI-PILC (Standard) | AI-POLC (Product Ownership Life Cycle) | Reads `Workflow Depth: Standard` from `pilc-state.md` → calibrates to Standard |
+| AI-POLC (Standard) | AI-UXD (UX Design) | Reads depth from `polc-state.md` → calibrates to Standard |
 | AI-UXD (Standard) | AI-ADLC | Reads depth from `uxd-state.md` → calibrates to Standard |
-| AI-ADLC (Comprehensive) | AI-DWG | Comprehensive AP → more conditional steering files generated, deeper operational docs |
-| AI-DWG (Standard workspace) | AI-GCE | Standard workspace → Standard derivation depth |
+| AI-ADLC (Comprehensive) | AI-DWG (Workspace Generator) | Comprehensive AP → more conditional steering files generated, deeper operational docs |
+| AI-DWG (Standard workspace) | AI-GCE (Governance & Compliance Engine) | Standard workspace → Standard derivation depth |
 
 The successor is not bound by predecessor depth — but uses it as a starting calibration. A comprehensive PIP might result in a minimal architecture if the technical complexity is low.
 

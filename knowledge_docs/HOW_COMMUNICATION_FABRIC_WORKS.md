@@ -1,6 +1,6 @@
 # How the Communication Fabric Works
 
-**Purpose:** Explains how every package in the AI-* Family communicates — intra-family and inter-family — through one unified mechanism: the AIFLC Communication Fabric. Covers how packages discover neighbors, how gates enforce contracts at boundaries, how edges form, how FLO routes over the fabric, and how families stay self-contained.
+**Purpose:** Explains how every package in the AI-* Family communicates — intra-family and inter-family — through one unified mechanism: the AIFLC (AI Full Life Cycle) Communication Fabric. Covers how packages discover neighbors, how gates enforce contracts at boundaries, how edges form, how FLO routes over the fabric, and how families stay self-contained.
 
 ---
 

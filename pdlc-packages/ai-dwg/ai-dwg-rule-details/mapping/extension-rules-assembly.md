@@ -1,13 +1,19 @@
 <!-- Copyright (c) 2026 Mohammad Maheri. Licensed under Apache 2.0. See LICENSE. Attribution required - see NOTICE. -->
-# Mapping: ADLC + UXD + TGE → aidlc-rules/extensions/ (AI-DLC v1 Extension Rules Bundle)
+# Mapping: ADLC + UXD + TGE → build-agent constraint rules
 
 ## Purpose
 
-Assembles the **extension rules bundle** that AI-DLC v1 consumes alongside the Vision Document and Technical Environment Document. Extension rules provide specialized governance that AI-DLC v1 applies during code generation — security constraints, accessibility requirements, and testing directives.
+Assembles the **specialized governance constraints** the build agent applies during code generation — security constraints, accessibility requirements, and testing directives. The **source extraction logic below is unchanged**; only the *output target* is build-method-dependent (see the build-method note).
 
-**Output:** `{workspace-root}/aidlc-rules/extensions/`
+> ⚠️ **Build-method note (AI-DLC v2 / `buildProfile`).** The "extension rules bundle" at `aidlc-rules/extensions/` was AI-DLC **v1's** delivery format and **no longer exists in v2**. The constraints this mapping extracts are the same; where they land depends on the build method:
+> - **`buildProfile = aidlc`** → the constraints become **`memory/project.md` behavioural rules + v2 deterministic sensors** (emitted by the AI-DLC v2 output surface — see the frozen output contract and the sensor-manifest emission).
+> - **`spec-driven` / `freestyle`** → the constraints render as steering rules in the workspace's rules directory.
+>
+> This file owns the **extraction** (what governance to pull from ADLC/UXD/TGE); the **output mechanism** for each build method is owned by the build-method subsystem and the sensor emission. Keep the extraction logic; read the output target from the build method.
 
-**Condition:** Generate IF `adlc-state.md` OR `uxd-state.md` is present (at least one source of extension rules exists).
+**Output:** build-method-dependent (see note above) — under `spec-driven`/`freestyle`, workspace rules; under `aidlc`, `memory/project.md` + sensors.
+
+**Condition:** Generate IF `adlc-state.md` OR `uxd-state.md` is present (at least one source of governance constraints exists).
 
 **Cluster:** Cross-cluster (assembled from multiple peer inputs)
 
@@ -18,13 +24,13 @@ Assembles the **extension rules bundle** that AI-DLC v1 consumes alongside the V
 During THIS activity, ALSO adopt the mindset of an **Automation Engineer**. This does NOT replace your primary role (DevOps/Platform Engineer + Senior Architect) — it ADDS a thinking dimension.
 
 ### Behavioral Shifts
-- Think about AI-DLC v1 as the consumer — extension rules are constraints it enforces during code generation
-- Package rules in AI-DLC v1's expected format — not our internal steering format
-- Each extension file is focused on ONE concern (security OR accessibility OR testing)
-- Rules are actionable constraints, not documentation — AI-DLC v1 uses them to PREVENT wrong code
+- Think about the build agent as the consumer — these are constraints it enforces during code generation
+- Package rules in the build agent's expected format — not our internal steering format
+- Each constraint file is focused on ONE concern (security OR accessibility OR testing)
+- Rules are actionable constraints, not documentation — the build agent uses them to PREVENT wrong code
 
 ### Anti-Patterns for This Activity
-- Do NOT duplicate full steering files into extensions — extract only the AI-DLC v1-relevant subset
+- Do NOT duplicate full steering files into constraints — extract only the enforceable subset the build agent needs
 - Do NOT include architecture decisions or rationale — just the enforceable rules
 - Do NOT package testing extensions from DWG if TGE is activated — TGE owns testing governance
 
@@ -187,8 +193,8 @@ ELSE                     → testing extension: NO
 For each available extension:
 1. Read the source document(s)
 2. Extract ONLY the enforceable rules (not rationale, not architecture decisions)
-3. Transform into AI-DLC v1's constraint format (action-oriented, binary compliance)
-4. Write to `aidlc-rules/extensions/{name}.md`
+3. Transform into the build agent's constraint format (action-oriented, binary compliance)
+4. Write to the build-method-appropriate target (see the build-method note above): workspace rules under `spec-driven`/`freestyle`, or `memory/project.md` + sensors under `aidlc`
 
 ### Step 3: Create Directory
 
@@ -228,5 +234,5 @@ If any extension is generated, ensure `aidlc-rules/extensions/` directory exists
 - [ ] Testing source correctly identified (TGE vs. DWG)
 - [ ] All rules use prescriptive language (MUST/MUST NOT)
 - [ ] No architectural rationale in extension files (just constraints)
-- [ ] Directory structure matches AI-DLC v1 expected format
+- [ ] Output target matches the build method (workspace rules for spec-driven/freestyle; `memory/project.md` + sensors for aidlc)
 - [ ] Provenance comments present in each file

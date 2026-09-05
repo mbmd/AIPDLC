@@ -18,7 +18,7 @@ PROPOSED ──→ ACCEPTED ──→ PROPAGATED ──→ ENFORCED ──→ �
 
 ### 1. Proposed (Under Discussion)
 
-**Trigger:** AI-ADLC reaches a stage requiring a technology/pattern decision.
+**Trigger:** AI-ADLC (Architecture Design Life Cycle) reaches a stage requiring a technology/pattern decision.
 
 **What happens:**
 - Options identified (minimum 2)
@@ -42,7 +42,7 @@ PROPOSED ──→ ACCEPTED ──→ PROPAGATED ──→ ENFORCED ──→ �
 
 ### 3. Propagated (Flows Downstream)
 
-**Trigger:** AI-DWG reads the Architecture Package containing the accepted ADR.
+**Trigger:** AI-DWG (Workspace Generator) reads the Architecture Package containing the accepted ADR.
 
 **What happens:**
 - AI-DWG translates the decision into steering file content
@@ -55,7 +55,7 @@ PROPOSED ──→ ACCEPTED ──→ PROPAGATED ──→ ENFORCED ──→ �
 
 ### 4. Enforced (Governance Active)
 
-**Trigger:** AI-GCE reads the steering files (which were derived from the ADR).
+**Trigger:** AI-GCE (Governance & Compliance Engine) reads the steering files (which were derived from the ADR).
 
 **What happens:**
 - Governance rules derived from the steering (which was derived from the ADR)
@@ -141,7 +141,7 @@ T3: AI-GCE re-derivation triggered
     ├── Old REST-specific hooks deprecated
     └── New GraphQL-specific hooks generated
     │
-T4: AI-TGE register updated
+T4: AI-TGE (Test Governance Engine) register updated
     ├── Old REST endpoint tests → Deprecated
     ├── New GraphQL query/mutation tests → Added as gaps
     └── Risk score recalculated

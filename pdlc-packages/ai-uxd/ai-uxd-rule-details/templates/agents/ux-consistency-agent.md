@@ -19,7 +19,7 @@ Validates that the UX Design Package (UXP) maintains internal consistency, trace
 |-----------|-----|
 | After completing or revising any UXP artifact | Verify consistency wasn't broken |
 | Before handing off to AI-POLC / AI-DWG / AI-GCE | Verify handoff artifacts are complete and consumable |
-| After receiving AI-DLC v1 feedback and making revisions | Verify ripple effects were addressed |
+| After receiving AI-DLC feedback and making revisions | Verify ripple effects were addressed |
 | Periodic governance check (monthly) | Catch drift over time |
 
 ---

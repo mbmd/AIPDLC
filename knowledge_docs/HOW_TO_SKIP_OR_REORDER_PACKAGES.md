@@ -1,6 +1,6 @@
 # How To Skip or Reorder Packages
 
-**Purpose:** Shows how to use AIFLC's AI-* PDLC Family when you *don't* want to run every package in the default order — entering the chain partway, skipping packages you don't need, feeding a package only part of its inputs, and changing the sequence to fit your project. The family is built so you can do all of this without fighting it; this guide is the practical how-to.
+**Purpose:** Shows how to use AIFLC (AI Full Life Cycle)'s AI-* PDLC Family when you *don't* want to run every package in the default order — entering the chain partway, skipping packages you don't need, feeding a package only part of its inputs, and changing the sequence to fit your project. The family is built so you can do all of this without fighting it; this guide is the practical how-to.
 
 ---
 
@@ -20,11 +20,11 @@ Install and run only the package that does the job you want, and give it your ow
 
 | Enter at | You skip | You provide instead |
 |----------|----------|---------------------|
-| **AI-ADLC** | Initiation (AI-PILC) | Requirements + constraints directly |
-| **AI-DWG** | Initiation + design | Architecture docs in any format |
-| **AI-GCE** | Everything upstream | Any workspace with a `.kiro/steering/` folder |
-| **AI-POLC** | Initiation | A product vision or feature list |
-| **AI-UXD** | Initiation + backlog | A product brief or feature list to design around |
+| **AI-ADLC (Architecture Design Life Cycle)** | Initiation (AI-PILC (Project Initiation Life Cycle)) | Requirements + constraints directly |
+| **AI-DWG (Workspace Generator)** | Initiation + design | Architecture docs in any format |
+| **AI-GCE (Governance & Compliance Engine)** | Everything upstream | Any workspace with a `.kiro/steering/` folder |
+| **AI-POLC (Product Ownership Life Cycle)** | Initiation | A product vision or feature list |
+| **AI-UXD (UX Design)** | Initiation + backlog | A product brief or feature list to design around |
 
 When you enter standalone, the package detects what kind of input you gave it — a structured document, a verbal description, or an existing (brownfield) codebase — and adapts its questions accordingly.
 
@@ -52,7 +52,7 @@ You don't have to pick one mode for the whole project. Mix chain and standalone 
 
 Because every package accepts raw input, you are not locked into the default `AI-POLC → AI-UXD → AI-ADLC` order. For a backend-heavy or API-first product where the architecture should lead, running `AI-POLC → AI-ADLC → AI-UXD` is a legitimate variant. The family optimizes for the product-led default but does not forbid context-sensitive reordering — you simply run each package with whatever inputs you have on hand.
 
-### Lever 2 — Drive a custom flow with AI-FLO
+### Lever 2 — Drive a custom flow with AI-FLO (Flow Orchestrator)
 
 AI-FLO is the family's router. It supports configurable topology modes and an exceptions/overrides path, so you can override the default routing and tell it the sequence you want. When a step's required inputs aren't ready yet, AI-FLO flags the conflict (flag-and-hold) rather than dispatching blindly — so you reorder intentionally, not by accident.
 
