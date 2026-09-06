@@ -14,6 +14,27 @@ pre-release (beta) suffix until the first stable release.
 
 <!-- New user-facing changes accrue here as they land, then get promoted to a version + date at release. -->
 
+## [0.1.0-beta.6-r3] — 2026-09-05
+
+### Added
+
+- **Knowledge base — seven new how-it-works guides for the AI-DLC v2 feature set.** The knowledge
+  base gained documentation for capabilities that shipped in beta.6: how AI-DLC v2 support works
+  end to end, how team-aligned workspaces are produced across the design chain, how the lens system
+  (AI Lens, Automation Lens, agentic coverage) applies domain facets, how workspace HTML publishing
+  works, how draft-first gates operate, how the AI-FLO / AI-DFE fabric auto-refreshes, and how
+  artifact-quality rules are enforced. These document existing behaviour — no package behaviour changed.
+
+### Fixed
+
+- **Documentation — corrected the retired test-governance output path.** Test-governance docs and
+  references that still pointed at the former top-level `.tge/` folder now point at
+  `.governance/test/`, matching where AI-TGE actually writes.
+- **Documentation — architecture-extension coverage brought current.** The architecture-extension
+  guides now describe the full set of opt-in patterns (adding Domain Storytelling, Wardley Mapping,
+  and deep Threat Modeling) and note that cross-service consistency (Saga) is handled by the core
+  workflow. The AI-DWG, AI-GCE, and AI-TGE package READMEs were refreshed to match.
+
 ## [0.1.0-beta.6-r2] — 2026-09-05
 
 ### Added
@@ -152,7 +173,8 @@ approval gate at every step. Earlier pre-public betas (beta.1–beta.4) are fold
 - GitHub Copilot support is partial (workspace-level instructions only).
 - Additional assistants (Windsurf, Augment Code, Tabnine, JetBrains AI Assistant, Sourcegraph Cody, Continue, Aider) are expected to work but are not yet validated.
 
-[Unreleased]: https://github.com/mbmd/AIPDLC/compare/v0.1.0-beta.6-r2...HEAD
+[Unreleased]: https://github.com/mbmd/AIPDLC/compare/v0.1.0-beta.6-r3...HEAD
+[0.1.0-beta.6-r3]: https://github.com/mbmd/AIPDLC/compare/v0.1.0-beta.6-r2...v0.1.0-beta.6-r3
 [0.1.0-beta.6-r2]: https://github.com/mbmd/AIPDLC/compare/v0.1.0-beta.6...v0.1.0-beta.6-r2
 [0.1.0-beta.6]: https://github.com/mbmd/AIPDLC/compare/v0.1.0-beta.5...v0.1.0-beta.6
 [0.1.0-beta.5]: https://github.com/mbmd/AIPDLC/releases/tag/v0.1.0-beta.5

@@ -193,7 +193,7 @@ appends its decisions, changes, issues, actions, assumptions, and lessons here.
 ```
 
 - Never hardcode a start; always scan for the current max.
-- Never reuse removed IDs (— non-destructive).
+- Never reuse removed IDs (non-destructive).
 - Each `{PKG}-{SCOPE}-{TYPE}` group has an independent counter.
 - **Concurrency:** single-user/single-agent model — scan-and-increment is race-free. Parallel-writer locking is explicitly deferred.
 - **Carry-forward:** where a spine is carried into a downstream workspace, numbering continues from the highest existing `{N}` — never resets.
